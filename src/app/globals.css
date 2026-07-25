@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+:root {
+  /* TEKMESIS brand palette — 13_DESIGN_SYSTEM_BRAND_AND_ASSETS.md */
+  --color-navy-950: #071726;
+  --color-navy-900: #0b2540;
+  --color-navy-800: #123258;
+  --color-navy-700: #1a4270;
+
+  --color-teal-700: #0a6570;
+  --color-teal-600: #0a7f8c;
+  --color-teal-500: #12a3ae;
+  --color-teal-400: #3fc2cc;
+  --color-teal-100: #e0f6f7;
+
+  --color-gold-600: #a5811f;
+  --color-gold-500: #c9a227;
+  --color-gold-300: #e4cd7c;
+
+  --color-warning-600: #b23a1f;
+  --color-warning-500: #d9531f;
+  --color-warning-100: #fbe6dd;
+
+  --color-neutral-950: #10151a;
+  --color-neutral-900: #1a2129;
+  --color-neutral-600: #4c5966;
+  --color-neutral-400: #8b98a3;
+  --color-neutral-200: #dde3e8;
+  --color-neutral-100: #eef2f5;
+  --color-neutral-50: #f8fafb;
+
+  --background: #ffffff;
+  --foreground: var(--color-neutral-950);
+}
+
+/*
+ * teal-500/teal-400 and neutral-400 fail WCAG AA (4.5:1) as normal body
+ * text on a white background — use them for large/bold text (>=24px or
+ * >=19px bold), non-text UI (borders, icons), or on dark backgrounds only.
+ * For body text on white, use teal-700/teal-600 and neutral-600 or darker.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-brand-navy-950: var(--color-navy-950);
+  --color-brand-navy-900: var(--color-navy-900);
+  --color-brand-navy-800: var(--color-navy-800);
+  --color-brand-navy-700: var(--color-navy-700);
+
+  --color-brand-teal-700: var(--color-teal-700);
+  --color-brand-teal-600: var(--color-teal-600);
+  --color-brand-teal-500: var(--color-teal-500);
+  --color-brand-teal-400: var(--color-teal-400);
+  --color-brand-teal-100: var(--color-teal-100);
+
+  --color-brand-gold-600: var(--color-gold-600);
+  --color-brand-gold-500: var(--color-gold-500);
+  --color-brand-gold-300: var(--color-gold-300);
+
+  --color-brand-warning-600: var(--color-warning-600);
+  --color-brand-warning-500: var(--color-warning-500);
+  --color-brand-warning-100: var(--color-warning-100);
+
+  --color-brand-neutral-950: var(--color-neutral-950);
+  --color-brand-neutral-900: var(--color-neutral-900);
+  --color-brand-neutral-600: var(--color-neutral-600);
+  --color-brand-neutral-400: var(--color-neutral-400);
+  --color-brand-neutral-200: var(--color-neutral-200);
+  --color-brand-neutral-100: var(--color-neutral-100);
+  --color-brand-neutral-50: var(--color-neutral-50);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--color-navy-950);
+    --foreground: var(--color-neutral-50);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}

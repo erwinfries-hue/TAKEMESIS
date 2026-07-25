@@ -1,0 +1,15 @@
+{
+  "brand": {
+    "name": "TEKMESIS",
+    "claim": "FROM STUDIES TO CLARITY.",
+    "parent": "A product of AXIA4 Digital"
+  },
+  "home": {
+    "description": "TEKMESIS helps curious individuals find, compare, and understand scientific evidence for personal questions and everyday decisions.",
+    "comingSoon": "The platform is under construction.",
+    "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription."
+  },
+  "footer": {
+    "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."
+  }
+}
