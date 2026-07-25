@@ -2,8 +2,7 @@
 
 ## Current phase
 
-Phase 2 — Topic inspiration and landing: **complete**. Phase 3 (question
-interpretation) next.
+Phase 3 — Question interpretation: **complete**. Phase 4 (source adapters) next.
 
 ## Completed
 
@@ -73,12 +72,39 @@ interpretation) next.
 - All 24 unit/integration tests and all 20 Playwright specs (incl. 8 a11y scans)
   pass; `npm run verify` passes end-to-end.
 
+### Phase 3 — Question interpretation
+- `src/lib/classification/domain.ts`: rule-based domain classifier — deliberately
+  not AI (`ANTHROPIC_API_KEY` isn't provisioned; `AI_EXTRACTION_ENABLED=false`).
+  Builds a term index from each topic's own name/description/examples (so it can't
+  drift from the taxonomy content) and scores a question against all 12 categories;
+  returns up to 3 ranked candidates, or an empty result that triggers a manual
+  fallback rather than guessing.
+- `src/lib/classification/high-risk.ts`: independent high-risk detector (decision
+  #2) — cancer, pregnancy, prescription drugs, vaccines, mental-health crisis,
+  acute symptoms, dosing, legal/financial high-stakes (term lists), plus a
+  combination rule for pediatric treatment (child term + treatment term
+  co-occurring, so ordinary child-development questions aren't over-blocked).
+  Deliberately simple substring matching: for a safety gate, a false positive
+  (unnecessary restriction) is the acceptable failure mode, a false negative isn't.
+- `/search`: real route wiring both classifiers together. No question → prompt
+  back to `/topics`. High-risk match → `HighRiskNotice` (safe general orientation,
+  pointer to professional help incl. Dargebotene Hand 143, no domain shown, no
+  path to payment — matches `restricted_high_risk` semantics from `05`). Otherwise
+  → `QuestionClarification`: confirm the top-scored domain or pick one of up to 2
+  alternatives (or, if nothing scored, the full 12-topic list), explicitly labeled
+  as rule-based (not yet AI) in the UI copy. Confirming states honestly that
+  source search/eligibility are a later build step — no fake progress.
+- `OwnQuestionForm` now does a real (JS-optional) GET submission to `/search`
+  instead of a client-only "coming soon" toast.
+- 13 new unit tests (classifiers) + 7 new e2e specs (full submit→classify→confirm
+  flow, high-risk restriction, no-match fallback, empty state, 3 a11y scans).
+  44 unit/integration tests, 27 Playwright specs total; `npm run verify` passes.
+
 ## Not started
 
-Phases 3–13 from `IMPLEMENTATION_PLAN.md`: question interpretation, source
-adapters, search/ranking/screening, eligibility engine, Stripe/report lifecycle,
-premium report renderer, email/admin/analytics, hardening, preview beta,
-production prep, production launch.
+Phases 4–13 from `IMPLEMENTATION_PLAN.md`: source adapters, search/ranking/
+screening, eligibility engine, Stripe/report lifecycle, premium report renderer,
+email/admin/analytics, hardening, preview beta, production prep, production launch.
 
 ## Blocking item tracked for later (does not block continued implementation)
 
@@ -87,6 +113,9 @@ Blocks live Stripe mode and real payments only — not the beta build itself.
 
 ## Next step
 
-Phase 3: domain/risk classification (all 12 categories plus the independent
-high-risk detector from decision #2), query clarification flow (confirm/edit/
-alternatives), unsafe/unsupported handling — per `IMPLEMENTATION_PLAN.md`.
+Phase 4: source adapters (OpenAlex, Crossref, Europe PMC, NCBI E-utilities) behind
+the normalized-record interface from `07`/`10`, per `SOURCE_COVERAGE_MATRIX.md`
+routing, with source health/status tracking and fixtures/tests — per
+`IMPLEMENTATION_PLAN.md`. Note: these are real external network calls: dev/CI
+behavior when the relevant API keys/network access aren't available needs a
+decision (e.g. recorded fixtures for tests, live calls gated by env vars).

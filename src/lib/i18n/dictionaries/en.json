@@ -68,7 +68,6 @@
     "label": "Your question",
     "placeholder": "e.g. Which learning method improves learning outcomes?",
     "submit": "Classify question",
-    "helper": "Automatic question analysis (topic and risk detection) is coming in a later build step. Your question is not processed or stored yet.",
     "warning": "Please do not enter names, documents, or confidential personal data.",
     "warningHealth": "Please do not enter individual diagnoses, medication lists, or health records."
   },
@@ -201,5 +200,23 @@
   },
   "footer": {
     "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."
+  },
+  "searchPage": {
+    "heading": "Your question",
+    "noQuestionHeading": "No question provided",
+    "noQuestionBody": "Please enter a question first.",
+    "noQuestionCta": "Back to topics",
+    "restrictedHeading": "We can't automatically process this question",
+    "restrictedBody": "Your question touches a high-risk topic (e.g. diagnosis, medication, acute symptoms, pregnancy, mental-health crisis). TEKMESIS does not offer an individual evaluation for this.",
+    "restrictedHelp": "If you're experiencing an acute issue or a crisis, please contact a doctor or a qualified support service. In Switzerland, the Dargebotene Hand is available 24/7 at 143.",
+    "clarificationHeading": "We're assigning your question to this domain",
+    "clarificationIntro": "This assignment is based on a rule-based analysis of your input — not yet a full AI-powered interpretation. Please confirm the domain or choose a different one.",
+    "notClassifiedHeading": "We couldn't clearly assign your question to a domain",
+    "notClassifiedBody": "Please choose the most fitting domain yourself.",
+    "confirmButton": "Confirm",
+    "changeSelection": "Change selection",
+    "confirmedHeading": "Thanks — domain confirmed",
+    "confirmedBody": "Automatic source research and eligibility checking for this domain are coming in a later build step. No study search happens yet.",
+    "viewTopicCta": "See example questions & limits of this domain"
   }
 }

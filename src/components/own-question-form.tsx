@@ -1,7 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 export function OwnQuestionForm({
@@ -32,17 +32,12 @@ function OwnQuestionFormFields({
   initialValue: string;
 }) {
   const [value, setValue] = useState(initialValue);
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSubmitted(true);
-  }
 
   return (
     <form
       id={id}
-      onSubmit={handleSubmit}
+      action="/search"
+      method="get"
       className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm"
     >
       <h2 className="font-semibold text-brand-navy-900">{dict.ownQuestionForm.heading}</h2>
@@ -51,13 +46,10 @@ function OwnQuestionFormFields({
       </label>
       <textarea
         id="own-question"
-        name="question"
+        name="q"
         rows={3}
         value={value}
-        onChange={(event) => {
-          setValue(event.target.value);
-          setSubmitted(false);
-        }}
+        onChange={(event) => setValue(event.target.value)}
         placeholder={dict.ownQuestionForm.placeholder}
         className="w-full resize-none rounded-lg border border-brand-neutral-200 p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400"
       />
@@ -69,11 +61,6 @@ function OwnQuestionFormFields({
       >
         {dict.ownQuestionForm.submit}
       </button>
-      {submitted && (
-        <p role="status" className="text-sm text-brand-teal-700">
-          {dict.ownQuestionForm.helper}
-        </p>
-      )}
     </form>
   );
 }

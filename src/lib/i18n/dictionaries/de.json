@@ -68,7 +68,6 @@
     "label": "Deine Frage",
     "placeholder": "z. B. Welche Lernmethode verbessert den Lernerfolg?",
     "submit": "Frage einordnen",
-    "helper": "Die automatische Fragenanalyse (Themen- und Risikoerkennung) folgt in einem der nächsten Ausbauschritte. Deine Frage wird aktuell noch nicht verarbeitet oder gespeichert.",
     "warning": "Bitte geben Sie keine Namen, Dokumente oder vertraulichen persönlichen Daten ein.",
     "warningHealth": "Bitte geben Sie keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten ein."
   },
@@ -204,5 +203,23 @@
   },
   "footer": {
     "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung."
+  },
+  "searchPage": {
+    "heading": "Deine Frage",
+    "noQuestionHeading": "Keine Frage angegeben",
+    "noQuestionBody": "Bitte gib zuerst eine Frage ein.",
+    "noQuestionCta": "Zurück zu den Themen",
+    "restrictedHeading": "Diese Frage können wir nicht automatisiert einordnen",
+    "restrictedBody": "Deine Frage berührt ein Hochrisiko-Thema (z. B. Diagnose, Medikamente, akute Symptome, Schwangerschaft, psychische Krise). TEKMESIS bietet dafür keine individuelle Auswertung an.",
+    "restrictedHelp": "Bei akuten Beschwerden oder einer Krise wende dich bitte an eine Ärztin, einen Arzt oder eine Fachstelle. In der Schweiz erreichst du die Dargebotene Hand rund um die Uhr unter Tel. 143.",
+    "clarificationHeading": "Wir ordnen deine Frage folgendem Bereich zu",
+    "clarificationIntro": "Diese Zuordnung basiert auf einer regelbasierten Analyse deiner Eingabe — noch nicht auf einer vollständigen KI-gestützten Interpretation. Bitte bestätige den Bereich oder wähle einen anderen.",
+    "notClassifiedHeading": "Wir konnten deine Frage keinem Bereich eindeutig zuordnen",
+    "notClassifiedBody": "Bitte wähle selbst den passendsten Bereich.",
+    "confirmButton": "Bestätigen",
+    "changeSelection": "Auswahl ändern",
+    "confirmedHeading": "Danke — Bereich bestätigt",
+    "confirmedBody": "Die automatische Quellenrecherche und Eignungsprüfung für diesen Bereich folgen in einem der nächsten Ausbauschritte. Aktuell wird noch nicht weiter nach Studien gesucht.",
+    "viewTopicCta": "Beispielfragen & Grenzen dieses Bereichs ansehen"
   }
 }

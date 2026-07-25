@@ -11,7 +11,9 @@
  * classifier decision (Phase 3), not a category-level block.
  */
 
-export type Locale = "de" | "en";
+import type { Locale } from "@/lib/i18n/config";
+
+export type { Locale } from "@/lib/i18n/config";
 export type TopicRiskProfile = "standard" | "elevated";
 
 export interface TopicCopy {
