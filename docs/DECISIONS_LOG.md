@@ -104,3 +104,15 @@ deaktivieren" control on the report page, without needing to contact support.
 - Report page needs a self-service revoke action (distinct from admin revoke),
   writing to the same report status field admin revocation uses.
 - Warning copy must appear both in the report UI and in the delivery email.
+
+## 7. Free-search usage limit
+
+**Decision:** `FREE_SEARCH_LIMIT` = 5 free searches per IP/session per day.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Rate limiter needs per-IP/session daily counter (Supabase or edge-side), reset at
+  UTC day boundary or rolling 24h window — implementation detail, not a concept
+  decision, deferred to implementation.
+- Limit-exceeded UX must fail safely (clear message, no stack trace) per `05`.
