@@ -21,3 +21,19 @@ are active and sellable from beta start (not narrowed to a 6-category subset).
   open as a separate decision: whether these specific sub-topics are excluded or
   handled via the `restricted_high_risk` status even though their parent category
   (e.g. Gesundheit & Prävention, Kinder/Erziehung) is active.
+
+## 2. High-risk sub-topic handling
+
+**Decision:** High-risk sub-topics (cancer, pregnancy, prescription drugs, vaccines,
+acute mental-health crisis, acute symptoms, dosing, pediatric treatment) are hard-blocked
+via risk classification to `restricted_high_risk` status, regardless of their parent
+category being active. No individualized synthesis is produced for these; only general
+orientation plus a pointer to qualified professional help, per `05_UX_USER_FLOWS_AND_PAGES.md`.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Risk classifier needs an explicit high-risk keyword/topic detector independent of
+  domain classification, evaluated for every question regardless of chosen category.
+- `restricted_high_risk` must be unconditionally non-payable (already required by
+  acceptance criteria in `14`).
