@@ -2,8 +2,8 @@
 
 ## Current phase
 
-Phase 5 — Search, ranking, screening: **complete**. Phase 6 (eligibility and
-teaser) next.
+Phase 6 — Eligibility and teaser: **complete**. Phase 7 (persistence and
+Stripe) next.
 
 ## Completed
 
@@ -168,29 +168,67 @@ teaser) next.
 - 29 new unit tests. 92 unit tests + 1 integration test; `npm run verify` and
   the full 27-spec Playwright suite pass.
 
+### Phase 6 — Eligibility and teaser
+- `src/lib/eligibility/eligibility.ts`: implements decision #4's thresholds as
+  named constants (`ELIGIBLE_MIN_RESULT_BEARING_STUDIES`, etc.) — `eligible`
+  (≥5 result-bearing studies, or 1 review/meta-analysis + ≥2 individual
+  studies), `eligible_with_limitations` (2–4 result-bearing, or enough studies
+  but mostly metadata-only), `not_eligible` (below both). A report-depth
+  estimate (`estimateReportDepth`, out of the 9 mandatory sections) acts as a
+  conservative backstop that can force `not_eligible` even if study counts
+  alone would suggest otherwise. `restricted_high_risk` is decided earlier
+  (Phase 3, before any search runs) and isn't produced here.
+- `src/lib/pricing/price-config.ts`: central price config reading
+  `REPORT_PRICE_MINOR`/`REPORT_CURRENCY`/`REPORT_PRICE_VERSION` from server
+  env (decision #9: CHF 9.90 / `MVP-01`), with an `Intl`-based display
+  formatter.
+- `src/lib/eligibility/teaser.ts`: turns a `SearchRunResult` + eligibility
+  assessment into teaser data — study-type distribution, a small top-3 study
+  preview, which sources were unavailable, and a **preliminary, structurally-
+  derived** confidence label (study count/design only — explicitly not the
+  full AI-assessed model from `08`, and labeled as such in the UI, since no
+  AI is wired up yet).
+- `/search` now runs the real Phase 4/5 pipeline once a domain is confirmed
+  (`QuestionClarification` is now a plain GET form, no client JS needed) and
+  renders one of: `SearchFailedNotice` (every source unreachable — verified
+  live in this sandbox, see below), `NotEligibleNotice`, or `FreeTeaser` +
+  `PaywallPanel` (with a prominent limitations notice for the
+  `eligible_with_limitations` tier, and the elevated-risk input warning for
+  Gesundheit & Prävention / Kinder & Erziehung). The paywall is transparently
+  non-functional yet ("Stripe checkout wird in Phase 7 angebunden") rather
+  than a fake buy button.
+- **Live-verified in this sandbox:** confirming a domain was manually checked
+  against the running dev server — since this environment still can't reach
+  the 4 source APIs, it correctly renders `SearchFailedNotice` rather than a
+  fabricated result. This is real end-to-end behavior of the resilience path,
+  not a mock; the success-path *rendering* is covered by unit tests against
+  fake `SearchRunResult`s (network-independent by design, per the Phase 4/5
+  testing approach agreed with Erwin).
+- 21 new unit tests (eligibility, teaser builder, price config) + 2 new e2e
+  specs (confirm→search-failed flow, +1 a11y scan). 112 unit tests + 1
+  integration test, 29 Playwright specs; `npm run verify` passes.
+
 ## Not started
 
-Phases 6–13 from `IMPLEMENTATION_PLAN.md`: eligibility engine, Stripe/report
-lifecycle, premium report renderer, email/admin/analytics, hardening, preview
-beta, production prep, production launch.
+Phases 7–13 from `IMPLEMENTATION_PLAN.md`: Supabase persistence and Stripe
+checkout/webhook/lifecycle, premium report renderer, email/admin/analytics,
+hardening, preview beta, production prep, production launch.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
   — blocks live Stripe mode and real payments only.
-- Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — blocks
-  trusting Phase 4/5 in production, not continued Phase 6+ development (the
-  eligibility engine consumes `SearchRunResult`, which is fully testable against
-  the same fake-adapter/fixture approach already in place).
+- Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — the
+  resilience path (all sources down) is now confirmed working live in this
+  sandbox; the success path (sources actually returning data) still needs a
+  real run from an environment with network access.
 
 ## Next step
 
-Phase 6: eligibility engine implementing decision #4's thresholds
-(`eligible`/`eligible_with_limitations`/`not_eligible`) against a
-`SearchRunResult`, expected-report-depth estimate, and the free teaser UI
-(real search stats, source-linked titles, preliminary synthesis note, coverage
-limitations, exact paid contents) with the paywall panel and central price
-config — per `IMPLEMENTATION_PLAN.md`. Note: no AI-based synthesis is available
-yet, so the teaser's "preliminary synthesis" must stay honestly structural
-(counts, study-type distribution, confidence *label* only) rather than
-prose that implies AI-generated interpretation we haven't built.
+Phase 7: Supabase migrations for the core tables (`10`), report lifecycle
+states, Stripe Checkout Session creation, webhook signature verification +
+idempotent fulfillment, test-mode only (`STRIPE_MODE=test`) — per
+`IMPLEMENTATION_PLAN.md`. This phase needs real Supabase/Stripe credentials
+that aren't provisioned yet (`.env.example` has them blank); expect to build
+against typed interfaces/migrations and defer live verification the same way
+Phase 4's adapters did.

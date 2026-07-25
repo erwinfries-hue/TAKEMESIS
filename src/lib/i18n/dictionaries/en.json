@@ -213,10 +213,64 @@
     "clarificationIntro": "This assignment is based on a rule-based analysis of your input — not yet a full AI-powered interpretation. Please confirm the domain or choose a different one.",
     "notClassifiedHeading": "We couldn't clearly assign your question to a domain",
     "notClassifiedBody": "Please choose the most fitting domain yourself.",
-    "confirmButton": "Confirm",
+    "confirmButton": "Confirm and search sources",
     "changeSelection": "Change selection",
-    "confirmedHeading": "Thanks — domain confirmed",
-    "confirmedBody": "Automatic source research and eligibility checking for this domain are coming in a later build step. No study search happens yet.",
     "viewTopicCta": "See example questions & limits of this domain"
+  },
+  "publicationTypeLabels": {
+    "meta_analysis": "Meta-analysis",
+    "systematic_review": "Systematic review",
+    "rct": "Randomized controlled trial (RCT)",
+    "quasi_experimental": "Quasi-experimental study",
+    "cohort": "Cohort study",
+    "case_control": "Case-control study",
+    "cross_sectional": "Cross-sectional study",
+    "case_report": "Case report",
+    "review": "Review",
+    "protocol": "Study protocol",
+    "other": "Other",
+    "unknown": "Not classified"
+  },
+  "confidenceLabels": {
+    "higher": "Higher evidence confidence",
+    "moderate": "Moderate evidence confidence",
+    "limited": "Limited evidence confidence",
+    "very_uncertain": "Very uncertain evidence",
+    "not_assessed": "Not assessed"
+  },
+  "teaserPage": {
+    "heading": "Free Evidence Teaser",
+    "searchDateLabel": "Search date",
+    "candidateLabel": "Records found",
+    "duplicatesLabel": "Duplicates removed",
+    "includedLabel": "Studies included",
+    "studyTypesHeading": "Study-type distribution",
+    "topStudiesHeading": "Preview: key studies",
+    "confidenceHeading": "Preliminary evidence confidence",
+    "confidencePreliminaryNote": "Preliminary, structural estimate based on study count and design — not yet a full content analysis (that arrives with AI-based synthesis in a later build step).",
+    "sourcesUnavailableNote": "The following sources were unreachable during this search and are therefore missing from the results",
+    "screeningExplanation": "Studies were selected by relevance, study design, and data completeness; retracted studies and pure study protocols were excluded.",
+    "limitationsNoticeHeading": "Important limitations before purchase",
+    "limitationsNoticeBody": "The evidence base for this question is currently limited. The full report makes these limitations transparent, but cannot deliver more than the available studies support.",
+    "noCoverageDisclosure": "No claim of complete coverage of the scientific literature.",
+    "unknownTitle": "(no title available)"
+  },
+  "paywallPanel": {
+    "heading": "Full Report",
+    "contentsHeading": "Included in the report",
+    "priceVersionLabel": "Price version",
+    "checkoutComingSoon": "Stripe checkout will be wired up in a later build step (Phase 7). The full report can't be purchased yet."
+  },
+  "notEligiblePage": {
+    "heading": "We can't offer a report for this question right now",
+    "bodyInsufficientEvidence": "We found too few comparable, informative studies to produce a well-founded evidence report.",
+    "refineHeading": "What you can do",
+    "refineBody": "Try phrasing your question more specifically or differently, or choose a different topic.",
+    "refineCta": "Ask a new question"
+  },
+  "searchFailedPage": {
+    "heading": "The sources are currently unreachable",
+    "body": "We couldn't reach any of our scientific data sources during this search. This isn't about your question — please try again in a few minutes.",
+    "retryCta": "Try again"
   }
 }

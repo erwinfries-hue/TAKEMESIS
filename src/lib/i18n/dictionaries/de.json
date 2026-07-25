@@ -216,10 +216,64 @@
     "clarificationIntro": "Diese Zuordnung basiert auf einer regelbasierten Analyse deiner Eingabe — noch nicht auf einer vollständigen KI-gestützten Interpretation. Bitte bestätige den Bereich oder wähle einen anderen.",
     "notClassifiedHeading": "Wir konnten deine Frage keinem Bereich eindeutig zuordnen",
     "notClassifiedBody": "Bitte wähle selbst den passendsten Bereich.",
-    "confirmButton": "Bestätigen",
+    "confirmButton": "Bestätigen und Quellen durchsuchen",
     "changeSelection": "Auswahl ändern",
-    "confirmedHeading": "Danke — Bereich bestätigt",
-    "confirmedBody": "Die automatische Quellenrecherche und Eignungsprüfung für diesen Bereich folgen in einem der nächsten Ausbauschritte. Aktuell wird noch nicht weiter nach Studien gesucht.",
     "viewTopicCta": "Beispielfragen & Grenzen dieses Bereichs ansehen"
+  },
+  "publicationTypeLabels": {
+    "meta_analysis": "Meta-Analyse",
+    "systematic_review": "Systematischer Review",
+    "rct": "Randomisierte kontrollierte Studie (RCT)",
+    "quasi_experimental": "Quasi-experimentelle Studie",
+    "cohort": "Kohortenstudie",
+    "case_control": "Fall-Kontroll-Studie",
+    "cross_sectional": "Querschnittsstudie",
+    "case_report": "Fallbericht",
+    "review": "Review",
+    "protocol": "Studienprotokoll",
+    "other": "Andere",
+    "unknown": "Nicht klassifiziert"
+  },
+  "confidenceLabels": {
+    "higher": "Höhere Evidenzsicherheit",
+    "moderate": "Mittlere Evidenzsicherheit",
+    "limited": "Begrenzte Evidenzsicherheit",
+    "very_uncertain": "Sehr unsichere Evidenz",
+    "not_assessed": "Nicht bewertet"
+  },
+  "teaserPage": {
+    "heading": "Kostenloser Evidenz-Teaser",
+    "searchDateLabel": "Suchdatum",
+    "candidateLabel": "Gefundene Treffer",
+    "duplicatesLabel": "Duplikate entfernt",
+    "includedLabel": "Eingeschlossene Studien",
+    "studyTypesHeading": "Studientyp-Verteilung",
+    "topStudiesHeading": "Vorschau: wichtigste Studien",
+    "confidenceHeading": "Vorläufige Evidenzsicherheit",
+    "confidencePreliminaryNote": "Vorläufige, strukturelle Einschätzung auf Basis von Studienzahl und -design — noch keine vollständige inhaltliche Analyse (folgt mit der KI-gestützten Synthese in einem späteren Ausbauschritt).",
+    "sourcesUnavailableNote": "Folgende Quellen waren bei dieser Suche nicht erreichbar und fehlen daher in den Ergebnissen",
+    "screeningExplanation": "Studien wurden nach Relevanz, Studiendesign und Datenvollständigkeit ausgewählt; zurückgezogene Studien und reine Studienprotokolle wurden ausgeschlossen.",
+    "limitationsNoticeHeading": "Wichtige Limitationen vor dem Kauf",
+    "limitationsNoticeBody": "Die Evidenzlage zu dieser Frage ist aktuell begrenzt. Der vollständige Report macht diese Limitationen transparent, kann aber nicht mehr liefern, als die verfügbaren Studien hergeben.",
+    "noCoverageDisclosure": "Kein Anspruch auf vollständige Abdeckung der wissenschaftlichen Literatur.",
+    "unknownTitle": "(kein Titel verfügbar)"
+  },
+  "paywallPanel": {
+    "heading": "Vollständiger Report",
+    "contentsHeading": "Im Report enthalten",
+    "priceVersionLabel": "Preisversion",
+    "checkoutComingSoon": "Der Stripe-Checkout wird in einem der nächsten Ausbauschritte angebunden (Phase 7). Aktuell kann der vollständige Report noch nicht gekauft werden."
+  },
+  "notEligiblePage": {
+    "heading": "Für diese Frage können wir aktuell keinen Report anbieten",
+    "bodyInsufficientEvidence": "Wir haben zu wenige vergleichbare, aussagekräftige Studien gefunden, um einen fundierten Evidence Report zu erstellen.",
+    "refineHeading": "So geht es weiter",
+    "refineBody": "Versuche, deine Frage konkreter oder anders zu formulieren, oder wähle einen anderen Themenbereich.",
+    "refineCta": "Neue Frage stellen"
+  },
+  "searchFailedPage": {
+    "heading": "Die Quellen sind aktuell nicht erreichbar",
+    "body": "Bei der Suche konnten wir keine unserer wissenschaftlichen Datenquellen erreichen. Das liegt nicht an deiner Frage — bitte versuche es in ein paar Minuten erneut.",
+    "retryCta": "Erneut versuchen"
   }
 }

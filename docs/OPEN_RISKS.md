@@ -21,11 +21,15 @@ checkpoint (decision #15) and before each production-readiness gate.
    that policy's own instructions. The adapters were built against each API's
    documented response contract and unit-tested against hand-authored fixtures
    (`src/lib/source-adapters/fixtures/`, see that folder's `README.md`), not
-   recorded live responses. **Before Phase 4 is considered validated:** run each
-   adapter's `search()` against the real API from an environment with normal
-   network access (locally, or a Vercel preview) and confirm the actual response
-   shape matches what the fixtures assume. Owner: Erwin or next session with
-   network access.
+   recorded live responses. **Update (Phase 6):** the all-sources-unreachable
+   resilience path was confirmed live in this same sandbox — `/search` with a
+   confirmed domain correctly renders `SearchFailedNotice` rather than a
+   fabricated result, since all 4 adapters genuinely fail here. **Still open
+   before Phase 4/5 are considered fully validated:** run each adapter's
+   `search()` against the real API from an environment with normal network
+   access (locally, or a Vercel preview) and confirm the actual response shape
+   (and a real success-path teaser render) matches what the fixtures assume.
+   Owner: Erwin or next session with network access.
 
 ## Non-blocking, monitor through beta
 
