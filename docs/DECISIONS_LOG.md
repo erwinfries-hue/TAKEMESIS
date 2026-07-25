@@ -237,3 +237,28 @@ or personal data sent, consistent with the privacy rule in `12`.
   accidentally attach raw question text or PII.
 - `analytics_events` Supabase table (per `10`) still used as the source-of-truth
   internal record; PostHog is the operator-facing funnel/dashboard view.
+
+## 15. Closed-beta size, first milestone, and continue/optimize/pause/stop thresholds
+
+**Decision:**
+- Closed beta: 15 people from the founder's network, spread across at least 4 of
+  the 12 topic categories.
+- First evaluation milestone: 4 weeks after beta start, or as soon as 10 people have
+  each run at least 1 search — whichever comes first.
+- Thresholds:
+  - **Continue** (→ extended beta, 30–50): eligible-rate ≥ 40%, checkout conversion
+    (eligible → paid) ≥ 15%, no critical evidence errors reported.
+  - **Optimize** (same cohort, +2 weeks): eligible-rate 20–40% or conversion 5–15%,
+    or isolated fixable evidence errors.
+  - **Pause**: eligible-rate < 20% (core problem: topic/source coverage not viable)
+    or repeated evidence errors.
+  - **Stop**: critical safety/trust incident (e.g. fabricated source in a paid
+    report) or a legal problem.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Admin dashboard (`11`) must surface eligible-rate and checkout-conversion as
+  first-class metrics so this checkpoint can be evaluated without manual DB queries.
+- These thresholds are the last mandatory open decision from `02_CONCEPT_REVIEW_PROTOCOL.md`'s
+  list — once documented, `FINAL_CONCEPT_DECISIONS.md` and siblings can be compiled.
