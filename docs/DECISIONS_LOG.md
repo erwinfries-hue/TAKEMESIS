@@ -54,3 +54,24 @@ supplied visual references (onepager, premium-report reference images).
 - This example report becomes the first end-to-end validation case for the full
   pipeline (search → screening → synthesis → confidence → render) and should be
   built and manually verified early, not left to the end.
+
+## 4. Eligibility thresholds and minimum report depth
+
+**Decision:**
+- `eligible`: at least 5 comparable, relevant studies with an available result
+  (abstract or full text), OR at least 1 systematic review/meta-analysis plus at
+  least 2 individual studies for context.
+- `eligible_with_limitations`: 2–4 comparable studies, or enough studies but mostly
+  metadata/abstract-only without a clear result — report is sold, but with a
+  prominent limitations notice shown before checkout.
+- `not_eligible`: fewer than 2 comparable, result-bearing studies.
+- Minimum depth gate: the report must be able to fill at least 3 of the 9 mandatory
+  sections from `06_PREMIUM_REPORT_SPECIFICATION.md` with real (non-"not reported")
+  content, regardless of study count, or it is `not_eligible`.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Eligibility engine implements these as configurable constants (not hard-coded
+  magic numbers) so they can be tuned post-beta based on real conversion/refund data.
+- Paywall copy must reflect which threshold tier applies (full vs. limitations notice).
