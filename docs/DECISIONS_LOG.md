@@ -116,3 +116,19 @@ deaktivieren" control on the report page, without needing to contact support.
   UTC day boundary or rolling 24h window — implementation detail, not a concept
   decision, deferred to implementation.
 - Limit-exceeded UX must fail safely (clear message, no stack trace) per `05`.
+
+## 8. Maximum included studies per report
+
+**Decision:** Maximum 15 studies in the detailed comparison/study-profile sections,
+selected by the ranking signals defined in `07_EVIDENCE_SOURCES_RETRIEVAL_AND_ELIGIBILITY.md`
+(relevance, study design, completeness, recency). When more relevant studies exist
+than the cap, the report transparently discloses "X of Y found studies covered in
+detail" with the full candidate list available in the source appendix.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Ranking/selection step must run before AI synthesis input assembly to keep AI
+  input bounded (ties into `AI_MAX_INPUT_CHARS` cost cap already in `.env.example`).
+- Source appendix (section 9 of `06`) must still list all screened/included sources,
+  not just the top-15 detailed subset.
