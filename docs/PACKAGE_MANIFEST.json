@@ -1,0 +1,19 @@
+{
+  "package": "TEKMESIS_CLAUDE_FINAL_MASTER_PACKAGE",
+  "version": "4.0",
+  "architecture": {
+    "domain": "tekmesis.com",
+    "registrar_dns_email": "Hostpoint",
+    "application": "Vercel",
+    "database": "Supabase",
+    "payments": "Stripe",
+    "source_code": "GitHub"
+  },
+  "positioning": "Broad evidence platform for interested private individuals; not health-only.",
+  "price": {
+    "amount": 9.9,
+    "currency": "CHF",
+    "type": "one_time"
+  },
+  "visual_assets_are_factual_sources": false
+}
