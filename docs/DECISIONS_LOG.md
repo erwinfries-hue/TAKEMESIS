@@ -221,3 +221,19 @@ correspondence.
 - `EMAIL_PROVIDER=resend` in `.env.example`/environment config.
 - Sending-domain DNS records (SPF/DKIM) for Resend must be added at Hostpoint
   without disturbing existing MX/mail records (per `16_DEPLOYMENT_TEKMESIS_DOMAIN_AND_AXIA4.md`).
+
+## 14. Analytics provider
+
+**Decision:** PostHog, EU Cloud region. Used to implement the funnel events defined
+in `11_ADMIN_ANALYTICS_EMAIL_AND_SUPPORT.md` (landing_viewed through refunded), with
+event payloads restricted to event name + anonymized/session ID — no raw questions
+or personal data sent, consistent with the privacy rule in `12`.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- `NEXT_PUBLIC_ANALYTICS_PROVIDER=posthog` in environment config.
+- Event schema/whitelist defined once in `lib/analytics/` so no call site can
+  accidentally attach raw question text or PII.
+- `analytics_events` Supabase table (per `10`) still used as the source-of-truth
+  internal record; PostHog is the operator-facing funnel/dashboard view.
