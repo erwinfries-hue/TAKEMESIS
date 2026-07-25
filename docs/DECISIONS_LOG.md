@@ -165,3 +165,29 @@ public SLA in beta.
   Werktagen" consistently.
 - Admin dashboard should flag safety-related issue reports distinctly from routine
   refund/correction requests so they surface first without needing a public SLA.
+
+## 11. Legal seller entity and tax status
+
+**Decision (human-provided, stop-condition item):**
+- Legal seller: AXIA4 GROUP, Einzelunternehmen von Erwin Fries, Hofmatt 9, 6332
+  Hagendorn, Schweiz.
+- Swiss VAT (MWST) registration: not yet registered (business still in formation /
+  early stage).
+- EU cross-border (DACH OSS) VAT treatment: not yet clarified — pending review with
+  Treuhänder (tax advisor).
+
+**Date:** 2026-07-25
+
+**Status:** PARTIALLY OPEN — seller identity is final and can be used in `/legal`,
+`/privacy`, Stripe account setup, and invoices now. The EU cross-border VAT question
+remains an explicit blocking item before **live** Stripe mode / real cross-border
+sales, tracked in `OPEN_RISKS.md`. Test-mode Stripe and beta development are not
+blocked by this.
+
+**Follow-on implications:**
+- `/legal` page uses the seller identity above.
+- Stripe account (test mode now) can be configured with this legal entity.
+- A go-live checklist item is added: "Treuhänder confirmation on Swiss MWST
+  registration threshold and EU OSS obligation received" — required before enabling
+  Stripe live mode and before accepting real payments from DE/AT customers.
+- Interim price wording (until MWST status is resolved) needed as next decision.
