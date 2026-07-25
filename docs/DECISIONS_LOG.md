@@ -191,3 +191,19 @@ blocked by this.
   registration threshold and EU OSS obligation received" — required before enabling
   Stripe live mode and before accepting real payments from DE/AT customers.
 - Interim price wording (until MWST status is resolved) needed as next decision.
+
+## 12. Interim tax wording
+
+**Decision:** Until the Treuhänder confirms VAT obligations, price copy reads:
+"CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung /
+Gründungsphase)." This appears on landing page, checkout, and `/legal`, sourced from
+a single shared text constant so it can be updated centrally once VAT status is
+confirmed.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Price/legal copy lives in one i18n string (DE/EN) referenced everywhere price is
+  shown, not duplicated across pages.
+- Go-live checklist item: update this string (and Stripe tax settings if applicable)
+  once Treuhänder confirms status — tracked alongside decision #11 in `OPEN_RISKS.md`.
