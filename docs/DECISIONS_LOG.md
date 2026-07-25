@@ -75,3 +75,17 @@ supplied visual references (onepager, premium-report reference images).
 - Eligibility engine implements these as configurable constants (not hard-coded
   magic numbers) so they can be tuned post-beta based on real conversion/refund data.
 - Paywall copy must reflect which threshold tier applies (full vs. limitations notice).
+
+## 5. Paid-report retention period
+
+**Decision:** Paid reports remain accessible via the secure link for 12 months after
+creation, then are automatically deleted/revoked. Users may request earlier deletion
+at any time via the support/deletion workflow, independent of this default.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Report email includes a notice of the 12-month retention window.
+- `/privacy` page states this retention period explicitly.
+- Scheduled job/cron needed to expire and purge reports past 12 months (report_jobs /
+  admin visibility per `10_TECHNICAL_ARCHITECTURE_AND_DATA_MODEL.md`).
