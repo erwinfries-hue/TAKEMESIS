@@ -2,7 +2,8 @@
 
 ## Current phase
 
-Phase 1 — Foundation: **complete**. Phase 2 (topic inspiration and landing) next.
+Phase 2 — Topic inspiration and landing: **complete**. Phase 3 (question
+interpretation) next.
 
 ## Completed
 
@@ -43,12 +44,41 @@ Phase 1 — Foundation: **complete**. Phase 2 (topic inspiration and landing) ne
 - Minimal branded placeholder home page (not the final landing page — that's
   Phase 2) proves the design tokens, i18n, and layout shell work together.
 
+### Phase 2 — Topic inspiration and landing
+- `src/content/topics.ts`: all 12 categories (decision #1), localized DE/EN, each
+  with description, 4–8 example questions, limitations, risk profile, and source
+  route (matching `SOURCE_COVERAGE_MATRIX.md`); `elevated` risk profile on
+  Gesundheit & Prävention and Kinder/Erziehung (decision #2).
+- Shared site chrome (`SiteHeader`, `SiteFooter`) moved into the root layout;
+  reusable `TopicCard`, `ExampleQuestionChip`, `OwnQuestionForm` components per
+  `13_DESIGN_SYSTEM_BRAND_AND_ASSETS.md`.
+- Full landing page with all 10 required sections from
+  `05_UX_USER_FLOWS_AND_PAGES.md` (brand/promise, topic grid teaser, own-question
+  input, example-report preview, how-it-works, free-vs-paid, source transparency,
+  trust/beta, price/no-subscription, footer/legal).
+- `/topics`: full category grid with all example questions, own-question form.
+- `/example-report`: honest "in preparation" placeholder naming the curated topic
+  (decision #3); real content is Phase 8, once source adapters exist.
+- `/methodology`, `/sources` (source-routing table sourced from the same topics
+  content module), `/privacy`, `/legal` (seller identity from decision #11, interim
+  tax wording from decision #12), `/about`.
+- Example-question chips deep-link into the own-question form with the question
+  prefilled (`?q=...`) — a real, working convenience, not a simulated backend;
+  no fake question-processing is implied anywhere in the UI copy.
+- Playwright + axe caught and fixed 2 real WCAG AA contrast violations (teal-500/
+  neutral-400 as body text) during this phase; both now documented in
+  `globals.css` as decorative-only shades. Also caught and fixed a broken
+  accessible-label association and a stale-state bug in `OwnQuestionForm` when
+  navigating between chips on the same page.
+- All 24 unit/integration tests and all 20 Playwright specs (incl. 8 a11y scans)
+  pass; `npm run verify` passes end-to-end.
+
 ## Not started
 
-Phases 2–13 from `IMPLEMENTATION_PLAN.md`: topic taxonomy/landing, question
-interpretation, source adapters, search/ranking/screening, eligibility engine,
-Stripe/report lifecycle, premium report renderer, email/admin/analytics,
-hardening, preview beta, production prep, production launch.
+Phases 3–13 from `IMPLEMENTATION_PLAN.md`: question interpretation, source
+adapters, search/ranking/screening, eligibility engine, Stripe/report lifecycle,
+premium report renderer, email/admin/analytics, hardening, preview beta,
+production prep, production launch.
 
 ## Blocking item tracked for later (does not block continued implementation)
 
@@ -57,6 +87,6 @@ Blocks live Stripe mode and real payments only — not the beta build itself.
 
 ## Next step
 
-Phase 2: topic taxonomy content, category cards, example-question chips,
-own-question input, curated example-report placeholder, methodology/trust/legal
-placeholder pages — per `IMPLEMENTATION_PLAN.md`.
+Phase 3: domain/risk classification (all 12 categories plus the independent
+high-risk detector from decision #2), query clarification flow (confirm/edit/
+alternatives), unsafe/unsupported handling — per `IMPLEMENTATION_PLAN.md`.

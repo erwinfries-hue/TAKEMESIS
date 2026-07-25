@@ -4,10 +4,203 @@
     "claim": "FROM STUDIES TO CLARITY.",
     "parent": "Ein Produkt von AXIA4 Digital"
   },
+  "nav": {
+    "topics": "Themen",
+    "methodology": "Methodik",
+    "sources": "Quellen",
+    "exampleReport": "Beispiel-Report",
+    "about": "Über TEKMESIS",
+    "privacy": "Datenschutz",
+    "legal": "Impressum & AGB"
+  },
   "home": {
     "description": "TEKMESIS hilft wissbegierigen Privatpersonen, wissenschaftliche Studien zu persönlichen Fragen und Entscheidungen im Alltag zu finden, zu vergleichen und verständlich einzuordnen.",
     "comingSoon": "Die Plattform befindet sich im Aufbau.",
-    "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo."
+    "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo.",
+    "heroCta": "Themen entdecken",
+    "topicsTeaserHeading": "Breite Themenvielfalt statt Gesundheitsfokus",
+    "topicsTeaserIntro": "Zwölf Lebensbereiche, von Gesundheit bis Technologie — wähle einen Bereich oder stelle direkt deine eigene Frage.",
+    "topicsTeaserCta": "Alle Themen ansehen",
+    "howItWorksHeading": "So funktioniert es",
+    "howItWorksSteps": [
+      "Frage eingeben",
+      "Frage präzisieren",
+      "Studien suchen",
+      "Eignung prüfen",
+      "Kostenlosen Teaser anzeigen",
+      "CHF 9.90 bezahlen",
+      "Vollständigen Evidence Report erhalten"
+    ],
+    "howItWorksNote": "Keine individuelle Beratung. Evidenzbasierte Orientierung für persönliche Fragestellungen.",
+    "freeVsPaidHeading": "Kostenlos vs. Vollständiger Report",
+    "freeFeatures": [
+      "Interpretierte Fragestellung",
+      "Durchsuchte Datenbanken & Suchstatus",
+      "Anzahl geeigneter / eingeschlossener Studien",
+      "Studientitel & Quellenlinks",
+      "Kurzer Evidenz-Teaser",
+      "Vorschau der Vergleichstabelle"
+    ],
+    "paidFeatures": [
+      "Vollständiger Studienvergleich",
+      "Evidenzsicherheit mit Begründung",
+      "Übereinstimmungen & Widersprüche",
+      "Limitationen & Unsicherheiten",
+      "Druckfreundliche Reportansicht",
+      "Sicherer Report-Link & E-Mail"
+    ],
+    "freeLabel": "Kostenlos",
+    "paidLabel": "Vollständiger Report",
+    "sourceTransparencyHeading": "Transparente Quellen",
+    "sourceTransparencyBody": "Jede Antwort verweist auf echte, überprüfbare Quellen aus anerkannten wissenschaftlichen Datenbanken — nie auf erfundene Studien.",
+    "sourceTransparencyCta": "Quellenrouting ansehen",
+    "trustHeading": "Vertrauen & Beta",
+    "trustBody": "TEKMESIS befindet sich in der geschlossenen Beta-Phase. Wir sammeln bewusst wenige Daten, verkaufen keine Reports zu ungeeigneten Fragen und legen unsere Limitationen offen.",
+    "trustPoints": [
+      "Kein Pflicht-Konto",
+      "Keine Gesundheitsprofile",
+      "Warnhinweis vor sensiblen Eingaben",
+      "Report jederzeit selbst deaktivierbar"
+    ]
+  },
+  "ownQuestionForm": {
+    "heading": "Eigene Frage stellen",
+    "label": "Deine Frage",
+    "placeholder": "z. B. Welche Lernmethode verbessert den Lernerfolg?",
+    "submit": "Frage einordnen",
+    "helper": "Die automatische Fragenanalyse (Themen- und Risikoerkennung) folgt in einem der nächsten Ausbauschritte. Deine Frage wird aktuell noch nicht verarbeitet oder gespeichert.",
+    "warning": "Bitte geben Sie keine Namen, Dokumente oder vertraulichen persönlichen Daten ein.",
+    "warningHealth": "Bitte geben Sie keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten ein."
+  },
+  "topicsPage": {
+    "heading": "Themen entdecken",
+    "intro": "Wähle einen Bereich als Inspiration — die Kategorie ist eine Orientierung, keine starre Einschränkung. Nicht jede Frage lässt sich wissenschaftlich fundiert beantworten; das prüfen wir für dich, bevor etwas verkauft wird.",
+    "examplesHeading": "Beispielfragen",
+    "limitationsHeading": "Grenzen dieses Bereichs",
+    "sourceRouteHeading": "Quellenrouting",
+    "elevatedRiskBadge": "Hochrisiko-Unterthemen eingeschränkt",
+    "yourQuestionPrefix": "Deine eingegebene Frage:"
+  },
+  "exampleReportPage": {
+    "heading": "Beispiel-Report",
+    "topicLabel": "Beispielfrage",
+    "topicQuestion": "Welche Lernmethode verbessert den Lernerfolg?",
+    "body": "Der vollständig verifizierte Beispiel-Report zu dieser Frage wird gebaut, sobald die echten Quellen-Adapter angebunden sind (siehe docs/IMPLEMENTATION_PLAN.md, Phase 8). Er verwendet ausschliesslich real recherchierte, geprüfte Studien — keine erfundenen oder aus Design-Referenzen übernommenen Daten.",
+    "status": "In Vorbereitung"
+  },
+  "methodologyPage": {
+    "heading": "Methodik",
+    "intro": "So entsteht ein TEKMESIS Evidence Report — Schritt für Schritt, transparent und nachvollziehbar.",
+    "steps": [
+      {
+        "title": "Frage eingeben",
+        "body": "Du wählst ein Thema oder formulierst deine eigene Frage."
+      },
+      {
+        "title": "Frage präzisieren",
+        "body": "TEKMESIS schlägt eine recherchierbare Formulierung vor, die du bestätigst oder anpasst."
+      },
+      {
+        "title": "Datenquellen wählen",
+        "body": "Je nach Thema werden passende wissenschaftliche Datenbanken angesteuert (siehe Quellenrouting)."
+      },
+      {
+        "title": "Studien suchen & prüfen",
+        "body": "Treffer werden dedupliziert, nach Relevanz und Studiendesign eingeordnet und auf Eignung geprüft."
+      },
+      {
+        "title": "Eignung bewerten",
+        "body": "Nur ausreichend belegte, vergleichbare Fragestellungen werden als Report angeboten."
+      },
+      {
+        "title": "Kostenlosen Teaser anzeigen",
+        "body": "Du siehst reale Suchstatistiken, Quellen und eine erste Einordnung, bevor du bezahlst."
+      },
+      {
+        "title": "Vollständigen Report erstellen",
+        "body": "Nach Zahlung wird der vollständige, strukturierte Evidence Report generiert und geprüft."
+      }
+    ],
+    "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung."
+  },
+  "sourcesPage": {
+    "heading": "Quellen & Datenbanken",
+    "intro": "TEKMESIS nutzt ausschliesslich offizielle, überprüfbare wissenschaftliche Datenquellen — kein Scraping, keine Umgehung von Bezahlschranken, kein Kopieren geschützter Volltexte.",
+    "layersHeading": "Ebenen der Quellenrecherche",
+    "layers": [
+      {
+        "title": "Breite Recherche",
+        "body": "OpenAlex — primärer Recherche-Graph über alle 12 Themenbereiche."
+      },
+      {
+        "title": "Metadaten-Verifikation",
+        "body": "Crossref — DOI- und Verlagsmetadaten zur Anreicherung jedes Treffers."
+      },
+      {
+        "title": "Biomedizinische Anreicherung",
+        "body": "Europe PMC & NCBI E-utilities — für gesundheitsnahe Themen und Fragen."
+      },
+      {
+        "title": "Inhaltsebene",
+        "body": "Abstracts und rechtlich frei zugänglicher Volltext, wo verfügbar."
+      }
+    ],
+    "routingHeading": "Quellenrouting nach Thema",
+    "honestyHeading": "Ehrliche Abdeckung",
+    "honestyBody": "Jeder Report nennt durchsuchte und nicht verfügbare Quellen, das Suchdatum sowie bekannte Limitationen. TEKMESIS beansprucht nie eine vollständige Abdeckung der Literatur."
+  },
+  "privacyPage": {
+    "heading": "Datenschutz",
+    "intro": "TEKMESIS ist so gebaut, dass so wenig personenbezogene Daten wie möglich anfallen.",
+    "sections": [
+      {
+        "title": "Kein Pflichtkonto",
+        "body": "Du kannst TEKMESIS ohne Registrierung nutzen. Der Zugriff auf einen bezahlten Report erfolgt über einen sicheren, nicht erratbaren Link."
+      },
+      {
+        "title": "Warnhinweis",
+        "body": "Bitte gib keine Namen, Dokumente oder vertrauliche persönliche Daten ein. Bei Gesundheitsthemen: keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten."
+      },
+      {
+        "title": "Aufbewahrung",
+        "body": "Unbezahlte Entwürfe: 7 Tage. Bezahlte Reports: 12 Monate, danach automatische Löschung. Du kannst jederzeit eine frühere Löschung verlangen."
+      },
+      {
+        "title": "Link-Teilen",
+        "body": "Jede Person mit deinem Report-Link kann den Report ansehen. Du kannst den Link jederzeit selbst deaktivieren."
+      },
+      {
+        "title": "Keine Rohfragen im Analytics",
+        "body": "Wir erfassen anonymisierte Nutzungs-Events (z. B. „Report bereit\"), aber keine Rohtexte deiner Fragen."
+      },
+      {
+        "title": "Auftragsverarbeiter",
+        "body": "Zahlungsabwicklung über Stripe, Transaktions-E-Mail über Resend, Datenhaltung über Supabase, Analytics über PostHog (EU-Region)."
+      }
+    ]
+  },
+  "legalPage": {
+    "heading": "Impressum & AGB",
+    "sellerHeading": "Anbieterin",
+    "seller": [
+      "AXIA4 GROUP, Einzelunternehmen von Erwin Fries",
+      "Hofmatt 9, 6332 Hagendorn, Schweiz"
+    ],
+    "contactHeading": "Kontakt",
+    "supportEmail": "support@tekmesis.com",
+    "responseTime": "Antwort innerhalb von 3–5 Werktagen.",
+    "priceHeading": "Preis",
+    "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo.",
+    "taxNote": "Die Klärung der grenzüberschreitenden Mehrwertsteuerpflicht (DACH) mit dem Treuhänder ist im Gang. Diese Seite wird nach Abschluss aktualisiert.",
+    "disclaimerHeading": "Haftungsausschluss",
+    "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung, Diagnose oder Behandlung."
+  },
+  "aboutPage": {
+    "heading": "Über TEKMESIS",
+    "body": "TEKMESIS hilft wissbegierigen Privatpersonen, wissenschaftliche Studien zu persönlichen Fragen und Entscheidungen im Alltag zu finden, zu vergleichen und verständlich einzuordnen. Aus einer konkreten Fragestellung entsteht ein transparenter Evidence Report mit sichtbaren Quellen, Studienvergleichen und einer klaren Darstellung von Erkenntnissen, Limitationen und Unsicherheiten.",
+    "axia4Heading": "AXIA4 Digital",
+    "axia4Body": "TEKMESIS ist ein Produkt von AXIA4 Digital.",
+    "axia4Cta": "AXIA4 Digital entdecken"
   },
   "footer": {
     "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung."

@@ -10,7 +10,7 @@ test("home page renders the TEKMESIS brand claim", async ({ page }) => {
 test("locale switcher toggles between DE and EN", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");
-  await page.getByRole("button", { name: "EN" }).click();
+  await page.getByRole("button", { name: "EN", exact: true }).click();
   await expect(page.locator("html")).toHaveAttribute("lang", "en");
 });
 

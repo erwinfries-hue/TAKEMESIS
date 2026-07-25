@@ -4,10 +4,200 @@
     "claim": "FROM STUDIES TO CLARITY.",
     "parent": "A product of AXIA4 Digital"
   },
+  "nav": {
+    "topics": "Topics",
+    "methodology": "Methodology",
+    "sources": "Sources",
+    "exampleReport": "Example Report",
+    "about": "About TEKMESIS",
+    "privacy": "Privacy",
+    "legal": "Legal & Terms"
+  },
   "home": {
     "description": "TEKMESIS helps curious individuals find, compare, and understand scientific evidence for personal questions and everyday decisions.",
     "comingSoon": "The platform is under construction.",
-    "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription."
+    "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription.",
+    "heroCta": "Explore topics",
+    "topicsTeaserHeading": "Broad topic coverage, not just health",
+    "topicsTeaserIntro": "Twelve life domains, from health to technology — pick a domain or write your own question.",
+    "topicsTeaserCta": "See all topics",
+    "howItWorksHeading": "How it works",
+    "howItWorksSteps": [
+      "Enter a question",
+      "Refine the question",
+      "Search studies",
+      "Check eligibility",
+      "See the free teaser",
+      "Pay CHF 9.90",
+      "Get the full evidence report"
+    ],
+    "howItWorksNote": "No individual advice. Evidence-based orientation for personal questions.",
+    "freeVsPaidHeading": "Free vs. Full Report",
+    "freeFeatures": [
+      "Interpreted research question",
+      "Databases searched & search status",
+      "Number of eligible / included studies",
+      "Study titles & source links",
+      "Short evidence teaser",
+      "Preview of the comparison table"
+    ],
+    "paidFeatures": [
+      "Full study comparison",
+      "Evidence confidence with reasoning",
+      "Agreements & contradictions",
+      "Limitations & uncertainties",
+      "Print-friendly report view",
+      "Secure report link & email"
+    ],
+    "freeLabel": "Free",
+    "paidLabel": "Full Report",
+    "sourceTransparencyHeading": "Transparent sources",
+    "sourceTransparencyBody": "Every answer links to real, verifiable sources from recognized scholarly databases — never to invented studies.",
+    "sourceTransparencyCta": "See source routing",
+    "trustHeading": "Trust & Beta",
+    "trustBody": "TEKMESIS is in closed beta. We deliberately collect little data, never sell reports for unsuitable questions, and disclose our limitations openly.",
+    "trustPoints": [
+      "No mandatory account",
+      "No health profiles",
+      "Warning before sensitive input",
+      "Self-service report deactivation"
+    ]
+  },
+  "ownQuestionForm": {
+    "heading": "Ask your own question",
+    "label": "Your question",
+    "placeholder": "e.g. Which learning method improves learning outcomes?",
+    "submit": "Classify question",
+    "helper": "Automatic question analysis (topic and risk detection) is coming in a later build step. Your question is not processed or stored yet.",
+    "warning": "Please do not enter names, documents, or confidential personal data.",
+    "warningHealth": "Please do not enter individual diagnoses, medication lists, or health records."
+  },
+  "topicsPage": {
+    "heading": "Explore topics",
+    "intro": "Pick a domain as inspiration — the category is orientation, not a rigid restriction. Not every question can be answered with solid science; we check that for you before anything is sold.",
+    "examplesHeading": "Example questions",
+    "limitationsHeading": "Limits of this domain",
+    "sourceRouteHeading": "Source routing",
+    "elevatedRiskBadge": "High-risk sub-topics restricted",
+    "yourQuestionPrefix": "Your entered question:"
+  },
+  "exampleReportPage": {
+    "heading": "Example Report",
+    "topicLabel": "Example question",
+    "topicQuestion": "Which learning method improves learning outcomes?",
+    "body": "The fully verified example report for this question will be built once the real source adapters are connected (see docs/IMPLEMENTATION_PLAN.md, Phase 8). It will use only genuinely researched, verified studies — never invented data or facts copied from design references.",
+    "status": "In preparation"
+  },
+  "methodologyPage": {
+    "heading": "Methodology",
+    "intro": "How a TEKMESIS Evidence Report is built — step by step, transparent and traceable.",
+    "steps": [
+      { "title": "Enter a question", "body": "You pick a topic or write your own question." },
+      {
+        "title": "Refine the question",
+        "body": "TEKMESIS proposes a researchable phrasing, which you confirm or edit."
+      },
+      {
+        "title": "Select data sources",
+        "body": "Depending on the topic, suitable scholarly databases are queried (see source routing)."
+      },
+      {
+        "title": "Search & screen studies",
+        "body": "Results are deduplicated, ranked by relevance and study design, and checked for eligibility."
+      },
+      {
+        "title": "Assess eligibility",
+        "body": "Only sufficiently supported, comparable questions are offered as a report."
+      },
+      {
+        "title": "Show the free teaser",
+        "body": "You see real search statistics, sources, and an initial orientation before you pay."
+      },
+      {
+        "title": "Generate the full report",
+        "body": "After payment, the full structured evidence report is generated and validated."
+      }
+    ],
+    "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."
+  },
+  "sourcesPage": {
+    "heading": "Sources & Databases",
+    "intro": "TEKMESIS uses only official, verifiable scholarly data sources — no scraping, no paywall bypass, no copying of protected full text.",
+    "layersHeading": "Layers of source retrieval",
+    "layers": [
+      {
+        "title": "Broad discovery",
+        "body": "OpenAlex — primary discovery graph across all 12 topic domains."
+      },
+      {
+        "title": "Metadata verification",
+        "body": "Crossref — DOI and publisher metadata enriching every candidate record."
+      },
+      {
+        "title": "Biomedical enrichment",
+        "body": "Europe PMC & NCBI E-utilities — for health-adjacent topics and questions."
+      },
+      {
+        "title": "Content layer",
+        "body": "Abstracts and legally available open-access full text, where available."
+      }
+    ],
+    "routingHeading": "Source routing by topic",
+    "honestyHeading": "Honest coverage",
+    "honestyBody": "Every report states which sources were searched and which were unavailable, the search date, and known limitations. TEKMESIS never claims exhaustive coverage of the literature."
+  },
+  "privacyPage": {
+    "heading": "Privacy",
+    "intro": "TEKMESIS is built to collect as little personal data as possible.",
+    "sections": [
+      {
+        "title": "No mandatory account",
+        "body": "You can use TEKMESIS without registering. Access to a paid report is via a secure, non-guessable link."
+      },
+      {
+        "title": "Input warning",
+        "body": "Please do not enter names, documents, or confidential personal data. For health topics: no individual diagnoses, medication lists, or health records."
+      },
+      {
+        "title": "Retention",
+        "body": "Unpaid drafts: 7 days. Paid reports: 12 months, then automatic deletion. You can request earlier deletion at any time."
+      },
+      {
+        "title": "Link sharing",
+        "body": "Anyone with your report link can view the report. You can deactivate the link yourself at any time."
+      },
+      {
+        "title": "No raw questions in analytics",
+        "body": "We record anonymized usage events (e.g. \"report ready\"), but never the raw text of your questions."
+      },
+      {
+        "title": "Processors",
+        "body": "Payments via Stripe, transactional email via Resend, data storage via Supabase, analytics via PostHog (EU region)."
+      }
+    ]
+  },
+  "legalPage": {
+    "heading": "Legal & Terms",
+    "sellerHeading": "Seller",
+    "seller": [
+      "AXIA4 GROUP, sole proprietorship of Erwin Fries",
+      "Hofmatt 9, 6332 Hagendorn, Switzerland"
+    ],
+    "contactHeading": "Contact",
+    "supportEmail": "support@tekmesis.com",
+    "responseTime": "Response within 3–5 business days.",
+    "priceHeading": "Price",
+    "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription.",
+    "taxNote": "Clarification of cross-border VAT obligations (DACH) with our tax advisor is in progress. This page will be updated once resolved.",
+    "disclaimerHeading": "Disclaimer",
+    "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice, diagnosis, or treatment."
+  },
+  "aboutPage": {
+    "heading": "About TEKMESIS",
+    "body": "TEKMESIS helps curious individuals find, compare, and understand scientific evidence for personal questions and everyday decisions. It turns a question into a transparent Evidence Report with visible sources, structured comparisons, and a clear explanation of findings, limitations, and uncertainty.",
+    "axia4Heading": "AXIA4 Digital",
+    "axia4Body": "TEKMESIS is a product of AXIA4 Digital.",
+    "axia4Cta": "Discover AXIA4 Digital"
   },
   "footer": {
     "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."
