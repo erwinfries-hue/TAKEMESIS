@@ -207,3 +207,17 @@ confirmed.
   shown, not duplicated across pages.
 - Go-live checklist item: update this string (and Stripe tax settings if applicable)
   once Treuhänder confirms status — tracked alongside decision #11 in `OPEN_RISKS.md`.
+
+## 13. Transactional email provider
+
+**Decision:** Resend. Domain-verified sending from `tekmesis.com` (DNS records set
+at Hostpoint), used for report-ready, payment-confirmation, delayed/failed, and
+refund emails. Hostpoint mailboxes (`info@`, `support@`) remain unchanged for human
+correspondence.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- `EMAIL_PROVIDER=resend` in `.env.example`/environment config.
+- Sending-domain DNS records (SPF/DKIM) for Resend must be added at Hostpoint
+  without disturbing existing MX/mail records (per `16_DEPLOYMENT_TEKMESIS_DOMAIN_AND_AXIA4.md`).
