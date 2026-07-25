@@ -149,3 +149,19 @@ decision #7) is an acceptable, low, capped cost of customer acquisition at beta 
   in `.env.example` stand as configured.
 - Admin cost-tracking dashboard (`11`) should still record actual AI spend per
   report from day one so this estimate can be validated against real usage.
+
+## 10. Support address and response-time commitment
+
+**Decision:** Support address is `support@tekmesis.com`. Public response-time
+commitment for regular requests (refund, correction, deletion) is 3–5 business days,
+reflecting single-founder capacity. Safety-critical reports (e.g. a dangerously
+wrong claim in a report) are handled with internal priority but without a separate
+public SLA in beta.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- `/legal`, `/privacy`, and delivery emails state "Antwort innerhalb von 3–5
+  Werktagen" consistently.
+- Admin dashboard should flag safety-related issue reports distinctly from routine
+  refund/correction requests so they surface first without needing a public SLA.
