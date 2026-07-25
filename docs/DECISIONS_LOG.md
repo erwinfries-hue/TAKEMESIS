@@ -132,3 +132,20 @@ detail" with the full candidate list available in the source appendix.
   input bounded (ties into `AI_MAX_INPUT_CHARS` cost cap already in `.env.example`).
 - Source appendix (section 9 of `06`) must still list all screened/included sources,
   not just the top-15 detailed subset.
+
+## 9. Price confirmation after cost estimate
+
+**Decision:** CHF 9.90 one-time price is confirmed as final for beta, based on a
+rough cost estimate: external scholarly APIs (OpenAlex, Crossref, Europe PMC, NCBI)
+are free/public; variable cost per paid report is AI calls (~CHF 0.30–0.80) plus
+Stripe fee (~CHF 0.59), totaling roughly CHF 1.00–1.50 per sold report — an estimated
+85–90% contribution margin. Free-teaser AI cost (bounded by the 5/day/IP limit from
+decision #7) is an acceptable, low, capped cost of customer acquisition at beta scale.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- `REPORT_PRICE_MINOR=990`, `REPORT_CURRENCY=CHF`, `REPORT_PRICE_VERSION=MVP-01`
+  in `.env.example` stand as configured.
+- Admin cost-tracking dashboard (`11`) should still record actual AI spend per
+  report from day one so this estimate can be validated against real usage.
