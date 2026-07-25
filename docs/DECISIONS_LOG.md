@@ -89,3 +89,18 @@ at any time via the support/deletion workflow, independent of this default.
 - `/privacy` page states this retention period explicitly.
 - Scheduled job/cron needed to expire and purge reports past 12 months (report_jobs /
   admin visibility per `10_TECHNICAL_ARCHITECTURE_AND_DATA_MODEL.md`).
+
+## 6. Secure link sharing policy
+
+**Decision:** Sharing the report link is explicitly permitted (no technical
+restriction). A clear, visible warning is shown on the report itself: "Jede Person
+mit diesem Link kann den Report ansehen. Teilen Sie den Link nur mit Personen, denen
+Sie vertrauen." The buyer can self-revoke the link at any time via a "Link
+deaktivieren" control on the report page, without needing to contact support.
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Report page needs a self-service revoke action (distinct from admin revoke),
+  writing to the same report status field admin revocation uses.
+- Warning copy must appear both in the report UI and in the delivery email.
