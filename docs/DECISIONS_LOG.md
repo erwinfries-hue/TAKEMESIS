@@ -37,3 +37,20 @@ orientation plus a pointer to qualified professional help, per `05_UX_USER_FLOWS
   domain classification, evaluated for every question regardless of chosen category.
 - `restricted_high_risk` must be unconditionally non-payable (already required by
   acceptance criteria in `14`).
+
+## 3. Public example-report topic
+
+**Decision:** The curated public example report (landing page + `/example-report`)
+answers: "Welche Lernmethode verbessert den Lernerfolg – Active Recall und Spaced
+Repetition im Vergleich zu Wiederlesen?" — matching the topic already used in the
+supplied visual references (onepager, premium-report reference images).
+
+**Date:** 2026-07-25
+
+**Follow-on implications:**
+- Actual studies must be sourced live via the real adapters (OpenAlex/Crossref/
+  Europe PMC etc.) and verified — the study names/numbers shown in the reference
+  images are illustrative only and must not be copied as fact (per `20`).
+- This example report becomes the first end-to-end validation case for the full
+  pipeline (search → screening → synthesis → confidence → render) and should be
+  built and manually verified early, not left to the end.
