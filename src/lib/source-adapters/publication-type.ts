@@ -11,6 +11,20 @@ import type { PublicationType } from "./types";
 export function inferPublicationType(...texts: Array<string | null | undefined>): PublicationType {
   const combined = texts.filter(Boolean).join(" ").toLowerCase();
 
+  // Checked first: a "systematic review protocol" or "protocol for a
+  // randomized controlled trial" is a protocol, not a completed study —
+  // per the evidence-safety rule that protocols are not outcome studies.
+  if (
+    combined.includes("study protocol") ||
+    combined.includes("trial protocol") ||
+    combined.includes("protocol for a") ||
+    combined.includes("protocol for an") ||
+    /\bprotocol\b.*\b(randomized|randomised|systematic review|trial)\b/.test(combined) ||
+    /\b(randomized|randomised|systematic review|trial)\b.*\bprotocol\b/.test(combined)
+  ) {
+    return "protocol";
+  }
+
   if (combined.includes("meta-analysis") || combined.includes("meta analysis")) {
     return "meta_analysis";
   }

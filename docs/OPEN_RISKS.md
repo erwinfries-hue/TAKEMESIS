@@ -64,6 +64,14 @@ checkpoint (decision #15) and before each production-readiness gate.
     additional `efetch` call with XML parsing — deliberately deferred (P1) rather
     than half-built. Europe PMC and OpenAlex cover abstract-level biomedical/broad
     content in the meantime.
+12. **Screening only excludes what's mechanically computable.** `retracted`,
+    `protocol_only`, and `insufficient_detail` are implemented; the doc's other
+    exclusion reasons (wrong topic, wrong population/context, non-comparable
+    intervention, insufficient result detail beyond a missing title, unsupported
+    language/content) need real content understanding — not built until AI-based
+    interpretation exists. Until then, some studies that a human screener would
+    exclude will pass through to ranking/eligibility; the eligibility engine
+    (Phase 6) must not assume screening has already filtered for topical fit.
 
 ## Not risks, but explicit go/no-go gates already defined
 

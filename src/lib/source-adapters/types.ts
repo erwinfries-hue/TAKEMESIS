@@ -21,6 +21,7 @@ export type PublicationType =
   | "cross_sectional"
   | "case_report"
   | "review"
+  | "protocol"
   | "other"
   | "unknown";
 

@@ -2,8 +2,8 @@
 
 ## Current phase
 
-Phase 4 — Source adapters: **complete** (with a flagged validation gap — see
-below). Phase 5 (search, ranking, screening) next.
+Phase 5 — Search, ranking, screening: **complete**. Phase 6 (eligibility and
+teaser) next.
 
 ## Completed
 
@@ -135,23 +135,62 @@ below). Phase 5 (search, ranking, screening) next.
   `npm run verify` and the full 27-spec Playwright suite (unaffected by this
   phase, re-run to confirm) pass.
 
+### Phase 5 — Search, ranking, screening
+- `src/lib/source-adapters/types.ts`: added `"protocol"` to `PublicationType`;
+  `publication-type.ts` now detects protocol language ("study protocol",
+  "protocol for a randomized...") *before* any other design match, since a
+  protocol is not an outcome study regardless of what trial type it describes.
+- `src/lib/search/dedupe.ts`: merges records representing the same work across
+  adapters — normalized DOI first, then normalized title+year, else falls back
+  to `(source, sourceId)` so unmatched records never collide. Field-level merge
+  prefers richer data (present over null, abstract over metadata-only), and a
+  `retracted` flag from any one source always wins over another source's
+  `unknown`/`none` — a safety property, not just a data-quality one.
+- `src/lib/search/screening.ts`: include/exclude decisions using only reasons we
+  can honestly compute from adapter metadata — `retracted`, `protocol_only`,
+  `insufficient_detail` (no usable title). The doc's other exclusion reasons
+  (wrong topic/population, non-comparable intervention, unsupported language)
+  need real content understanding we don't have yet (AI not wired up) and are
+  deliberately not faked — tracked in `OPEN_RISKS.md` #12.
+- `src/lib/search/relevance.ts` + `ranking.ts`: term-overlap relevance score,
+  study-design weighting (meta-analysis > systematic review > RCT > ... >
+  protocol at 0), a small recency signal that maxes out at ~10% of the
+  relevance weight (so results are never ranked "solely by recency"), and a
+  minor penalty for corrected-but-not-retracted records.
+- `src/lib/search/run-search.ts`: orchestrates adapters (routed per topic via
+  the Phase 4 registry) → dedupe → screen → rank, with each source's failure
+  isolated (one adapter being down doesn't block the others) and full
+  transparency stats returned (candidate/duplicate/included counts, exclusion
+  breakdown by reason, per-source ok/error, search date, screening version).
+  The core logic (`runSearchWithAdapters`) takes an explicit adapter list, so
+  it's fully unit-tested with fake in-memory adapters — no network or fixture
+  mocking needed at this layer.
+- 29 new unit tests. 92 unit tests + 1 integration test; `npm run verify` and
+  the full 27-spec Playwright suite pass.
+
 ## Not started
 
-Phases 5–13 from `IMPLEMENTATION_PLAN.md`: search/ranking/screening, eligibility
-engine, Stripe/report lifecycle, premium report renderer, email/admin/analytics,
-hardening, preview beta, production prep, production launch.
+Phases 6–13 from `IMPLEMENTATION_PLAN.md`: eligibility engine, Stripe/report
+lifecycle, premium report renderer, email/admin/analytics, hardening, preview
+beta, production prep, production launch.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
   — blocks live Stripe mode and real payments only.
 - Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — blocks
-  trusting Phase 4 in production, not continued Phase 5+ development (ranking/
-  screening logic can be built and tested against the same fixtures).
+  trusting Phase 4/5 in production, not continued Phase 6+ development (the
+  eligibility engine consumes `SearchRunResult`, which is fully testable against
+  the same fake-adapter/fixture approach already in place).
 
 ## Next step
 
-Phase 5: query builders per adapter, deduplication (e.g. by DOI), ranking per
-`07`'s signals (relevance, study design, completeness, recency — decision #8
-caps detailed results at 15), screening decisions with exclusion reasons,
-transparent failure states when a source is down — per `IMPLEMENTATION_PLAN.md`.
+Phase 6: eligibility engine implementing decision #4's thresholds
+(`eligible`/`eligible_with_limitations`/`not_eligible`) against a
+`SearchRunResult`, expected-report-depth estimate, and the free teaser UI
+(real search stats, source-linked titles, preliminary synthesis note, coverage
+limitations, exact paid contents) with the paywall panel and central price
+config — per `IMPLEMENTATION_PLAN.md`. Note: no AI-based synthesis is available
+yet, so the teaser's "preliminary synthesis" must stay honestly structural
+(counts, study-type distribution, confidence *label* only) rather than
+prose that implies AI-generated interpretation we haven't built.

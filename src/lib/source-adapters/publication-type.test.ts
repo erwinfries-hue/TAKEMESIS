@@ -25,6 +25,13 @@ describe("inferPublicationType", () => {
     expect(inferPublicationType("A Narrative Review of Sleep")).toBe("review");
   });
 
+  it("detects study protocols before any other design, since they aren't outcome studies", () => {
+    expect(inferPublicationType("Study Protocol for a Randomized Controlled Trial of X")).toBe(
+      "protocol",
+    );
+    expect(inferPublicationType("Protocol for a Systematic Review of Y")).toBe("protocol");
+  });
+
   it("returns unknown when nothing matches, never guessing", () => {
     expect(inferPublicationType("Effects of Interleaving on Retention")).toBe("unknown");
   });
