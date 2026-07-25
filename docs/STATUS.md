@@ -2,8 +2,8 @@
 
 ## Current phase
 
-Phase 6 — Eligibility and teaser: **complete**. Phase 7 (persistence and
-Stripe) next.
+Phase 7 — Persistence and Stripe: **complete** (library/infrastructure layer;
+not yet wired into the live UI — see below). Phase 8 (premium report) next.
 
 ## Completed
 
@@ -208,27 +208,94 @@ Stripe) next.
   specs (confirm→search-failed flow, +1 a11y scan). 112 unit tests + 1
   integration test, 29 Playwright specs; `npm run verify` passes.
 
+### Phase 7 — Persistence and Stripe
+Erwin chose (2026-07-25) to build this phase's code/migrations without live
+credentials, the same approach as Phase 4's adapters, rather than provisioning
+Supabase/Stripe test accounts first or reordering phases.
+
+- `supabase/migrations/20260725220000_init_core_schema.sql`: all 13 core
+  tables from `10_TECHNICAL_ARCHITECTURE_AND_DATA_MODEL.md` (reports,
+  report_sources, search_runs, screening_decisions, payments,
+  stripe_webhook_events, report_jobs, feedback, issue_reports,
+  analytics_events, price_versions, admin_audit_log, source_health_checks),
+  RLS enabled with no policies (default-deny for anon/authenticated — the app
+  only ever uses the server-only service-role key, per `10`'s security
+  section and the "no mandatory account" architecture). Seeded with the
+  `MVP-01` price version. **Never run against a live project** — no Supabase
+  project exists yet.
+- `src/lib/reports/token.ts`: SHA-256-hashed report tokens (256-bit random
+  token given to the user, only the hash stored — decision context: secure
+  hashed report tokens).
+- Repository pattern for `reports` and `payments`/`stripe_webhook_events`:
+  an interface, an in-memory implementation (what all the business-logic
+  tests below run against), and a Supabase implementation (structurally
+  correct against the migration above, **not run against a live database**).
+- `src/lib/reports/lifecycle.ts`: the full state machine from `09` (draft →
+  preview_ready → checkout_started → paid → processing → ready, plus
+  failed/refund_pending/refunded/blocked/expired branches) as pure,
+  fully-tested transition rules — enforced through a single
+  `transitionReportStatus` choke point so neither repository implementation
+  can bypass it.
+- `src/lib/stripe/checkout.ts`: server-side Checkout Session creation with
+  report ID + price version in metadata (`09`), preferring a configured
+  `STRIPE_PRICE_ID_MVP_01` and falling back to inline `price_data` from our
+  own price config for local dev before that Price exists in the dashboard.
+- `src/lib/stripe/webhook.ts` + `webhook-route-handler.ts` +
+  `/api/stripe/webhook`: raw-body signature verification
+  (`stripe.webhooks.constructEvent`), event-ID idempotency (duplicate
+  deliveries are detected and skipped entirely, not just deduplicated at the
+  response level), and a second independent safety net (a report already
+  past `checkout_started` is never re-fulfilled even under a hypothetically
+  different event ID). "No unlock from redirect alone" is structural: the
+  success page (`/checkout/success`) cannot mark anything paid — only this
+  webhook handler can.
+- `/checkout/success` and `/checkout/cancel`: the success page explicitly
+  states it is not proof of payment (`09`'s rule verified in the UI copy,
+  not just the backend); cancel page offers retry.
+- Every Stripe/Supabase client (`getStripeClient`, `getSupabaseClient`) is
+  lazily constructed — importing these modules never fails before real
+  credentials exist; the clear error only surfaces if something actually
+  tries to call Stripe/Supabase without them configured, same pattern as the
+  Phase 4 adapters.
+- **Not done in this phase, and deliberately so:** the `/search` page's
+  `PaywallPanel` still doesn't have a working "buy" button, and no report
+  row is created when a teaser is shown. Wiring that up meaningfully requires
+  real Supabase/Stripe credentials to create/persist a report and hand back
+  a working checkout URL — building that against nothing would produce code
+  that's guaranteed to error in this sandbox and unverifiable either way.
+  That live-wiring is the natural first step of the next session that has
+  real credentials (tracked in `OPEN_RISKS.md`).
+- 36 new unit tests (lifecycle, token, in-memory repositories, checkout
+  session builder, webhook signature/idempotency, webhook route handler).
+  148 unit tests + 1 integration test, 33 Playwright specs (2 new: checkout
+  success/cancel pages); `npm run verify` passes.
+
 ## Not started
 
-Phases 7–13 from `IMPLEMENTATION_PLAN.md`: Supabase persistence and Stripe
-checkout/webhook/lifecycle, premium report renderer, email/admin/analytics,
-hardening, preview beta, production prep, production launch.
+Phases 8–13 from `IMPLEMENTATION_PLAN.md`: premium report renderer (AI
+extraction, comparison, profiles, synthesis, confidence, print layout),
+email/admin/analytics, hardening, preview beta, production prep, production
+launch.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
   — blocks live Stripe mode and real payments only.
 - Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — the
-  resilience path (all sources down) is now confirmed working live in this
+  resilience path (all sources down) is confirmed working live in this
   sandbox; the success path (sources actually returning data) still needs a
   real run from an environment with network access.
+- Live validation of the Supabase migration and Stripe checkout/webhook code
+  (new, `OPEN_RISKS.md` #13) — nothing in Phase 7 has touched a real database
+  or a real Stripe account yet.
+- Wiring the live UI to real report creation + a working checkout button
+  (new, `OPEN_RISKS.md` #14) — needs the credentials above first.
 
 ## Next step
 
-Phase 7: Supabase migrations for the core tables (`10`), report lifecycle
-states, Stripe Checkout Session creation, webhook signature verification +
-idempotent fulfillment, test-mode only (`STRIPE_MODE=test`) — per
-`IMPLEMENTATION_PLAN.md`. This phase needs real Supabase/Stripe credentials
-that aren't provisioned yet (`.env.example` has them blank); expect to build
-against typed interfaces/migrations and defer live verification the same way
-Phase 4's adapters did.
+Phase 8: AI-based extraction and synthesis (once `ANTHROPIC_API_KEY` exists —
+until then, keep building what's credential-independent: the Premium Report
+renderer's structure/layout, comparison matrix and study-profile components
+using the same `SearchRunResult`/`TeaserData`-shaped fixtures already in
+place, print-friendly layout, and the curated learning-methods example report
+content once source adapters are live-verified) — per `IMPLEMENTATION_PLAN.md`.

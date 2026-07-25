@@ -272,5 +272,17 @@
     "heading": "The sources are currently unreachable",
     "body": "We couldn't reach any of our scientific data sources during this search. This isn't about your question — please try again in a few minutes.",
     "retryCta": "Try again"
+  },
+  "checkoutSuccessPage": {
+    "heading": "Thank you for your payment",
+    "body": "Your payment is being processed. Once your full evidence report is ready, you'll receive it by email as well as via a secure report link.",
+    "notProofNote": "This page alone does not confirm a successful payment — unlocking happens only after verified confirmation from Stripe.",
+    "homeCta": "Back to homepage"
+  },
+  "checkoutCancelPage": {
+    "heading": "Payment cancelled",
+    "body": "Your payment wasn't completed. Your report draft is still there — you can try again anytime.",
+    "retryCta": "Try again",
+    "homeCta": "Back to homepage"
   }
 }

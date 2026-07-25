@@ -9,6 +9,8 @@ const contentPages = [
   { path: "/privacy", heading: "Datenschutz" },
   { path: "/legal", heading: "Impressum & AGB" },
   { path: "/about", heading: "Über TEKMESIS" },
+  { path: "/checkout/success", heading: "Danke für deine Zahlung" },
+  { path: "/checkout/cancel", heading: "Zahlung abgebrochen" },
 ];
 
 for (const { path, heading } of contentPages) {

@@ -275,5 +275,17 @@
     "heading": "Die Quellen sind aktuell nicht erreichbar",
     "body": "Bei der Suche konnten wir keine unserer wissenschaftlichen Datenquellen erreichen. Das liegt nicht an deiner Frage — bitte versuche es in ein paar Minuten erneut.",
     "retryCta": "Erneut versuchen"
+  },
+  "checkoutSuccessPage": {
+    "heading": "Danke für deine Zahlung",
+    "body": "Deine Zahlung wird verarbeitet. Sobald dein vollständiger Evidence Report bereit ist, erhältst du ihn per E-Mail sowie über einen sicheren Report-Link.",
+    "notProofNote": "Diese Seite allein bestätigt keine erfolgreiche Zahlung — die Freischaltung erfolgt erst nach verifizierter Bestätigung durch Stripe.",
+    "homeCta": "Zurück zur Startseite"
+  },
+  "checkoutCancelPage": {
+    "heading": "Zahlung abgebrochen",
+    "body": "Deine Zahlung wurde nicht abgeschlossen. Dein Report-Entwurf bleibt bestehen — du kannst es jederzeit erneut versuchen.",
+    "retryCta": "Erneut versuchen",
+    "homeCta": "Zurück zur Startseite"
   }
 }
