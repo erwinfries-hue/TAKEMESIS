@@ -2,7 +2,8 @@
 
 ## Current phase
 
-Phase 3 — Question interpretation: **complete**. Phase 4 (source adapters) next.
+Phase 4 — Source adapters: **complete** (with a flagged validation gap — see
+below). Phase 5 (search, ranking, screening) next.
 
 ## Completed
 
@@ -100,22 +101,57 @@ Phase 3 — Question interpretation: **complete**. Phase 4 (source adapters) nex
   flow, high-risk restriction, no-match fallback, empty state, 3 a11y scans).
   44 unit/integration tests, 27 Playwright specs total; `npm run verify` passes.
 
+### Phase 4 — Source adapters
+- `src/lib/source-adapters/types.ts`: `NormalizedRecord` and `SourceAdapter`
+  interfaces per `07`/`10` — every field the docs require (source, identifiers,
+  title, authors, venue, year, publication type, abstract, OA status, retraction
+  status, subject concepts, source URL, data completeness, provenance
+  timestamp). Missing upstream data stays `null`, never guessed.
+- `src/lib/source-adapters/http.ts`: shared fetch-with-timeout-and-bounded-retry
+  helper (`SourceAdapterError` on exhaustion) so every adapter degrades safely
+  when a source is unavailable, per the resilience requirements in `10`.
+- `src/lib/source-adapters/publication-type.ts`: conservative keyword heuristic
+  for study design (RCT/cohort/meta-analysis/...) — returns `"unknown"` rather
+  than guessing when nothing matches, since the search APIs only return a coarse
+  document type, not a study design.
+- Four adapters, one per `01`'s expected source roles: `openalex.ts` (broad
+  discovery, incl. abstract reconstruction from OpenAlex's inverted-index
+  format), `crossref.ts` (DOI/metadata verification, incl. JATS-tag stripping
+  for abstracts), `europe-pmc.ts` (biomedical), `ncbi.ts` (biomedical,
+  chained esearch→esummary; abstracts require a further `efetch` call,
+  deliberately deferred — see `OPEN_RISKS.md` #11).
+- `registry.ts`: structured topic→adapter routing matching
+  `SOURCE_COVERAGE_MATRIX.md` (all 12 topics covered, tested), plus
+  `checkAllSourceStatuses()` for the future admin source-health view (Phase 9).
+- **Validation gap, flagged not hidden:** this sandbox's network egress policy
+  blocks all four API hosts (confirmed 403 policy denial), so adapters were
+  built against documented API contracts and tested against hand-authored
+  fixtures (`src/lib/source-adapters/fixtures/`), not recorded live responses.
+  Tracked as a blocking item in `OPEN_RISKS.md` #2 — must be run against the
+  real APIs from an environment with network access before Phase 4 is trusted
+  in production.
+- 30 new unit tests (http helper, publication-type heuristic, all 4 adapters,
+  registry). 63 unit/integration tests total (62 unit + 1 integration);
+  `npm run verify` and the full 27-spec Playwright suite (unaffected by this
+  phase, re-run to confirm) pass.
+
 ## Not started
 
-Phases 4–13 from `IMPLEMENTATION_PLAN.md`: source adapters, search/ranking/
-screening, eligibility engine, Stripe/report lifecycle, premium report renderer,
-email/admin/analytics, hardening, preview beta, production prep, production launch.
+Phases 5–13 from `IMPLEMENTATION_PLAN.md`: search/ranking/screening, eligibility
+engine, Stripe/report lifecycle, premium report renderer, email/admin/analytics,
+hardening, preview beta, production prep, production launch.
 
-## Blocking item tracked for later (does not block continued implementation)
+## Blocking items tracked for later (do not block continued implementation)
 
-Treuhänder confirmation on Swiss MWST / EU cross-border VAT (see `OPEN_RISKS.md` #1).
-Blocks live Stripe mode and real payments only — not the beta build itself.
+- Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
+  — blocks live Stripe mode and real payments only.
+- Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — blocks
+  trusting Phase 4 in production, not continued Phase 5+ development (ranking/
+  screening logic can be built and tested against the same fixtures).
 
 ## Next step
 
-Phase 4: source adapters (OpenAlex, Crossref, Europe PMC, NCBI E-utilities) behind
-the normalized-record interface from `07`/`10`, per `SOURCE_COVERAGE_MATRIX.md`
-routing, with source health/status tracking and fixtures/tests — per
-`IMPLEMENTATION_PLAN.md`. Note: these are real external network calls: dev/CI
-behavior when the relevant API keys/network access aren't available needs a
-decision (e.g. recorded fixtures for tests, live calls gated by env vars).
+Phase 5: query builders per adapter, deduplication (e.g. by DOI), ranking per
+`07`'s signals (relevance, study design, completeness, recency — decision #8
+caps detailed results at 15), screening decisions with exclusion reasons,
+transparent failure states when a source is down — per `IMPLEMENTATION_PLAN.md`.

@@ -1,0 +1,48 @@
+{
+  "meta": { "count": 2, "page": 1, "per_page": 15 },
+  "results": [
+    {
+      "id": "https://openalex.org/W2884523989",
+      "doi": "https://doi.org/10.1037/xge0000000",
+      "title": "Retrieval Practice Produces More Learning than Elaborative Studying with Concept Mapping",
+      "publication_year": 2011,
+      "type": "article",
+      "authorships": [
+        { "author": { "display_name": "Jeffrey D. Karpicke" } },
+        { "author": { "display_name": "Janell R. Blunt" } }
+      ],
+      "primary_location": {
+        "source": { "display_name": "Science" },
+        "landing_page_url": "https://example.org/openalex-fixture/W2884523989"
+      },
+      "open_access": { "is_oa": true },
+      "abstract_inverted_index": {
+        "Practicing": [0],
+        "retrieval": [1],
+        "improves": [2],
+        "long-term": [3],
+        "retention": [4],
+        "more": [5],
+        "than": [6],
+        "elaborative": [7],
+        "study": [8],
+        "techniques.": [9]
+      },
+      "concepts": [{ "display_name": "Retrieval practice" }, { "display_name": "Learning" }],
+      "is_retracted": false
+    },
+    {
+      "id": "https://openalex.org/W2143735587",
+      "doi": null,
+      "title": "A Systematic Review of Spaced Repetition Effects on Long-Term Retention",
+      "publication_year": 2016,
+      "type": "review",
+      "authorships": [{ "author": { "display_name": "Anonymized Author" } }],
+      "primary_location": { "source": { "display_name": "Educational Psychology Review" } },
+      "open_access": { "is_oa": false },
+      "abstract_inverted_index": null,
+      "concepts": [{ "display_name": "Spaced repetition" }],
+      "is_retracted": false
+    }
+  ]
+}

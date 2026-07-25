@@ -1,0 +1,32 @@
+{
+  "hitCount": 2,
+  "resultList": {
+    "result": [
+      {
+        "id": "31234567",
+        "source": "MED",
+        "pmid": "31234567",
+        "doi": "10.1000/fixture.epmc.001",
+        "title": "Effects of Melatonin on Sleep Onset Latency: A Randomized Controlled Trial.",
+        "authorString": "Fixture A, Fixture B, Fixture C.",
+        "journalTitle": "Sleep Medicine Reviews",
+        "pubYear": "2019",
+        "pubTypeList": { "pubType": ["Journal Article", "Randomized Controlled Trial"] },
+        "abstractText": "This randomized controlled trial evaluated melatonin's effect on sleep onset latency.",
+        "isOpenAccess": "Y"
+      },
+      {
+        "id": "28765432",
+        "source": "MED",
+        "pmid": "28765432",
+        "doi": null,
+        "title": "Screen Time and Sleep Quality in Adolescents.",
+        "authorString": "Fixture D.",
+        "journalTitle": "Journal of Adolescent Health",
+        "pubYear": "2017",
+        "pubTypeList": { "pubType": ["Journal Article"] },
+        "isOpenAccess": "N"
+      }
+    ]
+  }
+}

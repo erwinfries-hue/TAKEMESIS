@@ -1,0 +1,24 @@
+{
+  "result": {
+    "uids": ["30000001", "30000002"],
+    "30000001": {
+      "uid": "30000001",
+      "title": "Interval Training Effects on VO2max: A Randomized Controlled Trial.",
+      "authors": [{ "name": "Fixture E" }, { "name": "Fixture F" }],
+      "fulljournalname": "Journal of Sports Science Fixture",
+      "source": "J Sports Sci Fixture",
+      "pubdate": "2018 Sep",
+      "elocationid": "doi: 10.1000/fixture.ncbi.001",
+      "pubtype": ["Journal Article", "Randomized Controlled Trial"]
+    },
+    "30000002": {
+      "uid": "30000002",
+      "title": "Cold Exposure and Recovery: A Narrative Review.",
+      "authors": [{ "name": "Fixture G" }],
+      "fulljournalname": "Sports Medicine Fixture Review",
+      "pubdate": "2020",
+      "elocationid": "",
+      "pubtype": ["Journal Article", "Review"]
+    }
+  }
+}
