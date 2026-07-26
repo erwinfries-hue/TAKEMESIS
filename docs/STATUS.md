@@ -1127,6 +1127,30 @@ marker distinguishing "warning" from "informational," just color and copy.
   high-risk and search-failed states).
 - `npm run verify` and `npm run test:e2e` (53/53) both pass.
 
+### Design pass: homepage hero illustration (Erwin's request, continued)
+Erwin's feedback after the icon/notice polish: "what's still missing is
+images" — everything up to this point had been small line icons and layout
+polish, no actual illustration. Asked which direction to take (custom
+vector illustrations vs. Erwin supplying photos vs. stock photography);
+Erwin chose custom vector illustrations, which also matches what's
+possible in this environment — there is no photo/AI-image-generation tool
+available here.
+
+- New `src/components/hero-illustration.tsx`: a hand-coded SVG that
+  literalizes the brand claim ("FROM STUDIES TO CLARITY.") — a scattered
+  cluster of three study-document rectangles (rotated, layered, muted
+  tones) on the left, a dotted converging path, and one clean checked
+  report on the right. Built entirely from the existing brand palette
+  (navy-900, teal-600, neutral-200/50) so it reads as part of the same
+  design system as the line icons rather than a bolted-on graphic.
+- Placed on the homepage between the H1 and `LiveDemoPreview` — the
+  reading path is now claim → illustration of the claim → live proof of
+  the claim → CTA. `aria-hidden`, purely decorative, doesn't affect the
+  page's accessible structure.
+- Live-verified via a full-page screenshot; `npm run verify` and
+  `npm run test:e2e` (53/53) both pass unchanged (no new failures, no
+  a11y regressions on the home page's existing `@a11y` test).
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

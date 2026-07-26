@@ -10,6 +10,7 @@ import { buildExampleReportPreviewSearchResult } from "@/content/example-report-
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
+import { HeroIllustration } from "@/components/hero-illustration";
 
 const TEASER_COUNT = 6;
 
@@ -31,6 +32,7 @@ export default async function Home() {
         <h1 className="max-w-2xl text-3xl font-semibold leading-tight text-brand-navy-900 sm:text-4xl">
           {dict.home.description}
         </h1>
+        <HeroIllustration className="h-24 w-auto sm:h-28" />
         <LiveDemoPreview dict={dict} teaser={demoTeaser} />
         <p className="text-brand-neutral-600">{dict.home.comingSoon}</p>
         <Link
