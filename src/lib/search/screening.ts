@@ -1,5 +1,7 @@
 import type { DedupedRecord } from "./dedupe";
-import { computeRelevanceScore } from "./relevance";
+import { meetsRelevanceThreshold, MIN_RELEVANCE_SCORE } from "./relevance";
+
+export { MIN_RELEVANCE_SCORE };
 
 /**
  * Exclusion reasons we can honestly compute from adapter metadata alone.
@@ -29,19 +31,6 @@ export interface ScreeningResult {
   excluded: ScreeningDecision[];
 }
 
-/**
- * Below this term-overlap fraction (see relevance.ts), a record is
- * considered off-topic rather than merely low-ranked. Found necessary by a
- * live production test (2026-07-26): generic source-API full-text search
- * (e.g. Crossref's `query=` param) returns plenty of technically-matching
- * but topically unrelated records for natural-language questions — ranking
- * alone never excluded them, only sorted them to the bottom. 0.4 requires
- * at least two-fifths of the question's meaningful (non-stopword) terms to
- * actually appear in the record — comfortably above what a single generic
- * connector word can produce on its own, per relevance.test.ts.
- */
-export const MIN_RELEVANCE_SCORE = 0.4;
-
 /** Bump when the screening rules change, so a stored search run can record which version produced it. */
 export const SCREENING_VERSION = "screening-v2";
 
@@ -64,7 +53,7 @@ export function screenRecords(records: DedupedRecord[], query: string): Screenin
       excluded.push({ record: deduped, reason: "insufficient_detail" });
       continue;
     }
-    if (computeRelevanceScore(query, record) < MIN_RELEVANCE_SCORE) {
+    if (!meetsRelevanceThreshold(query, record)) {
       excluded.push({ record: deduped, reason: "not_relevant" });
       continue;
     }

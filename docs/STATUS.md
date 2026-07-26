@@ -650,6 +650,40 @@ surfaced a real bug:
   suite pass. Visually confirmed live via screenshot: the suggestion
   correctly reads "Könnte passen zu: Ernährung & Supplements" while typing
   the creatine question.
+- **Round 2, same day:** Erwin re-ran the creatine question on the live
+  Vercel deployment after the fix above. Better (13 of 15 obviously-
+  irrelevant records now correctly excluded), but the 2 remaining "included"
+  studies were still off-topic — one about weight regain after muscle
+  building, one about a cancer-cachexia messenger substance — neither
+  mentions creatine at all. **Root cause, found by re-deriving the actual
+  tokenization, not assumed:** the question "Hilft Kreatin beim
+  Muskelaufbau?" reduces to just 2 meaningful terms after stopword
+  filtering ("kreatin", "muskelaufbau"). Both offending records matched only
+  "Muskelaufbau" — 1 of 2 terms = 0.5, which still clears the 0.4 fraction
+  threshold. Removing stopwords doesn't fix this: it shrinks the numerator
+  and denominator together, so the fraction can stay just as high even
+  though the record misses the question's actual named subject. **Fix:**
+  `relevance.ts` gained `meetsRelevanceThreshold()` — for questions with 3+
+  meaningful terms it's the same 0.4 fraction rule as before, but for
+  questions with only 1-2 meaningful terms it now requires *every* term to
+  match, since a partial match at that granularity isn't a meaningful
+  signal. `screening.ts` now calls this instead of comparing
+  `computeRelevanceScore` to the threshold directly (that raw fraction
+  function is unchanged and still used for ranking/sort order in
+  `ranking.ts`, which is a weaker, order-only signal where the old behavior
+  is fine). Also fixed a real gap the first pass introduced but didn't
+  close: `relevance.ts`'s own comment named "hilft"/"wirkt"/"verbessert" as
+  generic connector verbs that needed filtering, but none of them were
+  actually in the `STOPWORDS` set — added a full German+English
+  conjugated-verb set for the connector verbs actually used across
+  `topics.ts`'s example questions and real user questions.
+  Verified against all three real records from Erwin's two live test rounds
+  (numerically, in new unit tests) plus a new test confirming a record that
+  genuinely mentions both terms is still included, and a 3-term-question
+  test confirming the plain fraction rule still applies once there's enough
+  signal. 2 new/updated screening tests, `MIN_RELEVANCE_SCORE` moved to
+  `relevance.ts` (re-exported from `screening.ts` for existing importers).
+  232 unit tests + 1 integration test; `npm run verify` passes.
 
 ## Blocking items tracked for later (do not block continued implementation)
 

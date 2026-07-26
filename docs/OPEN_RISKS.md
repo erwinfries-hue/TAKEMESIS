@@ -32,12 +32,19 @@ checkpoint (decision #15) and before each production-readiness gate.
    (real results came back from real sources), but it surfaced a genuine bug:
    irrelevant records (wrong topic entirely) were passing screening because the
    already-computed relevance score was only used for ranking, never exclusion.
-   Fixed: see `STATUS.md`'s "Live-network validation pass" entry
-   (`MIN_RELEVANCE_SCORE = 0.4` in `screening.ts`, stopword filtering in
-   `relevance.ts`). This threshold is reasoned and numerically checked against
-   the two real examples encountered, but **not exhaustively tuned** — revisit
-   once more real questions/traffic are observed, in case it's too strict or
-   too loose for phrasings not yet seen. **Still open:** one of the two live
+   Fixed, in two rounds — see `STATUS.md`'s "Live-network validation pass"
+   entry: round 1 added stopword filtering (`relevance.ts`) and a
+   `MIN_RELEVANCE_SCORE = 0.4` exclusion threshold (`screening.ts`); a
+   second live re-test the same day found round 1 incomplete for very short
+   questions (2 meaningful terms), so round 2 added `meetsRelevanceThreshold()`,
+   which requires *all* terms to match when a question has only 1-2
+   meaningful terms rather than the plain 0.4 fraction. This is reasoned and
+   numerically checked against all three real off-topic records encountered
+   across both live rounds, but **not exhaustively tuned** — revisit once
+   more real questions/traffic are observed, in case it's too strict (a
+   genuinely relevant record using a synonym for one of only 2 terms would
+   now be excluded) or still too loose for phrasings not yet seen. **Still
+   open:** one of the two live
    runs showed an "OpenAlex nicht erreichbar" notice; Erwin was asked to check
    Vercel's Runtime Logs for the OpenAlex-specific error line to determine
    whether this is a genuine OpenAlex outage or a fixable timeout/serverless-

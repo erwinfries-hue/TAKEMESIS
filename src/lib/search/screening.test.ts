@@ -66,10 +66,32 @@ describe("screenRecords", () => {
     expect(result.excluded[0].reason).toBe("not_relevant");
   });
 
-  it("includes a topically relevant record even when its title has different exact wording", () => {
+  it("excludes a record matching only the generic noun, missing the actual named subject (2026-07-26 live production finding, round 2)", () => {
+    // This is the exact record from the live test that motivated the first
+    // fix: it shares "Muskelaufbau" with the question but never mentions
+    // "Kreatin" at all — the real subject of the question. With only 2
+    // meaningful query terms, matching one of two isn't enough signal.
     const result = screenRecords(
       [wrap(makeRecord({ title: "Botenstoff hilft beim Muskelaufbau bei Muskelschwund" }))],
       "Hilft Kreatin beim Muskelaufbau?",
+    );
+    expect(result.included).toHaveLength(0);
+    expect(result.excluded[0].reason).toBe("not_relevant");
+  });
+
+  it("includes a record that genuinely mentions both meaningful terms of a short question", () => {
+    const result = screenRecords(
+      [wrap(makeRecord({ title: "Kreatin-Supplementierung und Muskelaufbau bei Kraftsportlern" }))],
+      "Hilft Kreatin beim Muskelaufbau?",
+    );
+    expect(result.included).toHaveLength(1);
+  });
+
+  it("uses the plain fraction threshold (not full-match) once a question has 3+ meaningful terms", () => {
+    // "kreatin", "sportlern", "muskelaufbau" — 3 terms; matching 2 of 3 (0.67) clears 0.4 even without every term.
+    const result = screenRecords(
+      [wrap(makeRecord({ title: "Kreatin und Muskelaufbau: eine Übersicht" }))],
+      "Hilft Kreatin Sportlern beim Muskelaufbau?",
     );
     expect(result.included).toHaveLength(1);
   });
