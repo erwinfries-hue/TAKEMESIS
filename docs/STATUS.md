@@ -808,6 +808,16 @@ rule, with a question about whether `CLAUDE.md` itself should be updated to
 match. 48 Playwright specs + full unit suite re-verified passing;
 `npm run verify` passes. Visually reconfirmed via screenshot.
 
+**Second correction, same day:** Erwin asked to remove the `/about` page's
+logo block entirely (not the header's — that stays) so the page now opens
+directly with the "FROM STUDIES TO CLARITY." tagline, then the "Über
+TEKMESIS" heading; and to remove the redundant "AXIA4 Digital" `<h2>` that
+sat directly under the new "AXIA4 GROUP" link (kept the body text and the
+"AXIA4 Digital entdecken" CTA below it). The now-unused
+`aboutPage.axia4Heading` dictionary key was removed from both locales.
+48 Playwright specs + full unit suite re-verified passing; `npm run verify`
+passes. Visually reconfirmed via screenshot.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
