@@ -66,7 +66,9 @@ describe("buildPremiumReportData", () => {
     expect(report.keyFindings).toBeNull();
     expect(report.interpretedQuestion).toBeNull();
     expect(report.synthesisAvailable).toBe(false);
+    expect(report.synthesisText).toBeNull();
     expect(report.practicalInterpretationAvailable).toBe(false);
+    expect(report.practicalInterpretationText).toBeNull();
     for (const row of report.comparison) {
       expect(row.outcome).toBeNull();
       expect(row.effectEstimate).toBeNull();

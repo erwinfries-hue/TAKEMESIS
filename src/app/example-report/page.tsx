@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 import { buildExampleReportPreviewSearchResult } from "@/content/example-report-preview";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
-import { buildPremiumReportData } from "@/lib/reports/premium-report";
+import { buildPremiumReportData, type PremiumReportData } from "@/lib/reports/premium-report";
+import { enrichPremiumReportWithAi } from "@/lib/ai/report-enrichment";
 import { PremiumReportView } from "@/components/premium-report/premium-report-view";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,18 +15,35 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: `${dict.exampleReportPage.heading} — ${dict.brand.name}` };
 }
 
+/**
+ * The demo's underlying data (content/example-report-preview.ts) never
+ * changes, so calling AI extraction/synthesis fresh on every page view
+ * would be a pointless repeated cost. Cached per locale for 24h — a real
+ * AI call happens at most once a day per locale, not once per visitor.
+ */
+const getCachedExampleReportData = unstable_cache(
+  async (locale: Locale): Promise<PremiumReportData> => {
+    const dict = getDictionary(locale);
+    const searchResult = buildExampleReportPreviewSearchResult(dict.exampleReportPage.topicQuestion);
+    const eligibility = assessEligibility(searchResult);
+    const reportData = buildPremiumReportData({
+      searchResult,
+      eligibility,
+      locale,
+      reportDate: "2026-07-25T00:00:00.000Z",
+    });
+    const detailedRecords = searchResult.detailed.map((scored) => scored.deduped.record);
+    return enrichPremiumReportWithAi({ report: reportData, detailedRecords });
+  },
+  ["example-report-data"],
+  { revalidate: 60 * 60 * 24 },
+);
+
 export default async function ExampleReportPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
 
-  const searchResult = buildExampleReportPreviewSearchResult(dict.exampleReportPage.topicQuestion);
-  const eligibility = assessEligibility(searchResult);
-  const reportData = buildPremiumReportData({
-    searchResult,
-    eligibility,
-    locale,
-    reportDate: "2026-07-25T00:00:00.000Z",
-  });
+  const reportData = await getCachedExampleReportData(locale);
 
   return (
     <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">

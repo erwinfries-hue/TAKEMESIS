@@ -210,6 +210,19 @@ checkpoint (decision #15) and before each production-readiness gate.
     estimate at beta scale. This is a default the eventual AI-wiring code
     should read from config, not hardcode, so it stays a one-line change
     to upgrade later if quality at beta volume warrants it.
+    **Update (2026-07-26): the AI-wiring code now exists**
+    (`src/lib/ai/`: extraction, synthesis, and an enrichment glue step —
+    see `STATUS.md`'s "First real AI wiring" entry), scoped exactly to
+    Erwin's chosen "Option A": wired into `/example-report`'s cached
+    fictional demo and a new admin-only `/admin/report-preview` against
+    real search results, deliberately **not** into the public `/search`
+    flow or a persisted report yet. What's still open: (a) real quality
+    judgment — no session with a live `ANTHROPIC_API_KEY` has actually run
+    this against genuine evidence yet, so whether Haiku-tier extraction is
+    good enough is still unverified (use `/admin/report-preview` once the
+    key exists); (b) the persisted-report flow itself (`OPEN_RISKS.md`
+    #14) is unchanged and still needed before AI synthesis can be part of
+    the real paid product, not just a preview tool.
 
 19. **`topics.ts`'s example questions have never been checked against real
     evidence coverage.** They were written during Phase 2 for topical

@@ -172,7 +172,11 @@ export function PremiumReportView({
       {/* 6. Integrated Synthesis */}
       <section id="synthesis" className={`scroll-mt-16 ${SECTION_CARD}`}>
         <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.synthesisHeading}</h2>
-        {report.synthesisAvailable ? null : <PendingAiNotice dict={dict} variant="short" />}
+        {report.synthesisAvailable && report.synthesisText ? (
+          <p className="text-sm text-brand-neutral-600">{report.synthesisText}</p>
+        ) : (
+          <PendingAiNotice dict={dict} variant="short" />
+        )}
       </section>
 
       {/* 7. Evidence Confidence */}
@@ -187,7 +191,11 @@ export function PremiumReportView({
       {/* 8. Practical Interpretation */}
       <section id="interpretation" className={`scroll-mt-16 ${SECTION_CARD}`}>
         <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.interpretationHeading}</h2>
-        {report.practicalInterpretationAvailable ? null : <PendingAiNotice dict={dict} variant="short" />}
+        {report.practicalInterpretationAvailable && report.practicalInterpretationText ? (
+          <p className="text-sm text-brand-neutral-600">{report.practicalInterpretationText}</p>
+        ) : (
+          <PendingAiNotice dict={dict} variant="short" />
+        )}
       </section>
 
       {/* 9. Open Questions and Sources */}

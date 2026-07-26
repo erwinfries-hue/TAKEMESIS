@@ -43,7 +43,11 @@ export interface PremiumReportData {
   comparison: PremiumComparisonRow[];
   profiles: PremiumStudyProfile[];
   synthesisAvailable: boolean;
+  /** The actual synthesis prose — null until AI-based synthesis exists; never fabricated. */
+  synthesisText: string | null;
   practicalInterpretationAvailable: boolean;
+  /** The actual practical-interpretation prose — null until AI-based synthesis exists; never fabricated. */
+  practicalInterpretationText: string | null;
   sources: PremiumSourceEntry[];
 }
 
@@ -173,7 +177,9 @@ export function buildPremiumReportData(params: BuildPremiumReportParams): Premiu
       fundingConflicts: null,
     })),
     synthesisAvailable: false,
+    synthesisText: null,
     practicalInterpretationAvailable: false,
+    practicalInterpretationText: null,
     sources: includedRecords.map((record) => ({
       citation: buildCitation(record, locale),
       doi: record.doi,

@@ -880,6 +880,82 @@ text with no visual signal of evidence strength.
   the report's logo strip, gold badge, card sections, and color-coded
   design badges.
 
+### First real AI wiring — extraction + synthesis (Erwin's request, Option A)
+Erwin asked to actually build the AI extraction/synthesis integration
+(`OPEN_RISKS.md` #18), chose "Option A" over building the full persisted-
+report flow first: wire AI into two low-risk, cost-bounded surfaces now
+(the fictional `/example-report` demo, and a new admin-only preview against
+real data) rather than waiting for the Supabase/Stripe live-report wiring
+(`OPEN_RISKS.md` #14) to exist. `buildPremiumReportData` itself is
+untouched and still pure/deterministic (its "never fabricates" test still
+passes unchanged) — AI is a separate, optional enrichment step layered on
+top.
+
+- **`@anthropic-ai/sdk` added.** `src/lib/ai/anthropic-client.ts`: lazy
+  client, same pattern as Stripe/Resend/Supabase (importing the module
+  never fails before `ANTHROPIC_API_KEY` is set).
+- **`src/lib/ai/study-extraction.ts`:** per-study structured extraction via
+  tool-use (forced `tool_choice`, not free-text parsing) — population,
+  intervention, outcome, result, uncertainty, limitations, funding/
+  conflicts. System prompt hard-constrains the model to only report what's
+  explicitly in the given title/abstract, null for anything not stated,
+  and never turn correlation into causation — the same evidence-integrity
+  rules `CLAUDE.md` already enforces everywhere else, now enforced via
+  prompt instead of just null defaults.
+- **`src/lib/ai/report-synthesis.ts`:** cross-study synthesis (key
+  findings, a short synthesis paragraph, a practical-interpretation
+  paragraph) from the already-extracted per-study summaries — system
+  prompt encodes `08_EVIDENCE_SAFETY_AND_CONFIDENCE_MODEL.md`'s rules
+  (never claim causation from correlation, never equate absence of
+  evidence with evidence of absence, no individualized advice, reflect
+  disagreement between studies honestly rather than smoothing it over).
+- **`src/lib/ai/report-enrichment.ts`:** the glue — checks
+  `AI_EXTRACTION_ENABLED`/`ANTHROPIC_API_KEY`, calls the two modules above,
+  and merges the results into a `PremiumReportData`; returns the report
+  **unchanged** if AI isn't configured or if anything fails (a thrown
+  error, a malformed response) — fails safe, never crashes the page, never
+  fabricates.
+- **`PremiumReportData` gained `synthesisText`/`practicalInterpretationText`**
+  (the actual prose — the existing `synthesisAvailable`/
+  `practicalInterpretationAvailable` booleans were tracked from Phase 8 but
+  nothing ever rendered when true, since there was no field to hold the
+  text). `PremiumReportView`'s synthesis/interpretation sections now render
+  this text when present.
+- **Wired into `/example-report`:** the fixed fictional demo data now runs
+  through real AI enrichment, cached per locale for 24h via Next's
+  `unstable_cache` — a real API call happens at most once a day per
+  locale, not once per visitor (this sandbox has no
+  `ANTHROPIC_API_KEY`/`AI_EXTRACTION_ENABLED`, so it correctly falls back
+  to the existing honest "not yet available" state, live-verified via
+  screenshot). Three of the five placeholder abstracts (the ones already
+  marked `dataCompleteness: "abstract"`) were rewritten with substantive
+  — still clearly `[Platzhalter]`-labeled fictional — content (a positive
+  RCT result, a mixed systematic review, a null-result narrative review)
+  so the demo can actually showcase the synthesis handling disagreement
+  between studies, not just extract "Nicht angegeben" from vague filler
+  text. The two `metadata_only` placeholders correctly keep no abstract.
+- **New `/admin/report-preview`:** admin-gated (same `requireAdminSession`
+  as the rest of `/admin`), runs a real search (typed question + topic)
+  through the actual pipeline plus AI enrichment, and renders the real
+  `PremiumReportView` — this is the tool for judging AI synthesis quality
+  against genuine evidence before deciding whether to build the full
+  persisted-report flow. Deliberately not public: an ungated live-AI page
+  would let any visitor (or bot) trigger paid API calls.
+- 9 new unit tests (`study-extraction`, `report-synthesis`,
+  `report-enrichment` — both the disabled/unconfigured path via the real
+  `serverEnv` and the enabled path via a mocked `serverEnv` module, per the
+  existing `check-free-search-limit` testing pattern in this codebase; no
+  real network calls in any test) + updated `premium-report.test.ts`
+  assertions for the two new fields. 246 unit tests + 1 integration test,
+  48 Playwright specs; `npm run verify` passes. Visually confirmed live:
+  `/example-report` still degrades honestly with no key configured, the
+  shortened pending-AI notices render correctly, and `/admin/report-preview`
+  is properly auth-gated.
+- **Not done, deliberately:** the real `/search` → paid checkout → stored
+  report flow still doesn't exist (`OPEN_RISKS.md` #14) — that's "Option B"
+  from this conversation, intentionally deferred until AI quality is
+  judged worthwhile via the admin preview tool above.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

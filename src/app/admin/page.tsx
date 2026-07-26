@@ -57,6 +57,9 @@ export default async function AdminOverviewPage() {
           <Link href="/admin/example-questions" className="text-brand-teal-700 hover:underline">
             Beispielfragen prüfen
           </Link>
+          <Link href="/admin/report-preview" className="text-brand-teal-700 hover:underline">
+            Report-Vorschau (KI)
+          </Link>
           <form action={adminLogoutAction}>
             <button type="submit" className="text-brand-teal-700 hover:underline">
               Abmelden

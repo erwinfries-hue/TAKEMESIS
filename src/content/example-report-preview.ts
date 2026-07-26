@@ -19,7 +19,8 @@ const PLACEHOLDER_RECORDS: NormalizedRecord[] = [
     venue: "[Platzhalter-Fachzeitschrift]",
     year: 2022,
     publicationType: "rct",
-    abstract: "Dies ist ein Platzhaltertext zur Layout-Demonstration, keine echte Studie.",
+    abstract:
+      "[Platzhalter] Randomisierte kontrollierte Studie mit 180 gesunden Erwachsenen (18-45 Jahre). Die Interventionsgruppe erhielt Methode A über 8 Wochen, die Kontrollgruppe ein Placebo. Die Zielgrösse verbesserte sich in der Interventionsgruppe signifikant stärker als in der Kontrollgruppe (Unterschied: 12%, 95%-Konfidenzintervall 4-20%, p=0.03). Limitation: kurze Nachbeobachtungszeit von 4 Wochen nach Studienende.",
     isOpenAccess: null,
     retractionStatus: "none",
     subjectConcepts: [],
@@ -36,7 +37,8 @@ const PLACEHOLDER_RECORDS: NormalizedRecord[] = [
     venue: "[Platzhalter-Fachzeitschrift 2]",
     year: 2020,
     publicationType: "systematic_review",
-    abstract: "Platzhaltertext für eine systematische Übersichtsarbeit.",
+    abstract:
+      "[Platzhalter] Systematische Übersichtsarbeit über 14 Studien mit insgesamt rund 2100 Teilnehmenden zu Methode B. Die meisten eingeschlossenen Studien berichteten einen positiven Effekt auf die Zielgrösse, einzelne Studien fanden jedoch keinen Effekt. Die Heterogenität zwischen den Studien war hoch. Limitation: uneinheitliche Studienqualität und unterschiedliche Falldefinitionen erschweren eine gepoolte Effektschätzung.",
     isOpenAccess: null,
     retractionStatus: "unknown",
     subjectConcepts: [],
@@ -87,7 +89,8 @@ const PLACEHOLDER_RECORDS: NormalizedRecord[] = [
     venue: "[Platzhalter-Fachzeitschrift 4]",
     year: 2024,
     publicationType: "review",
-    abstract: "Weiterer Platzhaltertext zur Demonstration eines Reviews.",
+    abstract:
+      "[Platzhalter] Narrative Übersichtsarbeit zu Methode E, basierend auf publizierten Studien der letzten zehn Jahre. Insgesamt fand sich in den meisten Einzelstudien kein eindeutiger Effekt von Methode E auf die untersuchte Zielgrösse. Limitation: keine systematische Suchstrategie, daher eingeschränkte Vollständigkeit der einbezogenen Literatur.",
     isOpenAccess: null,
     retractionStatus: "none",
     subjectConcepts: [],
