@@ -86,3 +86,52 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+/*
+ * Printed reports must stay light/legible regardless of the viewer's OS
+ * dark-mode setting (the `prefers-color-scheme: dark` override above would
+ * otherwise print a dark-navy page background) and must not have their
+ * accent colors silently stripped by the browser's default print behavior.
+ */
+@media print {
+  :root {
+    --background: #ffffff;
+    --foreground: var(--color-neutral-950);
+  }
+
+  body {
+    background: #ffffff;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  @page {
+    margin: 2cm;
+  }
+}
+
+/*
+ * Deliberately animates only `transform`, never `opacity` — an opacity
+ * fade leaves text at reduced contrast for the animation's duration, which
+ * a11y tooling (correctly) flags if it evaluates mid-transition, and is a
+ * real readability problem for anyone interacting during that window, not
+ * just a test artifact.
+ */
+@keyframes fade-in-up {
+  from {
+    transform: translateY(8px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up {
+    animation: none;
+  }
+}

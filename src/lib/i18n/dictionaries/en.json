@@ -15,12 +15,16 @@
   },
   "home": {
     "description": "TEKMESIS helps curious individuals find, compare, and understand scientific evidence for personal questions and everyday decisions.",
-    "heroExampleLabel": "For example:",
-    "heroExampleQuestion": "\"Does creatine actually work — or is it a waste of money?\"",
     "comingSoon": "The platform is under construction.",
     "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription.",
     "priceAnchor": "A wrong purchase or an ineffective approach usually costs more than CHF 9.90 — this report helps you know that in advance.",
     "heroCta": "Explore topics",
+    "liveDemoBadge": "Illustrative example",
+    "liveDemoHeading": "This is what your free teaser could look like",
+    "liveDemoQuestion": "Does creatine actually work — or is it a waste of money?",
+    "liveDemoCandidateLabel": "Records found",
+    "liveDemoIncludedLabel": "Studies included",
+    "liveDemoCta": "See the full example",
     "topicsTeaserHeading": "Broad topic coverage, not just health",
     "topicsTeaserIntro": "Twelve life domains, from health to technology — pick a domain or write your own question.",
     "topicsTeaserCta": "See all topics",
@@ -68,19 +72,35 @@
     "betaPositioning": "TEKMESIS is launching with a small, closed beta of 15 people. Joining now means directly shaping the product.",
     "refundNote": "If your report can't be generated for technical reasons, that's detected automatically and refunded. For anything else, just get in touch — we handle it personally, with a response within 3–5 business days.",
     "whyNotChatGptHeading": "Why not just ask ChatGPT?",
-    "whyNotChatGptIntro": "A chatbot answers almost anything instantly — the question is what the answer is actually based on. TEKMESIS is deliberately narrower and slower, for three reasons:",
-    "whyNotChatGptPoints": [
+    "whyNotChatGptIntro": "A chatbot answers almost anything instantly — the question is what the answer is actually based on. TEKMESIS is deliberately narrower and slower:",
+    "whyNotChatGptTableCriterionHeader": "Criterion",
+    "whyNotChatGptTableTekmesisHeader": "TEKMESIS",
+    "whyNotChatGptTableChatbotHeader": "Generic AI chatbot",
+    "whyNotChatGptRows": [
       {
-        "title": "Real sources, not a web summary",
-        "body": "Every claim links to specific studies from recognized scholarly databases — verifiable, not distilled from a general web search."
+        "criterion": "Answer basis",
+        "tekmesis": "Curated scholarly primary sources",
+        "chatbot": "Training data & general web search"
       },
       {
-        "title": "We don't sell what we can't support",
-        "body": "If the evidence base isn't sufficient, you're told that honestly — instead of a confident-sounding but unsupported answer."
+        "criterion": "Source links verifiable",
+        "tekmesis": "For every claim",
+        "chatbot": "Inconsistent"
       },
       {
-        "title": "No invented studies, by design",
-        "body": "Anything that doesn't come from real source data stays \"Not reported\" instead of guessed — that's built into the architecture, not just a promise."
+        "criterion": "When evidence is insufficient",
+        "tekmesis": "Says so honestly, sells nothing",
+        "chatbot": "Usually answers anyway"
+      },
+      {
+        "criterion": "Excluded studies",
+        "tekmesis": "Visible, with reasons",
+        "chatbot": "Not accessible"
+      },
+      {
+        "criterion": "Uncertainty",
+        "tekmesis": "Explicitly stated",
+        "chatbot": "Rarely named"
       }
     ],
     "whyNotChatGptCta": "See sources & methodology"
@@ -101,7 +121,9 @@
     "sourceRouteHeading": "Source routing",
     "elevatedRiskBadge": "High-risk sub-topics restricted",
     "yourQuestionPrefix": "Your entered question:",
-    "askedCountLabel": "{count} questions have already been asked in this domain"
+    "askedCountLabel": "{count} questions have already been asked in this domain",
+    "trendingHeading": "Most-asked topics this week",
+    "trendingCountLabel": "{count} questions"
   },
   "exampleReportPage": {
     "heading": "Example Report",
@@ -234,6 +256,8 @@
     "rateLimitedBody": "You've reached the maximum number of free searches for today. Please try again tomorrow.",
     "questionTooLongHeading": "Question too long",
     "questionTooLongBody": "Please shorten your question to a maximum of 500 characters.",
+    "loadingHeading": "We're searching scholarly databases for you",
+    "loadingBody": "Several recognized data sources matching your topic are being queried live. This can take a moment.",
     "restrictedHeading": "We can't automatically process this question",
     "restrictedBody": "Your question touches a high-risk topic (e.g. diagnosis, medication, acute symptoms, pregnancy, mental-health crisis). TEKMESIS does not offer an individual evaluation for this.",
     "restrictedHelp": "If you're experiencing an acute issue or a crisis, please contact a doctor or a qualified support service. In Switzerland, the Dargebotene Hand is available 24/7 at 143.",

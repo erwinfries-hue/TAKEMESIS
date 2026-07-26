@@ -13,7 +13,7 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
   ];
 
   return (
-    <header className="border-b border-brand-neutral-200 px-6 py-4 sm:px-10">
+    <header className="border-b border-brand-neutral-200 px-6 py-4 print:hidden sm:px-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link
           href="/"

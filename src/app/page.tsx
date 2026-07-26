@@ -5,6 +5,10 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
 import { TopicCard } from "@/components/topic-card";
 import { OwnQuestionForm } from "@/components/own-question-form";
+import { LiveDemoPreview } from "@/components/live-demo-preview";
+import { buildExampleReportPreviewSearchResult } from "@/content/example-report-preview";
+import { assessEligibility } from "@/lib/eligibility/eligibility";
+import { buildTeaserData } from "@/lib/eligibility/teaser";
 
 const TEASER_COUNT = 6;
 
@@ -12,6 +16,9 @@ export default async function Home() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const teaserTopics = topics.slice(0, TEASER_COUNT);
+
+  const demoSearchResult = buildExampleReportPreviewSearchResult(dict.home.liveDemoQuestion);
+  const demoTeaser = buildTeaserData(demoSearchResult, assessEligibility(demoSearchResult));
 
   return (
     <main className="flex flex-1 flex-col">
@@ -23,10 +30,7 @@ export default async function Home() {
         <h1 className="max-w-2xl text-3xl font-semibold leading-tight text-brand-navy-900 sm:text-4xl">
           {dict.home.description}
         </h1>
-        <p className="max-w-xl text-brand-neutral-600">
-          <span className="font-medium text-brand-teal-700">{dict.home.heroExampleLabel}</span>{" "}
-          {dict.home.heroExampleQuestion}
-        </p>
+        <LiveDemoPreview dict={dict} teaser={demoTeaser} />
         <p className="text-brand-neutral-600">{dict.home.comingSoon}</p>
         <Link
           href="/topics"
@@ -145,16 +149,36 @@ export default async function Home() {
         <p className="max-w-xl text-center text-brand-neutral-600">
           {dict.home.whyNotChatGptIntro}
         </p>
-        <div className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3">
-          {dict.home.whyNotChatGptPoints.map((point) => (
-            <div
-              key={point.title}
-              className="flex flex-col gap-2 rounded-lg border border-brand-neutral-200 bg-white p-4"
-            >
-              <h3 className="font-semibold text-brand-navy-900">{point.title}</h3>
-              <p className="text-sm text-brand-neutral-600">{point.body}</p>
-            </div>
-          ))}
+        <div className="w-full max-w-4xl overflow-x-auto rounded-lg border border-brand-neutral-200 bg-white">
+          <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-brand-neutral-200">
+                <th scope="col" className="p-4 font-semibold text-brand-navy-900">
+                  {dict.home.whyNotChatGptTableCriterionHeader}
+                </th>
+                <th scope="col" className="p-4 font-semibold text-brand-teal-700">
+                  {dict.home.whyNotChatGptTableTekmesisHeader}
+                </th>
+                <th scope="col" className="p-4 font-semibold text-brand-neutral-600">
+                  {dict.home.whyNotChatGptTableChatbotHeader}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {dict.home.whyNotChatGptRows.map((row, index) => (
+                <tr
+                  key={row.criterion}
+                  className={index % 2 === 1 ? "bg-brand-neutral-50" : undefined}
+                >
+                  <th scope="row" className="p-4 font-medium text-brand-navy-900">
+                    {row.criterion}
+                  </th>
+                  <td className="p-4 text-brand-neutral-950">{row.tekmesis}</td>
+                  <td className="p-4 text-brand-neutral-600">{row.chatbot}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
         <Link href="/methodology" className="font-medium text-brand-teal-700 hover:underline">
           {dict.home.whyNotChatGptCta} →

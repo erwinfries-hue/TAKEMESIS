@@ -15,12 +15,16 @@
   },
   "home": {
     "description": "TEKMESIS hilft wissbegierigen Privatpersonen, wissenschaftliche Studien zu persönlichen Fragen und Entscheidungen im Alltag zu finden, zu vergleichen und verständlich einzuordnen.",
-    "heroExampleLabel": "Zum Beispiel:",
-    "heroExampleQuestion": "„Wirkt Kreatin wirklich – oder ist es Geldverschwendung?“",
     "comingSoon": "Die Plattform befindet sich im Aufbau.",
     "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo.",
     "priceAnchor": "Eine falsche Kaufentscheidung oder ein wirkungsloses Vorgehen kostet meist mehr als CHF 9.90 — dieser Report hilft dir, das vorher zu wissen.",
     "heroCta": "Themen entdecken",
+    "liveDemoBadge": "Beispielhafte Darstellung",
+    "liveDemoHeading": "So könnte dein kostenloser Teaser aussehen",
+    "liveDemoQuestion": "Wirkt Kreatin wirklich – oder ist es Geldverschwendung?",
+    "liveDemoCandidateLabel": "Gefundene Treffer",
+    "liveDemoIncludedLabel": "Eingeschlossene Studien",
+    "liveDemoCta": "Vollständiges Beispiel ansehen",
     "topicsTeaserHeading": "Breite Themenvielfalt statt Gesundheitsfokus",
     "topicsTeaserIntro": "Zwölf Lebensbereiche, von Gesundheit bis Technologie — wähle einen Bereich oder stelle direkt deine eigene Frage.",
     "topicsTeaserCta": "Alle Themen ansehen",
@@ -68,19 +72,35 @@
     "betaPositioning": "TEKMESIS startet mit einer kleinen, geschlossenen Beta von 15 Personen. Wer jetzt einsteigt, prägt das Produkt aktiv mit.",
     "refundNote": "Kann dein Report aus technischen Gründen nicht erstellt werden, wird das automatisch erkannt und rückerstattet. Bei anderen Anliegen meldest du dich einfach bei uns — wir kümmern uns persönlich darum, Antwort innerhalb von 3–5 Werktagen.",
     "whyNotChatGptHeading": "Warum nicht einfach ChatGPT fragen?",
-    "whyNotChatGptIntro": "Ein Chatbot beantwortet fast alles sofort — die Frage ist, worauf die Antwort beruht. TEKMESIS ist bewusst enger und langsamer gebaut, aus drei Gründen:",
-    "whyNotChatGptPoints": [
+    "whyNotChatGptIntro": "Ein Chatbot beantwortet fast alles sofort — die Frage ist, worauf die Antwort beruht. TEKMESIS ist bewusst enger und langsamer gebaut:",
+    "whyNotChatGptTableCriterionHeader": "Kriterium",
+    "whyNotChatGptTableTekmesisHeader": "TEKMESIS",
+    "whyNotChatGptTableChatbotHeader": "Generischer KI-Chatbot",
+    "whyNotChatGptRows": [
       {
-        "title": "Echte Quellen statt Web-Zusammenfassung",
-        "body": "Jede Aussage verweist auf konkrete Studien aus anerkannten wissenschaftlichen Datenbanken — nachprüfbar, nicht aus einer allgemeinen Websuche destilliert."
+        "criterion": "Antwortbasis",
+        "tekmesis": "Kuratierte wissenschaftliche Primärquellen",
+        "chatbot": "Trainingsdaten & allgemeine Websuche"
       },
       {
-        "title": "Wir verkaufen nicht, was wir nicht belegen können",
-        "body": "Reicht die Studienlage nicht aus, bekommst du das ehrlich gesagt — statt einer selbstbewusst klingenden, aber unbelegten Antwort."
+        "criterion": "Quellenlinks nachprüfbar",
+        "tekmesis": "Bei jeder Aussage",
+        "chatbot": "Uneinheitlich"
       },
       {
-        "title": "Keine erfundenen Studien, strukturell ausgeschlossen",
-        "body": "Was nicht aus echten Quellendaten stammt, bleibt „Nicht angegeben“ statt geraten — das ist in der Architektur verankert, nicht nur ein Versprechen."
+        "criterion": "Bei unzureichender Evidenz",
+        "tekmesis": "Sagt es ehrlich, verkauft nichts",
+        "chatbot": "Antwortet meist trotzdem"
+      },
+      {
+        "criterion": "Ausgeschlossene Studien",
+        "tekmesis": "Sichtbar, mit Begründung",
+        "chatbot": "Nicht einsehbar"
+      },
+      {
+        "criterion": "Unsicherheit",
+        "tekmesis": "Explizit ausgewiesen",
+        "chatbot": "Selten benannt"
       }
     ],
     "whyNotChatGptCta": "Quellen & Methodik ansehen"
@@ -101,7 +121,9 @@
     "sourceRouteHeading": "Quellenrouting",
     "elevatedRiskBadge": "Hochrisiko-Unterthemen eingeschränkt",
     "yourQuestionPrefix": "Deine eingegebene Frage:",
-    "askedCountLabel": "{count} Fragen wurden in diesem Bereich bereits gestellt"
+    "askedCountLabel": "{count} Fragen wurden in diesem Bereich bereits gestellt",
+    "trendingHeading": "Meistgefragte Themen diese Woche",
+    "trendingCountLabel": "{count} Fragen"
   },
   "exampleReportPage": {
     "heading": "Beispiel-Report",
@@ -237,6 +259,8 @@
     "rateLimitedBody": "Du hast die maximale Anzahl kostenloser Suchen für heute erreicht. Bitte versuche es morgen erneut.",
     "questionTooLongHeading": "Frage zu lang",
     "questionTooLongBody": "Bitte kürze deine Frage auf maximal 500 Zeichen.",
+    "loadingHeading": "Wir durchsuchen wissenschaftliche Datenbanken für dich",
+    "loadingBody": "Passend zu deinem Thema werden mehrere anerkannte Datenquellen live abgefragt. Das kann einen Moment dauern.",
     "restrictedHeading": "Diese Frage können wir nicht automatisiert einordnen",
     "restrictedBody": "Deine Frage berührt ein Hochrisiko-Thema (z. B. Diagnose, Medikamente, akute Symptome, Schwangerschaft, psychische Krise). TEKMESIS bietet dafür keine individuelle Auswertung an.",
     "restrictedHelp": "Bei akuten Beschwerden oder einer Krise wende dich bitte an eine Ärztin, einen Arzt oder eine Fachstelle. In der Schweiz erreichst du die Dargebotene Hand rund um die Uhr unter Tel. 143.",

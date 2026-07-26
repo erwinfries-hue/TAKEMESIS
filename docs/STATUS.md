@@ -523,6 +523,78 @@ dependency:
   (screenshots) in this session's dev server, including confirming the
   social-proof badge correctly does not render pre-launch.
 
+### Market-acceptance review + WOW-effect pass (post-marketing-pass, Erwin's request)
+Erwin asked for a critical, honest market-acceptance review (product/offer/
+presentation/other) and separately for ideas that could create a genuine
+"wow" moment, then asked to implement everything scoped as small/medium
+effort. Full findings live in the chat record, not duplicated here; the
+single most important one: **the paid product's core value (AI synthesis,
+key findings, practical interpretation) doesn't exist yet** — no
+`ANTHROPIC_API_KEY` — so the biggest lever for both acceptance and "wow" is
+that, not UI polish. What was implemented from the small/medium-effort list
+(all honest — no fabricated data, no dark patterns, three ideas deliberately
+descoped from their original pitch for exactly those reasons):
+- **Visual confidence gauge** (`src/components/confidence-gauge.tsx`): a
+  4-segment bar alongside the existing text label (never replacing it —
+  color/shape alone must never carry the information) in both the free
+  teaser and the premium report.
+- **TEKMESIS vs. generic-AI-chatbot comparison table**: replaced the "why
+  not ChatGPT" section's three prose cards with a structured 5-row
+  comparison table. Deliberately compares against "a generic AI chatbot,"
+  not a named competitor by behavior claims — factual, verifiable claims
+  about TEKMESIS's own properties; generic, defensible characterizations on
+  the other side, avoiding unverifiable comparative-advertising claims
+  about a specific product.
+- **Honest branded loading state** (`src/app/search/loading.tsx`, Next.js's
+  automatic route-segment loading convention): **descoped from "live
+  per-source ticks"** — that would need a streaming architecture change and,
+  more importantly, would mean claiming a specific source is "done"
+  searching when we don't actually track per-source completion. What's
+  built instead is a real branded wait state ("we're searching scholarly
+  databases") show while the actual search runs — live-verified against the
+  real resilience path in this sandbox (screenshotted mid-search).
+- **Editorial print/PDF stylesheet**: **descoped from "a real PDF
+  generation service"** (Puppeteer et al. would be new server
+  infrastructure, not a stylesheet change) to CSS-only improvements to the
+  existing `window.print()` path: a print-only cover page
+  (`print-cover-page.tsx`, hidden on screen), page-break control around
+  study profiles/sources, `print-color-adjust: exact` so accent colors
+  survive printing, a light-mode-forced `@media print` override (the
+  existing `prefers-color-scheme: dark` rule would otherwise print a
+  dark-navy page background), and hiding the on-screen site header/footer
+  chrome in print so the report reads as a standalone document.
+- **Mini live-demo on the landing page** (`live-demo-preview.tsx`): a
+  compact, clearly-labeled ("Beispielhafte Darstellung") teaser preview
+  built by running the real `buildTeaserData` logic against the same vetted
+  fictional dataset `/example-report` already uses — not hand-invented
+  numbers. Replaced (not duplicated with) the plain-text hero example line
+  it superseded.
+- **"Most-asked topics this week"** (`src/lib/analytics/trending-topics.ts`,
+  `/topics`): **descoped from "most-asked *questions*" to most-asked
+  *topics*** — raw question text may never enter analytics (`CLAUDE.md`).
+  New `countByEventAndDomainSince()` on both repository implementations
+  (Supabase: `created_at` filter via PostgREST; in-memory: restructured to
+  track a `recordedAt` timestamp per event, which the public `events`
+  shape needed for existing tests didn't previously carry). Gated behind
+  `TRENDING_MIN_COUNT` (3) and capped at `TRENDING_TOP_N` (3), same
+  "don't show a misleading near-zero" principle as the social-proof badge.
+  Verified against real (temporarily hardcoded, then reverted) data via
+  screenshot since this sandbox has no live Supabase traffic to produce it
+  organically.
+- **Real regression caught and fixed by the a11y suite, not shipped**: the
+  live-demo card's initial CSS entrance animation faded in `opacity`
+  alongside `transform`; axe correctly caught reduced text contrast
+  mid-transition (2.12:1 against a required 4.5:1). Fixed by animating only
+  `transform`, never `opacity` — text now stays at full contrast throughout
+  the animation. This is the kind of thing "npm run verify passes" alone
+  wouldn't have caught without the full Playwright `@a11y` run.
+- 5 new unit tests (`trending-topics` ranking/threshold/cap/failure-resilience).
+  224 unit tests + 1 integration test, 46 Playwright specs (unchanged —
+  existing specs re-verified passing after the contrast fix, run repeated
+  5× to rule out flakiness); `npm run verify` passes. Landing, `/topics`,
+  `/search`'s loading state, and the print/PDF cover page all visually
+  confirmed live in this session's dev server via screenshots.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

@@ -21,7 +21,7 @@ export function StudyProfileCard({
   ];
 
   return (
-    <article className="rounded-xl border border-brand-neutral-200 bg-white p-5">
+    <article className="rounded-xl border border-brand-neutral-200 bg-white p-5 print:break-inside-avoid">
       <p className="font-medium text-brand-navy-900">{profile.citation}</p>
       <p className="mt-1 text-sm text-brand-neutral-600">
         {dict.premiumReportPage.profileDesignLabel}: {dict.publicationTypeLabels[profile.design]}

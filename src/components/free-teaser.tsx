@@ -2,6 +2,7 @@ import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import type { TeaserData } from "@/lib/eligibility/teaser";
 import type { EligibilityStatus } from "@/lib/eligibility/eligibility";
+import { ConfidenceGauge } from "@/components/confidence-gauge";
 
 function formatSearchDate(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(locale === "de" ? "de-CH" : "en-CH", {
@@ -85,9 +86,7 @@ export function FreeTeaser({
         <h2 className="mb-2 font-semibold text-brand-navy-900">
           {dict.teaserPage.confidenceHeading}
         </h2>
-        <span className="inline-block rounded-full bg-brand-teal-100 px-3 py-1 text-sm font-medium text-brand-teal-700">
-          {dict.confidenceLabels[teaser.confidenceLabel]}
-        </span>
+        <ConfidenceGauge label={teaser.confidenceLabel} dict={dict} />
         <p className="mt-2 text-xs text-brand-neutral-600">
           {dict.teaserPage.confidencePreliminaryNote}
         </p>

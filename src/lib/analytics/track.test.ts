@@ -37,6 +37,7 @@ describe("track", () => {
     const failingRepository = {
       record: vi.fn().mockRejectedValue(new Error("Supabase is not configured")),
       countByEventAndDomain: vi.fn(),
+      countByEventAndDomainSince: vi.fn(),
     };
     await expect(
       track({ eventName: "domain_classified" }, failingRepository),

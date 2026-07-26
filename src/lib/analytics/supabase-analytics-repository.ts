@@ -25,4 +25,19 @@ export class SupabaseAnalyticsRepository implements AnalyticsEventRepository {
     if (error) throw error;
     return count ?? 0;
   }
+
+  async countByEventAndDomainSince(
+    eventName: AnalyticsEventName,
+    domainSlug: string,
+    since: Date,
+  ): Promise<number> {
+    const { count, error } = await getSupabaseClient()
+      .from("analytics_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_name", eventName)
+      .eq("metadata->>domainSlug", domainSlug)
+      .gte("created_at", since.toISOString());
+    if (error) throw error;
+    return count ?? 0;
+  }
 }

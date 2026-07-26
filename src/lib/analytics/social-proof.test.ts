@@ -36,6 +36,9 @@ describe("getAskedCountForDomain", () => {
       countByEventAndDomain: async () => {
         throw new Error("Supabase is not configured");
       },
+      countByEventAndDomainSince: async () => {
+        throw new Error("Supabase is not configured");
+      },
     };
     await expect(getAskedCountForDomain("lernen-bildung", failingRepository)).resolves.toBeNull();
   });

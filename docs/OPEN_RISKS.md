@@ -146,17 +146,36 @@ checkpoint (decision #15) and before each production-readiness gate.
     with a deployed Vercel project (to provision `CRON_SECRET` and confirm
     the cron actually fires).
 
-17. **Marketing differentiation pass: two small live-validation gaps.**
+17. **Marketing differentiation pass: three small live-validation gaps.**
     (a) No Open Graph image — `layout.tsx` now sends `og:title`/
     `og:description` but no `og:image`, since no branded 1200×630 asset
     exists anywhere in this repo (`public/` is empty); a shared link will
     render as a text-only card until one is designed and added. (b) The
     `/topics` social-proof counter (`getAskedCountForDomain`,
-    `SOCIAL_PROOF_MIN_COUNT = 5`) is code-complete and unit-tested but has
-    never run against a real Supabase project — same live-validation gap as
-    everything else Supabase-backed (#13). It fails safe (renders nothing)
-    when unreachable, confirmed live in this sandbox, so this is a
-    "not yet verified," not a "known broken."
+    `SOCIAL_PROOF_MIN_COUNT = 5`) and (c) the "most-asked topics this week"
+    ranking (`getTrendingTopics`, `TRENDING_MIN_COUNT = 3`) are both
+    code-complete and unit-tested but have never run against a real Supabase
+    project or real traffic — same live-validation gap as everything else
+    Supabase-backed (#13). Both fail safe (render nothing) when unreachable,
+    confirmed live in this sandbox, so this is "not yet verified," not
+    "known broken" — and both will start showing real data on their own
+    once real beta traffic crosses their thresholds, no further code needed.
+
+18. **The paid product's core value doesn't exist yet — this is the actual
+    gap behind every "market acceptance" concern, not a UI issue.** Per the
+    market-acceptance review discussed with Erwin: `PremiumReportData`'s
+    `keyFindings`, `synthesisAvailable`, and `practicalInterpretationAvailable`
+    are structurally `null`/`false` until `ANTHROPIC_API_KEY` exists and
+    AI-based extraction/synthesis is built (tracked since Phase 3/8, see the
+    "Not started" section of `STATUS.md`) — today's report is real
+    citations/screening/stats plus an honest "not yet available" where the
+    actual answer should be. All the differentiation/WOW work in this and
+    the prior pass (comparison table, confidence gauge, live demo, editorial
+    print) is legitimate and worth having, but none of it substitutes for
+    this. Should be the next priority once Erwin decides how to proceed —
+    needs the API key (a `CLAUDE.md` human-stop-condition secret) and a
+    product decision on scope/cost per report (decision #9's CHF 1.00–1.50
+    estimate).
 
 ## Not risks, but explicit go/no-go gates already defined
 

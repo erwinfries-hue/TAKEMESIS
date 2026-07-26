@@ -6,6 +6,7 @@ import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { OwnQuestionForm } from "@/components/own-question-form";
 import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
+import { getTrendingTopics } from "@/lib/analytics/trending-topics";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -20,6 +21,13 @@ export default async function TopicsPage() {
     topics.map(async (topic) => [topic.slug, await getAskedCountForDomain(topic.slug)] as const),
   );
   const askedCountBySlug = new Map(askedCounts);
+  const trendingTopics = await getTrendingTopics(topics.map((topic) => topic.slug));
+  const trendingWithCopy = trendingTopics
+    .map((trending) => {
+      const topic = topics.find((t) => t.slug === trending.domainSlug);
+      return topic ? { topic, copy: topicCopy(topic, locale), count: trending.count } : null;
+    })
+    .filter((entry) => entry !== null);
 
   return (
     <main className="flex flex-1 flex-col items-center gap-12 px-6 py-16 sm:px-10">
@@ -29,6 +37,29 @@ export default async function TopicsPage() {
         </h1>
         <p className="text-brand-neutral-600">{dict.topicsPage.intro}</p>
       </div>
+
+      {trendingWithCopy.length > 0 && (
+        <div className="flex w-full max-w-2xl flex-col items-center gap-3">
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-brand-neutral-600">
+            {dict.topicsPage.trendingHeading}
+          </h2>
+          <ul className="flex flex-wrap justify-center gap-2">
+            {trendingWithCopy.map((entry) => (
+              <li key={entry.topic.slug}>
+                <a
+                  href={`#${entry.topic.slug}`}
+                  className="flex items-center gap-2 rounded-full border border-brand-teal-600 bg-brand-teal-100 px-4 py-2 text-sm font-medium text-brand-teal-700 hover:bg-brand-teal-600 hover:text-white"
+                >
+                  {entry.copy.name}
+                  <span className="text-xs font-normal">
+                    {dict.topicsPage.trendingCountLabel.replace("{count}", String(entry.count))}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <Suspense>
         <OwnQuestionForm dict={dict} id="eigene-frage" />

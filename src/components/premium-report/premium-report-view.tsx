@@ -1,6 +1,8 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumReportData } from "@/lib/reports/premium-report";
+import { ConfidenceGauge } from "@/components/confidence-gauge";
 import { PendingAiNotice } from "./pending-ai-notice";
+import { PrintCoverPage } from "./print-cover-page";
 import { EvidenceLandscapeSection } from "./evidence-landscape-section";
 import { StudyComparisonMatrix } from "./study-comparison-matrix";
 import { StudyProfileCard } from "./study-profile-card";
@@ -32,6 +34,7 @@ export function PremiumReportView({
 
   return (
     <article className="flex w-full max-w-4xl flex-col gap-10 text-left print:max-w-none">
+      <PrintCoverPage dict={dict} report={report} />
       <nav
         aria-label={p.coverHeading}
         className="sticky top-0 z-10 flex flex-wrap gap-x-4 gap-y-1 border-b border-brand-neutral-200 bg-brand-neutral-50 px-2 py-3 text-xs print:hidden"
@@ -74,9 +77,7 @@ export function PremiumReportView({
           <div>
             <dt className="text-xs text-brand-neutral-600">{p.confidenceHeading}</dt>
             <dd>
-              <span className="inline-block rounded-full bg-brand-teal-100 px-2 py-0.5 text-xs font-medium text-brand-teal-700">
-                {dict.confidenceLabels[report.confidenceLabel]}
-              </span>
+              <ConfidenceGauge label={report.confidenceLabel} dict={dict} size="sm" />
             </dd>
           </div>
         </dl>
@@ -148,7 +149,7 @@ export function PremiumReportView({
       </section>
 
       {/* 5. Detailed Study Profiles */}
-      <section id="profiles" className="scroll-mt-16">
+      <section id="profiles" className="scroll-mt-16 print:break-before-page">
         <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.profilesHeading}</h2>
         <div className="flex flex-col gap-3">
           {report.profiles.map((profile, index) => (
@@ -166,9 +167,7 @@ export function PremiumReportView({
       {/* 7. Evidence Confidence */}
       <section id="confidence" className="scroll-mt-16">
         <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.confidenceHeading}</h2>
-        <span className="inline-block rounded-full bg-brand-teal-100 px-3 py-1 text-sm font-medium text-brand-teal-700">
-          {dict.confidenceLabels[report.confidenceLabel]}
-        </span>
+        <ConfidenceGauge label={report.confidenceLabel} dict={dict} />
         <div className="mt-3">
           <PendingAiNotice dict={dict} />
         </div>
@@ -181,7 +180,7 @@ export function PremiumReportView({
       </section>
 
       {/* 9. Open Questions and Sources */}
-      <section id="sources" className="scroll-mt-16">
+      <section id="sources" className="scroll-mt-16 print:break-before-page">
         <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.openQuestionsHeading}</h2>
         <SourceAppendix dict={dict} sources={report.sources} />
       </section>

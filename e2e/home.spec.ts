@@ -3,7 +3,9 @@ import AxeBuilder from "@axe-core/playwright";
 
 test("home page renders the TEKMESIS brand claim", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByText("TEKMESIS", { exact: true })).toBeVisible();
+  // Scoped to the header link, not exact-text — the "why not ChatGPT"
+  // comparison table's TEKMESIS column header also matches "TEKMESIS".
+  await expect(page.getByRole("link", { name: "TEKMESIS", exact: true })).toBeVisible();
   await expect(page.getByText("FROM STUDIES TO CLARITY.")).toBeVisible();
 });
 
