@@ -1,5 +1,6 @@
 import "server-only";
 import { getSupabaseClient } from "@/lib/db/supabase-client";
+import type { AnalyticsEventName } from "./events";
 import type { AnalyticsEventInput, AnalyticsEventRepository } from "./analytics-repository";
 
 /** Untested against a live database — see the same note in supabase-report-repository.ts. */
@@ -12,5 +13,16 @@ export class SupabaseAnalyticsRepository implements AnalyticsEventRepository {
       metadata: input.metadata,
     });
     if (error) throw error;
+  }
+
+  /** Filters on the jsonb `metadata->>domainSlug` text path via PostgREST's arrow-operator column syntax — no grouping query/DB function needed. */
+  async countByEventAndDomain(eventName: AnalyticsEventName, domainSlug: string): Promise<number> {
+    const { count, error } = await getSupabaseClient()
+      .from("analytics_events")
+      .select("*", { count: "exact", head: true })
+      .eq("event_name", eventName)
+      .eq("metadata->>domainSlug", domainSlug);
+    if (error) throw error;
+    return count ?? 0;
   }
 }

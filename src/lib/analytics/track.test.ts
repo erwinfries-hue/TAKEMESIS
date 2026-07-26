@@ -32,4 +32,15 @@ describe("track", () => {
     const repository = new InMemoryAnalyticsRepository();
     await expect(track({ eventName: "landing_viewed" }, repository)).resolves.toBeUndefined();
   });
+
+  it("does not throw when the repository fails (e.g. Supabase unconfigured) — a page must never break because analytics failed", async () => {
+    const failingRepository = {
+      record: vi.fn().mockRejectedValue(new Error("Supabase is not configured")),
+      countByEventAndDomain: vi.fn(),
+    };
+    await expect(
+      track({ eventName: "domain_classified" }, failingRepository),
+    ).resolves.toBeUndefined();
+    expect(failingRepository.record).toHaveBeenCalledOnce();
+  });
 });

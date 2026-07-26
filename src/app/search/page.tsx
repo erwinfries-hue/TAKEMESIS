@@ -19,6 +19,7 @@ import { SearchFailedNotice } from "@/components/search-failed-notice";
 import { SearchLimitNotice } from "@/components/search-limit-notice";
 import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { checkFreeSearchLimit } from "@/lib/security/check-free-search-limit";
+import { track } from "@/lib/analytics/track";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -105,6 +106,16 @@ export default async function SearchPage({
       </main>
     );
   }
+
+  // Domain confirmed — record this regardless of the rate-limit outcome
+  // below, since it reflects genuine visitor interest in the domain, not
+  // just successful searches; feeds the /topics "N questions already
+  // asked" social-proof line once a domain crosses SOCIAL_PROOF_MIN_COUNT.
+  // Awaited (not fire-and-forget): on a serverless platform, an un-awaited
+  // promise can be cut off once the response is sent. track() never throws
+  // even if Supabase is unreachable (see analytics/track.ts), so this never
+  // breaks the page — it only ever adds a small, bounded delay.
+  await track({ eventName: "domain_classified", metadata: { domainSlug: confirmedTopic.slug } });
 
   // Domain confirmed: check the free-search limit (decision #7) right before
   // the costly step — the classification/clarification above is free/local.

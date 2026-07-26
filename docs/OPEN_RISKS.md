@@ -119,6 +119,15 @@ checkpoint (decision #15) and before each production-readiness gate.
     forwarding has been verified against a live account (`EMAIL_API_KEY` /
     PostHog site ID are both unset) — same live-validation gap as the source
     adapters and Stripe/Supabase, tracked here rather than assumed working.
+    **Update (marketing differentiation pass):** discovered that `track()`
+    itself had never been called from any route despite being fully built —
+    the funnel-event pipeline was completely disconnected. `track()` is now
+    resilient to a failing repository (see #17), and `domain_classified` is
+    wired in `/search`. The other ~25 events in the allowlist
+    (`question_submitted`, `paywall_viewed`, `checkout_completed`,
+    `report_ready`, etc.) are still not called anywhere — wiring them is
+    real, separate work for whenever the admin funnel dashboards from this
+    item are actually built (no value in tracking events nothing reads yet).
 
 16. **Report retention/expiry job (decision #5) is built but never triggered
     live, and there's still no page that reads it back.** `src/lib/reports/
@@ -136,6 +145,18 @@ checkpoint (decision #15) and before each production-readiness gate.
     as #14, extended to the post-purchase side. Owner: Erwin or next session
     with a deployed Vercel project (to provision `CRON_SECRET` and confirm
     the cron actually fires).
+
+17. **Marketing differentiation pass: two small live-validation gaps.**
+    (a) No Open Graph image — `layout.tsx` now sends `og:title`/
+    `og:description` but no `og:image`, since no branded 1200×630 asset
+    exists anywhere in this repo (`public/` is empty); a shared link will
+    render as a text-only card until one is designed and added. (b) The
+    `/topics` social-proof counter (`getAskedCountForDomain`,
+    `SOCIAL_PROOF_MIN_COUNT = 5`) is code-complete and unit-tested but has
+    never run against a real Supabase project — same live-validation gap as
+    everything else Supabase-backed (#13). It fails safe (renders nothing)
+    when unreachable, confirmed live in this sandbox, so this is a
+    "not yet verified," not a "known broken."
 
 ## Not risks, but explicit go/no-go gates already defined
 

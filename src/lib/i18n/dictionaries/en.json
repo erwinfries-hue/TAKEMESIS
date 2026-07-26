@@ -15,8 +15,11 @@
   },
   "home": {
     "description": "TEKMESIS helps curious individuals find, compare, and understand scientific evidence for personal questions and everyday decisions.",
+    "heroExampleLabel": "For example:",
+    "heroExampleQuestion": "\"Does creatine actually work — or is it a waste of money?\"",
     "comingSoon": "The platform is under construction.",
     "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription.",
+    "priceAnchor": "A wrong purchase or an ineffective approach usually costs more than CHF 9.90 — this report helps you know that in advance.",
     "heroCta": "Explore topics",
     "topicsTeaserHeading": "Broad topic coverage, not just health",
     "topicsTeaserIntro": "Twelve life domains, from health to technology — pick a domain or write your own question.",
@@ -61,7 +64,26 @@
       "No health profiles",
       "Warning before sensitive input",
       "Self-service report deactivation"
-    ]
+    ],
+    "betaPositioning": "TEKMESIS is launching with a small, closed beta of 15 people. Joining now means directly shaping the product.",
+    "refundNote": "If your report can't be generated for technical reasons, that's detected automatically and refunded. For anything else, just get in touch — we handle it personally, with a response within 3–5 business days.",
+    "whyNotChatGptHeading": "Why not just ask ChatGPT?",
+    "whyNotChatGptIntro": "A chatbot answers almost anything instantly — the question is what the answer is actually based on. TEKMESIS is deliberately narrower and slower, for three reasons:",
+    "whyNotChatGptPoints": [
+      {
+        "title": "Real sources, not a web summary",
+        "body": "Every claim links to specific studies from recognized scholarly databases — verifiable, not distilled from a general web search."
+      },
+      {
+        "title": "We don't sell what we can't support",
+        "body": "If the evidence base isn't sufficient, you're told that honestly — instead of a confident-sounding but unsupported answer."
+      },
+      {
+        "title": "No invented studies, by design",
+        "body": "Anything that doesn't come from real source data stays \"Not reported\" instead of guessed — that's built into the architecture, not just a promise."
+      }
+    ],
+    "whyNotChatGptCta": "See sources & methodology"
   },
   "ownQuestionForm": {
     "heading": "Ask your own question",
@@ -78,7 +100,8 @@
     "limitationsHeading": "Limits of this domain",
     "sourceRouteHeading": "Source routing",
     "elevatedRiskBadge": "High-risk sub-topics restricted",
-    "yourQuestionPrefix": "Your entered question:"
+    "yourQuestionPrefix": "Your entered question:",
+    "askedCountLabel": "{count} questions have already been asked in this domain"
   },
   "exampleReportPage": {
     "heading": "Example Report",
@@ -264,7 +287,9 @@
     "heading": "Full Report",
     "contentsHeading": "Included in the report",
     "priceVersionLabel": "Price version",
-    "checkoutComingSoon": "Stripe checkout will be wired up in a later build step (Phase 7). The full report can't be purchased yet."
+    "checkoutComingSoon": "Stripe checkout will be wired up in a later build step (Phase 7). The full report can't be purchased yet.",
+    "exampleReportCta": "See what a full report looks like",
+    "refundNote": "Technical failures are detected automatically and refunded. For anything else: support@tekmesis.com (response within 3–5 business days)."
   },
   "notEligiblePage": {
     "heading": "We can't offer a report for this question right now",

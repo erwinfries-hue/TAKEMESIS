@@ -452,6 +452,77 @@ Resend/PostHog/Vercel Cron credentials and network access), the deferred
 Phase 9 admin sections, and the secure-link report viewer noted in Phase 10
 above — all tracked in `OPEN_RISKS.md`.
 
+### Marketing differentiation pass (post-Phase-13, Erwin's request)
+Erwin asked for a marketer's assessment of what to optimize for market
+potential without adding complexity, then to implement all of it. Eight
+opportunities were identified and all eight were implemented as copy/config/
+small-repository-method changes — no new architecture, no new external
+dependency:
+- **"Why not just ask ChatGPT?" section** (`src/app/page.tsx`, new
+  `home.whyNotChatGpt*` dictionary keys): the single biggest unaddressed
+  objection a visitor has — real curated sources, the eligibility gate (we
+  don't sell what we can't support), and the structural no-fabrication
+  guarantee, positioned right after the price section, linking to
+  `/methodology`.
+- **Example-Report CTA on the paywall itself** (`PaywallPanel`): a link to
+  `/example-report` right where someone is deciding whether to pay — the
+  strongest existing trust signal wasn't visible at the moment it matters most.
+- **Open Graph / Twitter metadata** (`layout.tsx`): `title`/`description`
+  now render properly when a link is shared (WhatsApp is the common DACH
+  sharing channel). No `og:image` — no branded 1200×630 asset exists in this
+  repo, and inventing one isn't this session's call; noted as a follow-up
+  in `OPEN_RISKS.md`.
+- **Honest refund note near price** (`home.refundNote`,
+  `paywallPanel.refundNote`): deliberately **not** worded as a "money-back
+  guarantee" — `docs/09_MONETIZATION_STRIPE_AND_REPORT_LIFECYCLE.md` only
+  documents automatic refund for technical generation failure plus manual
+  refunds for other cases, not an unconditional satisfaction guarantee.
+  Marketing a broader promise than the actual policy would misrepresent it.
+- **Social-proof counter per topic** (`/topics`, "N questions already asked
+  in this domain"), gated behind `SOCIAL_PROOF_MIN_COUNT = 5`
+  (`src/lib/analytics/social-proof.ts`) so it never shows a misleading "0" or
+  "1" before real beta traffic exists — it will start appearing on its own
+  once a domain crosses the threshold. Building this surfaced a real,
+  previously undocumented gap: **`track()` (Phase 9's analytics module) was
+  never called from any route** — the whole event-recording pipeline existed
+  but was fully disconnected. Fixed as part of this pass:
+  - `track()` now catches repository failures instead of throwing (matches
+    `forwardToPostHog`'s existing "analytics is optional, must never break
+    the page" principle) — necessary because this session has no Supabase
+    configured, so without this fix, wiring `domain_classified` into
+    `/search` would have 500'd the page on every domain confirmation.
+  - `domain_classified` is now tracked in `/search` when a domain is
+    confirmed (awaited, not fire-and-forget, since an un-awaited promise can
+    be cut off on a serverless platform once the response is sent).
+  - `AnalyticsEventRepository.countByEventAndDomain()` added to both
+    implementations — Supabase via PostgREST's `metadata->>domainSlug`
+    jsonb-path filter (no grouping query/DB function needed), in-memory via
+    a plain filter.
+  - Every other funnel event from Phase 9's allowlist (question_submitted,
+    paywall_viewed, checkout_completed, etc.) is still not called anywhere —
+    only `domain_classified` was wired, scoped to what this feature needed.
+    Wiring the rest is real, separate work, tracked in `OPEN_RISKS.md`.
+- **Price anchor** (`home.priceAnchor`): "a wrong decision usually costs
+  more than CHF 9.90" — reframes the price against the cost of *not* having
+  the answer, not against subscription fatigue.
+- **Beta positioning** (`home.betaPositioning`): "join the first 15" stated
+  as a feature (early influence), not hidden — matches decision #15's actual
+  15-person closed beta rather than inventing exclusivity.
+- **Hero example question** (`home.heroExampleQuestion`): a single concrete,
+  high-intent example ("Does creatine actually work — or is it a waste of
+  money?") right under the headline, before the "12 broad topics" framing —
+  leads with a decision people already spend money on, per the analysis that
+  "curious platform for anyone" is a weak acquisition hook compared to a
+  concrete stakes-bearing question.
+- 5 new unit tests (`track` resilience,
+  `InMemoryAnalyticsRepository.countByEventAndDomain`,
+  `getAskedCountForDomain` threshold gating × 2 + failure resilience). 220
+  unit tests + 1 integration test, 46 Playwright specs (unchanged — no new
+  e2e state was introduced, existing specs re-verified passing); `npm run
+  verify` passes. Landing page and `/topics` visually confirmed live
+  (screenshots) in this session's dev server, including confirming the
+  social-proof badge correctly does not render pre-launch.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

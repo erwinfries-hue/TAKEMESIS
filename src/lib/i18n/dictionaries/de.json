@@ -15,8 +15,11 @@
   },
   "home": {
     "description": "TEKMESIS hilft wissbegierigen Privatpersonen, wissenschaftliche Studien zu persönlichen Fragen und Entscheidungen im Alltag zu finden, zu vergleichen und verständlich einzuordnen.",
+    "heroExampleLabel": "Zum Beispiel:",
+    "heroExampleQuestion": "„Wirkt Kreatin wirklich – oder ist es Geldverschwendung?“",
     "comingSoon": "Die Plattform befindet sich im Aufbau.",
     "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo.",
+    "priceAnchor": "Eine falsche Kaufentscheidung oder ein wirkungsloses Vorgehen kostet meist mehr als CHF 9.90 — dieser Report hilft dir, das vorher zu wissen.",
     "heroCta": "Themen entdecken",
     "topicsTeaserHeading": "Breite Themenvielfalt statt Gesundheitsfokus",
     "topicsTeaserIntro": "Zwölf Lebensbereiche, von Gesundheit bis Technologie — wähle einen Bereich oder stelle direkt deine eigene Frage.",
@@ -61,7 +64,26 @@
       "Keine Gesundheitsprofile",
       "Warnhinweis vor sensiblen Eingaben",
       "Report jederzeit selbst deaktivierbar"
-    ]
+    ],
+    "betaPositioning": "TEKMESIS startet mit einer kleinen, geschlossenen Beta von 15 Personen. Wer jetzt einsteigt, prägt das Produkt aktiv mit.",
+    "refundNote": "Kann dein Report aus technischen Gründen nicht erstellt werden, wird das automatisch erkannt und rückerstattet. Bei anderen Anliegen meldest du dich einfach bei uns — wir kümmern uns persönlich darum, Antwort innerhalb von 3–5 Werktagen.",
+    "whyNotChatGptHeading": "Warum nicht einfach ChatGPT fragen?",
+    "whyNotChatGptIntro": "Ein Chatbot beantwortet fast alles sofort — die Frage ist, worauf die Antwort beruht. TEKMESIS ist bewusst enger und langsamer gebaut, aus drei Gründen:",
+    "whyNotChatGptPoints": [
+      {
+        "title": "Echte Quellen statt Web-Zusammenfassung",
+        "body": "Jede Aussage verweist auf konkrete Studien aus anerkannten wissenschaftlichen Datenbanken — nachprüfbar, nicht aus einer allgemeinen Websuche destilliert."
+      },
+      {
+        "title": "Wir verkaufen nicht, was wir nicht belegen können",
+        "body": "Reicht die Studienlage nicht aus, bekommst du das ehrlich gesagt — statt einer selbstbewusst klingenden, aber unbelegten Antwort."
+      },
+      {
+        "title": "Keine erfundenen Studien, strukturell ausgeschlossen",
+        "body": "Was nicht aus echten Quellendaten stammt, bleibt „Nicht angegeben“ statt geraten — das ist in der Architektur verankert, nicht nur ein Versprechen."
+      }
+    ],
+    "whyNotChatGptCta": "Quellen & Methodik ansehen"
   },
   "ownQuestionForm": {
     "heading": "Eigene Frage stellen",
@@ -78,7 +100,8 @@
     "limitationsHeading": "Grenzen dieses Bereichs",
     "sourceRouteHeading": "Quellenrouting",
     "elevatedRiskBadge": "Hochrisiko-Unterthemen eingeschränkt",
-    "yourQuestionPrefix": "Deine eingegebene Frage:"
+    "yourQuestionPrefix": "Deine eingegebene Frage:",
+    "askedCountLabel": "{count} Fragen wurden in diesem Bereich bereits gestellt"
   },
   "exampleReportPage": {
     "heading": "Beispiel-Report",
@@ -267,7 +290,9 @@
     "heading": "Vollständiger Report",
     "contentsHeading": "Im Report enthalten",
     "priceVersionLabel": "Preisversion",
-    "checkoutComingSoon": "Der Stripe-Checkout wird in einem der nächsten Ausbauschritte angebunden (Phase 7). Aktuell kann der vollständige Report noch nicht gekauft werden."
+    "checkoutComingSoon": "Der Stripe-Checkout wird in einem der nächsten Ausbauschritte angebunden (Phase 7). Aktuell kann der vollständige Report noch nicht gekauft werden.",
+    "exampleReportCta": "So sieht ein vollständiger Report aus",
+    "refundNote": "Technisches Fehlschlagen wird automatisch erkannt und rückerstattet. Sonst: support@tekmesis.com (Antwort in 3–5 Werktagen)."
   },
   "notEligiblePage": {
     "heading": "Für diese Frage können wir aktuell keinen Report anbieten",

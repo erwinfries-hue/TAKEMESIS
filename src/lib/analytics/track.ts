@@ -20,18 +20,28 @@ const defaultRepository = new SupabaseAnalyticsRepository();
  * remember not to pass raw question text), persists it to the
  * source-of-truth repository, and best-effort forwards to PostHog.
  */
+/**
+ * Persisting an event must never break the page that triggered it — same
+ * "analytics is optional" principle as `forwardToPostHog`'s null-client
+ * no-op, extended to the repository itself: a misconfigured or unreachable
+ * Supabase (e.g. SUPABASE_URL unset) must not turn into a 500 on `/search`.
+ */
 export async function track(
   params: TrackParams,
   repository: AnalyticsEventRepository = defaultRepository,
 ): Promise<void> {
   const safeMetadata = sanitizeMetadata(params.metadata);
 
-  await repository.record({
-    eventName: params.eventName,
-    reportId: params.reportId ?? null,
-    anonymizedSessionId: params.anonymizedSessionId ?? null,
-    metadata: safeMetadata,
-  });
+  try {
+    await repository.record({
+      eventName: params.eventName,
+      reportId: params.reportId ?? null,
+      anonymizedSessionId: params.anonymizedSessionId ?? null,
+      metadata: safeMetadata,
+    });
+  } catch (error) {
+    console.error(`Analytics: failed to record "${params.eventName}"`, error);
+  }
 
   forwardToPostHog(params.eventName, safeMetadata, params.anonymizedSessionId ?? undefined);
 }

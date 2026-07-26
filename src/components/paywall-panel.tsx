@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 export function PaywallPanel({
@@ -17,11 +18,15 @@ export function PaywallPanel({
           <li key={feature}>✓ {feature}</li>
         ))}
       </ul>
+      <Link href="/example-report" className="text-sm font-medium text-brand-teal-700 hover:underline">
+        {dict.paywallPanel.exampleReportCta} →
+      </Link>
       <p className="text-2xl font-semibold text-brand-navy-900">{priceDisplay}</p>
       <p className="text-xs text-brand-neutral-600">{dict.home.priceNote}</p>
       <p className="text-xs text-brand-neutral-600">
         {dict.paywallPanel.priceVersionLabel}: {priceVersion}
       </p>
+      <p className="text-xs text-brand-neutral-600">{dict.paywallPanel.refundNote}</p>
       <p className="rounded-lg bg-brand-neutral-100 p-3 text-xs text-brand-neutral-600">
         {dict.paywallPanel.checkoutComingSoon}
       </p>

@@ -5,6 +5,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { OwnQuestionForm } from "@/components/own-question-form";
+import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -15,6 +16,10 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function TopicsPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
+  const askedCounts = await Promise.all(
+    topics.map(async (topic) => [topic.slug, await getAskedCountForDomain(topic.slug)] as const),
+  );
+  const askedCountBySlug = new Map(askedCounts);
 
   return (
     <main className="flex flex-1 flex-col items-center gap-12 px-6 py-16 sm:px-10">
@@ -32,6 +37,7 @@ export default async function TopicsPage() {
       <div className="flex w-full max-w-4xl flex-col gap-8">
         {topics.map((topic) => {
           const copy = topicCopy(topic, locale);
+          const askedCount = askedCountBySlug.get(topic.slug);
           return (
             <article
               key={topic.slug}
@@ -40,6 +46,11 @@ export default async function TopicsPage() {
             >
               <div className="mb-2 flex flex-wrap items-center gap-3">
                 <h2 className="text-xl font-semibold text-brand-navy-900">{copy.name}</h2>
+                {askedCount != null && (
+                  <span className="rounded-full bg-brand-teal-100 px-2 py-0.5 text-xs font-medium text-brand-teal-700">
+                    {dict.topicsPage.askedCountLabel.replace("{count}", String(askedCount))}
+                  </span>
+                )}
                 {topic.riskProfile === "elevated" && (
                   <span className="rounded-full bg-brand-warning-100 px-2 py-0.5 text-xs font-medium text-brand-warning-600">
                     {dict.topicsPage.elevatedRiskBadge}

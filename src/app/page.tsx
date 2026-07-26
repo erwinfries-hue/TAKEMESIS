@@ -23,6 +23,10 @@ export default async function Home() {
         <h1 className="max-w-2xl text-3xl font-semibold leading-tight text-brand-navy-900 sm:text-4xl">
           {dict.home.description}
         </h1>
+        <p className="max-w-xl text-brand-neutral-600">
+          <span className="font-medium text-brand-teal-700">{dict.home.heroExampleLabel}</span>{" "}
+          {dict.home.heroExampleQuestion}
+        </p>
         <p className="text-brand-neutral-600">{dict.home.comingSoon}</p>
         <Link
           href="/topics"
@@ -125,6 +129,36 @@ export default async function Home() {
           </div>
         </div>
         <p className="text-sm text-brand-neutral-600">{dict.home.priceNote}</p>
+        <p className="max-w-xl text-center text-sm font-medium text-brand-navy-900">
+          {dict.home.priceAnchor}
+        </p>
+        <p className="max-w-xl text-center text-xs text-brand-neutral-600">
+          {dict.home.refundNote}
+        </p>
+      </section>
+
+      {/* 6b. Differentiation: why not a general-purpose AI chatbot */}
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10">
+        <h2 className="text-2xl font-semibold text-brand-navy-900">
+          {dict.home.whyNotChatGptHeading}
+        </h2>
+        <p className="max-w-xl text-center text-brand-neutral-600">
+          {dict.home.whyNotChatGptIntro}
+        </p>
+        <div className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-3">
+          {dict.home.whyNotChatGptPoints.map((point) => (
+            <div
+              key={point.title}
+              className="flex flex-col gap-2 rounded-lg border border-brand-neutral-200 bg-white p-4"
+            >
+              <h3 className="font-semibold text-brand-navy-900">{point.title}</h3>
+              <p className="text-sm text-brand-neutral-600">{point.body}</p>
+            </div>
+          ))}
+        </div>
+        <Link href="/methodology" className="font-medium text-brand-teal-700 hover:underline">
+          {dict.home.whyNotChatGptCta} →
+        </Link>
       </section>
 
       {/* 7. Source/method transparency */}
@@ -142,6 +176,7 @@ export default async function Home() {
       <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-16 text-center sm:px-10">
         <h2 className="text-2xl font-semibold text-brand-navy-900">{dict.home.trustHeading}</h2>
         <p className="max-w-xl text-brand-neutral-600">{dict.home.trustBody}</p>
+        <p className="max-w-xl font-medium text-brand-teal-700">{dict.home.betaPositioning}</p>
         <ul className="flex flex-wrap justify-center gap-3 text-sm text-brand-neutral-600">
           {dict.home.trustPoints.map((point) => (
             <li
