@@ -201,6 +201,24 @@ checkpoint (decision #15) and before each production-readiness gate.
     product decision on scope/cost per report (decision #9's CHF 1.00–1.50
     estimate).
 
+19. **`topics.ts`'s example questions have never been checked against real
+    evidence coverage.** They were written during Phase 2 for topical
+    illustration, before this project had any live network access — a live
+    test (2026-07-26) showed a Gesundheit & Prävention example
+    ("Welche Massnahmen senken das Risiko häufiger Rückenschmerzen?")
+    reliably comes back `not_eligible`. Per the Broad-domain rule
+    (`CLAUDE.md`: "tested for researchability... tested for evidence
+    sufficiency," "unsupported questions must not be sold"), an example that
+    can't itself pass eligibility is a real content gap. A diagnostic tool
+    now exists to check this properly instead of guessing —
+    `/admin/example-questions` (see `STATUS.md`) runs every example question
+    of a chosen topic through the real search+eligibility pipeline and shows
+    per-question results. **Not done yet:** actually running it against all
+    12 topics on the live Vercel deployment and curating `topics.ts` based on
+    the real results — replacement questions must themselves be checked
+    before being added, not invented. Owner: Erwin (run the tool on
+    `takemesis.vercel.app`, report back which examples fail per topic).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

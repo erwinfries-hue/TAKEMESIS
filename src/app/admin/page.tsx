@@ -54,6 +54,9 @@ export default async function AdminOverviewPage() {
           <Link href="/admin/payments" className="text-brand-teal-700 hover:underline">
             Zahlungen
           </Link>
+          <Link href="/admin/example-questions" className="text-brand-teal-700 hover:underline">
+            Beispielfragen prüfen
+          </Link>
           <form action={adminLogoutAction}>
             <button type="submit" className="text-brand-teal-700 hover:underline">
               Abmelden

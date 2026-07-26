@@ -685,6 +685,54 @@ surfaced a real bug:
   `relevance.ts` (re-exported from `screening.ts` for existing importers).
   232 unit tests + 1 integration test; `npm run verify` passes.
 
+### Admin tool: live-verify example questions (post-round-2 fix, Erwin's request)
+Erwin tested a third live question ("Welche Massnahmen senken das Risiko
+häufiger Rückenschmerzen?", Gesundheit & Prävention) and got a correct but
+disappointing "not eligible" result, then pointed out something the prior
+fixes hadn't addressed: the example questions shown on `/topics` were never
+actually checked against real evidence coverage — they were written for
+topical illustration during Phase 2, when this project had no live network
+access at all. `CLAUDE.md`'s Broad-domain rule requires every question to be
+"tested for researchability" and "tested for evidence sufficiency," and
+"unsupported questions must not be sold" — so an example question that
+reliably comes back not-eligible is a real content gap, not just a rough
+edge.
+- `src/lib/admin/example-question-check.ts`: `checkExampleQuestionsForTopicWithAdapters`
+  runs every example question of one topic through the real
+  `runSearchWithAdapters` + `assessEligibility` pipeline (no shortcuts —
+  the actual screening/ranking/eligibility code, not a simulation), same
+  testable-with-fake-adapters split as `runSearch`/`runSearchWithAdapters`
+  from Phase 5. `checkExampleQuestionsForTopic` wraps it with the real
+  routed adapters. Sequential per question (not parallel) to respect
+  NCBI's unauthenticated rate limit and to keep one invocation bounded.
+- `/admin/example-questions`: new admin-gated page (`requireAdminSession`,
+  same as the rest of `/admin`) — pick a topic + locale, see every example
+  question's live eligibility, included/result-bearing counts, and any
+  per-source errors, in a table. `maxDuration = 60` declared on the route
+  segment since a topic's worth of sequential live API calls can exceed a
+  default 10s serverless budget (actual ceiling depends on Erwin's Vercel
+  plan — that's a plan constraint, not a code defect, if it still times
+  out). Linked from the main `/admin` overview.
+- **Live-verified in this sandbox in the one way that's actually possible
+  here:** logged into a real running build via Playwright, ran the
+  Gesundheit & Prävention topic — since this sandbox still has no network
+  to the 4 source APIs, every question correctly showed "Eignet sich
+  nicht" with real per-source connection-failure errors listed (not a
+  crash, not a fake success) — confirming the auth gate, form, live
+  pipeline call, and error surfacing all work end-to-end. The actually
+  useful output (which example questions hold up against real evidence)
+  can only come from Erwin running this on the live Vercel deployment.
+- **Deliberately not done in this pass:** curating `topics.ts`'s example
+  question lists themselves. Per the evidence-integrity rule, replacement
+  questions can't be invented without checking them too — the correct next
+  step is for Erwin to run this tool per topic on `takemesis.vercel.app`
+  and report which questions come back `not_eligible`, so any edits to
+  `topics.ts` are themselves evidence-checked, not guessed.
+- 5 new unit tests (`example-question-check.test.ts`, fake-adapter based:
+  per-question result mapping, not-eligible-on-empty, eligible-on-genuine-
+  match, per-source error surfacing, unknown-topic-slug safety). 237 unit
+  tests + 1 integration test; `npm run verify` passes.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
