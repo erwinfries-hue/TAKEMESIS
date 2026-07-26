@@ -1304,6 +1304,73 @@ the live site:
   `/`, both forms present on `/topics`). `npm run verify` and
   `npm run test:e2e` (59/59) both pass unchanged.
 
+### Full UI/UX audit pass (Erwin's request: "4 hours, test and optimize everything meticulously")
+Screenshotted every page/state at desktop (1280×900) and mobile (390×844),
+reviewed each image, and verified suspected issues against actual DOM/CSS
+(`page.evaluate()`) before treating anything as real — this ruled out two
+false alarms (see below) as well as confirming the real fixes.
+
+- **Real bug found and fixed: leading icons on notice cards drift into the
+  middle of multi-line headings on mobile.** All five status-notice
+  components (`high-risk-notice.tsx`, `not-eligible-notice.tsx`,
+  `search-failed-notice.tsx`, `search-limit-notice.tsx`,
+  `study-lookup-notice.tsx`) pair a leading icon with an `<h1>` inside a
+  `flex items-center` row. On desktop the headings mostly fit one line, so
+  `items-center` looked fine; on a 390px-wide mobile viewport the
+  high-risk-question heading wraps to three lines, and `items-center`
+  centers the icon against the whole three-line block — landing it
+  mid-sentence next to the second line instead of leading the heading.
+  Fixed the same way across all five: `items-start` on the row plus `mt-1`
+  on the icon (aligning it to the first line's cap-height instead of the
+  block's vertical center). Verified against a live screenshot of the
+  high-risk state at 390px before and after — icon now stays beside line
+  one regardless of how many lines the heading wraps to, with no
+  regression on the shorter two-line headings.
+- **Real bug found and fixed: 7-item "How it works" / methodology-steps
+  grids left an unbalanced empty gap in the last row.** Both the homepage's
+  `howItWorksSteps` (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`, 7 items)
+  and `/methodology`'s `steps` (`grid-cols-1 sm:grid-cols-2`, 7 items) don't
+  divide evenly into their column counts, so the last row's empty cell(s)
+  sat as dead space on the right. Switched both from CSS Grid to
+  `flex flex-wrap justify-center` with explicit per-breakpoint `calc()`
+  widths, so an incomplete final row centers itself instead. Verified via
+  screenshot on the homepage (items 05/06/07 now centered as a group); the
+  methodology fix follows the identical pattern.
+- **Real bug found and fixed: the "why not ChatGPT" comparison table hides
+  a whole column on mobile with no indication more content exists.**
+  Confirmed via `page.evaluate()` (`scrollWidth: 576` vs `clientWidth:
+  340`, `overflowX: "auto"`) that the table needs horizontal scrolling on
+  mobile but gave no visual cue — a mobile visitor could easily miss the
+  entire "generic AI chatbot" column, which is the whole point of that
+  section. Added a `sm:hidden` hint line above the table ("swipe the table
+  right to see the chatbot comparison →").
+- **False alarm, investigated and ruled out: the legal page's address line
+  looked like a styled link in a screenshot.** `page.evaluate()` confirmed
+  identical `color: rgb(76, 89, 102)` on both that line and the plain text
+  above it, and neither is an `<a>`. No code change.
+- **False alarm, investigated and ruled out: admin login appeared broken
+  during the audit.** Reproducible against a plain `npm run dev`, but the
+  full e2e suite (same login flow, same credentials) had just passed. Root
+  cause: `playwright.config.ts`'s `webServer.env` sets
+  `ADMIN_EMAILS`/`ADMIN_AUTH_SECRET` only for its own built+started server;
+  a manually-run `npm run dev` doesn't inherit them. Restarted the dev
+  server with those env vars set for audit purposes only — no code change.
+- Every other screenshot (checkout success/cancel, 404, all `/search`
+  failure/notice states, all admin pages, `/privacy`, `/legal`, `/about`,
+  `/example-report`, both viewports) was reviewed and found clean.
+- **Pre-existing e2e failures found while re-running the full suite,
+  confirmed unrelated by stashing all of this pass's changes and
+  re-running against the untouched baseline:** the rate-limit test in
+  `search.spec.ts` and an intermittent header/console-error failure in
+  `security-headers.spec.ts` both fail identically with zero code changes
+  applied — see `OPEN_RISKS.md` #24 for the detail and a likely root
+  cause. Not fixed in this pass since it's orthogonal to UI/UX and
+  pre-dates it.
+- `npm run lint`, `npm run typecheck`, `npm run test` (288/288),
+  `npm run test:integration` (1/1), and `npm run build` all pass clean on
+  the accumulated changes from this pass. `npm run test:e2e` passes
+  55/59, with the 4 failures confirmed pre-existing per above.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

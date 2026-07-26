@@ -98,13 +98,17 @@ export default async function Home() {
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.howItWorksHeading}
         </h2>
-        <ol className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* flex-wrap + justify-center rather than a 4-column grid: 7 steps
+            don't divide evenly into 4 columns, so a grid leaves an empty
+            gap in the last row. This centers the incomplete last row
+            instead. */}
+        <ol className="flex w-full max-w-4xl flex-wrap justify-center gap-4">
           {dict.home.howItWorksSteps.map((step, index) => {
             const StepIcon = PROCESS_STEP_ICONS[index];
             return (
               <li
                 key={step}
-                className="flex flex-col gap-2 rounded-lg border border-brand-neutral-200 bg-white p-4"
+                className="flex w-full flex-col gap-2 rounded-lg border border-brand-neutral-200 bg-white p-4 sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]"
               >
                 <div className="flex items-center gap-2">
                   {StepIcon && <StepIcon className="h-5 w-5 text-brand-teal-600" />}
@@ -161,6 +165,9 @@ export default async function Home() {
         </h2>
         <p className="max-w-xl text-center text-brand-neutral-600">
           {dict.home.whyNotChatGptIntro}
+        </p>
+        <p className="text-xs text-brand-neutral-600 sm:hidden">
+          {dict.home.whyNotChatGptSwipeHint}
         </p>
         <div className="w-full max-w-4xl overflow-x-auto rounded-lg border border-brand-neutral-200 bg-white">
           <table className="w-full min-w-[36rem] border-collapse text-left text-sm">

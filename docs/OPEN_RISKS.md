@@ -324,6 +324,28 @@ checkpoint (decision #15) and before each production-readiness gate.
     confirm the resolved title, the `SeedStudyPanel` render, and that the
     comparison results correctly exclude the seed study.
 
+24. **Two e2e tests fail in this sandbox against `npm run build && npm run
+    start`, unrelated to any code change — confirmed pre-existing by
+    stashing all working changes and re-running against the untouched
+    baseline commit.** `e2e/search.spec.ts`'s rate-limit test exhausts
+    `FREE_SEARCH_LIMIT` (5 requests) then expects a 6th to be blocked, but
+    the block never happens — `checkFreeSearchLimit` falls back to
+    `InMemoryRateLimiter` (module-level singleton) since Supabase isn't
+    configured, which should persist counts across requests within one
+    process; the counts apparently don't accumulate as expected under
+    this sandbox's `next start` process model. `e2e/security-headers.spec.ts`
+    intermittently fails the same way (missing CSP header on one run,
+    console errors from Supabase-not-configured trending-topics fetches on
+    another) — likely a related or adjacent flake in the same built/started
+    server. Not investigated further here since it's orthogonal to the
+    UI/UX audit pass that surfaced it and reproduces identically without
+    any of that pass's changes. Owner: whoever next touches
+    `src/lib/security/in-memory-rate-limiter.ts` or the e2e `webServer`
+    setup — reproduce with `npm run test:e2e -- --grep "rate-limit"` and
+    check whether `next start` (Turbopack) runs request handling across
+    more than one process/worker, which would explain why a module-level
+    singleton doesn't see all requests.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

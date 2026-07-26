@@ -23,11 +23,14 @@ export default async function MethodologyPage() {
         <MethodologyFunnelIllustration className="h-24 w-auto sm:h-28" />
       </div>
 
-      <ol className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
+      {/* flex-wrap + justify-center rather than a 2-column grid: 7 steps
+          are an odd count, so a grid leaves the last item alone on the
+          left with an empty gap beside it. This centers it instead. */}
+      <ol className="flex w-full max-w-4xl flex-wrap justify-center gap-4">
         {dict.methodologyPage.steps.map((step, index) => (
           <li
             key={step.title}
-            className="flex flex-col gap-1 rounded-xl border border-brand-neutral-200 bg-white p-5"
+            className="flex w-full flex-col gap-1 rounded-xl border border-brand-neutral-200 bg-white p-5 sm:w-[calc(50%-0.5rem)]"
           >
             <span className="text-xs font-semibold text-brand-teal-700">
               {String(index + 1).padStart(2, "0")}

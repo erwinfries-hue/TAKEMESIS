@@ -74,6 +74,7 @@
     "refundNote": "Kann dein Report aus technischen Gründen nicht erstellt werden, wird das automatisch erkannt und rückerstattet. Bei anderen Anliegen meldest du dich einfach bei uns — wir kümmern uns persönlich darum, Antwort innerhalb von 3–5 Werktagen.",
     "whyNotChatGptHeading": "Warum nicht einfach ChatGPT fragen?",
     "whyNotChatGptIntro": "Ein Chatbot beantwortet fast alles sofort — die Frage ist, worauf die Antwort beruht. TEKMESIS ist bewusst enger und langsamer gebaut:",
+    "whyNotChatGptSwipeHint": "Tabelle nach rechts wischen, um den Chatbot-Vergleich zu sehen →",
     "whyNotChatGptTableCriterionHeader": "Kriterium",
     "whyNotChatGptTableTekmesisHeader": "TEKMESIS",
     "whyNotChatGptTableChatbotHeader": "Generischer KI-Chatbot",

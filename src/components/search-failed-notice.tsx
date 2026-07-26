@@ -14,8 +14,8 @@ export function SearchFailedNotice({
       role="alert"
       className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-6 text-left"
     >
-      <div className="flex items-center gap-2">
-        <InfoIcon className="h-5 w-5 shrink-0 text-brand-teal-600" />
+      <div className="flex items-start gap-2">
+        <InfoIcon className="mt-1 h-5 w-5 shrink-0 text-brand-teal-600" />
         <h1 className="text-xl font-semibold text-brand-navy-900">
           {dict.searchFailedPage.heading}
         </h1>
