@@ -80,32 +80,37 @@ function OwnQuestionFormFields({
       id={id}
       action="/search"
       method="get"
-      className="flex h-full w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm"
+      className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm"
     >
       <h2 className="font-semibold text-brand-navy-900">{dict.ownQuestionForm.heading}</h2>
-      <label htmlFor="own-question" className="text-sm font-medium text-brand-neutral-950">
-        {dict.ownQuestionForm.label}
-      </label>
-      <textarea
-        id="own-question"
-        name="q"
-        rows={3}
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-        placeholder={dict.ownQuestionForm.placeholder}
-        maxLength={MAX_QUESTION_LENGTH}
-        aria-describedby={suggestedTopicName ? "own-question-suggestion" : undefined}
-        className="w-full resize-none rounded-lg border border-brand-neutral-200 p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400"
-      />
-      {suggestedTopicName && (
-        <p id="own-question-suggestion" role="status" className="text-xs text-brand-teal-700">
-          {dict.ownQuestionForm.suggestionPrefix} <strong>{suggestedTopicName}</strong>
-        </p>
-      )}
-      <p className="text-xs text-brand-neutral-600">{dict.ownQuestionForm.warning}</p>
+      {/* Same flex-1/justify-center wrapper as the paired StudyLookupForm
+          card, so both stay structurally symmetric regardless of which
+          one ends up taller as content changes. */}
+      <div className="flex flex-1 flex-col justify-center gap-3">
+        <label htmlFor="own-question" className="text-sm font-medium text-brand-neutral-950">
+          {dict.ownQuestionForm.label}
+        </label>
+        <textarea
+          id="own-question"
+          name="q"
+          rows={3}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          placeholder={dict.ownQuestionForm.placeholder}
+          maxLength={MAX_QUESTION_LENGTH}
+          aria-describedby={suggestedTopicName ? "own-question-suggestion" : undefined}
+          className="w-full resize-none rounded-lg border border-brand-neutral-200 p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400"
+        />
+        {suggestedTopicName && (
+          <p id="own-question-suggestion" role="status" className="text-xs text-brand-teal-700">
+            {dict.ownQuestionForm.suggestionPrefix} <strong>{suggestedTopicName}</strong>
+          </p>
+        )}
+        <p className="text-xs text-brand-neutral-600">{dict.ownQuestionForm.warning}</p>
+      </div>
       <button
         type="submit"
-        className="mt-auto self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
+        className="self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800 disabled:cursor-not-allowed disabled:opacity-60"
         disabled={value.trim().length === 0}
       >
         {dict.ownQuestionForm.submit}
