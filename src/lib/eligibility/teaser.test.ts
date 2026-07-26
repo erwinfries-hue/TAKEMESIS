@@ -18,7 +18,7 @@ function fakeSearchResult(records: NormalizedRecord[], perSource: SearchRunResul
     candidateCount: records.length + 2,
     duplicatesRemoved: 2,
     includedCount: records.length,
-    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0 },
+    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
     perSource,
     rankedIncluded: scored,
     detailed: scored,

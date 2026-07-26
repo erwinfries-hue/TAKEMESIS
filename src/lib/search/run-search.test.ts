@@ -30,7 +30,11 @@ describe("runSearchWithAdapters", () => {
       records: [makeRecord({ source: "crossref", title: "Active Recall Study" })],
     });
 
-    const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a, b]);
+    const result = await runSearchWithAdapters(
+      "spaced repetition active recall study",
+      "lernen-bildung",
+      [a, b],
+    );
 
     expect(result.candidateCount).toBe(2);
     expect(result.includedCount).toBe(2);
@@ -48,7 +52,10 @@ describe("runSearchWithAdapters", () => {
     });
     const broken = fakeAdapter("crossref", { fails: true });
 
-    const result = await runSearchWithAdapters("x", "lernen-bildung", [working, broken]);
+    const result = await runSearchWithAdapters("Fixture Study", "lernen-bildung", [
+      working,
+      broken,
+    ]);
 
     expect(result.includedCount).toBe(1);
     const crossrefStatus = result.perSource.find((s) => s.source === "crossref");
@@ -85,7 +92,7 @@ describe("runSearchWithAdapters", () => {
   it("records the screening version and search date", async () => {
     const a = fakeAdapter("openalex", { records: [] });
     const result = await runSearchWithAdapters("x", "lernen-bildung", [a]);
-    expect(result.screeningVersion).toBe("screening-v1");
+    expect(result.screeningVersion).toBe("screening-v2");
     expect(() => new Date(result.searchDate).toISOString()).not.toThrow();
   });
 });

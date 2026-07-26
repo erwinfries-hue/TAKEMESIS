@@ -69,7 +69,7 @@ export default async function Home() {
         className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10"
       >
         <Suspense>
-          <OwnQuestionForm dict={dict} />
+          <OwnQuestionForm dict={dict} locale={locale} />
         </Suspense>
       </section>
 

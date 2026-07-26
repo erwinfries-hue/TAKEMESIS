@@ -18,6 +18,25 @@ test("submitting the own-question form on the home page reaches /search with a c
   await expect(page.getByLabel("Lernen & Bildung")).toBeChecked();
 });
 
+test("the own-question form shows a live, debounced domain suggestion while typing — matching what submitting actually classifies to", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByLabel("Deine Frage").fill("Welche Lernmethode verbessert den Lernerfolg?");
+  // Scoped to the status element specifically — "Lernen & Bildung" also
+  // appears as a topic-card heading in the homepage's teaser grid.
+  await expect(page.getByRole("status")).toHaveText("Könnte passen zu: Lernen & Bildung");
+});
+
+test("the live domain suggestion disappears when the question is cleared", async ({ page }) => {
+  await page.goto("/");
+  const question = page.getByLabel("Deine Frage");
+  await question.fill("Welche Lernmethode verbessert den Lernerfolg?");
+  await expect(page.getByRole("status")).toBeVisible();
+  await question.fill("");
+  await expect(page.getByRole("status")).not.toBeVisible();
+});
+
 test("confirming a domain runs the real search pipeline (this sandbox has no network access to the source APIs, so it correctly reaches the search-failed state, not a fake success)", async ({
   page,
 }) => {

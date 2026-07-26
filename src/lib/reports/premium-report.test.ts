@@ -18,7 +18,7 @@ function fakeSearchResult(records: NormalizedRecord[]): SearchRunResult {
     candidateCount: records.length + 3,
     duplicatesRemoved: 3,
     includedCount: records.length,
-    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0 },
+    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
     perSource: [
       { source: "openalex", ok: true, recordCount: records.length },
       { source: "crossref", ok: false, recordCount: 0, error: "timeout" },

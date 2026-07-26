@@ -1,11 +1,47 @@
 import type { NormalizedRecord } from "@/lib/source-adapters/types";
 
+/**
+ * Closed-class function words (articles, prepositions, conjunctions,
+ * pronouns, auxiliary/modal verb forms, question words) in German and
+ * English — the two locales this app ships. Filtering these out matters
+ * because real questions are heavily templated around a handful of generic
+ * connector words ("hilft", "wirkt", "verbessert" show up across nearly
+ * every topic's example questions); without this, those words alone could
+ * make a totally unrelated record look relevant.
+ */
+const STOPWORDS = new Set([
+  // German
+  "der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem",
+  "einer", "eines", "und", "oder", "aber", "wie", "was", "wer", "wen", "wem",
+  "wessen", "welche", "welcher", "welches", "welchen", "welchem", "ist",
+  "sind", "war", "waren", "sein", "bin", "bist", "seid", "hat", "haben",
+  "hatte", "hatten", "wird", "werden", "wurde", "wurden", "kann", "können",
+  "konnte", "sollte", "sollten", "muss", "müssen", "darf", "dürfen", "nicht",
+  "auch", "noch", "nur", "schon", "sehr", "mehr", "als", "am", "im", "in",
+  "an", "auf", "aus", "bei", "beim", "bis", "durch", "für", "gegen", "mit",
+  "nach", "seit", "über", "um", "unter", "von", "vor", "zu", "zur", "zum",
+  "zwischen", "dass", "ob", "weil", "wenn", "während", "dich", "mich",
+  "sich", "uns", "euch", "ihn", "ihm", "ihr", "ihre", "ihrer", "sie", "er",
+  "es", "du", "ich", "wir",
+  // English
+  "the", "and", "or", "but", "if", "then", "than", "as", "of", "to", "in",
+  "on", "at", "by", "for", "with", "about", "against", "between", "into",
+  "through", "during", "before", "after", "above", "below", "from", "up",
+  "down", "out", "off", "over", "under", "again", "further", "once", "here",
+  "there", "when", "where", "why", "how", "all", "any", "both", "each",
+  "few", "more", "most", "other", "some", "such", "nor", "not", "only",
+  "own", "same", "too", "very", "can", "will", "just", "should", "now",
+  "does", "did", "doing", "this", "that", "these", "those", "you", "he",
+  "she", "it", "we", "they", "which", "whom", "are", "was", "were", "been",
+  "being", "have", "has", "had",
+]);
+
 function tokenize(text: string): string[] {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9äöüß]+/g, " ")
     .split(" ")
-    .filter((word) => word.length > 2);
+    .filter((word) => word.length > 2 && !STOPWORDS.has(word));
 }
 
 /**

@@ -24,12 +24,29 @@ checkpoint (decision #15) and before each production-readiness gate.
    recorded live responses. **Update (Phase 6):** the all-sources-unreachable
    resilience path was confirmed live in this same sandbox — `/search` with a
    confirmed domain correctly renders `SearchFailedNotice` rather than a
-   fabricated result, since all 4 adapters genuinely fail here. **Still open
-   before Phase 4/5 are considered fully validated:** run each adapter's
-   `search()` against the real API from an environment with normal network
-   access (locally, or a Vercel preview) and confirm the actual response shape
-   (and a real success-path teaser render) matches what the fixtures assume.
-   Owner: Erwin or next session with network access.
+   fabricated result, since all 4 adapters genuinely fail here. **Update
+   (live-network validation pass):** the real gap this item was tracking is now
+   partially closed — Erwin deployed a real Vercel project
+   (`erwinfries-hue/TAKEMESIS`, branch `claude/takemesis-mvp-app-f622xx`) and
+   ran two real questions against the live APIs. The success path does work
+   (real results came back from real sources), but it surfaced a genuine bug:
+   irrelevant records (wrong topic entirely) were passing screening because the
+   already-computed relevance score was only used for ranking, never exclusion.
+   Fixed: see `STATUS.md`'s "Live-network validation pass" entry
+   (`MIN_RELEVANCE_SCORE = 0.4` in `screening.ts`, stopword filtering in
+   `relevance.ts`). This threshold is reasoned and numerically checked against
+   the two real examples encountered, but **not exhaustively tuned** — revisit
+   once more real questions/traffic are observed, in case it's too strict or
+   too loose for phrasings not yet seen. **Still open:** one of the two live
+   runs showed an "OpenAlex nicht erreichbar" notice; Erwin was asked to check
+   Vercel's Runtime Logs for the OpenAlex-specific error line to determine
+   whether this is a genuine OpenAlex outage or a fixable timeout/serverless-
+   duration-limit mismatch (Vercel Hobby's default function timeout vs. the
+   adapter's own retry/timeout budget), but hasn't done so yet. Also
+   unconfirmed: whether the orphaned `takemesis-preview` Vercel project
+   (created by an initial clone-flow misstep before the real import) was ever
+   deleted — cosmetic, not a functional risk. Owner: Erwin or next session
+   with access to the live Vercel logs.
 
 ## Blocking (must resolve before Phase 7 is signed off as production-ready)
 

@@ -31,4 +31,26 @@ describe("computeRelevanceScore", () => {
     const record = makeRecord({ title: "Anything" });
     expect(computeRelevanceScore("   ", record)).toBe(0);
   });
+
+  it("does not let generic connector words alone count as relevance (real production case)", () => {
+    // "Hilft Kreatin beim Muskelaufbau?" vs. a record only sharing "hilft"/"beim".
+    const record = makeRecord({ title: "Offene Kultur hilft beim Risikomanagement", abstract: null });
+    const score = computeRelevanceScore("Hilft Kreatin beim Muskelaufbau?", record);
+    expect(score).toBeLessThan(0.4);
+  });
+
+  it("still scores highly when the actual content terms overlap, ignoring stopwords", () => {
+    const record = makeRecord({
+      title: "Botenstoff hilft beim Muskelaufbau bei Muskelschwund",
+      abstract: null,
+    });
+    const score = computeRelevanceScore("Hilft Kreatin beim Muskelaufbau?", record);
+    expect(score).toBeGreaterThanOrEqual(0.4);
+  });
+
+  it("ignores German and English stopwords when tokenizing (they never count toward the denominator)", () => {
+    const record = makeRecord({ title: "Retention", abstract: null });
+    // "does" and "the" are stopwords - "retention" is the only meaningful term.
+    expect(computeRelevanceScore("does the retention", record)).toBe(1);
+  });
 });

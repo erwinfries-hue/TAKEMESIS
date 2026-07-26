@@ -595,6 +595,62 @@ descoped from their original pitch for exactly those reasons):
   `/search`'s loading state, and the print/PDF cover page all visually
   confirmed live in this session's dev server via screenshots.
 
+### Live-network validation pass (post-WOW-effect, Erwin's request)
+Erwin asked to actually test the app rather than just read about it. Since
+this sandbox's egress policy blocks all 4 source APIs, a real Vercel project
+was set up (`erwinfries-hue/TAKEMESIS`, Production Branch set to
+`claude/takemesis-mvp-app-f622xx`, confirmed auto-redeploy on push) — the
+first environment in this project's history with genuine internet access to
+OpenAlex/Crossref/Europe PMC/NCBI. This is exactly the live-network
+validation `OPEN_RISKS.md` #2 had been waiting for, and it immediately
+surfaced a real bug:
+
+- **Bug found live:** two real test questions ("ist das Elektrofahrzeug
+  nachhaltiger als ein vergleichbares Dieselfahrzeug?" and "Hilft Kreatin
+  beim Muskelaufbau?") both returned search results with several visibly
+  irrelevant studies (linguistics, cultural philosophy, TV media, project
+  management, customer service) mixed in among the relevant ones. **Root
+  cause, found by tracing the actual code, not guessed:** `crossref.ts`
+  sends the raw natural-language question verbatim as Crossref's loose
+  full-text `query=` parameter, and while `relevance.ts` already computed a
+  term-overlap relevance score per record, `screening.ts` only ever used it
+  for *sort order* (via `ranking.ts`) — it was never used to *exclude*
+  anything. Irrelevant matches with a generic connector-word overlap
+  ("hilft", "beim") still made it into the results list, just ranked lower.
+- **Fix:** `relevance.ts` now strips a German+English stopword list (closed-
+  class function/connector words) before computing term overlap, so generic
+  verbs can no longer inflate a score on their own. `screening.ts` gained a
+  new `MIN_RELEVANCE_SCORE = 0.4` exclusion threshold and `"not_relevant"`
+  `ExclusionReason`, threaded through `run-search.ts` via a new `query`
+  parameter on `screenRecords()`. The threshold was verified numerically
+  against both real production examples: a generic-connector-only match
+  scored 1/3 ≈ 0.33 (now excluded), a genuinely relevant record scored
+  2/3 ≈ 0.67 (still included). `SCREENING_VERSION` bumped to
+  `"screening-v2"`.
+- **Second request in the same turn:** Erwin asked whether a live, typing-
+  time hint suggesting the likely topic domain would be worthwhile. Built as
+  `OwnQuestionForm`'s new debounced (400ms) preview: it reuses
+  `topDomainCandidates` — the exact same rule-based classifier and
+  `score > 0` decision boundary `/search`'s real post-submit clarification
+  screen already uses — so the live hint can never promise a match that
+  submitting wouldn't also find. Deliberately not a second, independently-
+  tuned heuristic. Shown as `role="status"` text ("Könnte passen zu: …"),
+  disappears when the field is cleared or nothing scores above zero.
+- Still open, not yet resolved: one of the two live test runs showed an
+  "OpenAlex nicht erreichbar" notice; Erwin was asked to check Vercel's
+  Runtime Logs for the specific OpenAlex error text (genuine outage vs. a
+  fixable timeout/serverless-duration-limit issue) but hasn't yet — tracked
+  in `OPEN_RISKS.md` #2.
+- 3 new unit tests (`relevance.ts` stopword behavior), 3 new unit tests +
+  full rewrite of existing cases (`screening.ts`'s new query parameter and
+  `not_relevant` exclusion), plus adjustments to 4 other test files whose
+  `excludedByReason` fixtures needed the new field. 2 new e2e specs (the
+  live suggestion appearing and disappearing). 230 unit tests + 1
+  integration test, 48 Playwright specs; `npm run verify` and the full e2e
+  suite pass. Visually confirmed live via screenshot: the suggestion
+  correctly reads "Könnte passen zu: Ernährung & Supplements" while typing
+  the creatine question.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
@@ -629,9 +685,14 @@ descoped from their original pitch for exactly those reasons):
 Everything that was buildable without live credentials for the remainder of
 `IMPLEMENTATION_PLAN.md` (Phases 11–13) is done as of this update:
 `docs/INDEPENDENT_REVIEW.md`, `docs/PRODUCTION_RUNBOOK.md`,
-`docs/SMOKE_TESTS.md` + `scripts/smoke-test.sh`. What remains is entirely
-gated on Erwin provisioning real accounts/DNS/legal sign-off — see
+`docs/SMOKE_TESTS.md` + `scripts/smoke-test.sh`. Erwin has since deployed a
+real Vercel project on `claude/takemesis-mvp-app-f622xx` (auto-redeploy
+confirmed on every push) and used it to run the first genuine live-network
+test of the search pipeline, which is documented above. What remains is
+entirely gated on Erwin provisioning real accounts/DNS/legal sign-off — see
 `docs/PRODUCTION_RUNBOOK.md` for the exact ordered steps once that starts,
-and `docs/OPEN_RISKS.md` for the full current risk register. The natural
+and `docs/OPEN_RISKS.md` for the full current risk register (including the
+still-open OpenAlex-reachability question from the live test). The natural
 next session should begin at `PRODUCTION_RUNBOOK.md` §1 once at least a
-Vercel + Supabase + Stripe-test-mode set of credentials exists.
+Supabase + Stripe-test-mode set of credentials exists alongside the now-live
+Vercel project.

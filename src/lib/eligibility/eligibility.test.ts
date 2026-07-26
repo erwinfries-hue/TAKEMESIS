@@ -13,7 +13,7 @@ function fakeSearchResult(records: NormalizedRecord[]): SearchRunResult {
     candidateCount: records.length,
     duplicatesRemoved: 0,
     includedCount: records.length,
-    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0 },
+    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
     perSource: [],
     rankedIncluded: records.map((record) => ({
       deduped: { record, mergedFromSources: [record.source] },

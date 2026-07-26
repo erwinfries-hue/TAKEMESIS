@@ -111,7 +111,7 @@ export function buildExampleReportPreviewSearchResult(query: string): SearchRunR
     candidateCount: PLACEHOLDER_RECORDS.length + 2,
     duplicatesRemoved: 2,
     includedCount: PLACEHOLDER_RECORDS.length,
-    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0 },
+    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
     perSource: [
       { source: "openalex", ok: true, recordCount: 2 },
       { source: "crossref", ok: true, recordCount: 1 },

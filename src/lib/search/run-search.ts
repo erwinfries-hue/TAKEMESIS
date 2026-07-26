@@ -35,6 +35,7 @@ const EMPTY_EXCLUSION_COUNTS: Record<ExclusionReason, number> = {
   retracted: 0,
   protocol_only: 0,
   insufficient_detail: 0,
+  not_relevant: 0,
 };
 
 /**
@@ -73,7 +74,7 @@ export async function runSearchWithAdapters(
 
   const candidateCount = allRecords.length;
   const { records: deduped, duplicatesRemoved } = dedupeRecords(allRecords);
-  const { included, excluded } = screenRecords(deduped);
+  const { included, excluded } = screenRecords(deduped, question);
 
   const excludedByReason: Record<ExclusionReason, number> = { ...EMPTY_EXCLUSION_COUNTS };
   for (const decision of excluded) {

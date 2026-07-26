@@ -111,7 +111,8 @@
     "placeholder": "z. B. Welche Lernmethode verbessert den Lernerfolg?",
     "submit": "Frage einordnen",
     "warning": "Bitte geben Sie keine Namen, Dokumente oder vertraulichen persönlichen Daten ein.",
-    "warningHealth": "Bitte geben Sie keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten ein."
+    "warningHealth": "Bitte geben Sie keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten ein.",
+    "suggestionPrefix": "Könnte passen zu:"
   },
   "topicsPage": {
     "heading": "Themen entdecken",
@@ -304,7 +305,7 @@
     "confidenceHeading": "Vorläufige Evidenzsicherheit",
     "confidencePreliminaryNote": "Vorläufige, strukturelle Einschätzung auf Basis von Studienzahl und -design — noch keine vollständige inhaltliche Analyse (folgt mit der KI-gestützten Synthese in einem späteren Ausbauschritt).",
     "sourcesUnavailableNote": "Folgende Quellen waren bei dieser Suche nicht erreichbar und fehlen daher in den Ergebnissen",
-    "screeningExplanation": "Studien wurden nach Relevanz, Studiendesign und Datenvollständigkeit ausgewählt; zurückgezogene Studien und reine Studienprotokolle wurden ausgeschlossen.",
+    "screeningExplanation": "Studien wurden nach Relevanz, Studiendesign und Datenvollständigkeit ausgewählt; zurückgezogene Studien, reine Studienprotokolle und thematisch nicht passende Treffer wurden ausgeschlossen.",
     "limitationsNoticeHeading": "Wichtige Limitationen vor dem Kauf",
     "limitationsNoticeBody": "Die Evidenzlage zu dieser Frage ist aktuell begrenzt. Der vollständige Report macht diese Limitationen transparent, kann aber nicht mehr liefern, als die verfügbaren Studien hergeben.",
     "noCoverageDisclosure": "Kein Anspruch auf vollständige Abdeckung der wissenschaftlichen Literatur.",
