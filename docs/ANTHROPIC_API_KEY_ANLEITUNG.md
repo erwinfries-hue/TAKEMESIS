@@ -92,10 +92,16 @@ Das Hinterlegen des Schlüssels allein verändert die Website noch nicht
 sichtbar — es ist die Voraussetzung, nicht der letzte Schritt. Der nächste
 Schritt ist eine separate Programmier-Aufgabe: Die KI-Anbindung für
 Kernaussagen, Studien-Synthese und praktische Einordnung muss noch gebaut
-werden (dokumentiert in `OPEN_RISKS.md`, Punkt #18). Erst danach entscheidet
-sich auch, welches konkrete KI-Modell verwendet wird (z. B. ein günstigeres
-oder ein leistungsfähigeres, über die bereits vorbereitete `AI_MODEL`-Variable)
-— das musst du jetzt noch nicht festlegen.
+werden (dokumentiert in `OPEN_RISKS.md`, Punkt #18).
+
+**Modellwahl bereits entschieden (2026-07-26):** Auf deinen Wunsch hin ist
+im Code bereits das günstigste aktuelle Claude-Modell (Haiku) als
+Standard hinterlegt (`AI_MODEL=claude-haiku-4-5-20251001`), damit die
+Kosten pro Report bei der Beta-Grösse (15 Personen) minimal bleiben —
+voraussichtlich deutlich unter der ursprünglichen Schätzung von
+CHF 1.00–1.50/Report. Du musst dazu nichts weiter tun; das wird bei der
+KI-Anbindung automatisch verwendet, ausser du entscheidest dich später
+bewusst für ein leistungsfähigeres (und teureres) Modell.
 
 ## Falls der Schlüssel je versehentlich weitergegeben wird
 

@@ -32,6 +32,7 @@ describe("serverEnvSchema", () => {
     expect(result.SUPPORT_EMAIL).toBe("support@tekmesis.com");
     expect(result.EMAIL_PROVIDER).toBe("resend");
     expect(result.REPORT_RETENTION_MONTHS).toBe(12);
+    expect(result.AI_MODEL).toBe("claude-haiku-4-5-20251001");
   });
 
   it("only accepts test or live for STRIPE_MODE", () => {

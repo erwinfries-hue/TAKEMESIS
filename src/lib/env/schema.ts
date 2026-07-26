@@ -43,7 +43,11 @@ export const serverEnvSchema = z.object({
 
   ANTHROPIC_API_KEY: z.string().optional(),
   AI_EXTRACTION_ENABLED: booleanFromString.default(false),
-  AI_MODEL: z.string().optional(),
+  // Cheapest current Claude model by Erwin's explicit choice (2026-07-26) —
+  // per-report AI cost matters far more than model capability at this
+  // extraction/synthesis task and beta scale (15 users). See
+  // docs/ANTHROPIC_API_KEY_ANLEITUNG.md and OPEN_RISKS.md #18.
+  AI_MODEL: z.string().min(1).default("claude-haiku-4-5-20251001"),
   AI_MAX_INPUT_CHARS: z.coerce.number().int().positive().default(24000),
   AI_TIMEOUT_MS: z.coerce.number().int().positive().default(20000),
   AI_MAX_RETRIES: z.coerce.number().int().nonnegative().default(2),

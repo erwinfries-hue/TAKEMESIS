@@ -202,7 +202,14 @@ checkpoint (decision #15) and before each production-readiness gate.
     account/key setup Erwin can do himself — the actual AI-wiring code is
     separate follow-up engineering work, not covered by that guide) and a
     product decision on scope/cost per report (decision #9's CHF 1.00–1.50
-    estimate).
+    estimate). **Update (2026-07-26):** Erwin explicitly chose cost-
+    minimization over model capability for this task — `AI_MODEL` now
+    defaults to the cheapest current Claude model
+    (`claude-haiku-4-5-20251001`, `src/lib/env/schema.ts`), which should
+    bring real per-report cost well under the original CHF 1.00–1.50
+    estimate at beta scale. This is a default the eventual AI-wiring code
+    should read from config, not hardcode, so it stays a one-line change
+    to upgrade later if quality at beta volume warrants it.
 
 19. **`topics.ts`'s example questions have never been checked against real
     evidence coverage.** They were written during Phase 2 for topical
