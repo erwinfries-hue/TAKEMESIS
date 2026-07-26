@@ -31,6 +31,7 @@ describe("serverEnvSchema", () => {
     expect(result.FREE_SEARCH_LIMIT).toBe(5);
     expect(result.SUPPORT_EMAIL).toBe("support@tekmesis.com");
     expect(result.EMAIL_PROVIDER).toBe("resend");
+    expect(result.REPORT_RETENTION_MONTHS).toBe(12);
   });
 
   it("only accepts test or live for STRIPE_MODE", () => {

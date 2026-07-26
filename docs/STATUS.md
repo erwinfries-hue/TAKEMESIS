@@ -2,8 +2,11 @@
 
 ## Current phase
 
-Phase 9 — Email, admin, analytics: **complete** for the scoped subset (see
-below). Phase 10 (hardening) next.
+Phase 10 — Hardening: **complete** for the scoped subset (see below). Phase
+11 (preview beta) next — per Erwin's 2026-07-26 instruction ("finish
+everything as far as possible, ask only where truly necessary"), continuing
+through Phases 11–13 without pausing for check-ins, documenting
+credential/access blockers in `OPEN_RISKS.md` rather than stopping to ask.
 
 ## Completed
 
@@ -352,15 +355,67 @@ Supabase/Stripe test accounts first or reordering phases.
   a11y scans). 186 unit tests + 1 integration test, 40 Playwright specs;
   `npm run verify` passes.
 
+### Phase 10 — Hardening
+- **Security headers + CSP:** `middleware.ts` sets a per-request-nonce CSP
+  (`script-src 'self' 'nonce-…' 'strict-dynamic'`, per Next.js's documented
+  pattern) plus `next.config.ts` static headers (`X-Content-Type-Options`,
+  `X-Frame-Options: DENY`, `Referrer-Policy`, a locked-down
+  `Permissions-Policy`, HSTS). **Live-verified:** a new `e2e/security-headers.spec.ts`
+  confirms the headers are present on a real response and that the nonce
+  doesn't break hydration/interactivity (locale switch, navigation) — zero
+  browser console errors during real use, not just a static check.
+- **Free-search rate limit (decision #7):** `src/lib/security/` — HMAC-hashes
+  the client IP (`RATE_LIMIT_SECRET`, raw IPs never stored, matching the
+  `CLAUDE.md` privacy rule) into a daily UTC window key; `InMemoryRateLimiter`
+  (single-process, functional today) and `SupabaseRateLimiter`
+  (serverless-correct, same live-unverified status as the rest of the
+  Supabase integration — see `OPEN_RISKS.md` #6) behind one `RateLimiter`
+  interface; fail-open (allows the search) whenever `RATE_LIMIT_SECRET` is
+  unset, so it's inert until deliberately turned on. Checked in `/search`
+  right before `runSearch()` — after the free local classification steps,
+  before the costly step.
+- **Question length limit:** `MAX_QUESTION_LENGTH = 500` shared between the
+  server-side `/search` check and the `OwnQuestionForm` textarea's `maxLength`
+  (client-side UX only; the server check is the actual enforcement).
+- **Report retention/expiry (decision #5):** `src/lib/reports/retention.ts`
+  (pure `computeReportExpiry`/`isPastExpiry`) + `expire-reports.ts`
+  (`expireDueReports`, scans `ready` reports past `expiresAt` and transitions
+  them to `expired` through the existing lifecycle choke point — a new
+  `ready → expired` transition was added to `lifecycle.ts` for this).
+  `expiresAt` is set to `paidAt + REPORT_RETENTION_MONTHS` (default 12) at
+  Stripe-webhook fulfillment time. Exposed as `GET /api/cron/expire-reports`,
+  gated on `Authorization: Bearer <CRON_SECRET>` (unset means the route
+  always 401s — **live-verified** against the running dev server in this
+  sandbox), scheduled daily at 03:00 UTC via a new `vercel.json`. Not yet
+  triggered by a real Vercel Cron invocation (no deployed project) — tracked
+  in `OPEN_RISKS.md` #16, along with the still-missing secure-link report
+  viewer that would actually read `expired` status back to a user.
+- New e2e coverage for both new `/search` guard states (question-too-long,
+  rate-limited), each with its own `@a11y` scan; the rate-limited spec uses a
+  unique `x-forwarded-for` per run so it never collides with the other
+  `/search` specs' shared "unknown" bucket.
+- 29 new unit tests (rate limiter, rate-limit key hashing, free-search-limit
+  check enabled/disabled, env schema default, retention date math,
+  expire-reports job, cron route handler authorized/unauthorized/unconfigured)
+  + 5 new e2e specs (2 functional, 3 a11y). 215 unit tests + 1 integration
+  test, 46 Playwright specs; `npm run verify` passes.
+- **Not done in this phase:** dependency audit re-check (`npm audit` findings
+  from Phase 1), a deeper manual accessibility pass beyond the automated axe
+  scans, performance testing, and evidence-safety/hallucination tests — these
+  need either real traffic/content or are lower-value before Phase 11's live
+  credentials exist; not tracked as a numbered risk since none are blocking
+  and none were silently skipped without being named here.
+
 ## Not started
 
-Phases 10–13 from `IMPLEMENTATION_PLAN.md`: hardening (security/privacy/abuse/
-accessibility/performance/hallucination testing), preview beta, production
-prep, production launch. Also still pending within already-"complete" phases:
+Phases 11–13 from `IMPLEMENTATION_PLAN.md`: preview beta, production prep,
+production launch — all need real Vercel/Stripe/Supabase/DNS access this
+session doesn't have. Also still pending within already-"complete" phases:
 AI-based query interpretation/extraction/synthesis (Phase 3 + Phase 8, needs
-`ANTHROPIC_API_KEY`), live wiring of Phases 4/5/7/9 (needs Supabase/Stripe/
-Resend/PostHog credentials and network access), and the deferred Phase 9
-admin sections above — all tracked in `OPEN_RISKS.md`.
+`ANTHROPIC_API_KEY`), live wiring of Phases 4/5/7/9/10 (needs Supabase/Stripe/
+Resend/PostHog/Vercel Cron credentials and network access), the deferred
+Phase 9 admin sections, and the secure-link report viewer noted in Phase 10
+above — all tracked in `OPEN_RISKS.md`.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
@@ -381,15 +436,17 @@ admin sections above — all tracked in `OPEN_RISKS.md`.
   interpretation) — needs `ANTHROPIC_API_KEY`, not yet provisioned.
 - Live validation of email sending (Resend) and analytics forwarding
   (PostHog), plus the deferred Phase 9 admin sections (`OPEN_RISKS.md` #15).
+- `CRON_SECRET` not provisioned and the daily expiry cron never triggered by
+  a real scheduler; no secure-link report-viewer page exists yet to read
+  report status back to a user (`OPEN_RISKS.md` #16) — needs a deployed
+  Vercel project.
 
 ## Next step
 
-Phase 10: hardening — security (rate limiting, input-size limits, security
-headers, dependency audit — the known dev-tooling `npm audit` findings from
-Phase 1 should be re-checked), privacy (the 12-month retention expiry job
-implied by decision #5 doesn't exist yet), abuse controls (the 5/day free-
-search limit from decision #7 is decided but not yet enforced in code — worth
-checking now that `/search` actually runs real searches), accessibility
-(deeper pass beyond the automated axe scans already in place throughout),
-performance, and evidence-safety/hallucination tests — per
-`IMPLEMENTATION_PLAN.md`.
+Phase 11: preview beta, per `IMPLEMENTATION_PLAN.md` — largely blocked on the
+same real credentials/deployment as the items above (a live Vercel preview,
+Stripe test-mode account, Supabase project). This session will continue
+building/documenting whatever is genuinely buildable without those (e.g.
+further docs, checklists, code paths that don't require a live round-trip),
+and will track every credential-gated step explicitly in `OPEN_RISKS.md`
+rather than skipping or faking it.

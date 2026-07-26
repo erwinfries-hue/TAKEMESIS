@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 
 export function OwnQuestionForm({
   dict,
@@ -51,6 +52,7 @@ function OwnQuestionFormFields({
         value={value}
         onChange={(event) => setValue(event.target.value)}
         placeholder={dict.ownQuestionForm.placeholder}
+        maxLength={MAX_QUESTION_LENGTH}
         className="w-full resize-none rounded-lg border border-brand-neutral-200 p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400"
       />
       <p className="text-xs text-brand-neutral-600">{dict.ownQuestionForm.warning}</p>

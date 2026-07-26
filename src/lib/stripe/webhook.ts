@@ -3,6 +3,7 @@ import type Stripe from "stripe";
 import { getStripeClient } from "./client";
 import { serverEnv } from "@/lib/env/server";
 import { transitionReportStatus } from "@/lib/reports/report-service";
+import { computeReportExpiry } from "@/lib/reports/retention";
 import type { ReportRepository } from "@/lib/reports/report-repository";
 import type { PaymentRepository } from "@/lib/payments/payment-repository";
 import type { WebhookEventRepository } from "@/lib/payments/webhook-event-repository";
@@ -103,9 +104,14 @@ async function fulfillCheckoutSession(
   const paymentIntentId =
     typeof session.payment_intent === "string" ? session.payment_intent : null;
 
+  // Decision #5: the 12-month retention clock starts when the report is paid
+  // for (the point at which it becomes a delivered asset), not at draft creation.
+  const expiresAt = computeReportExpiry(new Date(), serverEnv.REPORT_RETENTION_MONTHS);
+
   await transitionReportStatus(deps.reportRepository, reportId, "paid", {
     stripeCheckoutSessionId: session.id,
     stripePaymentIntentId: paymentIntentId,
+    expiresAt: expiresAt.toISOString(),
   });
 
   const payment = await deps.paymentRepository.findByCheckoutSessionId(session.id);

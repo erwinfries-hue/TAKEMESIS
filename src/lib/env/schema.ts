@@ -72,6 +72,12 @@ export const serverEnvSchema = z.object({
   LOG_REDACTION_SALT: z.string().optional(),
   FREE_SEARCH_LIMIT: z.coerce.number().int().positive().default(5),
 
+  // Decision #5: 12-month paid-report retention, auto-expiry.
+  REPORT_RETENTION_MONTHS: z.coerce.number().int().positive().default(12),
+  // Bearer token required on /api/cron/expire-reports so only the scheduler
+  // (e.g. Vercel Cron) can trigger it — unset means the route always 401s.
+  CRON_SECRET: z.string().optional(),
+
   SENTRY_DSN: z.string().optional(),
 });
 

@@ -68,14 +68,18 @@ checkpoint (decision #15) and before each production-readiness gate.
    (see `SOURCE_COVERAGE_MATRIX.md`). Monitor eligible-rate by category at the beta
    checkpoint; consider narrowing active categories if a specific one consistently
    fails to produce sellable reports.
-6. **AI + free-teaser cost exposure.** The 5/day/IP free-search limit is decided
-   (decision #7, `FREE_SEARCH_LIMIT` in `.env.example`) but **not yet enforced in
-   code** — `/search` runs a real search on every request with no rate limiting.
-   Low risk while this sandbox can't reach the source APIs anyway, but must be
-   built (Phase 10 hardening) before `/search` is exercised against live,
-   costed APIs. Actual AI spend should also be tracked from day one against the
-   CHF 1.00–1.50/report estimate (decision #9) to confirm it holds at real
-   usage volumes.
+6. **AI + free-teaser cost exposure.** **Update (Phase 10):** the 5/day/IP
+   free-search limit (decision #7) is now enforced — `src/lib/security/`
+   HMAC-hashes the client IP (`RATE_LIMIT_SECRET`, never stores it raw),
+   checked in `/search` right before `runSearch()` runs; fail-open (allows
+   the search) whenever `RATE_LIMIT_SECRET` is unset, so this is inert until
+   deliberately turned on. In-memory limiter is correct for a single
+   long-lived process only; `SupabaseRateLimiter` (used automatically once
+   `SUPABASE_URL`/`SUPABASE_SERVICE_ROLE_KEY` are set) is the
+   serverless-correct implementation but, like the rest of the Supabase
+   integration, has never run against a real database (see #13). Actual AI
+   spend should also be tracked from day one against the CHF 1.00–1.50/report
+   estimate (decision #9) to confirm it holds at real usage volumes.
 7. **NCBI E-utilities rate limits without an API key.** 3 req/sec cap is fine at
    beta volume; revisit (add `NCBI_API_KEY`) if search volume grows.
 8. **Admin auth is minimal (email allowlist + shared secret).** Acceptable for a
@@ -115,6 +119,23 @@ checkpoint (decision #15) and before each production-readiness gate.
     forwarding has been verified against a live account (`EMAIL_API_KEY` /
     PostHog site ID are both unset) — same live-validation gap as the source
     adapters and Stripe/Supabase, tracked here rather than assumed working.
+
+16. **Report retention/expiry job (decision #5) is built but never triggered
+    live, and there's still no page that reads it back.** `src/lib/reports/
+    expire-reports.ts` (12-month expiry, `REPORT_RETENTION_MONTHS`) is wired
+    to `GET /api/cron/expire-reports`, scheduled daily via `vercel.json`
+    (`0 3 * * *`), and gated on `CRON_SECRET` (`Authorization: Bearer
+    <CRON_SECRET>` — unset means the route always 401s, live-verified in
+    this sandbox). **Not done:** `CRON_SECRET` isn't provisioned anywhere, so
+    the schedule can't actually fire yet in production; and there is still no
+    secure-link report-viewer page (`/report/[token]` or similar) — Phase 7/8
+    built the checkout/lifecycle/report-rendering *pieces*, but nothing in the
+    app currently reads a report by token and shows/blocks it based on
+    status, so an expired report has no user-visible effect yet (only visible
+    in `/admin`). This viewer is the same "live UI can't sell anything" gap
+    as #14, extended to the post-purchase side. Owner: Erwin or next session
+    with a deployed Vercel project (to provision `CRON_SECRET` and confirm
+    the cron actually fires).
 
 ## Not risks, but explicit go/no-go gates already defined
 

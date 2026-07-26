@@ -53,6 +53,10 @@ describe("canTransition", () => {
   it("allows an admin to retry a failed report back into processing", () => {
     expect(canTransition("failed", "processing")).toBe(true);
   });
+
+  it("allows a ready report to auto-expire after the retention period (decision #5)", () => {
+    expect(canTransition("ready", "expired")).toBe(true);
+  });
 });
 
 describe("assertTransition", () => {

@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import type Stripe from "stripe";
 
 vi.mock("@/lib/env/server", () => ({
-  serverEnv: { STRIPE_WEBHOOK_SECRET: "whsec_test" },
+  serverEnv: { STRIPE_WEBHOOK_SECRET: "whsec_test", REPORT_RETENTION_MONTHS: 12 },
 }));
 
 import { verifyWebhookSignature, processStripeEvent } from "./webhook";
@@ -82,6 +82,9 @@ describe("processStripeEvent", () => {
     const updatedReport = await reportRepository.findById(report.id);
     expect(updatedReport?.status).toBe("paid");
     expect(updatedReport?.stripePaymentIntentId).toBe("pi_test_123");
+    // Decision #5: retention clock starts at fulfillment (12 months out).
+    expect(updatedReport?.expiresAt).not.toBeNull();
+    expect(new Date(updatedReport!.expiresAt!).getTime()).toBeGreaterThan(Date.now());
 
     const payment = await paymentRepository.findByCheckoutSessionId("cs_test_123");
     expect(payment?.status).toBe("paid");

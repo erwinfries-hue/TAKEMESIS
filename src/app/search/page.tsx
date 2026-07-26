@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy, getTopic } from "@/content/topics";
@@ -15,6 +16,9 @@ import { FreeTeaser } from "@/components/free-teaser";
 import { PaywallPanel } from "@/components/paywall-panel";
 import { NotEligibleNotice } from "@/components/not-eligible-notice";
 import { SearchFailedNotice } from "@/components/search-failed-notice";
+import { SearchLimitNotice } from "@/components/search-limit-notice";
+import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
+import { checkFreeSearchLimit } from "@/lib/security/check-free-search-limit";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -42,6 +46,17 @@ export default async function SearchPage({
         <Link href="/topics" className="font-medium text-brand-teal-700 hover:underline">
           {dict.searchPage.noQuestionCta} →
         </Link>
+      </main>
+    );
+  }
+
+  if (question.length > MAX_QUESTION_LENGTH) {
+    return (
+      <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
+        <SearchLimitNotice
+          heading={dict.searchPage.questionTooLongHeading}
+          body={dict.searchPage.questionTooLongBody}
+        />
       </main>
     );
   }
@@ -91,7 +106,25 @@ export default async function SearchPage({
     );
   }
 
-  // Domain confirmed: run the real Phase 4/5 search pipeline.
+  // Domain confirmed: check the free-search limit (decision #7) right before
+  // the costly step — the classification/clarification above is free/local.
+  const headerStore = await headers();
+  const clientIdentifier =
+    headerStore.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+    headerStore.get("x-real-ip") ??
+    "unknown";
+  const { allowed } = await checkFreeSearchLimit(clientIdentifier);
+  if (!allowed) {
+    return (
+      <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
+        <SearchLimitNotice
+          heading={dict.searchPage.rateLimitedHeading}
+          body={dict.searchPage.rateLimitedBody}
+        />
+      </main>
+    );
+  }
+
   const searchResult = await runSearch(question, confirmedTopic.slug);
   const allSourcesFailed =
     searchResult.perSource.length > 0 && searchResult.perSource.every((status) => !status.ok);

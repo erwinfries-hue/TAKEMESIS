@@ -39,6 +39,11 @@ export default defineConfig({
       // login flow — not a real secret, never used outside this test server.
       ADMIN_EMAILS: "admin@tekmesis.com",
       ADMIN_AUTH_SECRET: "e2e-test-secret",
+      // Enables the free-search rate limiter for e2e (fail-open when unset)
+      // so search.spec.ts can exercise the rate-limited UI state. FREE_SEARCH_LIMIT
+      // is left at its default (5); the dedicated test uses a unique x-forwarded-for
+      // per run so it never shares a bucket with the other /search specs.
+      RATE_LIMIT_SECRET: "e2e-test-rate-limit-secret",
     },
   },
 });

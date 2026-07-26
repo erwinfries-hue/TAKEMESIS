@@ -24,7 +24,9 @@ const TRANSITIONS: Record<ReportStatus, ReportStatus[]> = {
   // "permanent failure becomes refund_pending" (docs/09) — processing can
   // also be blocked directly if an admin needs to intervene mid-generation.
   processing: ["ready", "failed", "blocked"],
-  ready: ["blocked", "refund_pending"],
+  // "expired" is the 12-month auto-expiry (decision #5) — see
+  // src/lib/reports/retention.ts and the /api/cron/expire-reports route.
+  ready: ["blocked", "refund_pending", "expired"],
   // Admin "retry report" action re-attempts generation instead of going
   // straight to refund_pending.
   failed: ["refund_pending", "processing"],
