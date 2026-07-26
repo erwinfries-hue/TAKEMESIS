@@ -69,6 +69,25 @@ then reports back so the next session can verify and continue.
 9. Re-run the independent review (`docs/INDEPENDENT_REVIEW.md`) — items 2,
    16, 17, 22, 23, 25 can now be exercised live instead of assessed from
    static code; update that file's verdict.
+10. **Seed the `/topics` social-proof counter organically** (no code — an
+    operational step for the beta cohort). The badge
+    (`src/lib/analytics/social-proof.ts`) only renders once a domain crosses
+    `SOCIAL_PROOF_MIN_COUNT` (5) real `domain_classified` events — it
+    deliberately never shows a fabricated number (see the marketing-pass
+    discussion with Erwin: seeded/fake counts were explicitly rejected as a
+    dark pattern). To have it show something meaningful in the first days
+    without inventing anything:
+    - Ask the 15 beta testers to explore **a few topics in depth** rather
+      than spreading one question evenly across all 12 — each topic needs 5
+      confirmed-domain page loads, and a single engaged tester trying
+      several question phrasings in one topic during their test session
+      already contributes multiple real events toward that.
+    - The copy ("N questions already asked") counts confirmed-domain events,
+      not unique people, so this is accurate either way — a handful of
+      topics will likely cross the threshold within the first beta days,
+      the rest will catch up as public traffic grows. That's the honest,
+      and arguably more informative, outcome: it reflects which topics
+      people actually engage with, not an artificial uniform number.
 
 ## 2. Production preparation (Phase 12)
 
