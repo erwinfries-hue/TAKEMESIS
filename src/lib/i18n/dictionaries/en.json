@@ -116,6 +116,7 @@
   },
   "topicsPage": {
     "heading": "Explore topics",
+    "detailsToggle": "Show details",
     "intro": "Pick a domain as inspiration — the category is orientation, not a rigid restriction. Not every question can be answered with solid science; we check that for you before anything is sold.",
     "examplesHeading": "Example questions",
     "limitationsHeading": "Limits of this domain",
@@ -341,6 +342,7 @@
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",
+    "premiumBadge": "Premium Evidence Report",
     "originalQuestionLabel": "Original question",
     "interpretedQuestionLabel": "Interpreted research question",
     "reportDateLabel": "Report date",
@@ -381,6 +383,7 @@
     "notReported": "Not reported",
     "pendingAiHeading": "Not yet available",
     "pendingAiNote": "This section requires AI-based extraction or synthesis that isn't connected yet (no Anthropic API key configured). It will be filled in once that capability is available — until then, nothing here is invented.",
+    "pendingAiShort": "Coming with AI-based synthesis once available.",
     "printCta": "Save as PDF / print",
     "navCover": "Overview",
     "navScope": "Scope & Method",

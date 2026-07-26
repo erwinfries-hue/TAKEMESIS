@@ -1,6 +1,7 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumComparisonRow } from "@/lib/reports/premium-report";
 import { orNotReported } from "./format";
+import { StudyDesignBadge } from "./study-design-badge";
 
 /** Desktop table + mobile cards for the same data — design-doc requirement ("mobile cards for comparisons", "no illegible desktop-only tables"). */
 export function StudyComparisonMatrix({
@@ -45,7 +46,7 @@ export function StudyComparisonMatrix({
                 </td>
                 <td className="px-4 py-3 text-brand-neutral-600">{row.year ?? notReported}</td>
                 <td className="px-4 py-3 text-brand-neutral-600">
-                  {dict.publicationTypeLabels[row.design]}
+                  <StudyDesignBadge type={row.design} dict={dict} />
                 </td>
                 <td className="px-4 py-3 text-brand-neutral-600">
                   {orNotReported(row.outcome, notReported)}

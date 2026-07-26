@@ -66,7 +66,7 @@ export default async function TopicsPage() {
         <OwnQuestionForm dict={dict} locale={locale} id="eigene-frage" />
       </Suspense>
 
-      <div className="flex w-full max-w-4xl flex-col gap-8">
+      <div className="grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
         {topics.map((topic) => {
           const copy = topicCopy(topic, locale);
           const askedCount = askedCountBySlug.get(topic.slug);
@@ -95,21 +95,28 @@ export default async function TopicsPage() {
               <h3 className="mb-2 text-sm font-semibold text-brand-neutral-950">
                 {dict.topicsPage.examplesHeading}
               </h3>
-              <div className="mb-4 flex flex-wrap gap-2">
+              <div className="mb-1 flex flex-wrap gap-2">
                 {copy.examples.map((example) => (
                   <ExampleQuestionChip key={example} question={example} />
                 ))}
               </div>
 
-              <h3 className="mb-1 text-sm font-semibold text-brand-neutral-950">
-                {dict.topicsPage.limitationsHeading}
-              </h3>
-              <p className="mb-4 text-sm text-brand-neutral-600">{copy.limitations}</p>
+              <details className="mt-3 border-t border-brand-neutral-100 pt-3">
+                <summary className="cursor-pointer text-sm font-medium text-brand-teal-700 hover:underline">
+                  {dict.topicsPage.detailsToggle}
+                </summary>
+                <div className="mt-3">
+                  <h3 className="mb-1 text-sm font-semibold text-brand-neutral-950">
+                    {dict.topicsPage.limitationsHeading}
+                  </h3>
+                  <p className="mb-4 text-sm text-brand-neutral-600">{copy.limitations}</p>
 
-              <h3 className="mb-1 text-sm font-semibold text-brand-neutral-950">
-                {dict.topicsPage.sourceRouteHeading}
-              </h3>
-              <p className="text-sm text-brand-neutral-600">{topic.sourceRoute}</p>
+                  <h3 className="mb-1 text-sm font-semibold text-brand-neutral-950">
+                    {dict.topicsPage.sourceRouteHeading}
+                  </h3>
+                  <p className="text-sm text-brand-neutral-600">{topic.sourceRoute}</p>
+                </div>
+              </details>
             </article>
           );
         })}

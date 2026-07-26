@@ -1,6 +1,7 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumStudyProfile } from "@/lib/reports/premium-report";
 import { orNotReported } from "./format";
+import { StudyDesignBadge } from "./study-design-badge";
 
 export function StudyProfileCard({
   dict,
@@ -23,8 +24,9 @@ export function StudyProfileCard({
   return (
     <article className="rounded-xl border border-brand-neutral-200 bg-white p-5 print:break-inside-avoid">
       <p className="font-medium text-brand-navy-900">{profile.citation}</p>
-      <p className="mt-1 text-sm text-brand-neutral-600">
-        {dict.premiumReportPage.profileDesignLabel}: {dict.publicationTypeLabels[profile.design]}
+      <p className="mt-1 flex items-center gap-2 text-sm text-brand-neutral-600">
+        {dict.premiumReportPage.profileDesignLabel}:
+        <StudyDesignBadge type={profile.design} dict={dict} />
       </p>
 
       <dl className="mt-3 grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">

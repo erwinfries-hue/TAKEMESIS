@@ -116,6 +116,7 @@
   },
   "topicsPage": {
     "heading": "Themen entdecken",
+    "detailsToggle": "Details anzeigen",
     "intro": "Wähle einen Bereich als Inspiration — die Kategorie ist eine Orientierung, keine starre Einschränkung. Nicht jede Frage lässt sich wissenschaftlich fundiert beantworten; das prüfen wir für dich, bevor etwas verkauft wird.",
     "examplesHeading": "Beispielfragen",
     "limitationsHeading": "Grenzen dieses Bereichs",
@@ -344,6 +345,7 @@
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",
+    "premiumBadge": "Premium Evidence Report",
     "originalQuestionLabel": "Ursprüngliche Frage",
     "interpretedQuestionLabel": "Interpretierte Forschungsfrage",
     "reportDateLabel": "Berichtsdatum",
@@ -384,6 +386,7 @@
     "notReported": "Nicht angegeben",
     "pendingAiHeading": "Noch nicht verfügbar",
     "pendingAiNote": "Dieser Abschnitt erfordert KI-gestützte Extraktion bzw. Synthese, die noch nicht angebunden ist (kein Anthropic-API-Schlüssel hinterlegt). Er wird ergänzt, sobald diese Funktion verfügbar ist — bis dahin werden keine Inhalte erfunden.",
+    "pendingAiShort": "Folgt mit KI-gestützter Synthese, sobald verfügbar.",
     "printCta": "Als PDF speichern / drucken",
     "navCover": "Übersicht",
     "navScope": "Umfang & Methode",

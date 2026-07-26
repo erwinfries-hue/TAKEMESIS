@@ -818,6 +818,68 @@ sat directly under the new "AXIA4 GROUP" link (kept the body text and the
 48 Playwright specs + full unit suite re-verified passing; `npm run verify`
 passes. Visually reconfirmed via screenshot.
 
+### /topics cleanup + premium report visual/CD upgrade (Erwin's request)
+Erwin asked for two more things after seeing the live site: a cleaner
+`/topics` page (12 fully-expanded topic cards made for a very long, dense,
+monotone page), and a visual/content upgrade for the premium report, which
+still looked like "a functional form" rather than a premium branded
+deliverable — no logo anywhere in the report itself, no use of the
+palette's restrained gold accent, the same "Noch nicht verfügbar" paragraph
+repeated verbatim 4 times, and every study design shown as identical plain
+text with no visual signal of evidence strength.
+
+- **`/topics`:** "Grenzen dieses Bereichs" and "Quellenrouting" per topic
+  are now behind a native `<details>`/`<summary>` ("Details anzeigen") —
+  no JS needed, fully accessible, collapsed by default — with the
+  name/icon/description/example-question chips always visible. The topic
+  list is now a 2-column grid on large screens (`lg:grid-cols-2`) instead
+  of a single long column, roughly halving the page's felt length without
+  losing any content. New `topicsPage.detailsToggle` dictionary key
+  (DE/EN).
+- **Premium report — visual:**
+  - `TekmesisLogo` now appears both in the on-screen report (a small
+    branded strip above the section nav) and on the print cover page
+    (previously text-only "TEKMESIS — FROM STUDIES TO CLARITY.", now the
+    actual shield mark + separate tagline line, matching `/about`'s
+    pattern).
+  - A restrained-gold "Premium Evidence Report" badge sits next to the
+    logo on-screen — the first actual use of the palette's gold accent
+    anywhere on the site. First attempt (pale-gold background + gold text)
+    failed a real WCAG AA contrast check in the `@a11y` Playwright run
+    (3.34:1, needs 4.5:1) — fixed with a solid gold background and navy
+    text, caught and corrected before commit, not shipped broken.
+  - Each of the 9 report sections is now a distinct card (white, rounded,
+    bordered, subtle shadow on screen; collapses back to plain flowing
+    content when printed via `print:` overrides) instead of floating
+    directly on the page background — the single biggest contributor to
+    the "premium" feel per Erwin's framing.
+  - New `src/components/premium-report/study-design-badge.tsx`: colors
+    each study's design by the same evidence-hierarchy weight `ranking.ts`
+    already computes (meta-analysis/systematic review = solid teal,
+    RCT/cohort/quasi-experimental = light teal, weaker designs = neutral,
+    protocol = warning-tinted) — always alongside the existing text label,
+    never color alone (WCAG). Used in both `StudyComparisonMatrix` and
+    `StudyProfileCard`.
+  - The confidence gauge in the cover section's stats grid now sits in its
+    own teal-tinted highlight cell instead of blending in as a fourth
+    equal-weight stat, since it's arguably the single most important
+    number in the report.
+- **Premium report — content:** `PendingAiNotice` gained a `variant="short"`
+  — the first "not yet available" notice (key findings, top of the report)
+  still explains the reason in full; the other three occurrences
+  (synthesis, confidence, interpretation) now show one short line instead
+  of repeating the identical paragraph, cutting real redundancy without
+  hiding anything. New `premiumReportPage.pendingAiShort` dictionary key
+  (DE/EN). The actual content upgrade (real key findings/synthesis) is
+  still gated on `ANTHROPIC_API_KEY` (`OPEN_RISKS.md` #18) — explicitly
+  not claimed as solved here, only the presentation of what's honestly
+  available today.
+- 48 Playwright specs (all a11y scans re-verified, including the contrast
+  fix above) + full unit suite pass; `npm run verify` passes. Visually
+  confirmed live via screenshot: `/topics`' 2-column collapsed layout, and
+  the report's logo strip, gold badge, card sections, and color-coded
+  design badges.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

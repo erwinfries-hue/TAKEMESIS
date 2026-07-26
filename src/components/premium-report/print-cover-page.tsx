@@ -1,6 +1,7 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumReportData } from "@/lib/reports/premium-report";
 import { ConfidenceGauge } from "@/components/confidence-gauge";
+import { TekmesisLogo } from "@/components/brand/tekmesis-logo";
 
 /**
  * Print/PDF-only title page (hidden on screen — `hidden print:flex`). A
@@ -19,8 +20,9 @@ export function PrintCoverPage({
 
   return (
     <div className="hidden print:flex print:h-[22cm] print:break-after-page print:flex-col print:items-center print:justify-center print:gap-8 print:text-center">
-      <p className="text-sm font-medium uppercase tracking-widest text-brand-teal-700">
-        {dict.brand.name} — {dict.brand.claim}
+      <TekmesisLogo name={dict.brand.name} />
+      <p className="text-xs font-medium uppercase tracking-widest text-brand-teal-700">
+        {dict.brand.claim}
       </p>
       <h1 className="max-w-lg text-3xl font-semibold text-brand-navy-900">
         {report.originalQuestion}
