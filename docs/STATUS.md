@@ -1151,6 +1151,23 @@ available here.
   `npm run test:e2e` (53/53) both pass unchanged (no new failures, no
   a11y regressions on the home page's existing `@a11y` test).
 
+### Design pass: screening-funnel illustration on /methodology (Erwin's request, continued)
+`/methodology` explains the search/dedup/screening/eligibility pipeline in
+a plain numbered list with no visual reinforcement of the actual claim
+("we screen rigorously, not just dump everything found").
+
+- New `src/components/methodology-funnel-illustration.tsx`: scattered
+  candidate-hit squares along the top, narrowing through a funnel shape
+  down to a handful of included-study squares at the bottom — a literal,
+  wordless depiction of what the page's copy already says in prose. Same
+  brand palette and hand-coded-SVG approach as `hero-illustration.tsx`
+  (still no image-generation tool available in this environment).
+- Placed above the numbered step list on `/methodology`, between the
+  intro paragraph and the steps grid.
+- Live-verified via screenshot; `npm run verify` and `npm run test:e2e`
+  (53/53) both pass, including the existing `/methodology` `@a11y` check
+  (the illustration is `aria-hidden`).
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { MethodologyFunnelIllustration } from "@/components/methodology-funnel-illustration";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -19,6 +20,7 @@ export default async function MethodologyPage() {
           {dict.methodologyPage.heading}
         </h1>
         <p className="text-brand-neutral-600">{dict.methodologyPage.intro}</p>
+        <MethodologyFunnelIllustration className="h-24 w-auto sm:h-28" />
       </div>
 
       <ol className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2">
