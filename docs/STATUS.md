@@ -1092,6 +1092,26 @@ surface that didn't match the site's visual language.
   Visually verified by rendering the report-ready email's HTML to a file
   and screenshotting it in a real browser.
 
+### Design pass: polish the paywall panel (Erwin's request, continued)
+`PaywallPanel` (rendered on `/search` once a question is eligible — the
+actual CHF 9.90 purchase-decision moment) used a literal `"✓ "` text glyph
+in front of each feature and had flat, undifferentiated spacing between
+the feature list, the price, and the honest "checkout coming soon"
+disclaimer.
+
+- Replaced the text glyph with a small line-icon checkmark matching the
+  24×24/`currentColor`/rounded-cap style already used by
+  `src/components/icons`.
+- Added a divider before the price block so price/refund/version info
+  reads as a distinct group from the feature list, and bumped the price to
+  a slightly larger weight to match its role as the key decision number.
+- No content or functional change — same dictionary strings, same honest
+  "Stripe checkout not wired up yet" disclaimer box (`OPEN_RISKS.md` #14 is
+  unchanged; this was styling only, not a claim that checkout works).
+  Visually verified live via a temporary throwaway preview route (created,
+  screenshotted, then deleted — never committed). `npm run verify` and
+  `npm run test:e2e` (53/53) both pass.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
