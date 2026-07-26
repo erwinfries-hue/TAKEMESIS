@@ -329,6 +329,13 @@
     "body": "We couldn't reach any of our scientific data sources during this search. This isn't about your question — please try again in a few minutes.",
     "retryCta": "Try again"
   },
+  "notFoundPage": {
+    "eyebrow": "Error 404",
+    "heading": "We couldn't find that page",
+    "body": "The link may be outdated or mistyped. Your question isn't affected — just start again from the homepage.",
+    "homeCta": "Go to homepage",
+    "topicsCta": "Browse topics"
+  },
   "checkoutSuccessPage": {
     "heading": "Thank you for your payment",
     "body": "Your payment is being processed. Once your full evidence report is ready, you'll receive it by email as well as via a secure report link.",

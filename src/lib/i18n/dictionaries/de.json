@@ -332,6 +332,13 @@
     "body": "Bei der Suche konnten wir keine unserer wissenschaftlichen Datenquellen erreichen. Das liegt nicht an deiner Frage — bitte versuche es in ein paar Minuten erneut.",
     "retryCta": "Erneut versuchen"
   },
+  "notFoundPage": {
+    "eyebrow": "Fehler 404",
+    "heading": "Diese Seite konnten wir nicht finden",
+    "body": "Der Link ist möglicherweise veraltet oder falsch geschrieben. Deine Frage ist davon nicht betroffen — starte einfach neu von der Startseite.",
+    "homeCta": "Zur Startseite",
+    "topicsCta": "Themen ansehen"
+  },
   "checkoutSuccessPage": {
     "heading": "Danke für deine Zahlung",
     "body": "Deine Zahlung wird verarbeitet. Sobald dein vollständiger Evidence Report bereit ist, erhältst du ihn per E-Mail sowie über einen sicheren Report-Link.",

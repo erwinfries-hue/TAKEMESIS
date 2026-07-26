@@ -1046,6 +1046,29 @@ admin feedback/issue-report code for edge cases.
 - Verified together: `npm run verify` (lint, typecheck, 255 unit tests, 1
   integration test, build) and `npm run test:e2e` (50/50) all pass.
 
+### Design pass: branded 404 page (Erwin's request, continued)
+The root app had no `not-found.tsx`, so a mistyped or dead link fell through
+to Next.js's generic, unbranded default 404 — the one place in the app that
+still broke the "premium, calm, credible" visual language `CLAUDE.md`
+requires everywhere else.
+
+- **New `src/app/not-found.tsx`**: same panel/typography language as the
+  rest of the site (renders inside the existing header/footer via
+  `layout.tsx`), a small custom line-art illustration (document +
+  magnifying glass — reusing the "searched, found nothing" motif for
+  "page not found") in the same 24×24-viewBox / `currentColor` /
+  rounded-cap style as `src/components/icons`, plus CTAs back to the
+  homepage and `/topics`. Deliberately does **not** touch `TekmesisLogo` —
+  its icon-left-of-wordmark layout is fixed by earlier explicit instruction
+  and isn't varied here.
+- New `notFoundPage` dictionary keys in `de.json`/`en.json`. Live-verified
+  with a screenshot at `/this-page-does-not-exist` before writing tests.
+- Added to `e2e/site.spec.ts`'s existing content-page heading/`@a11y` loop,
+  plus a dedicated test confirming the route actually returns HTTP 404 (not
+  just a 200 page that looks like an error) and that the home CTA works.
+- Verified: `npm run verify` and `npm run test:e2e` (53/53, up from 50) both
+  pass; `next build` lists a new `/_not-found` route.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

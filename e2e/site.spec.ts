@@ -11,6 +11,7 @@ const contentPages = [
   { path: "/about", heading: "Über TEKMESIS" },
   { path: "/checkout/success", heading: "Danke für deine Zahlung" },
   { path: "/checkout/cancel", heading: "Zahlung abgebrochen" },
+  { path: "/this-page-does-not-exist", heading: "Diese Seite konnten wir nicht finden" },
 ];
 
 for (const { path, heading } of contentPages) {
@@ -27,6 +28,16 @@ for (const { path, heading } of contentPages) {
     expect(results.violations).toEqual([]);
   });
 }
+
+test("an unknown URL returns a real 404 status with a branded not-found page", async ({
+  page,
+}) => {
+  const response = await page.goto("/this-page-does-not-exist");
+  expect(response?.status()).toBe(404);
+  await expect(page.getByText("Fehler 404")).toBeVisible();
+  await page.getByRole("link", { name: "Zur Startseite" }).click();
+  await expect(page).toHaveURL(/\/$/);
+});
 
 test("main navigation links reach every content page", async ({ page }) => {
   await page.goto("/");
