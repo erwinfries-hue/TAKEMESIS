@@ -1069,6 +1069,29 @@ requires everywhere else.
 - Verified: `npm run verify` and `npm run test:e2e` (53/53, up from 50) both
   pass; `next build` lists a new `/_not-found` route.
 
+### Design pass: brand the transactional email templates (Erwin's request, continued)
+`src/lib/email/templates.ts` (report-ready, report-failed, refund
+confirmation — the emails a real customer actually receives) were plain
+unstyled `<div>`/`<p>` HTML with no branding at all, the one remaining
+surface that didn't match the site's visual language.
+
+- `wrapEmail()` now renders a table-based, fully inline-styled card (email
+  clients don't load stylesheets): a navy (`#0b2540`) header bar with the
+  TEKMESIS wordmark, a white content area, and a footer using the same
+  neutral-600/neutral-400 hierarchy as the rest of the site — all colors
+  are the exact hex values from `globals.css`'s design tokens, not
+  approximations.
+- The report-ready email's link is now a teal pill-shaped CTA button
+  (`emailButton()`) with a plain-text fallback link underneath, instead of
+  a bare hyperlink; the other two templates' `mailto:` links are styled
+  consistently (`emailLink()`).
+- No content changed — same subjects, same body copy, same evidence-
+  integrity guarantee (still takes no question/report-content parameter,
+  so nothing sensitive can leak in). All 6 existing tests pass unchanged
+  plus 1 new test asserting the branded header renders in every template.
+  Visually verified by rendering the report-ready email's HTML to a file
+  and screenshotting it in a real browser.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

@@ -27,6 +27,14 @@ describe("email templates", () => {
     expect(email.html).toContain(baseParams.supportEmail);
   });
 
+  it("every template renders the branded navy header bar with the TEKMESIS wordmark", () => {
+    for (const build of [buildReportReadyEmail, buildReportFailedEmail, buildRefundConfirmationEmail]) {
+      const email = build({ locale: "de", ...baseParams });
+      expect(email.html).toContain("#0b2540");
+      expect(email.html).toContain(">TEKMESIS<");
+    }
+  });
+
   it("report-ready email is localized", () => {
     const de = buildReportReadyEmail({ locale: "de", ...baseParams });
     const en = buildReportReadyEmail({ locale: "en", ...baseParams });
