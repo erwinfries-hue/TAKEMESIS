@@ -5,6 +5,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { OwnQuestionForm } from "@/components/own-question-form";
+import { TopicIcon } from "@/components/icons/topic-icons";
 import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
 import { getTrendingTopics } from "@/lib/analytics/trending-topics";
 
@@ -76,6 +77,7 @@ export default async function TopicsPage() {
               className="scroll-mt-20 rounded-xl border border-brand-neutral-200 bg-white p-6"
             >
               <div className="mb-2 flex flex-wrap items-center gap-3">
+                <TopicIcon slug={topic.slug} className="h-6 w-6 shrink-0 text-brand-teal-600" />
                 <h2 className="text-xl font-semibold text-brand-navy-900">{copy.name}</h2>
                 {askedCount != null && (
                   <span className="rounded-full bg-brand-teal-100 px-2 py-0.5 text-xs font-medium text-brand-teal-700">

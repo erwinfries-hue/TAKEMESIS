@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { Axia4Logo } from "@/components/brand/axia4-logo";
 
 export function SiteFooter({ dict }: { dict: Dictionary }) {
   return (
@@ -18,7 +19,10 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
           {dict.nav.sources}
         </Link>
       </nav>
-      <p>{dict.brand.parent}</p>
+      <p className="mb-2 flex items-center justify-center gap-2">
+        <Axia4Logo alt="AXIA4 Digital" />
+        <span>{dict.brand.parent}</span>
+      </p>
       <p className="mt-1">{dict.footer.disclaimer}</p>
     </footer>
   );

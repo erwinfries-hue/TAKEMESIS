@@ -67,6 +67,12 @@ test("admin overview page (authenticated) has no critical accessibility violatio
   await page.getByLabel("Zugangscode").fill("e2e-test-secret");
   await page.getByRole("button", { name: "Anmelden" }).click();
   await expect(page).toHaveURL(/\/admin$/);
+  await expect(page.getByRole("heading", { name: "Admin-Übersicht" })).toBeVisible();
+  // Client-side navigation can render the page body before the App
+  // Router commits the route's <title> to <head> — waiting on the heading
+  // alone isn't enough; explicitly wait for the title too, otherwise axe can
+  // sample the DOM mid-transition and flag a false "document-title" violation.
+  await expect(page).toHaveTitle("Admin — TEKMESIS");
 
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag22aa"])

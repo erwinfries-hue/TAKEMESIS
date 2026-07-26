@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { TekmesisLogo } from "@/components/brand/tekmesis-logo";
 
 export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const navItems: Array<{ href: string; label: string }> = [
@@ -15,11 +16,8 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
   return (
     <header className="border-b border-brand-neutral-200 px-6 py-4 print:hidden sm:px-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link
-          href="/"
-          className="text-lg font-semibold tracking-tight text-brand-navy-900"
-        >
-          {dict.brand.name}
+        <Link href="/" className="shrink-0">
+          <TekmesisLogo name={dict.brand.name} />
         </Link>
         <nav
           aria-label={locale === "de" ? "Hauptnavigation" : "Main navigation"}

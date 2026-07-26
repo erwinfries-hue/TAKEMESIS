@@ -9,6 +9,7 @@ import { LiveDemoPreview } from "@/components/live-demo-preview";
 import { buildExampleReportPreviewSearchResult } from "@/content/example-report-preview";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
+import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 
 const TEASER_COUNT = 6;
 
@@ -92,17 +93,23 @@ export default async function Home() {
           {dict.home.howItWorksHeading}
         </h2>
         <ol className="grid w-full max-w-4xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {dict.home.howItWorksSteps.map((step, index) => (
-            <li
-              key={step}
-              className="flex flex-col gap-1 rounded-lg border border-brand-neutral-200 bg-white p-4"
-            >
-              <span className="text-xs font-semibold text-brand-teal-700">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span className="text-sm text-brand-neutral-950">{step}</span>
-            </li>
-          ))}
+          {dict.home.howItWorksSteps.map((step, index) => {
+            const StepIcon = PROCESS_STEP_ICONS[index];
+            return (
+              <li
+                key={step}
+                className="flex flex-col gap-2 rounded-lg border border-brand-neutral-200 bg-white p-4"
+              >
+                <div className="flex items-center gap-2">
+                  {StepIcon && <StepIcon className="h-5 w-5 text-brand-teal-600" />}
+                  <span className="text-xs font-semibold text-brand-teal-700">
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <span className="text-sm text-brand-neutral-950">{step}</span>
+              </li>
+            );
+          })}
         </ol>
         <p className="max-w-xl text-center text-sm text-brand-neutral-600">
           {dict.home.howItWorksNote}

@@ -733,6 +733,64 @@ edge.
   match, per-source error surfacing, unknown-topic-slug safety). 237 unit
   tests + 1 integration test; `npm run verify` passes.
 
+### Visual design pass (Erwin's request)
+Erwin asked for a more polished visual identity: a TEKMESIS logo with the
+existing tagline, icons/graphics, and a punchier "Über TEKMESIS" text, plus
+the `axia4.lovable.app` link needing a `/de/` path segment. No image-
+generation tool is available this session, so everything was built as
+inline SVG (no new dependency, adapts to light/dark via `currentColor`,
+fully accessible) rather than raster images:
+
+- `src/components/brand/tekmesis-logo.tsx`: a shield-and-"T" mark in the
+  style of the supplied onepager reference (`docs/assets/onepager/`) — a
+  placeholder-quality vector mark, not a finalized trademark asset — plus
+  the existing `brand.claim` tagline ("FROM STUDIES TO CLARITY."). Used
+  compact (icon+wordmark) in `SiteHeader` site-wide, and stacked
+  (icon+wordmark+tagline) on `/about`.
+- `src/components/brand/axia4-logo.tsx`: the actual official AXIA4 logo
+  (`docs/assets/brand/AXIA4_OFFICIAL_LOGO_REFERENCE.png`, copied verbatim
+  into `public/brand/axia4-logo.jpg` — geometry/wording/colors unchanged)
+  is now genuinely rendered on the site — previously only text ("AXIA4
+  Digital") appeared anywhere, despite the design system doc requiring an
+  "AXIA4 parent-brand lockup" component. The source file is a baseline
+  JPEG with a white background baked in (no alpha channel); wrapped in a
+  small white badge so it stays legible against this app's real dark-mode
+  background instead of showing a stray white box. Used in `SiteFooter`
+  and `/about`. A transparent PNG/SVG requested directly from AXIA4 would
+  let the badge wrapper go away later (tracked in `OPEN_RISKS.md`).
+- `src/components/icons/topic-icons.tsx`: one simple line icon per topic
+  slug (heart, apple, moon, dumbbell, book, briefcase, ...), shown on
+  `TopicCard` and the `/topics` category list. Purely decorative
+  (`aria-hidden`) — the accessible name stays the topic's text name.
+- `src/components/icons/process-step-icons.tsx`: one icon per "how it
+  works" step (pencil, target, magnifying glass, checkmark-shield, eye,
+  card, document) — matches the onepager reference's 7-step icon row.
+- `aboutPage.body` (DE/EN) tightened per Erwin's approval of the
+  short/punchy option: "TEKMESIS macht aus einer Frage einen Evidence
+  Report — echte Studien gefunden, verglichen und verständlich erklärt.
+  Mit sichtbaren Quellen, offenen Limitationen und ganz ohne falsche
+  Gewissheit." (and its English equivalent).
+- The `axia4.lovable.app/digital` link needing a `/de/` segment is a
+  Vercel environment variable (`NEXT_PUBLIC_AXIA4_DIGITAL_URL`), not
+  anything in this repo (the codebase's own default is `https://axia4.ch/digital`,
+  the real domain per `CLAUDE.md`) — flagged to Erwin as a one-exact-action
+  Vercel dashboard change, not something this session can do.
+- **Real pre-existing e2e flake found and fixed while re-running the full
+  suite for this pass** (confirmed pre-existing via `git stash` bisection
+  against the prior commit, not caused by this design work):
+  `e2e/admin.spec.ts`'s authenticated-admin-overview a11y scan raced
+  against the Next.js App Router's client-side `<title>` update after the
+  login redirect — waiting for the heading to be visible wasn't enough
+  (the body can render before `<head>`'s title commits), so axe sometimes
+  sampled the DOM with a momentarily-empty `<title>` and flagged a false
+  "document-title" violation. Fixed by explicitly asserting
+  `toHaveTitle(...)` before scanning.
+- 48 Playwright specs (all a11y scans included, unaffected in count —
+  no new e2e state introduced) + full unit/integration suite pass;
+  `npm run verify` passes. Visually confirmed live via screenshot: header
+  logo, topic icons on `/topics`, and the stacked logo + AXIA4 badge on
+  `/about`.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
