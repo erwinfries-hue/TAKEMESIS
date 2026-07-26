@@ -5,6 +5,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { OwnQuestionForm } from "@/components/own-question-form";
+import { StudyLookupForm } from "@/components/study-lookup-form";
 import { TopicIcon } from "@/components/icons/topic-icons";
 import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
 import { getTrendingTopics } from "@/lib/analytics/trending-topics";
@@ -62,9 +63,12 @@ export default async function TopicsPage() {
         </div>
       )}
 
-      <Suspense>
-        <OwnQuestionForm dict={dict} locale={locale} id="eigene-frage" />
-      </Suspense>
+      <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-stretch lg:justify-center">
+        <Suspense>
+          <OwnQuestionForm dict={dict} locale={locale} id="eigene-frage" />
+        </Suspense>
+        <StudyLookupForm dict={dict} />
+      </div>
 
       <div className="grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
         {topics.map((topic) => {

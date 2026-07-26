@@ -7,7 +7,7 @@ export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string })
       id={id}
       action="/search"
       method="get"
-      className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm"
+      className="flex h-full w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm"
     >
       <h2 className="font-semibold text-brand-navy-900">{dict.studyLookupForm.heading}</h2>
       <p className="text-sm text-brand-neutral-600">{dict.studyLookupForm.intro}</p>
@@ -23,7 +23,7 @@ export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string })
       />
       <button
         type="submit"
-        className="self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
+        className="mt-auto self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
       >
         {dict.studyLookupForm.submit}
       </button>

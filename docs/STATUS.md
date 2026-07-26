@@ -1278,6 +1278,32 @@ from the filters feature above so both stay independently reviewable).
   (mocked fetch) plus live-verified UI/routing for both DOI failure
   states. `npm run verify` and `npm run test:e2e` (59/59) both pass.
 
+### Fix: unequal card heights on the home/topics own-question row + add the study lookup to /topics (Erwin's feedback on the live deploy)
+Erwin's repo turned out to have no separate `main` branch —
+`claude/takemesis-mvp-app-f622xx` is the repository's only and default
+branch, so what looked like "still needs a PR" was actually already live
+via Vercel once he checked; this was a mistaken assumption on my part,
+corrected once verified via `list_branches`/`list_pull_requests` (0
+branches besides this one, 0 PRs). He then reported two real issues from
+the live site:
+
+- **The two homepage cards (`OwnQuestionForm`/`StudyLookupForm`) had
+  visibly different heights**, submit buttons misaligned, because the
+  shorter card's content just stopped early — the flex row used
+  `lg:items-start` (natural per-item height) instead of stretching.
+  Fixed: the row is now `lg:items-stretch`, and each form is `h-full`
+  with `mt-auto` on its submit button, so both cards match the row's
+  height (driven by whichever is taller) and both buttons align at the
+  bottom regardless of content length.
+- **`/topics` never got the "compare a study you already have" entry** —
+  it only ever had `OwnQuestionForm` standalone; the DOI-lookup feature
+  (see the previous entry) was wired into the homepage only. Added
+  `StudyLookupForm` next to `OwnQuestionForm` on `/topics` too, in the
+  same side-by-side layout as the homepage.
+- Live-verified via screenshots on both pages (equal-height cards on
+  `/`, both forms present on `/topics`). `npm run verify` and
+  `npm run test:e2e` (59/59) both pass unchanged.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
