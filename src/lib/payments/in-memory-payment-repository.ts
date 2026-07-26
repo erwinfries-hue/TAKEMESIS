@@ -42,4 +42,8 @@ export class InMemoryPaymentRepository implements PaymentRepository {
     this.payments.set(id, updated);
     return updated;
   }
+
+  async listAll(): Promise<Payment[]> {
+    return Array.from(this.payments.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
 }

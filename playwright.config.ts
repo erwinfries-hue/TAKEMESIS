@@ -34,5 +34,11 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
+    env: {
+      // Test-only fixed credentials so e2e specs can exercise the admin
+      // login flow — not a real secret, never used outside this test server.
+      ADMIN_EMAILS: "admin@tekmesis.com",
+      ADMIN_AUTH_SECRET: "e2e-test-secret",
+    },
   },
 });

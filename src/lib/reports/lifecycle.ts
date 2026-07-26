@@ -25,7 +25,9 @@ const TRANSITIONS: Record<ReportStatus, ReportStatus[]> = {
   // also be blocked directly if an admin needs to intervene mid-generation.
   processing: ["ready", "failed", "blocked"],
   ready: ["blocked", "refund_pending"],
-  failed: ["refund_pending"],
+  // Admin "retry report" action re-attempts generation instead of going
+  // straight to refund_pending.
+  failed: ["refund_pending", "processing"],
   refund_pending: ["refunded"],
   refunded: [],
   blocked: ["refund_pending"],

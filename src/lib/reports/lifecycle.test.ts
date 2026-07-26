@@ -49,6 +49,10 @@ describe("canTransition", () => {
     expect(canTransition("blocked", "refund_pending")).toBe(true);
     expect(canTransition("blocked", "ready")).toBe(false);
   });
+
+  it("allows an admin to retry a failed report back into processing", () => {
+    expect(canTransition("failed", "processing")).toBe(true);
+  });
 });
 
 describe("assertTransition", () => {

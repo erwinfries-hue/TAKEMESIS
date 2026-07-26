@@ -64,4 +64,8 @@ export class InMemoryReportRepository implements ReportRepository {
     this.reports.set(id, updated);
     return updated;
   }
+
+  async listAll(): Promise<Report[]> {
+    return Array.from(this.reports.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
 }

@@ -68,10 +68,14 @@ checkpoint (decision #15) and before each production-readiness gate.
    (see `SOURCE_COVERAGE_MATRIX.md`). Monitor eligible-rate by category at the beta
    checkpoint; consider narrowing active categories if a specific one consistently
    fails to produce sellable reports.
-6. **AI + free-teaser cost exposure.** Bounded by the 5/day/IP free-search limit
-   (decision #7) and per-report input caps, but actual AI spend should be tracked
-   from day one against the CHF 1.00–1.50/report estimate (decision #9) to confirm
-   the estimate holds at real usage volumes.
+6. **AI + free-teaser cost exposure.** The 5/day/IP free-search limit is decided
+   (decision #7, `FREE_SEARCH_LIMIT` in `.env.example`) but **not yet enforced in
+   code** — `/search` runs a real search on every request with no rate limiting.
+   Low risk while this sandbox can't reach the source APIs anyway, but must be
+   built (Phase 10 hardening) before `/search` is exercised against live,
+   costed APIs. Actual AI spend should also be tracked from day one against the
+   CHF 1.00–1.50/report estimate (decision #9) to confirm it holds at real
+   usage volumes.
 7. **NCBI E-utilities rate limits without an API key.** 3 req/sec cap is fine at
    beta volume; revisit (add `NCBI_API_KEY`) if search volume grows.
 8. **Admin auth is minimal (email allowlist + shared secret).** Acceptable for a
@@ -100,6 +104,17 @@ checkpoint (decision #15) and before each production-readiness gate.
     interpretation exists. Until then, some studies that a human screener would
     exclude will pass through to ranking/eligibility; the eligibility engine
     (Phase 6) must not assume screening has already filtered for topical fit.
+15. **Phase 9's admin/email/analytics scope was deliberately narrowed.** Built:
+    email templates+send (Resend), the funnel-event allowlist + tracking
+    (PostHog), admin auth, and an admin dashboard covering report status/
+    actions + payments. **Not built** (see `STATUS.md` for why each was
+    deferred rather than shipped as an empty shell): feedback/issue-report
+    repositories and admin pages, source-health persistence (Phase 4's
+    `checkAllSourceStatuses` still isn't written anywhere), cost-estimate and
+    topic/source-coverage analytics views. None of email sending or PostHog
+    forwarding has been verified against a live account (`EMAIL_API_KEY` /
+    PostHog site ID are both unset) — same live-validation gap as the source
+    adapters and Stripe/Supabase, tracked here rather than assumed working.
 
 ## Not risks, but explicit go/no-go gates already defined
 

@@ -2,9 +2,8 @@
 
 ## Current phase
 
-Phase 8 — Premium report: **complete** for everything credential-independent
-(structure/layout/real data; AI-dependent narrative explicitly pending, not
-faked). Phase 9 (email, admin, analytics) next.
+Phase 9 — Email, admin, analytics: **complete** for the scoped subset (see
+below). Phase 10 (hardening) next.
 
 ## Completed
 
@@ -306,13 +305,62 @@ Supabase/Stripe test accounts first or reordering phases.
   placeholder-data warning is visible, AI-pending sections say so). 155 unit
   tests + 1 integration test, 34 Playwright specs; `npm run verify` passes.
 
+### Phase 9 — Email, admin, analytics
+- `src/lib/email/`: report-ready, report-failed, refund-confirmation templates
+  as pure, localized (DE/EN) functions — deliberately take no question/report-
+  content parameter at all, so raw question text structurally cannot leak into
+  an email (docs/11: "no unnecessary sensitive question details"). Lazy Resend
+  client + injectable-client `sendEmail` (same DI pattern as Stripe/Supabase).
+- `src/lib/analytics/`: the full funnel event list from `11` as a typed
+  allowlist; `sanitizeMetadata` strips any non-allowlisted key before an event
+  ever reaches a repository or PostHog — a caller cannot leak raw question
+  text even by mistake, verified by a dedicated test. `analytics_events`
+  Supabase table is the source-of-truth repository; PostHog (EU Cloud,
+  decision #14) forwarding is a safe no-op whenever analytics is disabled or
+  unconfigured (`NEXT_PUBLIC_ANALYTICS_ENABLED`/`_SITE_ID`).
+- `src/lib/admin/auth.ts`: minimal email-allowlist + shared-secret admin auth
+  (`OPEN_RISKS.md` #8) — no session storage needed, the cookie is self-
+  verifying (HMAC-signed email, keyed on `ADMIN_AUTH_SECRET`), so a forged or
+  tampered cookie fails verification without a database lookup.
+  `/admin/login`, session cookie, `requireAdminSession` gate, logout.
+- `/admin` (report status counts + full report list with status-appropriate
+  actions: retry, block, mark refund pending, record refunded, revoke link)
+  and `/admin/payments`, both degrading gracefully with a visible "database
+  not connected" notice rather than crashing when Supabase isn't configured
+  (same pattern as the source adapters). Every action is written to
+  `admin_audit_log` via a new `AuditLogRepository`.
+- Extended `ReportRepository`/`PaymentRepository` with `listAll()` (fine at
+  beta scale — decision #15's 15-person closed beta — paginate before public
+  MVP) and the lifecycle state machine with `failed → processing` (the
+  "retry report" admin action), with a new test covering it.
+- **Live-verified in this sandbox, not just unit-tested:** the full admin auth
+  flow (unauthenticated redirect, wrong-credential rejection, correct login,
+  logout, graceful no-database state) was run against a real browser via
+  Playwright with a test-only fixed `ADMIN_EMAILS`/`ADMIN_AUTH_SECRET` in
+  `playwright.config.ts`'s webServer env — genuine end-to-end coverage of the
+  one piece of Phase 9 that doesn't need external credentials to fully exercise.
+- **Deliberately deferred, not built shallow:** feedback/issue-report
+  repositories and admin pages, source-health persistence (`checkAllSourceStatuses`
+  from Phase 4 still isn't written anywhere), cost-estimate and topic/source-
+  coverage analytics dashboards. `11` lists these as admin sections but they
+  need either more Phase-4/8 groundwork (source health) or are genuinely
+  low-value to build before there's any real traffic to show — tracked in
+  `OPEN_RISKS.md` #15 rather than shipped as empty shells.
+- 31 new unit tests (email templates/send, analytics sanitization/tracking/
+  PostHog forwarding, admin auth, admin report actions, 1 new lifecycle
+  transition) + 6 new e2e specs (full admin login/logout/degradation flow, 2
+  a11y scans). 186 unit tests + 1 integration test, 40 Playwright specs;
+  `npm run verify` passes.
+
 ## Not started
 
-Phases 9–13 from `IMPLEMENTATION_PLAN.md`: email/admin/analytics, hardening,
-preview beta, production prep, production launch. Also still pending within
-already-"complete" phases: AI-based query interpretation/extraction/synthesis
-(Phase 3 + Phase 8, needs `ANTHROPIC_API_KEY`) and live wiring of Phases 4/5/7
-(needs Supabase/Stripe/network access) — all tracked in `OPEN_RISKS.md`.
+Phases 10–13 from `IMPLEMENTATION_PLAN.md`: hardening (security/privacy/abuse/
+accessibility/performance/hallucination testing), preview beta, production
+prep, production launch. Also still pending within already-"complete" phases:
+AI-based query interpretation/extraction/synthesis (Phase 3 + Phase 8, needs
+`ANTHROPIC_API_KEY`), live wiring of Phases 4/5/7/9 (needs Supabase/Stripe/
+Resend/PostHog credentials and network access), and the deferred Phase 9
+admin sections above — all tracked in `OPEN_RISKS.md`.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
@@ -323,22 +371,25 @@ already-"complete" phases: AI-based query interpretation/extraction/synthesis
   sandbox; the success path (sources actually returning data) still needs a
   real run from an environment with network access.
 - Live validation of the Supabase migration and Stripe checkout/webhook code
-  (`OPEN_RISKS.md` #13) — nothing in Phase 7 has touched a real database or a
-  real Stripe account yet.
+  (`OPEN_RISKS.md` #13) — nothing has touched a real database or a real
+  Stripe account yet.
 - Wiring the live UI to real report creation + a working checkout button +
-  real premium-report generation on payment (`OPEN_RISKS.md` #14, now also
-  covering Phase 8's renderer) — needs the credentials above first.
+  real premium-report generation on payment (`OPEN_RISKS.md` #14) — needs the
+  credentials above first.
 - AI-based extraction/synthesis for Phase 3 (query interpretation) and Phase 8
   (key findings, study-level extraction, integrated synthesis, practical
   interpretation) — needs `ANTHROPIC_API_KEY`, not yet provisioned.
+- Live validation of email sending (Resend) and analytics forwarding
+  (PostHog), plus the deferred Phase 9 admin sections (`OPEN_RISKS.md` #15).
 
 ## Next step
 
-Phase 9: transactional email (Resend, decision #13), admin dashboard sections
-from `11_ADMIN_ANALYTICS_EMAIL_AND_SUPPORT.md` (funnel, source health,
-payments, report jobs, failures, refunds, feedback/issues, cost estimates,
-audit log), PostHog analytics integration (decision #14) with the documented
-event whitelist — per `IMPLEMENTATION_PLAN.md`. Needs `EMAIL_API_KEY` and
-`NEXT_PUBLIC_ANALYTICS_SITE_ID`/PostHog credentials plus `ADMIN_AUTH_SECRET`/
-`ADMIN_EMAILS`, none of which are provisioned yet — expect the same
-credential-independent-first approach as Phases 4/7/8.
+Phase 10: hardening — security (rate limiting, input-size limits, security
+headers, dependency audit — the known dev-tooling `npm audit` findings from
+Phase 1 should be re-checked), privacy (the 12-month retention expiry job
+implied by decision #5 doesn't exist yet), abuse controls (the 5/day free-
+search limit from decision #7 is decided but not yet enforced in code — worth
+checking now that `/search` actually runs real searches), accessibility
+(deeper pass beyond the automated axe scans already in place throughout),
+performance, and evidence-safety/hallucination tests — per
+`IMPLEMENTATION_PLAN.md`.

@@ -6,4 +6,6 @@ export interface ReportRepository {
   findByTokenHash(tokenHash: string): Promise<Report | null>;
   findByCheckoutSessionId(sessionId: string): Promise<Report | null>;
   update(id: string, patch: Partial<Omit<Report, "id" | "createdAt">>): Promise<Report>;
+  /** Admin dashboard use only — fine at beta scale (decision #15: 15-person closed beta); paginate before public MVP. */
+  listAll(): Promise<Report[]>;
 }

@@ -77,4 +77,13 @@ export class SupabasePaymentRepository implements PaymentRepository {
     if (error) throw error;
     return toDomain(data as PaymentRow);
   }
+
+  async listAll(): Promise<Payment[]> {
+    const { data, error } = await getSupabaseClient()
+      .from("payments")
+      .select()
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data as PaymentRow[]).map(toDomain);
+  }
 }

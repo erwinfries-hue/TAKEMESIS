@@ -137,4 +137,13 @@ export class SupabaseReportRepository implements ReportRepository {
     if (error) throw error;
     return toDomain(data as ReportRow);
   }
+
+  async listAll(): Promise<Report[]> {
+    const { data, error } = await getSupabaseClient()
+      .from("reports")
+      .select()
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data as ReportRow[]).map(toDomain);
+  }
 }
