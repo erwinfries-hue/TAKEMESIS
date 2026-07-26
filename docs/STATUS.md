@@ -1112,6 +1112,21 @@ disclaimer.
   screenshotted, then deleted — never committed). `npm run verify` and
   `npm run test:e2e` (53/53) both pass.
 
+### Design pass: leading icons on status notices (Erwin's request, continued)
+`HighRiskNotice`, `SearchLimitNotice`, `NotEligibleNotice`, and
+`SearchFailedNotice` — the four `/search` guard-rail panels — had no visual
+marker distinguishing "warning" from "informational," just color and copy.
+
+- New shared `src/components/icons/notice-icons.tsx`: `WarningIcon`
+  (triangle) for the two amber warning-style panels, `InfoIcon` (circled
+  "i") for the two neutral white panels — same 24×24/`currentColor`
+  line-icon style as the rest of `src/components/icons`.
+- Icons sit `aria-hidden` next to each heading; the heading's accessible
+  name is unchanged, so none of the existing `getByRole("heading", {name})`
+  e2e assertions needed updates. Visually verified live (screenshots of the
+  high-risk and search-failed states).
+- `npm run verify` and `npm run test:e2e` (53/53) both pass.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
