@@ -2,11 +2,18 @@
 
 ## Current phase
 
-Phase 10 — Hardening: **complete** for the scoped subset (see below). Phase
-11 (preview beta) next — per Erwin's 2026-07-26 instruction ("finish
-everything as far as possible, ask only where truly necessary"), continuing
-through Phases 11–13 without pausing for check-ins, documenting
-credential/access blockers in `OPEN_RISKS.md` rather than stopping to ask.
+Phase 10 (Hardening) is complete. Phases 11–13 (preview beta, production
+prep, production launch) are **blocked on real infrastructure this session
+doesn't have** (Vercel project, Stripe/Supabase/Resend accounts, Hostpoint
+DNS access, Treuhänder sign-off) — most of their concrete steps are explicit
+`CLAUDE.md` human-stop-conditions. Per Erwin's 2026-07-26 instruction
+("finish everything as far as possible, ask only where truly necessary"),
+everything from those phases that *is* buildable without live access has
+been done: an independent code review (`docs/INDEPENDENT_REVIEW.md`), a
+step-by-step production runbook (`docs/PRODUCTION_RUNBOOK.md`), and a
+smoke-test script + checklist (`docs/SMOKE_TESTS.md`,
+`scripts/smoke-test.sh`, live-verified against a real build). What's left in
+11–13 needs Erwin (see "Blocking items" below).
 
 ## Completed
 
@@ -406,12 +413,40 @@ Supabase/Stripe test accounts first or reordering phases.
   credentials exist; not tracked as a numbered risk since none are blocking
   and none were silently skipped without being named here.
 
-## Not started
+### Phases 11–13 — Preview beta / production prep / production launch (docs only)
+Everything in these phases that needs a live Vercel/Stripe/Supabase project,
+Hostpoint DNS access, or Treuhänder sign-off is genuinely blocked — not
+skipped, but not attemptable from this session (several of these are
+explicit `CLAUDE.md` human-stop-conditions: DNS ownership, Stripe
+configuration, legal/tax approval). What was buildable without them:
+- `docs/INDEPENDENT_REVIEW.md`: ran the full 25-item review from
+  `18_FINAL_INDEPENDENT_REVIEW_PROMPT.md` against the actual codebase (not
+  prior status claims) — re-verified every command (lint/typecheck/test/
+  build/e2e all pass; `npm audit` genuinely could not run, registry endpoint
+  retired), spot-checked claims that hadn't been independently confirmed
+  before (no Google Scholar/paywall-bypass code exists anywhere; source
+  routing per topic is a real table, not just UI copy; no iframe/AXIA4
+  embedding anywhere). Verdict: **NO-GO**, correctly — no P0 code defect
+  found, but real infrastructure/credentials are missing, which the review
+  documents item by item rather than papering over.
+- `docs/PRODUCTION_RUNBOOK.md`: turns `00_START_HERE_ERWIN.md` §7–12 into an
+  executable checklist using this repo's actual env var names, including a
+  rollback plan (Vercel instant rollback, admin-driven data correction
+  instead of raw DB edits, additive-only migrations, easy `CRON_SECRET`
+  rotation) that didn't exist anywhere before.
+- `docs/SMOKE_TESTS.md` + `scripts/smoke-test.sh`: a read-only,
+  non-destructive HTTP smoke-test script (never starts a checkout, never
+  logs into admin) — **live-verified in this session**, all 17 checks pass
+  against a real `npm run build && npm run start`. Manual checks that need a
+  human or real payment (Stripe checkout, refund, email delivery, mobile,
+  DNS/mail) are listed separately, not scripted, since scripting those would
+  either be unsafe (real money) or not meaningfully automatable.
+- No git tag was created — `PRODUCTION_RUNBOOK.md` explicitly says
+  `v0.1.0` should only be tagged after a GO-verdict independent review
+  against production, not preemptively.
 
-Phases 11–13 from `IMPLEMENTATION_PLAN.md`: preview beta, production prep,
-production launch — all need real Vercel/Stripe/Supabase/DNS access this
-session doesn't have. Also still pending within already-"complete" phases:
-AI-based query interpretation/extraction/synthesis (Phase 3 + Phase 8, needs
+Also still pending within already-"complete" phases: AI-based query
+interpretation/extraction/synthesis (Phase 3 + Phase 8, needs
 `ANTHROPIC_API_KEY`), live wiring of Phases 4/5/7/9/10 (needs Supabase/Stripe/
 Resend/PostHog/Vercel Cron credentials and network access), the deferred
 Phase 9 admin sections, and the secure-link report viewer noted in Phase 10
@@ -440,13 +475,20 @@ above — all tracked in `OPEN_RISKS.md`.
   a real scheduler; no secure-link report-viewer page exists yet to read
   report status back to a user (`OPEN_RISKS.md` #16) — needs a deployed
   Vercel project.
+- Everything in `docs/PRODUCTION_RUNBOOK.md` §1–3 (Vercel project, live
+  Supabase/Stripe/Resend accounts, Hostpoint DNS change, Treuhänder sign-off,
+  a real payment, tagging `v0.1.0`) — all require Erwin's direct action per
+  `CLAUDE.md`'s human-stop-conditions; this session will not and cannot
+  perform them.
 
 ## Next step
 
-Phase 11: preview beta, per `IMPLEMENTATION_PLAN.md` — largely blocked on the
-same real credentials/deployment as the items above (a live Vercel preview,
-Stripe test-mode account, Supabase project). This session will continue
-building/documenting whatever is genuinely buildable without those (e.g.
-further docs, checklists, code paths that don't require a live round-trip),
-and will track every credential-gated step explicitly in `OPEN_RISKS.md`
-rather than skipping or faking it.
+Everything that was buildable without live credentials for the remainder of
+`IMPLEMENTATION_PLAN.md` (Phases 11–13) is done as of this update:
+`docs/INDEPENDENT_REVIEW.md`, `docs/PRODUCTION_RUNBOOK.md`,
+`docs/SMOKE_TESTS.md` + `scripts/smoke-test.sh`. What remains is entirely
+gated on Erwin provisioning real accounts/DNS/legal sign-off — see
+`docs/PRODUCTION_RUNBOOK.md` for the exact ordered steps once that starts,
+and `docs/OPEN_RISKS.md` for the full current risk register. The natural
+next session should begin at `PRODUCTION_RUNBOOK.md` §1 once at least a
+Vercel + Supabase + Stripe-test-mode set of credentials exists.
