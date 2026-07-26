@@ -289,6 +289,25 @@ checkpoint (decision #15) and before each production-readiness gate.
     Erwin: Vercel project → Settings → Environment Variables →
     `NEXT_PUBLIC_AXIA4_DIGITAL_URL` → update value → redeploy.
 
+22. **A country-of-study search filter was requested (Erwin) and
+    deliberately not built.** Publication-age and study-type filters were
+    built (`src/lib/search/filters.ts`) since `NormalizedRecord.year` and
+    `.publicationType` are already populated for every record from all
+    four source adapters. Country is different: none of the four adapters
+    (OpenAlex, Crossref, Europe PMC, NCBI) currently extract a country
+    field, and the only field that could approximate it — OpenAlex's
+    author-institution `country_code` (present in the raw API response,
+    not currently mapped) — reflects where the *researchers* are
+    affiliated, not where the study *population* was drawn from, and
+    would only work for one of the four sources. Offering a country filter
+    on that basis would either quietly narrow results to a small,
+    non-representative slice or misrepresent what's actually being
+    filtered — both cross `CLAUDE.md`'s "never invent source coverage"
+    rule. Revisit only if a source with genuine per-study population
+    country data is added, or if institution-affiliation filtering is
+    explicitly relabeled as such (not "country of study") and scoped to
+    OpenAlex-only with a visible coverage caveat.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

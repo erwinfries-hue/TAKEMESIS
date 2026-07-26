@@ -138,6 +138,12 @@ export function FreeTeaser({
         </p>
       )}
 
+      {teaser.excludedByFilterCount > 0 && (
+        <p className="text-xs text-brand-neutral-600">
+          {dict.teaserPage.filtersAppliedLabel}: {teaser.excludedByFilterCount}
+        </p>
+      )}
+
       <p className="text-xs text-brand-neutral-600">{dict.teaserPage.noCoverageDisclosure}</p>
     </div>
   );

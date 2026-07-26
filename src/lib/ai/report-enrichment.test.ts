@@ -3,6 +3,7 @@ import { makeRecord } from "@/lib/search/test-fixtures";
 import { buildPremiumReportData } from "@/lib/reports/premium-report";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import type { SearchRunResult } from "@/lib/search/run-search";
+import { NO_FILTERS } from "@/lib/search/filters";
 import { enrichPremiumReportWithAi } from "./report-enrichment";
 
 function fakeSearchResult() {
@@ -17,6 +18,8 @@ function fakeSearchResult() {
     duplicatesRemoved: 0,
     includedCount: 1,
     excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
+    filtersApplied: NO_FILTERS,
+    excludedByFilterCount: 0,
     perSource: [{ source: "openalex", ok: true, recordCount: 1 }],
     rankedIncluded: scored,
     detailed: scored,

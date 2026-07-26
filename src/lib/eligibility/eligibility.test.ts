@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import type { SearchRunResult } from "@/lib/search/run-search";
+import { NO_FILTERS } from "@/lib/search/filters";
 import { makeRecord } from "@/lib/search/test-fixtures";
 import { assessEligibility, estimateReportDepth } from "./eligibility";
 
@@ -14,6 +15,8 @@ function fakeSearchResult(records: NormalizedRecord[]): SearchRunResult {
     duplicatesRemoved: 0,
     includedCount: records.length,
     excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
+    filtersApplied: NO_FILTERS,
+    excludedByFilterCount: 0,
     perSource: [],
     rankedIncluded: records.map((record) => ({
       deduped: { record, mergedFromSources: [record.source] },

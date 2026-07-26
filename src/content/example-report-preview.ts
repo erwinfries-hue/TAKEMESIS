@@ -1,5 +1,6 @@
 import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import type { SearchRunResult } from "@/lib/search/run-search";
+import { NO_FILTERS } from "@/lib/search/filters";
 
 /**
  * Fictional placeholder records for the /example-report structural preview
@@ -115,6 +116,8 @@ export function buildExampleReportPreviewSearchResult(query: string): SearchRunR
     duplicatesRemoved: 2,
     includedCount: PLACEHOLDER_RECORDS.length,
     excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
+    filtersApplied: NO_FILTERS,
+    excludedByFilterCount: 0,
     perSource: [
       { source: "openalex", ok: true, recordCount: 2 },
       { source: "crossref", ok: true, recordCount: 1 },

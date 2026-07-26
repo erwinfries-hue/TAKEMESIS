@@ -9,6 +9,7 @@ import { topDomainCandidates } from "@/lib/classification/domain";
 import { HighRiskNotice } from "@/components/high-risk-notice";
 import { QuestionClarification, type CandidateOption } from "@/components/question-clarification";
 import { runSearch } from "@/lib/search/run-search";
+import { parseFiltersFromParams } from "@/lib/search/filters";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { getPriceConfig, formatPrice } from "@/lib/pricing/price-config";
@@ -30,12 +31,18 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; domain?: string }>;
+  searchParams: Promise<{
+    q?: string;
+    domain?: string;
+    maxAgeYears?: string;
+    studyTypeGroup?: string | string[];
+  }>;
 }) {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const { q, domain } = await searchParams;
+  const { q, domain, maxAgeYears, studyTypeGroup } = await searchParams;
   const question = q?.trim() ?? "";
+  const filters = parseFiltersFromParams({ maxAgeYears, studyTypeGroup });
 
   if (!question) {
     return (
@@ -136,17 +143,19 @@ export default async function SearchPage({
     );
   }
 
-  const searchResult = await runSearch(question, confirmedTopic.slug);
+  const searchResult = await runSearch(question, confirmedTopic.slug, filters);
   const allSourcesFailed =
     searchResult.perSource.length > 0 && searchResult.perSource.every((status) => !status.ok);
 
   if (allSourcesFailed) {
+    const retryParams = new URLSearchParams({ q: question, domain: confirmedTopic.slug });
+    if (maxAgeYears) retryParams.set("maxAgeYears", maxAgeYears);
+    for (const group of Array.isArray(studyTypeGroup) ? studyTypeGroup : studyTypeGroup ? [studyTypeGroup] : []) {
+      retryParams.append("studyTypeGroup", group);
+    }
     return (
       <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
-        <SearchFailedNotice
-          dict={dict}
-          retryHref={`/search?q=${encodeURIComponent(question)}&domain=${confirmedTopic.slug}`}
-        />
+        <SearchFailedNotice dict={dict} retryHref={`/search?${retryParams.toString()}`} />
       </main>
     );
   }

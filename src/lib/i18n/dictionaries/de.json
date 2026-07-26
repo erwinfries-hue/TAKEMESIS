@@ -274,6 +274,20 @@
     "changeSelection": "Auswahl ändern",
     "viewTopicCta": "Beispielfragen & Grenzen dieses Bereichs ansehen"
   },
+  "searchFilters": {
+    "heading": "Suche einschränken (optional)",
+    "ageLabel": "Nur Studien der letzten",
+    "ageNoLimit": "Kein Limit",
+    "age5": "5 Jahre",
+    "age10": "10 Jahre",
+    "age15": "15 Jahre",
+    "studyTypeHeading": "Studientypen",
+    "groupReviews": "Systematische Übersichtsarbeiten & Meta-Analysen",
+    "groupRct": "Randomisierte kontrollierte Studien (RCT)",
+    "groupObservational": "Beobachtungsstudien (Kohorten-, Fall-Kontroll-, Querschnittsstudien)",
+    "groupOther": "Sonstige Studientypen",
+    "note": "Einschränkende Filter können die Anzahl gefundener Studien deutlich reduzieren — bis hin zu \"nicht genug Evidenz\"."
+  },
   "publicationTypeLabels": {
     "meta_analysis": "Meta-Analyse",
     "systematic_review": "Systematischer Review",
@@ -310,7 +324,8 @@
     "limitationsNoticeHeading": "Wichtige Limitationen vor dem Kauf",
     "limitationsNoticeBody": "Die Evidenzlage zu dieser Frage ist aktuell begrenzt. Der vollständige Report macht diese Limitationen transparent, kann aber nicht mehr liefern, als die verfügbaren Studien hergeben.",
     "noCoverageDisclosure": "Kein Anspruch auf vollständige Abdeckung der wissenschaftlichen Literatur.",
-    "unknownTitle": "(kein Titel verfügbar)"
+    "unknownTitle": "(kein Titel verfügbar)",
+    "filtersAppliedLabel": "Durch deine Filter ausgeschlossen"
   },
   "paywallPanel": {
     "heading": "Vollständiger Report",

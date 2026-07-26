@@ -55,6 +55,39 @@ test("confirming a domain runs the real search pipeline (this sandbox has no net
   );
 });
 
+test("the domain-confirmation step offers optional search filters, all study types selected by default", async ({
+  page,
+}) => {
+  await page.goto(
+    "/search?q=" + encodeURIComponent("Welche Lernmethode verbessert den Lernerfolg?"),
+  );
+  await expect(page.getByText("Suche einschränken (optional)")).toBeVisible();
+  await expect(page.getByLabel("Systematische Übersichtsarbeiten & Meta-Analysen")).toBeChecked();
+  await expect(page.getByLabel("Randomisierte kontrollierte Studien (RCT)")).toBeChecked();
+  await expect(
+    page.getByLabel("Beobachtungsstudien (Kohorten-, Fall-Kontroll-, Querschnittsstudien)"),
+  ).toBeChecked();
+  await expect(page.getByLabel("Sonstige Studientypen")).toBeChecked();
+});
+
+test("choosing filters carries them through to the search request as query params", async ({
+  page,
+}) => {
+  await page.goto(
+    "/search?q=" + encodeURIComponent("Welche Lernmethode verbessert den Lernerfolg?"),
+  );
+  await page.getByLabel("Nur Studien der letzten").selectOption("10");
+  await page
+    .getByLabel("Beobachtungsstudien (Kohorten-, Fall-Kontroll-, Querschnittsstudien)")
+    .uncheck();
+  await page.getByRole("button", { name: "Bestätigen und Quellen durchsuchen" }).click();
+
+  await expect(page).toHaveURL(/maxAgeYears=10/);
+  await expect(page).toHaveURL(/studyTypeGroup=reviews/);
+  await expect(page).toHaveURL(/studyTypeGroup=rct/);
+  await expect(page).not.toHaveURL(/studyTypeGroup=observational/);
+});
+
 test("a high-risk question is restricted, not classified", async ({ page }) => {
   await page.goto("/search?q=" + encodeURIComponent("Welche Chemotherapie hilft bei Krebs?"));
   await expect(

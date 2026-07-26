@@ -1,11 +1,25 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { TopicRiskProfile } from "@/content/topics";
+import { AGE_FILTER_OPTIONS, STUDY_TYPE_GROUP_IDS, type StudyTypeGroupId } from "@/lib/search/filters";
 
 export interface CandidateOption {
   slug: string;
   name: string;
   riskProfile: TopicRiskProfile;
 }
+
+const STUDY_TYPE_GROUP_LABEL_KEY: Record<StudyTypeGroupId, keyof Dictionary["searchFilters"]> = {
+  reviews: "groupReviews",
+  rct: "groupRct",
+  observational: "groupObservational",
+  other: "groupOther",
+};
+
+const AGE_OPTION_LABEL_KEY: Record<(typeof AGE_FILTER_OPTIONS)[number], keyof Dictionary["searchFilters"]> = {
+  5: "age5",
+  10: "age10",
+  15: "age15",
+};
 
 /**
  * Plain GET form (no client JS needed): confirming navigates to
@@ -56,6 +70,46 @@ export function QuestionClarification({
           </label>
         ))}
       </fieldset>
+
+      <div className="flex flex-col gap-3 border-t border-brand-neutral-200 pt-4">
+        <h3 className="text-sm font-semibold text-brand-navy-900">{dict.searchFilters.heading}</h3>
+
+        <label className="flex flex-wrap items-center gap-2 text-sm text-brand-neutral-950">
+          {dict.searchFilters.ageLabel}
+          <select
+            name="maxAgeYears"
+            defaultValue=""
+            className="rounded-lg border border-brand-neutral-200 px-2 py-1 text-sm"
+          >
+            <option value="">{dict.searchFilters.ageNoLimit}</option>
+            {AGE_FILTER_OPTIONS.map((years) => (
+              <option key={years} value={years}>
+                {dict.searchFilters[AGE_OPTION_LABEL_KEY[years]]}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <fieldset className="flex flex-col gap-2">
+          <legend className="text-sm text-brand-neutral-950">
+            {dict.searchFilters.studyTypeHeading}
+          </legend>
+          {STUDY_TYPE_GROUP_IDS.map((groupId) => (
+            <label key={groupId} className="flex items-center gap-2 text-sm text-brand-neutral-600">
+              <input
+                type="checkbox"
+                name="studyTypeGroup"
+                value={groupId}
+                defaultChecked
+                className="h-4 w-4 rounded border-brand-neutral-200 text-brand-teal-600 focus:ring-brand-teal-400"
+              />
+              {dict.searchFilters[STUDY_TYPE_GROUP_LABEL_KEY[groupId]]}
+            </label>
+          ))}
+        </fieldset>
+
+        <p className="text-xs text-brand-neutral-600">{dict.searchFilters.note}</p>
+      </div>
 
       <button
         type="submit"

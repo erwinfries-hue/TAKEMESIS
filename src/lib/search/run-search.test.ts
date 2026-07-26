@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { SourceAdapter } from "@/lib/source-adapters/types";
 import { runSearchWithAdapters, DETAILED_RESULTS_CAP } from "./run-search";
+import { NO_FILTERS } from "./filters";
 import { makeRecord } from "./test-fixtures";
 
 function fakeAdapter(
@@ -94,5 +95,45 @@ describe("runSearchWithAdapters", () => {
     const result = await runSearchWithAdapters("x", "lernen-bildung", [a]);
     expect(result.screeningVersion).toBe("screening-v2");
     expect(() => new Date(result.searchDate).toISOString()).not.toThrow();
+  });
+
+  it("defaults to NO_FILTERS and applies no scope restriction", async () => {
+    const a = fakeAdapter("openalex", {
+      records: [makeRecord({ year: 1999, publicationType: "case_report" })],
+    });
+    const result = await runSearchWithAdapters("study", "lernen-bildung", [a]);
+    expect(result.filtersApplied).toEqual(NO_FILTERS);
+    expect(result.excludedByFilterCount).toBe(0);
+    expect(result.includedCount).toBe(1);
+  });
+
+  it("narrows the included set per the given filters and reports the excluded count", async () => {
+    const currentYear = new Date().getFullYear();
+    const recentRct = makeRecord({
+      title: "Recent RCT about spaced repetition",
+      year: currentYear,
+      publicationType: "rct",
+    });
+    const oldRct = makeRecord({
+      title: "Old RCT about spaced repetition",
+      year: currentYear - 20,
+      publicationType: "rct",
+    });
+    const recentCohort = makeRecord({
+      title: "Recent cohort study about spaced repetition",
+      year: currentYear,
+      publicationType: "cohort",
+    });
+    const a = fakeAdapter("openalex", { records: [recentRct, oldRct, recentCohort] });
+
+    const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a], {
+      maxAgeYears: 5,
+      studyTypes: ["rct"],
+    });
+
+    expect(result.includedCount).toBe(1);
+    expect(result.rankedIncluded).toHaveLength(1);
+    expect(result.rankedIncluded[0].deduped.record.title).toBe(recentRct.title);
+    expect(result.excludedByFilterCount).toBe(2);
   });
 });

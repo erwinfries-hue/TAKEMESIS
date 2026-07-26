@@ -271,6 +271,20 @@
     "changeSelection": "Change selection",
     "viewTopicCta": "See example questions & limits of this domain"
   },
+  "searchFilters": {
+    "heading": "Narrow the search (optional)",
+    "ageLabel": "Only studies from the last",
+    "ageNoLimit": "No limit",
+    "age5": "5 years",
+    "age10": "10 years",
+    "age15": "15 years",
+    "studyTypeHeading": "Study types",
+    "groupReviews": "Systematic reviews & meta-analyses",
+    "groupRct": "Randomized controlled trials (RCTs)",
+    "groupObservational": "Observational studies (cohort, case-control, cross-sectional)",
+    "groupOther": "Other study types",
+    "note": "Restrictive filters can significantly reduce the number of studies found — up to \"not enough evidence\"."
+  },
   "publicationTypeLabels": {
     "meta_analysis": "Meta-analysis",
     "systematic_review": "Systematic review",
@@ -307,7 +321,8 @@
     "limitationsNoticeHeading": "Important limitations before purchase",
     "limitationsNoticeBody": "The evidence base for this question is currently limited. The full report makes these limitations transparent, but cannot deliver more than the available studies support.",
     "noCoverageDisclosure": "No claim of complete coverage of the scientific literature.",
-    "unknownTitle": "(no title available)"
+    "unknownTitle": "(no title available)",
+    "filtersAppliedLabel": "Excluded by your filters"
   },
   "paywallPanel": {
     "heading": "Full Report",

@@ -1168,6 +1168,57 @@ a plain numbered list with no visual reinforcement of the actual claim
   (53/53) both pass, including the existing `/methodology` `@a11y` check
   (the illustration is `aria-hidden`).
 
+### Search scope filters: publication age + study type (Erwin's request)
+Erwin asked whether the own-question flow should offer scope-restriction
+filters (his examples: country of study, publication age) and, if I judged
+them worthwhile, to propose the most important ones and build them
+directly.
+
+- **Analysis first.** Checked what the four source adapters
+  (OpenAlex/Crossref/Europe PMC/NCBI) actually expose per `NormalizedRecord`
+  before promising anything: `year` and `publicationType` are already
+  populated for every record, so an age filter and a study-design filter
+  are honestly buildable today. A **country-of-study filter is
+  deliberately not built** — none of the four adapters currently extract a
+  country field at all, and the only close approximation (OpenAlex
+  author-institution country) reflects where *researchers* are affiliated,
+  not the study *population*, and is only available from one of four
+  sources. Building it would have meant either quietly working for a
+  fraction of results or silently misrepresenting source coverage — both
+  violate `CLAUDE.md`'s "never invent source coverage" rule. Documented as
+  a considered-and-rejected option, not a silent gap.
+- **New `src/lib/search/filters.ts`:** `SearchFilters` (`maxAgeYears`,
+  `studyTypes`), `applyFilters()` (runs after evidence-quality screening,
+  before ranking — a separate concept from `ExclusionReason`, since this
+  is user-chosen scope restriction, not an evidence-quality judgment), and
+  `parseFiltersFromParams()` for the URL-query-string → filter mapping.
+  Age filtering never guesses: a study with an unknown year is excluded
+  when an age filter is active rather than assumed to pass it, matching
+  the "unknown stays null, never guessed" rule. The 11 non-protocol
+  `PublicationType` values are grouped into 4 user-facing checkboxes
+  (reviews/meta-analyses, RCTs, observational studies, other) that
+  together cover every value, so "all four checked" is verifiably
+  equivalent to "no filter" — `protocol` itself is already excluded by
+  screening regardless of any filter.
+- **Wired end to end:** `runSearch`/`runSearchWithAdapters` take an
+  optional `SearchFilters` (defaulting to no restriction, so every
+  existing caller — `/example-report`, `/admin/report-preview` —
+  is unaffected); `SearchRunResult` gained `filtersApplied` and
+  `excludedByFilterCount`, threaded through `TeaserData` so the free
+  teaser discloses how many studies a filter excluded (same transparency
+  pattern as `sourcesUnavailable`). The filter UI lives in
+  `QuestionClarification` (the existing "confirm domain and search" step)
+  as a plain GET form — no client JS needed, consistent with the rest of
+  the search flow — and its selections travel as ordinary `/search` query
+  params (`maxAgeYears`, `studyTypeGroup`), preserved through the
+  search-failed retry link.
+- 26 new unit tests (filters.ts + run-search.ts integration) and 2 new
+  e2e specs (filter UI renders with everything selected by default;
+  choosing filters produces the right query params) — `npm run verify`
+  and `npm run test:e2e` (55/55) both pass. Live-verified via screenshots:
+  the filter panel, and the resulting `/search` URL after narrowing to a
+  10-year age limit with one study-type group unchecked.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

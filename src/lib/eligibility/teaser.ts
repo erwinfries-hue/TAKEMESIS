@@ -1,4 +1,5 @@
 import type { SearchRunResult } from "@/lib/search/run-search";
+import type { SearchFilters } from "@/lib/search/filters";
 import type { PublicationType, SourceId } from "@/lib/source-adapters/types";
 import type { EligibilityAssessment } from "./eligibility";
 
@@ -34,6 +35,8 @@ export interface TeaserData {
   topStudies: TeaserStudySummary[];
   confidenceLabel: ConfidenceLabel;
   sourcesUnavailable: SourceId[];
+  filtersApplied: SearchFilters;
+  excludedByFilterCount: number;
 }
 
 export function deriveConfidenceLabel(assessment: EligibilityAssessment): ConfidenceLabel {
@@ -90,5 +93,7 @@ export function buildTeaserData(
     topStudies,
     confidenceLabel: deriveConfidenceLabel(assessment),
     sourcesUnavailable,
+    filtersApplied: searchResult.filtersApplied,
+    excludedByFilterCount: searchResult.excludedByFilterCount,
   };
 }

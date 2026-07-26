@@ -4,6 +4,7 @@ import type { NormalizedRecord, SourceAdapter, SourceId } from "@/lib/source-ada
 import { dedupeRecords } from "./dedupe";
 import { screenRecords, SCREENING_VERSION, type ExclusionReason } from "./screening";
 import { rankRecords, type ScoredRecord } from "./ranking";
+import { applyFilters, NO_FILTERS, type SearchFilters } from "./filters";
 
 /** Decision #8: max 15 studies in the detailed comparison/profile sections. */
 export const DETAILED_RESULTS_CAP = 15;
@@ -24,6 +25,10 @@ export interface SearchRunResult {
   duplicatesRemoved: number;
   includedCount: number;
   excludedByReason: Record<ExclusionReason, number>;
+  /** The user-chosen scope restrictions this run was executed with (NO_FILTERS if none). */
+  filtersApplied: SearchFilters;
+  /** How many otherwise-included studies were narrowed out by filtersApplied — distinct from excludedByReason (evidence-quality) and duplicatesRemoved. */
+  excludedByFilterCount: number;
   perSource: PerSourceResult[];
   /** Every included, ranked record — this is what the source appendix must list in full (decision #8). */
   rankedIncluded: ScoredRecord[];
@@ -48,6 +53,7 @@ export async function runSearchWithAdapters(
   question: string,
   topicSlug: string,
   adapters: SourceAdapter[],
+  filters: SearchFilters = NO_FILTERS,
 ): Promise<SearchRunResult> {
   const searchDate = new Date().toISOString();
   const perSource: PerSourceResult[] = [];
@@ -81,7 +87,9 @@ export async function runSearchWithAdapters(
     excludedByReason[decision.reason] += 1;
   }
 
-  const rankedIncluded = rankRecords(included, question);
+  const { records: filteredIncluded, excludedByFilterCount } = applyFilters(included, filters);
+
+  const rankedIncluded = rankRecords(filteredIncluded, question);
   const detailed = rankedIncluded.slice(0, DETAILED_RESULTS_CAP);
 
   return {
@@ -91,14 +99,20 @@ export async function runSearchWithAdapters(
     screeningVersion: SCREENING_VERSION,
     candidateCount,
     duplicatesRemoved,
-    includedCount: included.length,
+    includedCount: filteredIncluded.length,
     excludedByReason,
+    filtersApplied: filters,
+    excludedByFilterCount,
     perSource,
     rankedIncluded,
     detailed,
   };
 }
 
-export async function runSearch(question: string, topicSlug: string): Promise<SearchRunResult> {
-  return runSearchWithAdapters(question, topicSlug, adaptersForTopic(topicSlug));
+export async function runSearch(
+  question: string,
+  topicSlug: string,
+  filters: SearchFilters = NO_FILTERS,
+): Promise<SearchRunResult> {
+  return runSearchWithAdapters(question, topicSlug, adaptersForTopic(topicSlug), filters);
 }
