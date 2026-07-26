@@ -10,6 +10,8 @@ import { HighRiskNotice } from "@/components/high-risk-notice";
 import { QuestionClarification, type CandidateOption } from "@/components/question-clarification";
 import { runSearch } from "@/lib/search/run-search";
 import { parseFiltersFromParams } from "@/lib/search/filters";
+import { parseDoiInput } from "@/lib/search/study-lookup";
+import { lookupByDoi } from "@/lib/source-adapters/crossref";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { getPriceConfig, formatPrice } from "@/lib/pricing/price-config";
@@ -18,6 +20,9 @@ import { PaywallPanel } from "@/components/paywall-panel";
 import { NotEligibleNotice } from "@/components/not-eligible-notice";
 import { SearchFailedNotice } from "@/components/search-failed-notice";
 import { SearchLimitNotice } from "@/components/search-limit-notice";
+import { StudyLookupNotice } from "@/components/study-lookup-notice";
+import { SeedStudyPanel } from "@/components/seed-study-panel";
+import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { checkFreeSearchLimit } from "@/lib/security/check-free-search-limit";
 import { track } from "@/lib/analytics/track";
@@ -36,13 +41,65 @@ export default async function SearchPage({
     domain?: string;
     maxAgeYears?: string;
     studyTypeGroup?: string | string[];
+    doi?: string;
   }>;
 }) {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const { q, domain, maxAgeYears, studyTypeGroup } = await searchParams;
-  const question = q?.trim() ?? "";
+  const { q, domain, maxAgeYears, studyTypeGroup, doi: rawDoi } = await searchParams;
+  let question = q?.trim() ?? "";
   const filters = parseFiltersFromParams({ maxAgeYears, studyTypeGroup });
+
+  // "Compare a study you already have" mode: doi is present on every
+  // request through this flow (clarification step and the final search
+  // both need the resolved study, to exclude it from its own comparison
+  // list and to render it as "your study"), so it's looked up again on
+  // each request rather than cached — no persisted state anywhere else in
+  // this flow either.
+  let seedStudy: NormalizedRecord | null = null;
+  let seedDoi: string | null = null;
+  if (rawDoi) {
+    const parsedDoi = parseDoiInput(rawDoi);
+    if (!parsedDoi) {
+      return (
+        <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
+          <StudyLookupNotice
+            dict={dict}
+            heading={dict.studyLookupForm.invalidDoiHeading}
+            body={dict.studyLookupForm.invalidDoi}
+          />
+        </main>
+      );
+    }
+    seedDoi = parsedDoi;
+    try {
+      seedStudy = await lookupByDoi(parsedDoi);
+    } catch {
+      return (
+        <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
+          <StudyLookupNotice
+            dict={dict}
+            heading={dict.studyLookupForm.lookupFailedHeading}
+            body={dict.studyLookupForm.lookupFailedBody}
+          />
+        </main>
+      );
+    }
+    if (!seedStudy?.title) {
+      return (
+        <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
+          <StudyLookupNotice
+            dict={dict}
+            heading={dict.studyLookupForm.notFoundHeading}
+            body={dict.studyLookupForm.notFoundBody}
+          />
+        </main>
+      );
+    }
+    if (!question) {
+      question = seedStudy.title;
+    }
+  }
 
   if (!question) {
     return (
@@ -109,6 +166,7 @@ export default async function SearchPage({
           question={question}
           candidates={candidates}
           fallbackTopics={fallbackTopics}
+          doi={seedDoi ?? undefined}
         />
       </main>
     );
@@ -143,13 +201,14 @@ export default async function SearchPage({
     );
   }
 
-  const searchResult = await runSearch(question, confirmedTopic.slug, filters);
+  const searchResult = await runSearch(question, confirmedTopic.slug, filters, seedDoi ?? undefined);
   const allSourcesFailed =
     searchResult.perSource.length > 0 && searchResult.perSource.every((status) => !status.ok);
 
   if (allSourcesFailed) {
     const retryParams = new URLSearchParams({ q: question, domain: confirmedTopic.slug });
     if (maxAgeYears) retryParams.set("maxAgeYears", maxAgeYears);
+    if (rawDoi) retryParams.set("doi", rawDoi);
     for (const group of Array.isArray(studyTypeGroup) ? studyTypeGroup : studyTypeGroup ? [studyTypeGroup] : []) {
       retryParams.append("studyTypeGroup", group);
     }
@@ -180,6 +239,14 @@ export default async function SearchPage({
         <p className="w-full max-w-3xl rounded-lg bg-brand-warning-100 p-3 text-sm text-brand-warning-600">
           {dict.ownQuestionForm.warningHealth}
         </p>
+      )}
+      {seedStudy && (
+        <>
+          <SeedStudyPanel dict={dict} study={seedStudy} />
+          <h2 className="w-full max-w-3xl text-left text-sm font-semibold text-brand-neutral-600">
+            {dict.studyLookupForm.comparisonHeading}
+          </h2>
+        </>
       )}
       <FreeTeaser
         dict={dict}

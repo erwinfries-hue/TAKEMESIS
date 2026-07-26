@@ -32,11 +32,14 @@ export function QuestionClarification({
   question,
   candidates,
   fallbackTopics,
+  doi,
 }: {
   dict: Dictionary;
   question: string;
   candidates: CandidateOption[];
   fallbackTopics: CandidateOption[];
+  /** Set only in the "compare a study you already have" flow — carried through confirmation so the final search can exclude the seed study from its own comparison list. */
+  doi?: string;
 }) {
   const options = candidates.length > 0 ? candidates : fallbackTopics;
 
@@ -47,6 +50,7 @@ export function QuestionClarification({
       className="flex w-full max-w-xl flex-col gap-4 rounded-xl border border-brand-neutral-200 bg-white p-6 text-left"
     >
       <input type="hidden" name="q" value={question} />
+      {doi && <input type="hidden" name="doi" value={doi} />}
       <h2 className="text-lg font-semibold text-brand-navy-900">
         {candidates.length > 0
           ? dict.searchPage.clarificationHeading

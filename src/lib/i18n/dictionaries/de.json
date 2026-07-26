@@ -115,6 +115,21 @@
     "warningHealth": "Bitte geben Sie keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten ein.",
     "suggestionPrefix": "Könnte passen zu:"
   },
+  "studyLookupForm": {
+    "heading": "Hast du schon eine Studie?",
+    "intro": "Vergleiche eine konkrete Studie mit der übrigen verfügbaren Evidenz zum gleichen Thema.",
+    "label": "DOI der Studie",
+    "placeholder": "z. B. 10.1000/182 oder https://doi.org/10.1000/182",
+    "submit": "Studie vergleichen",
+    "invalidDoiHeading": "Ungültige DOI",
+    "invalidDoi": "Das sieht nicht nach einer gültigen DOI aus. Eine DOI beginnt normalerweise mit \"10.\", z. B. 10.1000/182.",
+    "notFoundHeading": "Studie nicht gefunden",
+    "notFoundBody": "Zu dieser DOI konnten wir keine Studie finden. Bitte prüfe die DOI und versuche es erneut.",
+    "lookupFailedHeading": "Studie konnte nicht abgerufen werden",
+    "lookupFailedBody": "Beim Abrufen der Studiendaten ist ein Fehler aufgetreten. Das liegt nicht an der DOI — bitte versuche es in ein paar Minuten erneut.",
+    "seedStudyLabel": "Deine Studie",
+    "comparisonHeading": "Im Vergleich zu weiterer Evidenz zum gleichen Thema"
+  },
   "topicsPage": {
     "heading": "Themen entdecken",
     "detailsToggle": "Details anzeigen",

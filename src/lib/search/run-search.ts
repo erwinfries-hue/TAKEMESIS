@@ -1,7 +1,7 @@
 import "server-only";
 import { adaptersForTopic } from "@/lib/source-adapters/registry";
 import type { NormalizedRecord, SourceAdapter, SourceId } from "@/lib/source-adapters/types";
-import { dedupeRecords } from "./dedupe";
+import { dedupeRecords, normalizeDoi } from "./dedupe";
 import { screenRecords, SCREENING_VERSION, type ExclusionReason } from "./screening";
 import { rankRecords, type ScoredRecord } from "./ranking";
 import { applyFilters, NO_FILTERS, type SearchFilters } from "./filters";
@@ -54,17 +54,30 @@ export async function runSearchWithAdapters(
   topicSlug: string,
   adapters: SourceAdapter[],
   filters: SearchFilters = NO_FILTERS,
+  /**
+   * Omits a specific DOI from the candidate pool entirely (before
+   * candidateCount is computed) — used by the "compare a study you
+   * already have" flow so the seed study, shown separately, doesn't also
+   * turn up a second time in the comparison list it's being measured
+   * against.
+   */
+  excludeDoi?: string,
 ): Promise<SearchRunResult> {
   const searchDate = new Date().toISOString();
   const perSource: PerSourceResult[] = [];
   const allRecords: NormalizedRecord[] = [];
+  const normalizedExcludeDoi = excludeDoi ? normalizeDoi(excludeDoi) : null;
 
   // Each source's failure is isolated — one adapter being down must not
   // prevent results from the others (docs/10, "Resilience").
   await Promise.all(
     adapters.map(async (adapter) => {
       try {
-        const records = await adapter.search({ query: question, limit: DETAILED_RESULTS_CAP });
+        const records = (
+          await adapter.search({ query: question, limit: DETAILED_RESULTS_CAP })
+        ).filter(
+          (record) => normalizedExcludeDoi === null || normalizeDoi(record.doi) !== normalizedExcludeDoi,
+        );
         allRecords.push(...records);
         perSource.push({ source: adapter.capabilities.id, ok: true, recordCount: records.length });
       } catch (error) {
@@ -113,6 +126,7 @@ export async function runSearch(
   question: string,
   topicSlug: string,
   filters: SearchFilters = NO_FILTERS,
+  excludeDoi?: string,
 ): Promise<SearchRunResult> {
-  return runSearchWithAdapters(question, topicSlug, adaptersForTopic(topicSlug), filters);
+  return runSearchWithAdapters(question, topicSlug, adaptersForTopic(topicSlug), filters, excludeDoi);
 }

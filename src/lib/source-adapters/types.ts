@@ -85,11 +85,14 @@ export interface SourceAdapter {
 export class SourceAdapterError extends Error {
   readonly source: SourceId;
   readonly cause?: unknown;
+  /** HTTP status of the failing response, when the failure came from a non-2xx response rather than a network/timeout error. Lets callers like a DOI lookup distinguish "not found" (404) from a real failure. */
+  readonly status?: number;
 
-  constructor(message: string, source: SourceId, cause?: unknown) {
+  constructor(message: string, source: SourceId, cause?: unknown, status?: number) {
     super(message);
     this.name = "SourceAdapterError";
     this.source = source;
     this.cause = cause;
+    this.status = status;
   }
 }

@@ -43,6 +43,8 @@ export async function fetchJson(url: string, options: FetchJsonOptions): Promise
         throw new SourceAdapterError(
           `${source} responded with HTTP ${response.status}`,
           source,
+          undefined,
+          response.status,
         );
       }
       return await response.json();
@@ -60,5 +62,6 @@ export async function fetchJson(url: string, options: FetchJsonOptions): Promise
     `${source} request failed after ${maxRetries + 1} attempt(s)`,
     source,
     lastError,
+    lastError instanceof SourceAdapterError ? lastError.status : undefined,
   );
 }

@@ -192,3 +192,37 @@ test("/search (rate-limited state) has no critical accessibility violations @a11
     .analyze();
   expect(results.violations).toEqual([]);
 });
+
+test("the homepage offers a DOI lookup as an alternative to the own-question form", async ({
+  page,
+}) => {
+  await page.goto("/#eigene-frage");
+  await expect(page.getByText("Hast du schon eine Studie?")).toBeVisible();
+  await expect(page.getByLabel("DOI der Studie")).toBeVisible();
+});
+
+test("an unparseable DOI shows an honest 'invalid DOI' notice rather than attempting a lookup", async ({
+  page,
+}) => {
+  await page.goto("/search?doi=" + encodeURIComponent("not-a-real-doi"));
+  await expect(page.getByRole("heading", { name: "Ungültige DOI" })).toBeVisible();
+});
+
+test("a well-formed DOI that can't be reached (no network access to Crossref in this sandbox) shows an honest failure, not a false 'not found'", async ({
+  page,
+}) => {
+  await page.goto("/search?doi=" + encodeURIComponent("10.1000/182"));
+  await expect(
+    page.getByRole("heading", { name: "Studie konnte nicht abgerufen werden" }),
+  ).toBeVisible();
+});
+
+test("/search (invalid-DOI state) has no critical accessibility violations @a11y", async ({
+  page,
+}) => {
+  await page.goto("/search?doi=" + encodeURIComponent("not-a-real-doi"));
+  const results = await new AxeBuilder({ page })
+    .withTags(["wcag2a", "wcag2aa", "wcag22aa"])
+    .analyze();
+  expect(results.violations).toEqual([]);
+});

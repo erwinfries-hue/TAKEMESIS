@@ -136,4 +136,43 @@ describe("runSearchWithAdapters", () => {
     expect(result.rankedIncluded[0].deduped.record.title).toBe(recentRct.title);
     expect(result.excludedByFilterCount).toBe(2);
   });
+
+  it("omits a record matching excludeDoi entirely, from candidateCount onward", async () => {
+    const seed = makeRecord({ doi: "10.1000/seed-study", title: "Spaced repetition seed study" });
+    const other = makeRecord({ title: "Spaced repetition comparable study" });
+    const a = fakeAdapter("openalex", { records: [seed, other] });
+
+    const result = await runSearchWithAdapters(
+      "spaced repetition",
+      "lernen-bildung",
+      [a],
+      NO_FILTERS,
+      "10.1000/seed-study",
+    );
+
+    expect(result.candidateCount).toBe(1);
+    expect(result.rankedIncluded).toHaveLength(1);
+    expect(result.rankedIncluded[0].deduped.record.title).toBe(other.title);
+  });
+
+  it("matches excludeDoi case-insensitively and regardless of a doi.org URL prefix", async () => {
+    const seed = makeRecord({ doi: "10.1000/Seed-Study", title: "The seed study itself" });
+    const a = fakeAdapter("openalex", { records: [seed] });
+
+    const result = await runSearchWithAdapters(
+      "seed study topic",
+      "lernen-bildung",
+      [a],
+      NO_FILTERS,
+      "https://doi.org/10.1000/seed-study",
+    );
+
+    expect(result.candidateCount).toBe(0);
+  });
+
+  it("does not filter anything when excludeDoi is omitted, even for records with a null doi", async () => {
+    const a = fakeAdapter("openalex", { records: [makeRecord({ doi: null })] });
+    const result = await runSearchWithAdapters("x", "lernen-bildung", [a]);
+    expect(result.candidateCount).toBe(1);
+  });
 });

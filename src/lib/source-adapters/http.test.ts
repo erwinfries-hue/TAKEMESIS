@@ -64,4 +64,17 @@ describe("fetchJson", () => {
     ).rejects.toThrow(/ncbi_pubmed request failed/);
     expect(fetchImpl).toHaveBeenCalledTimes(1);
   });
+
+  it("carries the response status onto the final thrown error, not just the intermediate one", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue(jsonResponse({}, false, 404));
+
+    await expect(
+      fetchJson("https://example.test", {
+        source: "crossref",
+        fetchImpl,
+        maxRetries: 0,
+        timeoutMs: 1000,
+      }),
+    ).rejects.toMatchObject({ status: 404 });
+  });
 });

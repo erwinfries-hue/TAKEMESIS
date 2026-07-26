@@ -308,6 +308,22 @@ checkpoint (decision #15) and before each production-readiness gate.
     explicitly relabeled as such (not "country of study") and scoped to
     OpenAlex-only with a visible coverage caveat.
 
+23. **The "compare a study you already have" DOI lookup has never
+    resolved a real DOI live.** Same live-network-validation gap as the
+    four search adapters (`OPEN_RISKS.md` #2) — this sandbox has no
+    outbound network access to Crossref's API at all, so
+    `lookupByDoi()`'s success path (`src/lib/source-adapters/crossref.ts`)
+    is only verified via mocked-fetch unit tests, never against a real
+    response shape. Both honest failure states (invalid DOI, lookup
+    failed) were live-verified in the UI since they don't depend on
+    network access. Scoped to Crossref only for v1, not also
+    OpenAlex/Europe PMC/NCBI — see `STATUS.md`'s "Compare a study you
+    already have" entry for the reasoning. Owner: whoever first runs this
+    from an environment with real network access — try a known-good DOI
+    (e.g. a real published paper) end to end through `/search?doi=...` and
+    confirm the resolved title, the `SeedStudyPanel` render, and that the
+    comparison results correctly exclude the seed study.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

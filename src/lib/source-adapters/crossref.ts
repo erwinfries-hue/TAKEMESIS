@@ -8,6 +8,7 @@ import type {
   SourceSearchParams,
   SourceStatus,
 } from "./types";
+import { SourceAdapterError } from "./types";
 import { serverEnv } from "@/lib/env/server";
 
 interface CrossrefDateParts {
@@ -31,6 +32,10 @@ interface CrossrefItem {
 
 interface CrossrefResponse {
   message?: { items?: CrossrefItem[] };
+}
+
+interface CrossrefSingleItemResponse {
+  message?: CrossrefItem;
 }
 
 /** Crossref abstracts are JATS-tagged (e.g. "<jats:p>...</jats:p>"); strip tags for plain text. */
@@ -105,6 +110,33 @@ function buildSearchUrl(params: SourceSearchParams): string {
 function politeHeaders(): Record<string, string> {
   const contact = serverEnv.NCBI_EMAIL ? ` (mailto:${serverEnv.NCBI_EMAIL})` : "";
   return { "User-Agent": `TEKMESIS/1.0${contact}` };
+}
+
+/**
+ * Direct single-record lookup for the "compare a study you already have"
+ * flow (as opposed to `search`, a free-text query). Crossref's DOI
+ * registration covers virtually any published DOI regardless of field, so
+ * it's the adapter used for this — scoped to Crossref only for now rather
+ * than also querying OpenAlex/Europe PMC/NCBI, since one reliable lookup
+ * beats three more integration points for a first version. Returns null
+ * for a genuine "no such DOI" (404); anything else (network failure, non-2xx
+ * error) still throws, same as `search`.
+ */
+export async function lookupByDoi(doi: string): Promise<NormalizedRecord | null> {
+  const fetchedAt = new Date().toISOString();
+  try {
+    const data = (await fetchJson(`${BASE_URL()}/works/${encodeURIComponent(doi)}`, {
+      source: "crossref",
+      headers: politeHeaders(),
+      maxRetries: 0,
+    })) as CrossrefSingleItemResponse;
+    return data.message ? toNormalizedRecord(data.message, fetchedAt) : null;
+  } catch (error) {
+    if (error instanceof SourceAdapterError && error.status === 404) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 export const crossrefAdapter: SourceAdapter = {

@@ -1219,6 +1219,65 @@ directly.
   the filter panel, and the resulting `/search` URL after narrowing to a
   10-year age limit with one study-type group unchecked.
 
+### "Compare a study you already have" (Erwin's request)
+Erwin's second idea in the same message: if someone already has a specific
+study, they should be able to compare it against the rest of the available
+evidence as an alternative to typing a free-text question. Assessed it as
+sensible and feasible, and built it as its own unit of work (kept separate
+from the filters feature above so both stay independently reviewable).
+
+- **New `lookupByDoi()` in `src/lib/source-adapters/crossref.ts`:** a
+  direct single-record fetch (`/works/{doi}`) reusing the adapter's
+  existing `toNormalizedRecord` mapper, returning `null` for a genuine
+  404 and still throwing for a real failure (network/5xx) — the same
+  fail-safe-vs-fail-honest distinction used everywhere else in this
+  codebase. Scoped to Crossref only for v1 (its DOI registration covers
+  virtually any published DOI across fields) rather than also wiring
+  OpenAlex/Europe PMC/NCBI lookup — one reliable source beats three more
+  integration points for a first version; revisit if Crossref coverage
+  turns out to be a real gap once a live API key/network exists to test
+  against.
+- **Bug fixed along the way:** `fetchJson` (`src/lib/source-adapters/http.ts`)
+  threw a *new* `SourceAdapterError` after exhausting retries that didn't
+  carry forward the original response's HTTP status — so a 404 from the
+  lookup call looked identical to a network failure once retries were
+  involved, breaking the "not found vs. real error" distinction `status`
+  was added for. Fixed to propagate the last error's status onto the
+  final thrown error; covered by a new `http.test.ts` case.
+- **New `src/lib/search/study-lookup.ts`:** `parseDoiInput()` accepts what
+  someone is likely to paste (bare DOI, `doi.org` URL, `doi:` prefix,
+  copy-paste whitespace/punctuation) and returns `null` for anything not
+  DOI-shaped, so an obviously-invalid input shows an honest "invalid DOI"
+  state instead of attempting a doomed lookup.
+- **`runSearch`/`runSearchWithAdapters` gained `excludeDoi`:** the seed
+  study is removed from the candidate pool before `candidateCount` is even
+  computed (not screened out later), since it's being shown separately as
+  "your study," not evaluated as one of the studies it's compared against.
+  `normalizeDoi` (previously private to `dedupe.ts`) is now exported and
+  reused here for the DOI comparison.
+- **`/search` accepts a `doi` param** as an alternative to `q`: resolves
+  it via `lookupByDoi`, uses the found study's title as the search query
+  through the *same* existing classification/clarification/screening/
+  ranking pipeline (no parallel code path), and renders a new
+  `SeedStudyPanel` ("Deine Studie") above the usual `FreeTeaser` results.
+  Three honest failure states, each visually verified live: an unparseable
+  DOI, a genuine 404 (not built to be distinguishable from a network
+  failure in this sandbox, since there's no outbound network access here
+  either way — both correctly reach the same honest "couldn't retrieve"
+  notice rather than a false "not found" claim), and — new —
+  `QuestionClarification` carries the DOI forward as a hidden field so
+  confirming a domain doesn't lose it.
+- **New `StudyLookupForm`** on the homepage next to `OwnQuestionForm` (a
+  plain GET form, no client JS, same pattern as the rest of this flow).
+- 19 new unit tests (crossref lookupByDoi + http.ts status-propagation fix
+  + study-lookup.ts DOI parsing + run-search.ts excludeDoi behavior) and 4
+  new e2e specs. The "found study → comparison results" success path
+  can't be exercised live in this sandbox (no outbound network access to
+  Crossref, same constraint already documented for the question-based
+  flow's search-failed test) — covered instead by the crossref unit tests
+  (mocked fetch) plus live-verified UI/routing for both DOI failure
+  states. `npm run verify` and `npm run test:e2e` (59/59) both pass.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

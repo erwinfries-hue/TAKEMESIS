@@ -11,6 +11,7 @@ import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 import { HeroIllustration } from "@/components/hero-illustration";
+import { StudyLookupForm } from "@/components/study-lookup-form";
 
 const TEASER_COUNT = 6;
 
@@ -66,14 +67,17 @@ export default async function Home() {
         </Link>
       </section>
 
-      {/* 3. Own-question input */}
+      {/* 3. Own-question input, plus the alternative "compare a study you already have" entry */}
       <section
         id="eigene-frage"
         className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10"
       >
-        <Suspense>
-          <OwnQuestionForm dict={dict} locale={locale} />
-        </Suspense>
+        <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-start lg:justify-center">
+          <Suspense>
+            <OwnQuestionForm dict={dict} locale={locale} />
+          </Suspense>
+          <StudyLookupForm dict={dict} />
+        </div>
       </section>
 
       {/* 4. Curated example-report preview */}

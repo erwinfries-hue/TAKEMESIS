@@ -11,7 +11,7 @@ export interface DedupeResult {
   duplicatesRemoved: number;
 }
 
-function normalizeDoi(doi: string | null): string | null {
+export function normalizeDoi(doi: string | null): string | null {
   if (!doi) {
     return null;
   }

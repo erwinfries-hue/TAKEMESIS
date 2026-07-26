@@ -115,6 +115,21 @@
     "warningHealth": "Please do not enter individual diagnoses, medication lists, or health records.",
     "suggestionPrefix": "Might fit:"
   },
+  "studyLookupForm": {
+    "heading": "Already have a study?",
+    "intro": "Compare a specific study against the rest of the available evidence on the same topic.",
+    "label": "Study DOI",
+    "placeholder": "e.g. 10.1000/182 or https://doi.org/10.1000/182",
+    "submit": "Compare study",
+    "invalidDoiHeading": "Invalid DOI",
+    "invalidDoi": "That doesn't look like a valid DOI. A DOI usually starts with \"10.\", e.g. 10.1000/182.",
+    "notFoundHeading": "Study not found",
+    "notFoundBody": "We couldn't find a study for this DOI. Please check the DOI and try again.",
+    "lookupFailedHeading": "Couldn't retrieve the study",
+    "lookupFailedBody": "Something went wrong while fetching the study data. This isn't about the DOI — please try again in a few minutes.",
+    "seedStudyLabel": "Your study",
+    "comparisonHeading": "Compared against other evidence on the same topic"
+  },
   "topicsPage": {
     "heading": "Explore topics",
     "detailsToggle": "Show details",

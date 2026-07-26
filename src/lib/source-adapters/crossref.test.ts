@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import fixture from "./fixtures/crossref-works.json";
-import { crossrefAdapter, stripJatsTags } from "./crossref";
+import { crossrefAdapter, lookupByDoi, stripJatsTags } from "./crossref";
 
 function mockFetchReturning(body: unknown, ok = true, status = 200) {
   return vi.fn().mockResolvedValue({
@@ -54,6 +54,45 @@ describe("crossrefAdapter.search", () => {
   it("degrades safely when the source is unavailable", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
     await expect(crossrefAdapter.search({ query: "x" })).rejects.toMatchObject({
+      source: "crossref",
+    });
+    vi.unstubAllGlobals();
+  });
+});
+
+describe("lookupByDoi", () => {
+  it("returns the normalized record for a known DOI", async () => {
+    vi.stubGlobal(
+      "fetch",
+      mockFetchReturning({ message: fixture.message.items[0] }),
+    );
+
+    const record = await lookupByDoi("10.1000/fixture.crossref.001");
+    expect(record?.doi).toBe("10.1000/fixture.crossref.001");
+    expect(record?.title).toBe(
+      "Distributed Practice in Verbal Recall Tasks: A Review and Quantitative Synthesis",
+    );
+    vi.unstubAllGlobals();
+  });
+
+  it("returns null for a DOI Crossref doesn't know about (404), without throwing", async () => {
+    vi.stubGlobal("fetch", mockFetchReturning({}, false, 404));
+    const record = await lookupByDoi("10.9999/does-not-exist");
+    expect(record).toBeNull();
+    vi.unstubAllGlobals();
+  });
+
+  it("still throws for a real failure (not a 404)", async () => {
+    vi.stubGlobal("fetch", mockFetchReturning({}, false, 500));
+    await expect(lookupByDoi("10.1000/fixture.crossref.001")).rejects.toMatchObject({
+      source: "crossref",
+    });
+    vi.unstubAllGlobals();
+  });
+
+  it("propagates a network failure rather than treating it as not-found", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
+    await expect(lookupByDoi("10.1000/fixture.crossref.001")).rejects.toMatchObject({
       source: "crossref",
     });
     vi.unstubAllGlobals();
