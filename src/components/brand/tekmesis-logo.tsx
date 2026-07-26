@@ -17,31 +17,12 @@ function TekmesisMark({ className }: { className?: string }) {
   );
 }
 
-export function TekmesisLogo({
-  name,
-  tagline,
-  variant = "compact",
-  className,
-}: {
-  name: string;
-  tagline?: string;
-  variant?: "compact" | "stacked";
-  className?: string;
-}) {
-  if (variant === "stacked") {
-    return (
-      <span className={`inline-flex flex-col items-center gap-2 ${className ?? ""}`}>
-        <TekmesisMark className="h-14 w-14 text-brand-teal-600" />
-        <span className="text-2xl font-semibold tracking-tight text-brand-navy-900">{name}</span>
-        {tagline && (
-          <span className="text-xs font-medium uppercase tracking-widest text-brand-teal-700">
-            {tagline}
-          </span>
-        )}
-      </span>
-    );
-  }
-
+/**
+ * Fixed layout: icon to the left of the wordmark, always — this is the one
+ * arrangement used site-wide (header, about page, ...), per explicit
+ * instruction not to vary it (e.g. no stacked/centered variant).
+ */
+export function TekmesisLogo({ name, className }: { name: string; className?: string }) {
   return (
     <span className={`inline-flex items-center gap-2 ${className ?? ""}`}>
       <TekmesisMark className="h-7 w-7 text-brand-teal-600" />

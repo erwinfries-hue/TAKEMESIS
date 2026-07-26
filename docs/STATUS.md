@@ -791,6 +791,23 @@ fully accessible) rather than raster images:
   logo, topic icons on `/topics`, and the stacked logo + AXIA4 badge on
   `/about`.
 
+**Correction, same day:** Erwin reviewed the live result and asked for two
+changes: (1) `/about`'s logo should always use the same icon-left-of-
+wordmark layout as the header, not the stacked/centered variant — so
+`TekmesisLogo` was simplified to a single fixed layout (the "stacked"
+variant and `tagline` prop were removed as dead code once nothing used
+them); the tagline itself still shows on `/about`, just as its own line
+under the logo rather than baked into a stacked component variant. (2) The
+AXIA4 image logo should not be embedded at all — footer and `/about` now
+show plain text "AXIA4 GROUP" (the legal-entity name from `/legal`) linking
+to `https://axia4.ch`, and `src/components/brand/axia4-logo.tsx` plus the
+copied `public/brand/axia4-logo.jpg` asset were deleted as unused. Note:
+this runs counter to `CLAUDE.md`'s Design section ("use official AXIA4 logo
+asset") — flagged to Erwin as a direct instruction overriding that standing
+rule, with a question about whether `CLAUDE.md` itself should be updated to
+match. 48 Playwright specs + full unit suite re-verified passing;
+`npm run verify` passes. Visually reconfirmed via screenshot.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

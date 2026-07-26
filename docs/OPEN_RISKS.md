@@ -219,19 +219,17 @@ checkpoint (decision #15) and before each production-readiness gate.
     before being added, not invented. Owner: Erwin (run the tool on
     `takemesis.vercel.app`, report back which examples fail per topic).
 
-20. **AXIA4 logo asset used on-site is a non-transparent JPEG.** The only
-    official asset available in this repo
-    (`docs/assets/brand/AXIA4_OFFICIAL_LOGO_REFERENCE.png`, actually a
-    baseline JPEG with no alpha channel) is now genuinely displayed on the
-    site (`src/components/brand/axia4-logo.tsx`, footer + `/about`) instead
-    of text-only, per the design system's "AXIA4 parent-brand lockup"
-    requirement — but wrapped in a small white badge to avoid a stray white
-    box against this app's real dark-mode background. A transparent PNG/SVG
-    requested directly from AXIA4 (matching geometry/wording/colors exactly,
-    per `13_DESIGN_SYSTEM_BRAND_AND_ASSETS.md`) would let that badge wrapper
-    go away for a cleaner treatment. Non-blocking — current treatment is
-    legible in both light and dark mode. Owner: Erwin, whenever a real asset
-    is obtained from AXIA4.
+20. **AXIA4 is represented as a text link, not the official logo image.**
+    Erwin explicitly decided (2026-07-26) against embedding
+    `docs/assets/brand/AXIA4_OFFICIAL_LOGO_REFERENCE.png` (a non-transparent
+    baseline JPEG) on-site at all — superseding the brief earlier attempt to
+    wrap it in a white badge. Footer and `/about` now show plain text
+    "AXIA4 GROUP" linking to `https://axia4.ch`, matching the legal-entity
+    name already used on `/legal` ("AXIA4 GROUP, Einzelunternehmen von Erwin
+    Fries"). `src/components/brand/axia4-logo.tsx` and the copied asset were
+    removed as unused. Revisit only if Erwin later wants a real logo
+    treatment (would need a transparent PNG/SVG requested directly from
+    AXIA4). Not blocking anything.
 21. **`NEXT_PUBLIC_AXIA4_DIGITAL_URL` on the live Vercel deployment points
     at `axia4.lovable.app/digital` without a locale segment.** Not a repo
     issue — the codebase's own default is `https://axia4.ch/digital` (the
