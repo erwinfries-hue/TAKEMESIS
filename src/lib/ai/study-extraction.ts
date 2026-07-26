@@ -1,5 +1,6 @@
 import "server-only";
 import type Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import { serverEnv } from "@/lib/env/server";
 import { getAnthropicClient } from "./anthropic-client";
@@ -7,15 +8,17 @@ import { getAnthropicClient } from "./anthropic-client";
 /** Minimal slice of the SDK this module needs — lets tests pass a fake client instead of constructing a real one (which requires ANTHROPIC_API_KEY), same DI pattern as EmailSendingClient/Stripe's webhooks client. */
 export type AiMessagesClient = Pick<Anthropic["messages"], "create">;
 
-export interface ExtractedStudyFields {
-  population: string | null;
-  intervention: string | null;
-  outcome: string | null;
-  result: string | null;
-  uncertainty: string | null;
-  limitations: string | null;
-  fundingConflicts: string | null;
-}
+const EXTRACTED_STUDY_FIELDS_SCHEMA = z.object({
+  population: z.string().nullable(),
+  intervention: z.string().nullable(),
+  outcome: z.string().nullable(),
+  result: z.string().nullable(),
+  uncertainty: z.string().nullable(),
+  limitations: z.string().nullable(),
+  fundingConflicts: z.string().nullable(),
+});
+
+export type ExtractedStudyFields = z.infer<typeof EXTRACTED_STUDY_FIELDS_SCHEMA>;
 
 const EXTRACTION_TOOL_NAME = "record_study_fields";
 
@@ -111,5 +114,10 @@ export async function extractStudyFields(
   if (!toolUse) {
     return null;
   }
-  return toolUse.input as ExtractedStudyFields;
+  const parsed = EXTRACTED_STUDY_FIELDS_SCHEMA.safeParse(toolUse.input);
+  if (!parsed.success) {
+    console.error("AI study extraction returned an unexpected shape:", parsed.error);
+    return null;
+  }
+  return parsed.data;
 }

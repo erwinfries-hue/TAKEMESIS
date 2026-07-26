@@ -1011,6 +1011,41 @@ judged beneficial.
   `npm run test -- --run` (253/253), `npm run test:e2e` (50/50, up from 48),
   and `npm run build` all pass.
 
+### Bug-hunt pass across recent AI wiring (Erwin's request, continued)
+Erwin asked for a further round of detailed testing to find and fix anything
+possible. Reviewed the AI extraction/synthesis modules (the newest and
+riskiest code, since it parses output from an external LLM) and the new
+admin feedback/issue-report code for edge cases.
+
+- **Found and fixed: unvalidated AI tool-response shape could crash the
+  report page.** `study-extraction.ts` and `report-synthesis.ts` cast the
+  Anthropic tool-use response straight to their TypeScript result types
+  (`toolUse.input as ExtractedStudyFields` / `as ReportSynthesisResult`) with
+  no runtime check. Forced `tool_choice` makes a schema-conforming reply
+  likely but the SDK/API give no hard guarantee — a subtly wrong shape (e.g.
+  `keyFindings` returned as a string instead of an array) would not throw
+  inside `report-enrichment.ts`'s try/catch (assigning bad data doesn't
+  throw), so the malformed value would flow straight into
+  `PremiumReportData` and crash at render time in `PremiumReportView`
+  (`report.keyFindings.map(...)` on a non-array). Fixed by validating both
+  responses with a Zod schema (`zod` was already a dependency for env
+  validation) and returning `null` — the module's existing "AI unavailable"
+  fallback — on any mismatch, so a malformed reply now degrades the same
+  way an absent API key does, never crashes the page. Added one unit test
+  per module reproducing a malformed response (255 unit tests total).
+- **Checked and found sound, no change needed:** `/admin/report-preview`'s
+  AI calls are bounded to at most `DETAILED_RESULTS_CAP` (15, decision #8)
+  parallel extraction calls plus one synthesis call per generation — no new
+  unbounded-cost path was introduced. The new `/admin/feedback` page only
+  reads/updates rows via the admin-gated action functions; nothing yet
+  writes to `feedback`/`issue_reports` from a public route, so there is no
+  new unauthenticated-input surface to harden yet (tracked as a known gap,
+  not a bug, in `OPEN_RISKS.md` #15). `issue-actions.ts`'s "not found" error
+  on an unknown issue ID matches the same throw-on-not-found convention
+  already used by the report repositories.
+- Verified together: `npm run verify` (lint, typecheck, 255 unit tests, 1
+  integration test, build) and `npm run test:e2e` (50/50) all pass.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

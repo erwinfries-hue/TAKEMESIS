@@ -47,4 +47,28 @@ describe("extractStudyFields", () => {
     );
     expect(result).toBeNull();
   });
+
+  it("returns null instead of a malformed result when the model omits a required field", async () => {
+    // Forced tool_choice doesn't guarantee schema conformance — a
+    // missing/mistyped field must fail safe (null), not silently produce
+    // undefined that gets spread into the report and rendered.
+    const client: AiMessagesClient = {
+      create: vi.fn().mockResolvedValue({
+        content: [
+          {
+            type: "tool_use",
+            id: "t1",
+            name: "record_study_fields",
+            input: { population: "Adults", intervention: 42 },
+          },
+        ],
+      }),
+    } as unknown as AiMessagesClient;
+
+    const result = await extractStudyFields(
+      { title: "Some study", abstract: "Some abstract" },
+      client,
+    );
+    expect(result).toBeNull();
+  });
 });

@@ -1,5 +1,6 @@
 import "server-only";
 import type Anthropic from "@anthropic-ai/sdk";
+import { z } from "zod";
 import { serverEnv } from "@/lib/env/server";
 import { getAnthropicClient } from "./anthropic-client";
 import type { AiMessagesClient, ExtractedStudyFields } from "./study-extraction";
@@ -16,11 +17,13 @@ export interface ReportSynthesisInput {
   studies: ReportSynthesisStudyInput[];
 }
 
-export interface ReportSynthesisResult {
-  keyFindings: string[];
-  synthesis: string;
-  practicalInterpretation: string;
-}
+const REPORT_SYNTHESIS_RESULT_SCHEMA = z.object({
+  keyFindings: z.array(z.string()),
+  synthesis: z.string(),
+  practicalInterpretation: z.string(),
+});
+
+export type ReportSynthesisResult = z.infer<typeof REPORT_SYNTHESIS_RESULT_SCHEMA>;
 
 const SYNTHESIS_TOOL_NAME = "record_report_synthesis";
 
@@ -108,5 +111,10 @@ export async function synthesizeReport(
   if (!toolUse) {
     return null;
   }
-  return toolUse.input as ReportSynthesisResult;
+  const parsed = REPORT_SYNTHESIS_RESULT_SCHEMA.safeParse(toolUse.input);
+  if (!parsed.success) {
+    console.error("AI report synthesis returned an unexpected shape:", parsed.error);
+    return null;
+  }
+  return parsed.data;
 }

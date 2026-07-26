@@ -69,4 +69,32 @@ describe("synthesizeReport", () => {
     );
     expect(result).toBeNull();
   });
+
+  it("returns null instead of a malformed result when the model returns the wrong shape", async () => {
+    // A model could return keyFindings as a single string instead of an
+    // array despite the forced tool schema — this must not crash
+    // downstream rendering (premium-report-view calls .map() on it).
+    const client: AiMessagesClient = {
+      create: vi.fn().mockResolvedValue({
+        content: [
+          {
+            type: "tool_use",
+            id: "t1",
+            name: "record_report_synthesis",
+            input: { keyFindings: "not an array", synthesis: "x", practicalInterpretation: "y" },
+          },
+        ],
+      }),
+    } as unknown as AiMessagesClient;
+
+    const result = await synthesizeReport(
+      {
+        question: "Q",
+        confidenceLabel: "limited",
+        studies: [{ citation: "A (2020).", design: "cohort", fields: null }],
+      },
+      client,
+    );
+    expect(result).toBeNull();
+  });
 });

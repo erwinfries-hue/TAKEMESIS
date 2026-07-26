@@ -235,6 +235,19 @@ checkpoint (decision #15) and before each production-readiness gate.
     key exists); (b) the persisted-report flow itself (`OPEN_RISKS.md`
     #14) is unchanged and still needed before AI synthesis can be part of
     the real paid product, not just a preview tool.
+    **Update (2026-07-26): hardened against malformed model output.** A
+    bug-hunt pass found that `study-extraction.ts`/`report-synthesis.ts`
+    trusted the Anthropic tool-use response with an unchecked `as` cast —
+    forced `tool_choice` makes a schema-conforming reply likely but not
+    guaranteed, and a wrong-shaped reply (e.g. `keyFindings` as a string
+    instead of an array) would have bypassed `report-enrichment.ts`'s
+    try/catch (it doesn't throw, just returns bad data) and crashed
+    `PremiumReportView` at render time (`report.keyFindings.map(...)`).
+    Both modules now validate the tool response with a Zod schema and
+    return `null` (the existing "AI unavailable" fallback) on a mismatch,
+    with new unit tests covering a malformed response for each. No live
+    key exists in this sandbox to confirm real-world response shapes, but
+    the failure mode is now a safe no-op instead of a page crash either way.
 
 19. **`topics.ts`'s example questions have never been checked against real
     evidence coverage.** They were written during Phase 2 for topical
