@@ -37,6 +37,19 @@ test("login with correct credentials reaches the admin overview (no live databas
   await expect(page.getByRole("heading", { name: "Zahlungen" })).toBeVisible();
 });
 
+test("admin feedback/issues page degrades gracefully without a live database", async ({ page }) => {
+  await page.goto("/admin/login");
+  await page.getByLabel("E-Mail").fill("admin@tekmesis.com");
+  await page.getByLabel("Zugangscode").fill("e2e-test-secret");
+  await page.getByRole("button", { name: "Anmelden" }).click();
+  await expect(page).toHaveURL(/\/admin$/);
+
+  await page.getByRole("link", { name: "Feedback & Probleme" }).click();
+  await expect(page).toHaveURL(/\/admin\/feedback$/);
+  await expect(page.getByRole("heading", { name: "Feedback & Probleme" })).toBeVisible();
+  await expect(page.getByText(/Datenbank nicht verbunden/)).toBeVisible();
+});
+
 test("logout clears the session and /admin requires login again", async ({ page }) => {
   await page.goto("/admin/login");
   await page.getByLabel("E-Mail").fill("admin@tekmesis.com");

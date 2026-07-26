@@ -135,9 +135,17 @@ checkpoint (decision #15) and before each production-readiness gate.
 15. **Phase 9's admin/email/analytics scope was deliberately narrowed.** Built:
     email templates+send (Resend), the funnel-event allowlist + tracking
     (PostHog), admin auth, and an admin dashboard covering report status/
-    actions + payments. **Not built** (see `STATUS.md` for why each was
-    deferred rather than shipped as an empty shell): feedback/issue-report
-    repositories and admin pages, source-health persistence (Phase 4's
+    actions + payments. **Update (2026-07-26): feedback/issue-report
+    repositories and admin pages are now built** — `FeedbackRepository`/
+    `IssueReportRepository` (in-memory + Supabase implementations),
+    `resolveIssue`/`dismissIssue` admin actions with audit logging, and a new
+    `/admin/feedback` page (linked from `/admin`) listing both tables and
+    letting an admin resolve/dismiss open issues. Like the rest of the admin
+    dashboard, it degrades gracefully (visible warning banner, no crash) when
+    Supabase isn't configured — live-verified via a new Playwright spec.
+    Still **not built**: nothing yet *writes* to these tables from public
+    pages (no feedback-submission or issue-report UI exists outside the demo/
+    admin surfaces), source-health persistence (Phase 4's
     `checkAllSourceStatuses` still isn't written anywhere), cost-estimate and
     topic/source-coverage analytics views. None of email sending or PostHog
     forwarding has been verified against a live account (`EMAIL_API_KEY` /
@@ -171,10 +179,14 @@ checkpoint (decision #15) and before each production-readiness gate.
     the cron actually fires).
 
 17. **Marketing differentiation pass: three small live-validation gaps.**
-    (a) No Open Graph image — `layout.tsx` now sends `og:title`/
-    `og:description` but no `og:image`, since no branded 1200×630 asset
-    exists anywhere in this repo (`public/` is empty); a shared link will
-    render as a text-only card until one is designed and added. (b) The
+    (a) **Resolved (2026-07-26):** a branded Open Graph image now exists —
+    `src/app/opengraph-image.tsx` uses Next's built-in `ImageResponse`
+    (Satori) to render a 1200×630 PNG (shield mark, wordmark, tagline, on
+    the brand navy background) with no external image-generation tool or
+    static asset needed; `src/app/icon.svg` replaces the default Next.js
+    starter favicon with the same shield mark. Live-verified: fetched both
+    at runtime and confirmed a real 1200×630 PNG / valid SVG. Twitter card
+    type upgraded to `summary_large_image` to match. (b) The
     `/topics` social-proof counter (`getAskedCountForDomain`,
     `SOCIAL_PROOF_MIN_COUNT = 5`) and (c) the "most-asked topics this week"
     ranking (`getTrendingTopics`, `TRENDING_MIN_COUNT = 3`) are both

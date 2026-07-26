@@ -9,6 +9,16 @@ test("home page renders the TEKMESIS brand claim", async ({ page }) => {
   await expect(page.getByText("FROM STUDIES TO CLARITY.")).toBeVisible();
 });
 
+test("a skip-to-content link is the first focusable element and jumps past the header nav", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.keyboard.press("Tab");
+  const skipLink = page.getByRole("link", { name: "Zum Inhalt springen" });
+  await expect(skipLink).toBeFocused();
+  await expect(skipLink).toHaveAttribute("href", "#main-content");
+});
+
 test("locale switcher toggles between DE and EN", async ({ page }) => {
   await page.goto("/");
   await expect(page.locator("html")).toHaveAttribute("lang", "de");

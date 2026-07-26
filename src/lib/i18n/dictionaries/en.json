@@ -5,6 +5,7 @@
     "parent": "A product of AXIA4 Digital"
   },
   "nav": {
+    "skipToContent": "Skip to content",
     "topics": "Topics",
     "methodology": "Methodology",
     "sources": "Sources",

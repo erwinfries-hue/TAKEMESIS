@@ -26,10 +26,8 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(clientEnv.NEXT_PUBLIC_APP_BASE_URL),
     title,
     description: dict.home.description,
-    // No og:image yet — no branded 1200x630 asset exists in this repo
-    // (see docs/OPEN_RISKS.md). Title + description alone is a real
-    // improvement over an unstyled raw-link preview when shared (e.g. via
-    // WhatsApp, common in the DACH market) and doesn't invent visual assets.
+    // og:image is auto-injected by Next.js from app/opengraph-image.tsx
+    // (file-convention metadata) — no need to reference it here.
     openGraph: {
       title,
       description: dict.home.description,
@@ -39,7 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
     },
     twitter: {
-      card: "summary",
+      card: "summary_large_image",
       title,
       description: dict.home.description,
     },
@@ -60,8 +58,16 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-brand-neutral-50 text-brand-neutral-950">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-brand-navy-900 focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-white"
+        >
+          {dict.nav.skipToContent}
+        </a>
         <SiteHeader dict={dict} locale={locale} />
-        <div className="flex flex-1 flex-col">{children}</div>
+        <div id="main-content" className="flex flex-1 flex-col">
+          {children}
+        </div>
         <SiteFooter dict={dict} />
       </body>
     </html>

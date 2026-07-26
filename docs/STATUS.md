@@ -956,6 +956,61 @@ top.
   from this conversation, intentionally deferred until AI quality is
   judged worthwhile via the admin preview tool above.
 
+### Idle-time polish pass: favicon/OG image, accessibility, feedback admin (Erwin's request)
+While Erwin worked on obtaining `ANTHROPIC_API_KEY`, he asked me to use the
+time productively; after a first `npm audit` triage (see below) he then gave
+a broader mandate: implement both proposed items, run further detailed tests
+and fixes, and propose/implement graphic and UI improvements directly where
+judged beneficial.
+
+- **`npm audit` triage (no code change).** 12 high-severity findings, all
+  traced to either ESLint's dev-only dependency chain (`brace-expansion`/
+  `minimatch` via `@eslint/config-array`) or dependencies bundled inside
+  Next.js itself (`postcss`, `sharp`) — none reachable from this app's
+  runtime. The suggested `npm audit fix --force` would have downgraded
+  `next` to `9.3.3` or forced a breaking ESLint major bump, so it was
+  deliberately **not** applied; documented here instead of silently ignored.
+- **Branded favicon + dynamic OG/social image.** `src/app/icon.svg` (the
+  TEKMESIS shield mark, replacing the generic Next.js starter
+  `favicon.ico`) and `src/app/opengraph-image.tsx` (a 1200×630 PNG built
+  with Next's `ImageResponse`/Satori — no external image tool or static
+  asset needed) are both Next.js file-convention metadata, auto-picked up
+  with no manual `<meta>` wiring. Twitter card type upgraded to
+  `summary_large_image` to match. Live-verified: fetched both routes and
+  confirmed a real PNG / valid SVG. See `OPEN_RISKS.md` #17(a).
+- **Accessibility deep-dive beyond the existing automated `@a11y` suite.**
+  Ran an ad-hoc `best-practice`-tagged axe scan (broader than the
+  `wcag2a`/`wcag2aa`/`wcag22aa` tags already enforced in `e2e/*.spec.ts`)
+  across all 7 pages — 0 violations. Reasoned manually about a gap
+  automated tools don't catch: sighted keyboard-only users have no
+  screen-reader landmark-jump shortcut, so a skip-to-content link has real
+  value even with 0 automated "bypass blocks" violations. Added a
+  `sr-only`/`focus:not-sr-only` skip link as the first element in
+  `<body>` (`src/app/layout.tsx`) jumping to a new `#main-content` wrapper,
+  with a `dict.nav.skipToContent` string in both `de.json`/`en.json`, plus
+  a new e2e test confirming it's the first focusable element and has the
+  right `href`.
+- **Admin feedback/issue-report sections (`OPEN_RISKS.md` #15).** Built the
+  piece of Phase 9 that was deferred as an empty shell: `FeedbackRepository`
+  and `IssueReportRepository` (interface + in-memory + Supabase
+  implementations, following the exact pattern of the existing payment/
+  webhook/audit-log repositories, including the standard "untested against
+  a live database" comment). `src/lib/admin/issue-actions.ts` adds
+  `resolveIssue`/`dismissIssue`, each unconditionally recording an audit-log
+  entry like every other admin action in this codebase. New
+  `/admin/feedback` page (linked from `/admin`) lists gemeldete Probleme
+  (with resolve/dismiss buttons on open issues) and Feedback (rating/
+  comment), degrading gracefully with the same "Datenbank nicht verbunden"
+  banner pattern as `/admin/payments` when Supabase isn't configured. 7 new
+  unit tests (253 total) plus a new Playwright spec confirming the page
+  reaches the graceful-degradation state live. **Not built:** any
+  public-facing UI that actually writes to these tables — this is
+  admin-side plumbing only, so the tables stay empty until a feedback-
+  submission or issue-report form exists somewhere in the product.
+- All three items verified together: `npm run lint`, `npm run typecheck`,
+  `npm run test -- --run` (253/253), `npm run test:e2e` (50/50, up from 48),
+  and `npm run build` all pass.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
