@@ -2,8 +2,9 @@
 
 ## Current phase
 
-Phase 7 — Persistence and Stripe: **complete** (library/infrastructure layer;
-not yet wired into the live UI — see below). Phase 8 (premium report) next.
+Phase 8 — Premium report: **complete** for everything credential-independent
+(structure/layout/real data; AI-dependent narrative explicitly pending, not
+faked). Phase 9 (email, admin, analytics) next.
 
 ## Completed
 
@@ -270,12 +271,48 @@ Supabase/Stripe test accounts first or reordering phases.
   148 unit tests + 1 integration test, 33 Playwright specs (2 new: checkout
   success/cancel pages); `npm run verify` passes.
 
+### Phase 8 — Premium report
+- `src/lib/reports/premium-report.ts`: `buildPremiumReportData` — a pure
+  function producing all 9 sections from `06_PREMIUM_REPORT_SPECIFICATION.md`
+  out of a `SearchRunResult` + eligibility assessment. Real, computable data
+  is populated everywhere it exists (citations built from actual authors/
+  year/title/venue, search stats, study-type distribution, publication-year
+  range, confidence label, full source appendix). Fields that genuinely need
+  AI (`01`'s "structured extraction... plain-language synthesis"): key
+  findings, interpreted question, per-study outcome/effect estimate/key
+  finding/limitations, study-profile population/intervention/result/
+  uncertainty/funding, integrated synthesis, practical interpretation — all
+  explicitly `null`/`false`, never guessed, per the evidence-integrity rules.
+- Display components (`src/components/premium-report/`): `StudyComparisonMatrix`
+  (desktop table + mobile cards, per the design doc's explicit requirement),
+  `StudyProfileCard`, `EvidenceLandscapeSection`, `SourceAppendix`,
+  `PendingAiNotice` (used everywhere a section is honestly not-yet-available),
+  `PrintButton`, assembled by `PremiumReportView` with a jump-link section
+  nav (hidden on print) and print-friendly layout (`print:` variants).
+- `/example-report` now renders `PremiumReportView` for real — but with
+  clearly fictional, explicitly-labeled placeholder studies
+  (`src/content/example-report-preview.ts`), never real evidence. The
+  genuinely curated, real-source version (decision #3) still needs live
+  source adapters, which this sandbox can't reach — building the fake-data
+  preview now still delivers real value: it exercises and visually/
+  a11y-validates the entire report-rendering pipeline today, live, in a real
+  browser, without waiting on that.
+- Fixed a real heading-hierarchy bug the new page surfaced: `PremiumReportView`
+  originally rendered its own `<h1>`, which collided with the host page's
+  `<h1>` (two `<h1>`s on `/example-report`) — changed to `<h2>` since this
+  component is always embedded content, not a page root.
+- 7 new unit tests (data builder, incl. an explicit "never fabricates
+  AI-dependent content" test) + 1 new e2e spec (all 9 sections render, the
+  placeholder-data warning is visible, AI-pending sections say so). 155 unit
+  tests + 1 integration test, 34 Playwright specs; `npm run verify` passes.
+
 ## Not started
 
-Phases 8–13 from `IMPLEMENTATION_PLAN.md`: premium report renderer (AI
-extraction, comparison, profiles, synthesis, confidence, print layout),
-email/admin/analytics, hardening, preview beta, production prep, production
-launch.
+Phases 9–13 from `IMPLEMENTATION_PLAN.md`: email/admin/analytics, hardening,
+preview beta, production prep, production launch. Also still pending within
+already-"complete" phases: AI-based query interpretation/extraction/synthesis
+(Phase 3 + Phase 8, needs `ANTHROPIC_API_KEY`) and live wiring of Phases 4/5/7
+(needs Supabase/Stripe/network access) — all tracked in `OPEN_RISKS.md`.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
@@ -286,16 +323,22 @@ launch.
   sandbox; the success path (sources actually returning data) still needs a
   real run from an environment with network access.
 - Live validation of the Supabase migration and Stripe checkout/webhook code
-  (new, `OPEN_RISKS.md` #13) — nothing in Phase 7 has touched a real database
-  or a real Stripe account yet.
-- Wiring the live UI to real report creation + a working checkout button
-  (new, `OPEN_RISKS.md` #14) — needs the credentials above first.
+  (`OPEN_RISKS.md` #13) — nothing in Phase 7 has touched a real database or a
+  real Stripe account yet.
+- Wiring the live UI to real report creation + a working checkout button +
+  real premium-report generation on payment (`OPEN_RISKS.md` #14, now also
+  covering Phase 8's renderer) — needs the credentials above first.
+- AI-based extraction/synthesis for Phase 3 (query interpretation) and Phase 8
+  (key findings, study-level extraction, integrated synthesis, practical
+  interpretation) — needs `ANTHROPIC_API_KEY`, not yet provisioned.
 
 ## Next step
 
-Phase 8: AI-based extraction and synthesis (once `ANTHROPIC_API_KEY` exists —
-until then, keep building what's credential-independent: the Premium Report
-renderer's structure/layout, comparison matrix and study-profile components
-using the same `SearchRunResult`/`TeaserData`-shaped fixtures already in
-place, print-friendly layout, and the curated learning-methods example report
-content once source adapters are live-verified) — per `IMPLEMENTATION_PLAN.md`.
+Phase 9: transactional email (Resend, decision #13), admin dashboard sections
+from `11_ADMIN_ANALYTICS_EMAIL_AND_SUPPORT.md` (funnel, source health,
+payments, report jobs, failures, refunds, feedback/issues, cost estimates,
+audit log), PostHog analytics integration (decision #14) with the documented
+event whitelist — per `IMPLEMENTATION_PLAN.md`. Needs `EMAIL_API_KEY` and
+`NEXT_PUBLIC_ANALYTICS_SITE_ID`/PostHog credentials plus `ADMIN_AUTH_SECRET`/
+`ADMIN_EMAILS`, none of which are provisioned yet — expect the same
+credential-independent-first approach as Phases 4/7/8.

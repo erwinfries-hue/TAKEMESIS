@@ -1,0 +1,124 @@
+import type { NormalizedRecord } from "@/lib/source-adapters/types";
+import type { SearchRunResult } from "@/lib/search/run-search";
+
+/**
+ * Fictional placeholder records for the /example-report structural preview
+ * ONLY — never presented as real evidence (see docs/20_VISUAL_ASSET_USAGE_RULES.md:
+ * the same principle that applies to the supplied design-reference images
+ * applies here). Every title/author/venue is invented and clearly labeled
+ * as such in the UI. Deliberately varied publicationType/dataCompleteness so
+ * the preview demonstrates the full range of report states.
+ */
+const PLACEHOLDER_RECORDS: NormalizedRecord[] = [
+  {
+    source: "openalex",
+    sourceId: "placeholder-1",
+    doi: null,
+    title: "[Platzhalter] Beispielstudie 1 zu Methode A",
+    authors: ["Platzhalter Autor:in 1", "Platzhalter Autor:in 2"],
+    venue: "[Platzhalter-Fachzeitschrift]",
+    year: 2022,
+    publicationType: "rct",
+    abstract: "Dies ist ein Platzhaltertext zur Layout-Demonstration, keine echte Studie.",
+    isOpenAccess: null,
+    retractionStatus: "none",
+    subjectConcepts: [],
+    sourceUrl: null,
+    dataCompleteness: "abstract",
+    fetchedAt: "2026-07-25T00:00:00.000Z",
+  },
+  {
+    source: "crossref",
+    sourceId: "placeholder-2",
+    doi: null,
+    title: "[Platzhalter] Systematische Übersicht zu Methode B",
+    authors: ["Platzhalter Autor:in 3"],
+    venue: "[Platzhalter-Fachzeitschrift 2]",
+    year: 2020,
+    publicationType: "systematic_review",
+    abstract: "Platzhaltertext für eine systematische Übersichtsarbeit.",
+    isOpenAccess: null,
+    retractionStatus: "unknown",
+    subjectConcepts: [],
+    sourceUrl: null,
+    dataCompleteness: "abstract",
+    fetchedAt: "2026-07-25T00:00:00.000Z",
+  },
+  {
+    source: "europe_pmc",
+    sourceId: "placeholder-3",
+    doi: null,
+    title: "[Platzhalter] Kohortenstudie zu Methode C",
+    authors: ["Platzhalter Autor:in 4"],
+    venue: "[Platzhalter-Fachzeitschrift 3]",
+    year: 2019,
+    publicationType: "cohort",
+    abstract: null,
+    isOpenAccess: null,
+    retractionStatus: "none",
+    subjectConcepts: [],
+    sourceUrl: null,
+    dataCompleteness: "metadata_only",
+    fetchedAt: "2026-07-25T00:00:00.000Z",
+  },
+  {
+    source: "ncbi_pubmed",
+    sourceId: "placeholder-4",
+    doi: null,
+    title: "[Platzhalter] Quasi-experimentelle Untersuchung zu Methode D",
+    authors: [],
+    venue: null,
+    year: 2023,
+    publicationType: "quasi_experimental",
+    abstract: null,
+    isOpenAccess: null,
+    retractionStatus: "unknown",
+    subjectConcepts: [],
+    sourceUrl: null,
+    dataCompleteness: "metadata_only",
+    fetchedAt: "2026-07-25T00:00:00.000Z",
+  },
+  {
+    source: "openalex",
+    sourceId: "placeholder-5",
+    doi: null,
+    title: "[Platzhalter] Narrative Review zu Methode E",
+    authors: ["Platzhalter Autor:in 5"],
+    venue: "[Platzhalter-Fachzeitschrift 4]",
+    year: 2024,
+    publicationType: "review",
+    abstract: "Weiterer Platzhaltertext zur Demonstration eines Reviews.",
+    isOpenAccess: null,
+    retractionStatus: "none",
+    subjectConcepts: [],
+    sourceUrl: null,
+    dataCompleteness: "abstract",
+    fetchedAt: "2026-07-25T00:00:00.000Z",
+  },
+];
+
+export function buildExampleReportPreviewSearchResult(query: string): SearchRunResult {
+  const scored = PLACEHOLDER_RECORDS.map((record) => ({
+    deduped: { record, mergedFromSources: [record.source] },
+    score: 0,
+  }));
+
+  return {
+    query,
+    topicSlug: "lernen-bildung",
+    searchDate: "2026-07-25T00:00:00.000Z",
+    screeningVersion: "preview",
+    candidateCount: PLACEHOLDER_RECORDS.length + 2,
+    duplicatesRemoved: 2,
+    includedCount: PLACEHOLDER_RECORDS.length,
+    excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0 },
+    perSource: [
+      { source: "openalex", ok: true, recordCount: 2 },
+      { source: "crossref", ok: true, recordCount: 1 },
+      { source: "europe_pmc", ok: true, recordCount: 1 },
+      { source: "ncbi_pubmed", ok: true, recordCount: 1 },
+    ],
+    rankedIncluded: scored,
+    detailed: scored,
+  };
+}

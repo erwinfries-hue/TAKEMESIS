@@ -56,3 +56,33 @@ test("clicking an example-question chip prefills the own-question form", async (
     "Welche Lernmethode verbessert den Lernerfolg?",
   );
 });
+
+test("example-report preview renders all 9 premium report sections with a clear placeholder-data warning", async ({
+  page,
+}) => {
+  await page.goto("/example-report");
+
+  await expect(
+    page.getByText(
+      "Alle Studientitel, Autor:innen und Zeitschriften unten sind erfundene Platzhalter",
+    ),
+  ).toBeVisible();
+
+  for (const heading of [
+    "Frage, Umfang & Methode",
+    "Evidenzlandschaft",
+    "Studienvergleich",
+    "Detaillierte Studienprofile",
+    "Integrierte Synthese",
+    "Evidenzsicherheit",
+    "Praktische Einordnung",
+    "Offene Fragen & Quellen",
+  ]) {
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+  }
+
+  // AI-dependent sections must say so, never show fabricated content.
+  await expect(page.getByText("Noch nicht verfügbar").first()).toBeVisible();
+
+  await expect(page.getByRole("button", { name: "Als PDF speichern / drucken" })).toBeVisible();
+});
