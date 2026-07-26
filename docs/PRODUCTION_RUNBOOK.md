@@ -15,8 +15,10 @@ then reports back so the next session can verify and continue.
 - [ ] Supabase project
 - [ ] Transactional email provider account (Resend, per decision #10) or a
       vetted Hostpoint mail solution
-- [ ] Anthropic API key (only needed once AI extraction/synthesis is built —
-      not required to deploy the current MVP)
+- [ ] Anthropic API key — not required to deploy the current MVP, only once
+      AI extraction/synthesis is built (`OPEN_RISKS.md` #18). See
+      `ANTHROPIC_API_KEY_ANLEITUNG.md` for the non-technical account/key
+      setup steps; the AI-wiring code itself is separate engineering work.
 - [ ] Optional: Sentry, a privacy-friendly analytics provider (PostHog EU
       Cloud is already the coded default)
 

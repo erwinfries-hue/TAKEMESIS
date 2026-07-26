@@ -197,7 +197,10 @@ checkpoint (decision #15) and before each production-readiness gate.
     the prior pass (comparison table, confidence gauge, live demo, editorial
     print) is legitimate and worth having, but none of it substitutes for
     this. Should be the next priority once Erwin decides how to proceed —
-    needs the API key (a `CLAUDE.md` human-stop-condition secret) and a
+    needs the API key (a `CLAUDE.md` human-stop-condition secret; see
+    `docs/ANTHROPIC_API_KEY_ANLEITUNG.md` for the non-technical step-by-step
+    account/key setup Erwin can do himself — the actual AI-wiring code is
+    separate follow-up engineering work, not covered by that guide) and a
     product decision on scope/cost per report (decision #9's CHF 1.00–1.50
     estimate).
 
