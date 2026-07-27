@@ -23,10 +23,8 @@ function isResultBearing(record: NormalizedRecord): boolean {
  * This is a conservative backstop, not the primary eligibility signal: the
  * study-count thresholds below do most of the gating.
  */
-export function estimateReportDepth(records: NormalizedRecord[]): number {
-  const resultBearingCount = records.filter(isResultBearing).length;
-  const includedCount = records.length;
-
+/** Counts-only core so callers without full `NormalizedRecord[]` (e.g. the interactive methodology demo) can derive the exact same depth estimate rather than a parallel reimplementation. */
+export function estimateReportDepthFromCounts(includedCount: number, resultBearingCount: number): number {
   const ALWAYS_FILLABLE = 3; // scope/method, evidence-confidence label, source appendix
   let depth = ALWAYS_FILLABLE;
 
@@ -40,6 +38,12 @@ export function estimateReportDepth(records: NormalizedRecord[]): number {
   return depth;
 }
 
+export function estimateReportDepth(records: NormalizedRecord[]): number {
+  const resultBearingCount = records.filter(isResultBearing).length;
+  const includedCount = records.length;
+  return estimateReportDepthFromCounts(includedCount, resultBearingCount);
+}
+
 export interface EligibilityAssessment {
   status: EligibilityStatus;
   includedCount: number;
@@ -48,7 +52,7 @@ export interface EligibilityAssessment {
   estimatedReportDepthSections: number;
 }
 
-const MIN_REPORT_DEPTH_SECTIONS = 3;
+export const MIN_REPORT_DEPTH_SECTIONS = 3;
 
 /** Decision #4 (DECISIONS_LOG.md) thresholds, implemented as named constants — not magic numbers, and tunable post-beta from real conversion/refund data. */
 export const ELIGIBLE_MIN_RESULT_BEARING_STUDIES = 5;
@@ -56,39 +60,61 @@ export const ELIGIBLE_MIN_INDIVIDUAL_STUDIES_WITH_REVIEW = 2;
 export const LIMITATIONS_MIN_RESULT_BEARING_STUDIES = 2;
 export const LIMITATIONS_MIN_INCLUDED_STUDIES = 2;
 
-export function assessEligibility(searchResult: SearchRunResult): EligibilityAssessment {
-  const included = searchResult.rankedIncluded.map((scored) => scored.deduped.record);
-  const resultBearing = included.filter(isResultBearing);
-  const reviewsOrMeta = included.filter((r) => REVIEW_TYPES.has(r.publicationType));
-  const individualResultBearing = resultBearing.filter((r) => !REVIEW_TYPES.has(r.publicationType));
+export interface EligibilityCounts {
+  includedCount: number;
+  resultBearingCount: number;
+  reviewOrMetaCount: number;
+  individualResultBearingCount: number;
+}
 
+/** The actual decision rule, factored out to plain counts — single source of truth for both the real pipeline (`assessEligibility` below) and the interactive methodology demo, so the demo can never drift from what a real search actually decides. */
+export function deriveEligibilityStatus(counts: EligibilityCounts): EligibilityStatus {
   const meetsFullThreshold =
-    resultBearing.length >= ELIGIBLE_MIN_RESULT_BEARING_STUDIES ||
-    (reviewsOrMeta.length >= 1 &&
-      individualResultBearing.length >= ELIGIBLE_MIN_INDIVIDUAL_STUDIES_WITH_REVIEW);
+    counts.resultBearingCount >= ELIGIBLE_MIN_RESULT_BEARING_STUDIES ||
+    (counts.reviewOrMetaCount >= 1 &&
+      counts.individualResultBearingCount >= ELIGIBLE_MIN_INDIVIDUAL_STUDIES_WITH_REVIEW);
 
   let status: EligibilityStatus;
   if (meetsFullThreshold) {
     status = "eligible";
   } else if (
-    resultBearing.length >= LIMITATIONS_MIN_RESULT_BEARING_STUDIES ||
-    included.length >= LIMITATIONS_MIN_INCLUDED_STUDIES
+    counts.resultBearingCount >= LIMITATIONS_MIN_RESULT_BEARING_STUDIES ||
+    counts.includedCount >= LIMITATIONS_MIN_INCLUDED_STUDIES
   ) {
     status = "eligible_with_limitations";
   } else {
     status = "not_eligible";
   }
 
-  const estimatedReportDepthSections = estimateReportDepth(included);
+  const estimatedReportDepthSections = estimateReportDepthFromCounts(
+    counts.includedCount,
+    counts.resultBearingCount,
+  );
   if (estimatedReportDepthSections < MIN_REPORT_DEPTH_SECTIONS) {
     status = "not_eligible";
   }
+
+  return status;
+}
+
+export function assessEligibility(searchResult: SearchRunResult): EligibilityAssessment {
+  const included = searchResult.rankedIncluded.map((scored) => scored.deduped.record);
+  const resultBearing = included.filter(isResultBearing);
+  const reviewsOrMeta = included.filter((r) => REVIEW_TYPES.has(r.publicationType));
+  const individualResultBearing = resultBearing.filter((r) => !REVIEW_TYPES.has(r.publicationType));
+
+  const status = deriveEligibilityStatus({
+    includedCount: included.length,
+    resultBearingCount: resultBearing.length,
+    reviewOrMetaCount: reviewsOrMeta.length,
+    individualResultBearingCount: individualResultBearing.length,
+  });
 
   return {
     status,
     includedCount: included.length,
     resultBearingCount: resultBearing.length,
     reviewOrMetaCount: reviewsOrMeta.length,
-    estimatedReportDepthSections,
+    estimatedReportDepthSections: estimateReportDepthFromCounts(included.length, resultBearing.length),
   };
 }

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
+import { SourceStatusPanel } from "@/components/source-status-panel";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -71,6 +73,19 @@ export default async function SourcesPage() {
         </h2>
         <p className="text-brand-neutral-600">{dict.sourcesPage.honestyBody}</p>
       </section>
+
+      <Suspense
+        fallback={
+          <section className="w-full max-w-4xl">
+            <h2 className="mb-1 text-xl font-semibold text-brand-navy-900">
+              {dict.sourcesPage.liveStatusHeading}
+            </h2>
+            <p className="text-sm text-brand-neutral-600">{dict.sourcesPage.liveStatusLoading}</p>
+          </section>
+        }
+      >
+        <SourceStatusPanel dict={dict} locale={locale} />
+      </Suspense>
     </main>
   );
 }

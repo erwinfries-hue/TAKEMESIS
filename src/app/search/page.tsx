@@ -26,6 +26,7 @@ import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { checkFreeSearchLimit } from "@/lib/security/check-free-search-limit";
 import { track } from "@/lib/analytics/track";
+import { RecordSearchHistory } from "@/components/record-search-history";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -232,9 +233,11 @@ export default async function SearchPage({
   const teaser = buildTeaserData(searchResult, eligibility);
   const priceConfig = getPriceConfig();
   const topicName = topicCopy(confirmedTopic, locale).name;
+  const historyHref = `/search?${new URLSearchParams({ q: question, domain: confirmedTopic.slug }).toString()}`;
 
   return (
     <main className="flex flex-1 flex-col items-center gap-8 px-6 py-16 sm:px-10">
+      <RecordSearchHistory question={question} href={historyHref} />
       {confirmedTopic.riskProfile === "elevated" && (
         <p className="w-full max-w-3xl rounded-lg bg-brand-warning-100 p-3 text-sm text-brand-warning-600">
           {dict.ownQuestionForm.warningHealth}

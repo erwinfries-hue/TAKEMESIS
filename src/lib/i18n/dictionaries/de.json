@@ -114,7 +114,9 @@
     "submit": "Frage einordnen",
     "warning": "Bitte geben Sie keine Namen, Dokumente oder vertraulichen persönlichen Daten ein.",
     "warningHealth": "Bitte geben Sie keine individuellen Diagnosen, Medikamentenlisten oder Gesundheitsakten ein.",
-    "suggestionPrefix": "Könnte passen zu:"
+    "suggestionPrefix": "Könnte passen zu:",
+    "voiceInputCta": "Frage per Spracheingabe diktieren",
+    "voiceInputListening": "Hört zu — antippen zum Stoppen"
   },
   "studyLookupForm": {
     "heading": "Hast du schon eine Studie?",
@@ -185,6 +187,15 @@
         "body": "Nach Zahlung wird der vollständige, strukturierte Evidence Report generiert und geprüft."
       }
     ],
+    "calculatorHeading": "Probier es selbst: Wann reicht die Evidenzlage für einen Report?",
+    "calculatorIntro": "Bewege die Regler und sieh live, welche Einstufung dieselbe Regel liefert, die auch bei einer echten Suche entscheidet — keine Demo-Logik, sondern der reale Code.",
+    "calculatorIncludedLabel": "Eingeschlossene Studien insgesamt",
+    "calculatorResultBearingLabel": "Davon mit tatsächlichen Ergebnisdaten",
+    "calculatorReviewLabel": "Davon systematische Reviews / Meta-Analysen",
+    "calculatorResultEligible": "Würde als Report angeboten (volle Tiefe)",
+    "calculatorResultLimitations": "Würde als Report angeboten, mit sichtbarem Limitationen-Hinweis",
+    "calculatorResultNotEligible": "Würde nicht als Report angeboten — zu wenig Evidenz",
+    "calculatorNote": "Reine Struktur-Regel, keine inhaltliche Bewertung: Die tatsächliche Eignung einer echten Frage hängt zusätzlich von den echten Suchtreffern ab.",
     "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung."
   },
   "sourcesPage": {
@@ -211,7 +222,13 @@
     ],
     "routingHeading": "Quellenrouting nach Thema",
     "honestyHeading": "Ehrliche Abdeckung",
-    "honestyBody": "Jeder Report nennt durchsuchte und nicht verfügbare Quellen, das Suchdatum sowie bekannte Limitationen. TEKMESIS beansprucht nie eine vollständige Abdeckung der Literatur."
+    "honestyBody": "Jeder Report nennt durchsuchte und nicht verfügbare Quellen, das Suchdatum sowie bekannte Limitationen. TEKMESIS beansprucht nie eine vollständige Abdeckung der Literatur.",
+    "liveStatusHeading": "Live-Status der Datenquellen",
+    "liveStatusIntro": "Jetzt live geprüft — genau die Verbindung, die auch bei einer echten Suche verwendet wird.",
+    "liveStatusOk": "Erreichbar",
+    "liveStatusError": "Nicht erreichbar",
+    "liveStatusCheckedAtLabel": "Geprüft um",
+    "liveStatusLoading": "Prüfe Quellen …"
   },
   "privacyPage": {
     "heading": "Datenschutz",
@@ -281,7 +298,15 @@
     "loadingBody": "Passend zu deinem Thema werden mehrere anerkannte Datenquellen live abgefragt. Das kann einen Moment dauern.",
     "restrictedHeading": "Diese Frage können wir nicht automatisiert einordnen",
     "restrictedBody": "Deine Frage berührt ein Hochrisiko-Thema (z. B. Diagnose, Medikamente, akute Symptome, Schwangerschaft, psychische Krise). TEKMESIS bietet dafür keine individuelle Auswertung an.",
-    "restrictedHelp": "Bei akuten Beschwerden oder einer Krise wende dich bitte an eine Ärztin, einen Arzt oder eine Fachstelle. In der Schweiz erreichst du die Dargebotene Hand rund um die Uhr unter Tel. 143.",
+    "restrictedHelp": "Bei akuten Beschwerden oder einer Krise wende dich bitte an eine Ärztin, einen Arzt oder eine Fachstelle.",
+    "restrictedHelpContactsLabel": "Beispiele für Krisen-Hotlines (nicht abschliessend — wenn du dich in einem anderen Land befindest, suche nach der lokalen Notrufnummer):",
+    "restrictedHelpContacts": [
+      { "country": "Schweiz", "contact": "Tel. 143 — Die Dargebotene Hand, rund um die Uhr" },
+      { "country": "Deutschland", "contact": "Tel. 0800 111 0 111 oder 0800 111 0 222 — Telefonseelsorge, rund um die Uhr" },
+      { "country": "Österreich", "contact": "Tel. 142 — Telefonseelsorge, rund um die Uhr" },
+      { "country": "USA", "contact": "Tel. 988 — Suicide & Crisis Lifeline, rund um die Uhr" },
+      { "country": "Vereinigtes Königreich", "contact": "Tel. 116 123 — Samaritans, rund um die Uhr" }
+    ],
     "clarificationHeading": "Wir ordnen deine Frage folgendem Bereich zu",
     "clarificationIntro": "Diese Zuordnung basiert auf einer regelbasierten Analyse deiner Eingabe — noch nicht auf einer vollständigen KI-gestützten Interpretation. Bitte bestätige den Bereich oder wähle einen anderen.",
     "notClassifiedHeading": "Wir konnten deine Frage keinem Bereich eindeutig zuordnen",
@@ -318,6 +343,22 @@
     "other": "Andere",
     "unknown": "Nicht klassifiziert"
   },
+  "glossaryDefinitions": {
+    "meta_analysis": "Fasst die Ergebnisse mehrerer Studien mit statistischen Methoden zu einer Gesamtaussage zusammen — gilt methodisch oft als besonders belastbar, wenn die zusammengefassten Studien selbst solide sind.",
+    "systematic_review": "Sucht systematisch und nach vorab festgelegten Regeln nach allen relevanten Studien zu einer Frage und bewertet sie strukturiert — meist ohne eigene neue statistische Zusammenfassung.",
+    "rct": "Teilnehmende werden per Zufall einer Interventions- oder einer Kontrollgruppe zugeteilt. Das verringert das Risiko, dass systematische Unterschiede zwischen den Gruppen das Ergebnis verzerren.",
+    "quasi_experimental": "Vergleicht Gruppen ähnlich wie eine RCT, aber ohne echte Zufallszuteilung — dadurch anfälliger für verzerrende Einflüsse zwischen den Gruppen.",
+    "cohort": "Beobachtet eine Gruppe über einen Zeitraum und vergleicht, wie sich unterschiedliche Expositionen auf ein Ergebnis auswirken, ohne aktiv einzugreifen.",
+    "case_control": "Vergleicht rückblickend Personen mit einem bestimmten Ergebnis mit Personen ohne dieses Ergebnis, um mögliche Einflussfaktoren zu identifizieren.",
+    "cross_sectional": "Erfasst Daten zu einem einzelnen Zeitpunkt. Zeigt mögliche Zusammenhänge, aber keine zeitliche Abfolge und damit keine Aussage zu Ursache und Wirkung.",
+    "case_report": "Beschreibt die Beobachtung bei einer einzelnen Person oder einem sehr kleinen Fall — liefert einen Hinweis, aber keine verallgemeinerbare Evidenz.",
+    "review": "Fasst vorhandene Literatur zusammen, meist ohne die vorab festgelegte, systematische Suchmethodik eines systematischen Reviews.",
+    "protocol": "Beschreibt eine geplante, aber noch nicht abgeschlossene Studie — liefert noch keine Ergebnisse.",
+    "other": "Eine Studienart, die sich keiner der übrigen Kategorien eindeutig zuordnen lässt.",
+    "unknown": "Der Studientyp liess sich aus den verfügbaren Metadaten nicht eindeutig bestimmen.",
+    "evidence_certainty": "Wie sicher man sich aufgrund der vorhandenen Studienlage insgesamt sein kann, dass ein beobachteter Effekt real und stabil ist — nicht dasselbe wie \"Effekt vorhanden oder nicht vorhanden\".",
+    "bias": "Eine systematische Verzerrung, die ein Studienergebnis unabhängig vom tatsächlichen Effekt in eine bestimmte Richtung verschieben kann."
+  },
   "confidenceLabels": {
     "higher": "Höhere Evidenzsicherheit",
     "moderate": "Mittlere Evidenzsicherheit",
@@ -335,6 +376,7 @@
     "topStudiesHeading": "Vorschau: wichtigste Studien",
     "confidenceHeading": "Vorläufige Evidenzsicherheit",
     "confidencePreliminaryNote": "Vorläufige, strukturelle Einschätzung auf Basis von Studienzahl und -design — noch keine vollständige inhaltliche Analyse (folgt mit der KI-gestützten Synthese in einem späteren Ausbauschritt).",
+    "shareCardCta": "Als Bild teilen",
     "sourcesUnavailableNote": "Folgende Quellen waren bei dieser Suche nicht erreichbar und fehlen daher in den Ergebnissen",
     "screeningExplanation": "Studien wurden nach Relevanz, Studiendesign und Datenvollständigkeit ausgewählt; zurückgezogene Studien, reine Studienprotokolle und thematisch nicht passende Treffer wurden ausgeschlossen.",
     "limitationsNoticeHeading": "Wichtige Limitationen vor dem Kauf",
@@ -401,6 +443,8 @@
     "evidenceLandscapeHeading": "Evidenzlandschaft",
     "studyTypesHeading": "Studientyp-Verteilung",
     "yearRangeLabel": "Publikationszeitraum",
+    "timelineHeading": "Studien nach Publikationsjahr",
+    "timelineUndatedNote": "{count} Studie(n) ohne angegebenes Publikationsjahr sind hier nicht dargestellt.",
     "comparisonHeading": "Studienvergleich",
     "comparisonTableCaption": "Vergleich der wichtigsten eingeschlossenen Studien",
     "studyColumnLabel": "Studie",
@@ -427,6 +471,18 @@
     "pendingAiNote": "Dieser Abschnitt erfordert KI-gestützte Extraktion bzw. Synthese, die noch nicht angebunden ist (kein Anthropic-API-Schlüssel hinterlegt). Er wird ergänzt, sobald diese Funktion verfügbar ist — bis dahin werden keine Inhalte erfunden.",
     "pendingAiShort": "Folgt mit KI-gestützter Synthese, sobald verfügbar.",
     "printCta": "Als PDF speichern / drucken",
+    "exportCitationsHeading": "Studienliste exportieren",
+    "exportBibtexCta": "Als BibTeX",
+    "exportRisCta": "Als RIS",
+    "readAloudCta": "Vorlesen",
+    "readAloudStopCta": "Stopp",
+    "chatHeading": "Frag genauer nach",
+    "chatIntro": "Antwortet ausschliesslich auf Basis der in diesem Report gefundenen Studien — nie auf Basis von Allgemeinwissen.",
+    "chatInputPlaceholder": "z. B. Welche Altersgruppe wurde untersucht?",
+    "chatSubmitCta": "Fragen",
+    "chatLoading": "Durchsucht die Studien …",
+    "chatError": "Die Frage konnte gerade nicht beantwortet werden. Bitte versuche es erneut.",
+    "chatNotAnswerableNote": "Nicht aus den Studien dieses Reports beantwortbar.",
     "navCover": "Übersicht",
     "navScope": "Umfang & Methode",
     "navLandscape": "Evidenzlandschaft",
@@ -436,5 +492,11 @@
     "navConfidence": "Evidenzsicherheit",
     "navInterpretation": "Einordnung",
     "navSources": "Quellen"
+  },
+  "recentSearches": {
+    "heading": "Deine letzten Fragen",
+    "note": "Nur auf diesem Gerät gespeichert, nie an TEKMESIS übertragen.",
+    "removeAriaLabel": "Aus Verlauf entfernen",
+    "clearCta": "Verlauf löschen"
   }
 }

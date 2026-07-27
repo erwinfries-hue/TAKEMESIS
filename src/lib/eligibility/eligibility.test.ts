@@ -3,7 +3,12 @@ import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import type { SearchRunResult } from "@/lib/search/run-search";
 import { NO_FILTERS } from "@/lib/search/filters";
 import { makeRecord } from "@/lib/search/test-fixtures";
-import { assessEligibility, estimateReportDepth } from "./eligibility";
+import {
+  assessEligibility,
+  deriveEligibilityStatus,
+  estimateReportDepth,
+  estimateReportDepthFromCounts,
+} from "./eligibility";
 
 function fakeSearchResult(records: NormalizedRecord[]): SearchRunResult {
   return {
@@ -106,5 +111,44 @@ describe("assessEligibility", () => {
     expect(result.includedCount).toBe(3);
     expect(result.resultBearingCount).toBe(2);
     expect(result.reviewOrMetaCount).toBe(1);
+  });
+});
+
+describe("deriveEligibilityStatus (counts-only core, used by the interactive methodology demo)", () => {
+  it("agrees with assessEligibility for the same underlying counts", () => {
+    const records = [
+      makeRecord({ dataCompleteness: "abstract" }),
+      makeRecord({ dataCompleteness: "abstract" }),
+      makeRecord({ dataCompleteness: "abstract" }),
+      makeRecord({ dataCompleteness: "abstract" }),
+      makeRecord({ dataCompleteness: "abstract" }),
+    ];
+    const viaFullPipeline = assessEligibility(fakeSearchResult(records));
+    const viaCountsOnly = deriveEligibilityStatus({
+      includedCount: 5,
+      resultBearingCount: 5,
+      reviewOrMetaCount: 0,
+      individualResultBearingCount: 5,
+    });
+    expect(viaCountsOnly).toBe(viaFullPipeline.status);
+  });
+
+  it("is not_eligible below the report-depth floor even with the review-plus-2 shortcut met", () => {
+    expect(
+      deriveEligibilityStatus({
+        includedCount: 0,
+        resultBearingCount: 0,
+        reviewOrMetaCount: 0,
+        individualResultBearingCount: 0,
+      }),
+    ).toBe("not_eligible");
+  });
+
+  it("estimateReportDepthFromCounts matches estimateReportDepth for equivalent records", () => {
+    const records = [
+      makeRecord({ dataCompleteness: "abstract" }),
+      makeRecord({ dataCompleteness: "metadata_only" }),
+    ];
+    expect(estimateReportDepthFromCounts(2, 1)).toBe(estimateReportDepth(records));
   });
 });

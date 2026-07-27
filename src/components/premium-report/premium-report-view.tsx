@@ -10,6 +10,11 @@ import { StudyProfileCard } from "./study-profile-card";
 import { SourceAppendix } from "./source-appendix";
 import { PrintButton } from "./print-button";
 import { orNotReported } from "./format";
+import { GlossaryTerm } from "@/components/glossary-term";
+import { CitationExportButtons } from "./citation-export-buttons";
+import { ReadAloudButton } from "./read-aloud-button";
+import { ReportChatWidget } from "./report-chat-widget";
+import { serverEnv } from "@/lib/env/server";
 
 /** Card treatment on screen; collapses back to plain flowing content when printed (the print cover page + page-break rules already handle print layout). */
 const SECTION_CARD =
@@ -93,7 +98,16 @@ export function PremiumReportView({
           </div>
         </dl>
 
-        <h2 className="mt-6 mb-2 font-semibold text-brand-navy-900">{p.keyFindingsHeading}</h2>
+        <div className="mt-6 mb-2 flex flex-wrap items-center justify-between gap-2">
+          <h2 className="font-semibold text-brand-navy-900">{p.keyFindingsHeading}</h2>
+          {report.keyFindings && (
+            <ReadAloudButton
+              dict={dict}
+              locale={report.locale}
+              text={report.keyFindings.join(". ")}
+            />
+          )}
+        </div>
         {report.keyFindings ? (
           <ul className="list-disc pl-5 text-sm text-brand-neutral-600">
             {report.keyFindings.map((finding, index) => (
@@ -181,7 +195,11 @@ export function PremiumReportView({
 
       {/* 7. Evidence Confidence */}
       <section id="confidence" className={`scroll-mt-16 ${SECTION_CARD}`}>
-        <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.confidenceHeading}</h2>
+        <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">
+          <GlossaryTerm definition={dict.glossaryDefinitions.evidence_certainty}>
+            {p.confidenceHeading}
+          </GlossaryTerm>
+        </h2>
         <ConfidenceGauge label={report.confidenceLabel} dict={dict} />
         <div className="mt-3">
           <PendingAiNotice dict={dict} variant="short" />
@@ -198,10 +216,23 @@ export function PremiumReportView({
         )}
       </section>
 
+      {/* Optional: follow-up chat, only when AI is actually configured */}
+      {serverEnv.AI_EXTRACTION_ENABLED && serverEnv.ANTHROPIC_API_KEY && (
+        <ReportChatWidget
+          dict={dict}
+          originalQuestion={report.originalQuestion}
+          profiles={report.profiles}
+          comparison={report.comparison}
+        />
+      )}
+
       {/* 9. Open Questions and Sources */}
       <section id="sources" className={`scroll-mt-16 print:break-before-page ${SECTION_CARD}`}>
         <h2 className="mb-3 text-xl font-semibold text-brand-navy-900">{p.openQuestionsHeading}</h2>
         <SourceAppendix dict={dict} sources={report.sources} />
+        <div className="mt-4">
+          <CitationExportButtons dict={dict} sources={report.sources} />
+        </div>
       </section>
     </article>
   );

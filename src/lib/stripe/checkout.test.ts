@@ -40,6 +40,15 @@ describe("createCheckoutSession", () => {
     expect(call.line_items[0].price_data).toMatchObject({ currency: "chf", unit_amount: 990 });
   });
 
+  it("allows Stripe's built-in promotion/gift codes on the checkout page", async () => {
+    const { client, create } = fakeStripeClient();
+    await createCheckoutSession(
+      { reportId: "report-1", priceVersion: "MVP-01", amountMinor: 990, currency: "CHF", locale: "de" },
+      client,
+    );
+    expect(create).toHaveBeenCalledWith(expect.objectContaining({ allow_promotion_codes: true }));
+  });
+
   it("points success/cancel URLs at the app base URL with the report ID", async () => {
     const { client, create } = fakeStripeClient();
     await createCheckoutSession(

@@ -15,6 +15,18 @@ export function HighRiskNotice({ dict }: { dict: Dictionary }) {
       </div>
       <p className="text-sm text-brand-neutral-950">{dict.searchPage.restrictedBody}</p>
       <p className="text-sm text-brand-neutral-950">{dict.searchPage.restrictedHelp}</p>
+      <div>
+        <p className="text-xs font-medium text-brand-neutral-950">
+          {dict.searchPage.restrictedHelpContactsLabel}
+        </p>
+        <ul className="mt-1 flex flex-col gap-0.5 text-xs text-brand-neutral-950">
+          {dict.searchPage.restrictedHelpContacts.map((entry) => (
+            <li key={entry.country}>
+              <strong>{entry.country}:</strong> {entry.contact}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

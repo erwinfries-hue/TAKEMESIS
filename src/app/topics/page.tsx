@@ -6,6 +6,7 @@ import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { OwnQuestionForm } from "@/components/own-question-form";
 import { StudyLookupForm } from "@/components/study-lookup-form";
+import { RecentSearchesPanel } from "@/components/recent-searches-panel";
 import { TopicIcon } from "@/components/icons/topic-icons";
 import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
 import { getTrendingTopics } from "@/lib/analytics/trending-topics";
@@ -69,6 +70,7 @@ export default async function TopicsPage() {
         </Suspense>
         <StudyLookupForm dict={dict} />
       </div>
+      <RecentSearchesPanel dict={dict} />
 
       <div className="grid w-full max-w-6xl grid-cols-1 gap-6 lg:grid-cols-2">
         {topics.map((topic) => {

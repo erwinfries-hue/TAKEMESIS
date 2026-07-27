@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumReportData } from "@/lib/reports/premium-report";
+import { PublicationTimelineChart } from "./publication-timeline-chart";
 
 export function EvidenceLandscapeSection({
   dict,
@@ -36,6 +37,7 @@ export function EvidenceLandscapeSection({
           {earliest && latest ? `${earliest}–${latest}` : notReported}
         </p>
       </div>
+      <PublicationTimelineChart dict={dict} rows={report.comparison} />
     </div>
   );
 }

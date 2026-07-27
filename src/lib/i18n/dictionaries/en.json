@@ -114,7 +114,9 @@
     "submit": "Classify question",
     "warning": "Please do not enter names, documents, or confidential personal data.",
     "warningHealth": "Please do not enter individual diagnoses, medication lists, or health records.",
-    "suggestionPrefix": "Might fit:"
+    "suggestionPrefix": "Might fit:",
+    "voiceInputCta": "Dictate your question by voice",
+    "voiceInputListening": "Listening — tap to stop"
   },
   "studyLookupForm": {
     "heading": "Already have a study?",
@@ -182,6 +184,15 @@
         "body": "After payment, the full structured evidence report is generated and validated."
       }
     ],
+    "calculatorHeading": "Try it yourself: when is the evidence enough for a report?",
+    "calculatorIntro": "Move the sliders and watch the exact same rule that decides on a real search classify it live — not demo logic, the real code.",
+    "calculatorIncludedLabel": "Studies included in total",
+    "calculatorResultBearingLabel": "Of those, with actual result data",
+    "calculatorReviewLabel": "Of those, systematic reviews / meta-analyses",
+    "calculatorResultEligible": "Would be offered as a report (full depth)",
+    "calculatorResultLimitations": "Would be offered as a report, with a visible limitations notice",
+    "calculatorResultNotEligible": "Would not be offered as a report — not enough evidence",
+    "calculatorNote": "A pure structural rule, not a content judgment: whether a real question qualifies also depends on the actual search results.",
     "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."
   },
   "sourcesPage": {
@@ -208,7 +219,13 @@
     ],
     "routingHeading": "Source routing by topic",
     "honestyHeading": "Honest coverage",
-    "honestyBody": "Every report states which sources were searched and which were unavailable, the search date, and known limitations. TEKMESIS never claims exhaustive coverage of the literature."
+    "honestyBody": "Every report states which sources were searched and which were unavailable, the search date, and known limitations. TEKMESIS never claims exhaustive coverage of the literature.",
+    "liveStatusHeading": "Live status of the data sources",
+    "liveStatusIntro": "Checked live, right now — the exact same connection a real search would use.",
+    "liveStatusOk": "Reachable",
+    "liveStatusError": "Not reachable",
+    "liveStatusCheckedAtLabel": "Checked at",
+    "liveStatusLoading": "Checking sources …"
   },
   "privacyPage": {
     "heading": "Privacy",
@@ -278,7 +295,15 @@
     "loadingBody": "Several recognized data sources matching your topic are being queried live. This can take a moment.",
     "restrictedHeading": "We can't automatically process this question",
     "restrictedBody": "Your question touches a high-risk topic (e.g. diagnosis, medication, acute symptoms, pregnancy, mental-health crisis). TEKMESIS does not offer an individual evaluation for this.",
-    "restrictedHelp": "If you're experiencing an acute issue or a crisis, please contact a doctor or a qualified support service. In Switzerland, the Dargebotene Hand is available 24/7 at 143.",
+    "restrictedHelp": "If you're experiencing an acute issue or a crisis, please contact a doctor or a qualified support service.",
+    "restrictedHelpContactsLabel": "Example crisis hotlines (not exhaustive — if you're elsewhere, look up your local emergency number):",
+    "restrictedHelpContacts": [
+      { "country": "Switzerland", "contact": "Tel. 143 — Die Dargebotene Hand, 24/7" },
+      { "country": "Germany", "contact": "Tel. 0800 111 0 111 or 0800 111 0 222 — Telefonseelsorge, 24/7" },
+      { "country": "Austria", "contact": "Tel. 142 — Telefonseelsorge, 24/7" },
+      { "country": "USA", "contact": "Tel. 988 — Suicide & Crisis Lifeline, 24/7" },
+      { "country": "United Kingdom", "contact": "Tel. 116 123 — Samaritans, 24/7" }
+    ],
     "clarificationHeading": "We're assigning your question to this domain",
     "clarificationIntro": "This assignment is based on a rule-based analysis of your input — not yet a full AI-powered interpretation. Please confirm the domain or choose a different one.",
     "notClassifiedHeading": "We couldn't clearly assign your question to a domain",
@@ -315,6 +340,22 @@
     "other": "Other",
     "unknown": "Not classified"
   },
+  "glossaryDefinitions": {
+    "meta_analysis": "Statistically combines the results of multiple studies into one overall estimate — often considered particularly robust evidence when the underlying studies are themselves sound.",
+    "systematic_review": "Searches systematically and by pre-defined rules for all relevant studies on a question and appraises them in a structured way — usually without a new statistical combination.",
+    "rct": "Participants are randomly assigned to an intervention or a control group. This reduces the risk that systematic differences between groups distort the result.",
+    "quasi_experimental": "Compares groups similarly to an RCT, but without true random assignment — making it more susceptible to biasing differences between groups.",
+    "cohort": "Follows a group over time and compares how different exposures affect an outcome, without actively intervening.",
+    "case_control": "Looks back at people with a given outcome and compares them to people without it, to identify possible contributing factors.",
+    "cross_sectional": "Captures data at a single point in time. Shows possible associations, but no time sequence and therefore no statement about cause and effect.",
+    "case_report": "Describes the observation in a single person or a very small case — a hint, not generalizable evidence.",
+    "review": "Summarizes existing literature, usually without the pre-defined, systematic search method of a systematic review.",
+    "protocol": "Describes a planned but not yet completed study — no results yet.",
+    "other": "A study type that doesn't clearly fit any of the other categories.",
+    "unknown": "The study type could not be determined from the available metadata.",
+    "evidence_certainty": "How confident one can be, based on the overall body of evidence, that an observed effect is real and stable — not the same as \"an effect exists or doesn't\".",
+    "bias": "A systematic distortion that can shift a study's result in a particular direction, independent of the true effect."
+  },
   "confidenceLabels": {
     "higher": "Higher evidence confidence",
     "moderate": "Moderate evidence confidence",
@@ -332,6 +373,7 @@
     "topStudiesHeading": "Preview: key studies",
     "confidenceHeading": "Preliminary evidence confidence",
     "confidencePreliminaryNote": "Preliminary, structural estimate based on study count and design — not yet a full content analysis (that arrives with AI-based synthesis in a later build step).",
+    "shareCardCta": "Share as image",
     "sourcesUnavailableNote": "The following sources were unreachable during this search and are therefore missing from the results",
     "screeningExplanation": "Studies were selected by relevance, study design, and data completeness; retracted studies, pure study protocols, and topically unrelated matches were excluded.",
     "limitationsNoticeHeading": "Important limitations before purchase",
@@ -398,6 +440,8 @@
     "evidenceLandscapeHeading": "Evidence Landscape",
     "studyTypesHeading": "Study-type distribution",
     "yearRangeLabel": "Publication timeframe",
+    "timelineHeading": "Studies by publication year",
+    "timelineUndatedNote": "{count} stud(y/ies) without a stated publication year are not shown here.",
     "comparisonHeading": "Study Comparison",
     "comparisonTableCaption": "Comparison of the key included studies",
     "studyColumnLabel": "Study",
@@ -423,6 +467,18 @@
     "pendingAiHeading": "Not yet available",
     "pendingAiNote": "This section requires AI-based extraction or synthesis that isn't connected yet (no Anthropic API key configured). It will be filled in once that capability is available — until then, nothing here is invented.",
     "pendingAiShort": "Coming with AI-based synthesis once available.",
+    "exportCitationsHeading": "Export study list",
+    "exportBibtexCta": "As BibTeX",
+    "exportRisCta": "As RIS",
+    "readAloudCta": "Read aloud",
+    "readAloudStopCta": "Stop",
+    "chatHeading": "Ask a follow-up",
+    "chatIntro": "Answers only from the studies found for this report — never from general knowledge.",
+    "chatInputPlaceholder": "e.g. What age group was studied?",
+    "chatSubmitCta": "Ask",
+    "chatLoading": "Searching the studies …",
+    "chatError": "Couldn't answer that just now. Please try again.",
+    "chatNotAnswerableNote": "Not answerable from this report's studies.",
     "printCta": "Save as PDF / print",
     "navCover": "Overview",
     "navScope": "Scope & Method",
@@ -433,5 +489,11 @@
     "navConfidence": "Evidence Confidence",
     "navInterpretation": "Interpretation",
     "navSources": "Sources"
+  },
+  "recentSearches": {
+    "heading": "Your recent questions",
+    "note": "Stored on this device only, never sent to TEKMESIS.",
+    "removeAriaLabel": "Remove from history",
+    "clearCta": "Clear history"
   }
 }

@@ -84,6 +84,11 @@ export interface PremiumSourceEntry {
   doi: string | null;
   sourceUrl: string | null;
   source: SourceId;
+  /** Structured fields for citation export (BibTeX/RIS) — same underlying data as `citation`, just not pre-joined into prose. */
+  authors: string[];
+  year: number | null;
+  title: string | null;
+  venue: string | null;
 }
 
 function buildCitation(record: NormalizedRecord, locale: Locale): string {
@@ -185,6 +190,10 @@ export function buildPremiumReportData(params: BuildPremiumReportParams): Premiu
       doi: record.doi,
       sourceUrl: record.sourceUrl,
       source: record.source,
+      authors: record.authors,
+      year: record.year,
+      title: record.title,
+      venue: record.venue,
     })),
   };
 }

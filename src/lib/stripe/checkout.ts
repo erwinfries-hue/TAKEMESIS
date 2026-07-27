@@ -56,6 +56,11 @@ export async function createCheckoutSession(
       reportId: params.reportId,
       priceVersion: params.priceVersion,
     },
+    // Lets Stripe show its own "gift/discount code" field on the Checkout
+    // page — no custom code-validation logic needed. Codes themselves are
+    // created and managed in the Stripe Dashboard (Erwin's side, once a
+    // real account exists); nothing here invents or hardcodes a discount.
+    allow_promotion_codes: true,
     success_url: `${baseUrl}/checkout/success?report=${params.reportId}`,
     cancel_url: `${baseUrl}/checkout/cancel?report=${params.reportId}`,
     locale: params.locale,

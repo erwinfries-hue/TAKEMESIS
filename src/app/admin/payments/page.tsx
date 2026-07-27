@@ -3,6 +3,7 @@ import Link from "next/link";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
 import { SupabasePaymentRepository } from "@/lib/payments/supabase-payment-repository";
 import type { Payment } from "@/lib/payments/types";
+import { refundPaymentAction } from "@/app/admin/actions";
 
 export const metadata: Metadata = { title: "Admin — Zahlungen — TEKMESIS" };
 
@@ -46,6 +47,7 @@ export default async function AdminPaymentsPage() {
               <th className="px-3 py-2 font-semibold">Preisversion</th>
               <th className="px-3 py-2 font-semibold">Modus</th>
               <th className="px-3 py-2 font-semibold">Stripe Session</th>
+              <th className="px-3 py-2 font-semibold">Aktionen</th>
             </tr>
           </thead>
           <tbody>
@@ -63,11 +65,24 @@ export default async function AdminPaymentsPage() {
                 <td className="px-3 py-2 text-brand-neutral-600">
                   {payment.stripeCheckoutSessionId}
                 </td>
+                <td className="px-3 py-2">
+                  {payment.status === "paid" && payment.stripePaymentIntentId && (
+                    <form action={refundPaymentAction}>
+                      <input type="hidden" name="paymentId" value={payment.id} />
+                      <button
+                        type="submit"
+                        className="rounded-full border border-brand-warning-500 px-3 py-1 text-xs font-medium text-brand-warning-600 transition-colors hover:bg-brand-warning-100"
+                      >
+                        Rückerstatten
+                      </button>
+                    </form>
+                  )}
+                </td>
               </tr>
             ))}
             {payments.length === 0 && !dbError && (
               <tr>
-                <td colSpan={6} className="px-3 py-6 text-center text-brand-neutral-600">
+                <td colSpan={7} className="px-3 py-6 text-center text-brand-neutral-600">
                   Noch keine Zahlungen.
                 </td>
               </tr>

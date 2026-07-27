@@ -90,6 +90,20 @@ export function FreeTeaser({
         <p className="mt-2 text-xs text-brand-neutral-600">
           {dict.teaserPage.confidencePreliminaryNote}
         </p>
+        <a
+          href={`/api/evidence-card?${new URLSearchParams({
+            q: teaser.query,
+            topic: topicName,
+            confidence: teaser.confidenceLabel,
+            locale,
+          }).toString()}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-brand-neutral-200 px-3 py-1 text-xs font-medium text-brand-navy-900 transition-colors hover:bg-brand-neutral-50"
+        >
+          <span aria-hidden="true">🔗</span>
+          {dict.teaserPage.shareCardCta}
+        </a>
       </section>
 
       <section>

@@ -346,6 +346,51 @@ checkpoint (decision #15) and before each production-readiness gate.
     more than one process/worker, which would explain why a module-level
     singleton doesn't see all requests.
 
+25. **Two items from the "WOW-Zusatzleistungen" marketing brainstorm
+    (Erwin's request) were deliberately not built, on top of the 13 that
+    were.** Both need a real product/data decision first, not just code:
+    - **Themen-Digest E-Mail:** the buildable *infrastructure* (an opt-in
+      signup form, storage, unsubscribe, a Resend template) is
+      straightforward and follows the exact pattern already used for
+      transactional email. What isn't buildable here is the actual
+      newsletter *content* — "latest findings in your topic" requires a
+      real, recurring editorial/curation process (someone deciding what's
+      genuinely worth sending, backed by real evidence, on a real
+      cadence). Building the signup pipe without that process would
+      either collect email addresses for a newsletter that never sends
+      (a privacy cost — `CLAUDE.md`: "no unnecessary personal data" —
+      for zero benefit) or invite filling it with generated-sounding
+      copy, which risks brushing against the evidence-integrity rules if
+      done carelessly. Needs Erwin's decision on who curates it and how
+      often before the signup form is worth building.
+    - **Evidenz-Update-Check:** a genuinely recurring "notify me when new
+      studies appear" mechanism is architecturally adjacent to a
+      subscription (recurring checks tied to one visitor, running
+      indefinitely) — `CLAUDE.md`: "No subscription in MVP". A one-time,
+      user-triggered re-check ("check again now") would avoid that, and
+      could reuse the existing cron/expiry infrastructure, but still
+      needs a decision on where its result goes for someone without an
+      account (no mandatory account exists per `CLAUDE.md`) — e-mail is
+      the only channel that doesn't require inventing account state, so
+      this is really the same open question as the digest email above:
+      needs Erwin's sign-off on any recurring-contact mechanism before
+      it's built, not a default "yes" from this session.
+    - The following were already covered in `STATUS.md`'s
+      "WOW-Zusatzleistungen" entry as bewusst nicht vorgeschlagen and
+      remain so: a "Wissenschafts-Mythen" content section (would require
+      genuinely researched, non-fabricated evidence-checks per myth — a
+      content task, not a code task), a full "Entscheidungsassistent" /
+      "Vergleichsrechner" (each is architecturally a new report type,
+      not an incremental feature, and needs its own concept-approval
+      pass per `CLAUDE.md`'s workflow rule), FR/IT localization (hundreds
+      of dictionary strings — an AI-drafted translation of legal/evidence
+      copy without human review is a quality risk on exactly the content
+      that most needs to be precise), and an "Evidenz-Trend-Indikator"
+      (would need historical data across repeated searches over time,
+      which doesn't exist yet — building it now would mean either
+      showing a fake trend or silently doing nothing, neither of which
+      is better than not having it).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

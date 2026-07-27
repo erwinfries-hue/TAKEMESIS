@@ -1371,6 +1371,111 @@ false alarms (see below) as well as confirming the real fixes.
   the accumulated changes from this pass. `npm run test:e2e` passes
   55/59, with the 4 failures confirmed pre-existing per above.
 
+### WOW-Zusatzleistungen: marketer brainstorm, then "setze alle um" (Erwin's request)
+Erwin asked for a creative marketing brainstorm of value-add features rated
+by impact/benefit/complexity, then said to implement all of them. Doing all
+~20 to the same tested-and-documented standard as every other feature in one
+pass wasn't realistic without cutting corners — several were self-rated
+"Hoch" complexity or explicitly flagged as needing a real product decision
+first (subscription-adjacent mechanics, new report types, translation
+quality). Built everything that was genuinely buildable now without
+fabricated content or an un-made policy call; deferred the rest with
+reasoning in `OPEN_RISKS.md` #25 rather than rushing or silently skipping
+them.
+
+**Built (13):**
+- **Glossary tooltips in the premium report** (`glossary-term.tsx`, wired
+  into `StudyDesignBadge` and the "Evidenzsicherheit" heading): click/tap
+  popover definitions for every study-design term and two general
+  methodology terms, sourced from a new `glossaryDefinitions` dictionary
+  section — not hover-only, so it works the same on touch.
+- **Publication-year timeline chart** (`publication-timeline-chart.tsx`):
+  a plain-div bar histogram in the Evidence Landscape section, built from
+  `report.comparison`'s per-study years; studies with an unknown year are
+  counted separately in a note rather than silently dropped.
+- **Citation export (BibTeX/RIS)** (`lib/reports/citation-export.ts` +
+  `citation-export-buttons.tsx`): `PremiumSourceEntry` gained structured
+  `authors`/`year`/`title`/`venue` fields (same underlying data the
+  citation string was already built from, just not pre-joined) so export
+  omits unknown fields instead of inventing placeholder text.
+- **Read-aloud** (`read-aloud-button.tsx`): browser-native
+  `SpeechSynthesis` for the Key Findings section; the button itself is
+  omitted (not shown-disabled) when the API or the content isn't there.
+- **Live source-status page** (`source-status-panel.tsx`, added to
+  `/sources` behind `Suspense`): actually calls each of the 4 adapters'
+  existing `checkStatus()` — this was already-built, unused
+  infrastructure (`registry.ts`'s `checkAllSourceStatuses`) that had no
+  UI anywhere until now.
+- **Local search history** (`lib/search-history/local-history.ts`,
+  `recent-searches-panel.tsx`): purely `localStorage`, never sent to the
+  server or analytics, capped at 8, with per-item and clear-all removal.
+  Recorded only on genuinely completed searches (the teaser-shown
+  branch), not on every intermediate state.
+- **Voice input** (`voice-input-button.tsx`): Web Speech API dictation
+  into the own-question textarea; hidden entirely on browsers without the
+  API (currently Firefox) rather than shown-but-broken.
+- **Shareable Evidence Card** (`/api/evidence-card`, `next/og`
+  `ImageResponse`, opt-in link on the free teaser): only ever carries what
+  the user already typed themselves plus the already-public confidence
+  label and topic name — never study titles or anything from the paid
+  report, and only generated when the user clicks "share", never
+  automatically.
+- **Localized emergency contacts**: the high-risk notice's single
+  Switzerland-only hotline became a short, explicitly-labeled
+  non-exhaustive list (CH/DE/AT/US/UK) with a note to look up the local
+  number elsewhere — real, well-established public crisis lines, not
+  invented.
+- **In-report follow-up chat** (`lib/ai/report-chat.ts` +
+  `report-chat-widget.tsx` + `/api/report-chat`): same tool-forced,
+  schema-validated pattern as the existing synthesis/extraction AI
+  modules. The system prompt requires every answer be grounded only in
+  this report's own studies, explicitly refuses to fall back on general
+  knowledge, treats study text as data rather than instructions, and can
+  honestly say "not answerable from this report's studies"
+  (`answerableFromReport: false`) instead of guessing. Gated the same way
+  as the rest of AI enrichment — `AI_EXTRACTION_ENABLED` +
+  `ANTHROPIC_API_KEY` — and only rendered where `PremiumReportView`
+  already appears (the admin preview and the public example-report demo;
+  there's still no live paid-report viewer page, see `OPEN_RISKS.md`
+  #16).
+- **Gift/discount codes at checkout**: `createCheckoutSession` now sets
+  `allow_promotion_codes: true` — Stripe's own native promo-code UI,
+  configured from Erwin's real Dashboard once it exists, rather than a
+  custom code-validation system. A genuine "buy now, redeem later as a
+  gift" flow is a different, bigger feature (its own redemption-token
+  system) and wasn't in scope here.
+- **Admin one-click refund** (`lib/payments/refund.ts`,
+  `lib/admin/payment-actions.ts`, a button on `/admin/payments`): the
+  pre-existing `recordRefundedAction` only ever flipped the *Report's*
+  internal status, on the assumption an admin had already refunded
+  manually in the Stripe Dashboard — it never called Stripe and never
+  touched the `Payment` row's own `refund_pending`/`refunded` status
+  (defined in the schema, never wired to anything). This collapses that
+  two-system manual process into one admin-authenticated action. Still
+  admin-only, never customer-facing self-service, since it moves real
+  money — see the reasoning in the commit/PR, not a silent scope
+  decision.
+- **Interactive methodology calculator** (`methodology-calculator.tsx`
+  on `/methodology`): sliders for included/result-bearing/review-or-meta
+  study counts, live-classified by the *actual* eligibility rule. Required
+  extracting `deriveEligibilityStatus`/`estimateReportDepthFromCounts` as
+  counts-only pure functions out of `eligibility.ts` (`assessEligibility`
+  now calls them too) — a single source of truth shared by the real
+  pipeline and the demo, so the demo can't quietly drift from what a real
+  search actually decides.
+
+**Deferred, with reasoning:** Themen-Digest E-Mail, Evidenz-Update-Check,
+plus the five items already flagged as "bewusst nicht vorgeschlagen" in the
+original brainstorm (Mythen-Rubrik, Entscheidungsassistent,
+Vergleichsrechner, FR/IT, Evidenz-Trend-Indikator) — see `OPEN_RISKS.md`
+#25 for the full reasoning per item.
+
+`npm run lint`, `npm run typecheck`, `npm run test` (326/326),
+`npm run test:integration` (1/1), and `npm run build` all pass clean on the
+accumulated changes. `npm run test:e2e` passed 59/59 on this run — the two
+pre-existing failures tracked in `OPEN_RISKS.md` #24 are intermittent, not
+consistently reproducing every run, and didn't surface this time.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

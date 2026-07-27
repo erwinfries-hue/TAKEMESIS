@@ -7,6 +7,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { topDomainCandidates } from "@/lib/classification/domain";
 import { topics, topicCopy } from "@/content/topics";
+import { VoiceInputButton } from "@/components/voice-input-button";
 
 const SUGGESTION_DEBOUNCE_MS = 400;
 
@@ -87,9 +88,19 @@ function OwnQuestionFormFields({
           card, so both stay structurally symmetric regardless of which
           one ends up taller as content changes. */}
       <div className="flex flex-1 flex-col justify-center gap-3">
-        <label htmlFor="own-question" className="text-sm font-medium text-brand-neutral-950">
-          {dict.ownQuestionForm.label}
-        </label>
+        <div className="flex items-center justify-between gap-2">
+          <label htmlFor="own-question" className="text-sm font-medium text-brand-neutral-950">
+            {dict.ownQuestionForm.label}
+          </label>
+          <VoiceInputButton
+            lang={locale === "de" ? "de-CH" : "en-US"}
+            onResult={(transcript) =>
+              setValue((prev) => (prev.trim().length > 0 ? `${prev} ${transcript}` : transcript))
+            }
+            ariaLabel={dict.ownQuestionForm.voiceInputCta}
+            listeningLabel={dict.ownQuestionForm.voiceInputListening}
+          />
+        </div>
         <textarea
           id="own-question"
           name="q"

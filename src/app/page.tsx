@@ -12,6 +12,7 @@ import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 import { HeroIllustration } from "@/components/hero-illustration";
 import { StudyLookupForm } from "@/components/study-lookup-form";
+import { RecentSearchesPanel } from "@/components/recent-searches-panel";
 
 const TEASER_COUNT = 6;
 
@@ -78,6 +79,7 @@ export default async function Home() {
           </Suspense>
           <StudyLookupForm dict={dict} />
         </div>
+        <RecentSearchesPanel dict={dict} />
       </section>
 
       {/* 4. Curated example-report preview */}
