@@ -1669,6 +1669,47 @@ ursprüngliche Fehlklassifizierungs-/Wörterbuch-Lücke (a/b oben) bleibt eine
 separate, noch offene Beobachtung — kein Blocker, aber ein Kandidat für die
 geplante KI-Rückfalllösung.
 
+### Nachtrag: Erwin testet erneut — Domain-Klassifizierer-Bug gefunden und behoben
+Erwin stellte dieselbe Fringe-Benefits-Frage nochmal (leicht umformuliert,
+mit Mehrfachauswahl "Umwelt, Nachhaltigkeit & Alltag" + "Gesundheit &
+Prävention" gewählt) — wieder "zu wenige Studien gefunden", und "Arbeit,
+Produktivität & Organisation" wurde nicht mal als Kandidat vorgeschlagen.
+Diagnose per direktem Aufruf von `classifyDomain()`: Die Frage matchte
+**nur** die generischen Wörter "haben" und "wirkung" gegen die
+Themen-Indizes — kein einziger inhaltlicher Begriff ("fringe", "benefits",
+"arbeitsplatz", "mitarbeiterzufriedenheit") kommt in irgendeinem der 12
+Themen vor. "Umwelt, Nachhaltigkeit & Alltag" gewann rein zufällig, weil es
+diese zwei bedeutungslosen Wörter am häufigsten in seinen eigenen
+Beispielfragen wiederholt. Derselbe Fehlertyp wie beim Suchanfrage-Bug
+weiter oben (generische Wörter erzeugen Falsch-Treffer), diesmal in
+`classification/domain.ts` statt `search/relevance.ts`/`run-search.ts` —
+dort war das Problem schon einmal gelöst (`relevance.ts`'s
+Konnektor-Wort-Filterung), hier aber nie angewendet worden.
+
+Fix: `domain.ts`s Stopword-Listen um generische Effekt-Nomen erweitert
+("wirkung", "effekt", "einfluss", "nutzen", "auswirkung" + EN-Äquivalente,
+plus "haben"/"hat"/"hatte"/"hatten"). **Bewusst nicht** die Konnektor-*Verben*
+selbst (verbessert, unterstützt, fördert, beeinflusst, …) — ein erster,
+breiterer Versuch (analog zu `relevance.ts`s vollständiger Liste) brach zwei
+bestehende Selbst-Klassifizierungstests (Fragen, die sich correct auf ihr
+eigenes Thema stützten, u. a. weil "verbessert"/"supports" dort als
+legitimes Unterscheidungsmerkmal zählt) — zurückgenommen zugunsten der
+engeren, nur auf die tatsächlich beobachtete Fehlerursache zugeschnittenen
+Lösung. Mit dem engeren Fix: alle 247 Selbst-Klassifizierungs-/Klassifizierer-
+Tests grün, plus 2 neue Regressionstests (der Fringe-Benefits-Fall liefert
+jetzt korrekt eine leere Kandidatenliste → ehrliches "konnten nicht
+zuordnen" mit allen 12 Bereichen zur Auswahl, statt einer falschen
+Vorschlags-Sicherheit). `npm run verify` grün (587 Unit-Tests).
+
+Damit fehlt weiterhin echtes Fachvokabular für Vergütung/Zusatzleistungen in
+keinem der 12 Themen — die Frage würde also weiterhin nicht automatisch
+vorgeschlagen, nur ehrlich als "nicht eindeutig zuordenbar" markiert statt
+falsch zugeordnet. Ob ein neues Beispielfragen-Content-Update für "Arbeit,
+Produktivität & Organisation" sinnvoll ist, bleibt eine separate, noch
+unbeantwortete Frage an Erwin (jede neue Beispielfrage braucht dieselbe
+Recherchierbarkeits-/Evidenz-Prüfung wie die bestehenden 60, nicht einfach
+hinzufügbar).
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

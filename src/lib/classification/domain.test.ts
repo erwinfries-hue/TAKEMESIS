@@ -29,4 +29,22 @@ describe("classifyDomain", () => {
     );
     expect(candidates.length).toBeLessThanOrEqual(3);
   });
+
+  it("does not let an off-topic question win purely on generic connector words (live production case, 2026-07-27)", () => {
+    // "haben" and "wirkung" recur across nearly every topic's own example
+    // questions — before this fix, a question about a subject no topic
+    // covers ("fringe benefits"/"Mitarbeiterzufriedenheit") still scored a
+    // false-confidence top match on Umwelt & Nachhaltigkeit purely because
+    // it happened to share those two generic words.
+    const scores = classifyDomain(
+      "welche fringe benefits haben am Arbeitsplatz die grösste wirkung auf die mitarbeiterzufriedenheit?",
+      "de",
+    );
+    expect(scores).toEqual([]);
+  });
+
+  it("still classifies correctly once the generic connector word is set aside — the real subject term carries the match", () => {
+    const scores = classifyDomain("Welche Wirkung hat Krafttraining auf Kraftzuwachs?", "de");
+    expect(scores[0]?.slug).toBe("fitness-leistungsfaehigkeit");
+  });
 });

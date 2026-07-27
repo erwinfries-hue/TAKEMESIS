@@ -15,12 +15,25 @@ const STOPWORDS_DE = new Set([
   "oder", "der", "die", "das", "den", "dem", "des", "ein", "eine", "einen",
   "einem", "im", "in", "auf", "zu", "bei", "von", "mit", "nicht", "sich",
   "werden", "wird", "kann", "können", "am", "an", "als", "um", "durch",
+  "haben", "hat", "hatte", "hatten",
+  // Generic effect-nouns, not the connector verbs themselves (those still
+  // carry legitimate self-referential signal in this term-frequency
+  // classifier — e.g. "verbessert" is part of what correctly identifies a
+  // topic's own example question). "Welche Wirkung hat X auf Y?" templates
+  // recur across nearly every topic, so "wirkung" alone is noise; a live
+  // production case (2026-07-27) showed an unrelated topic winning purely
+  // on "haben"+"wirkung" overlap while the question's actual subject
+  // matched no topic at all.
+  "wirkung", "wirkungen", "effekt", "effekte", "einfluss", "nutzen",
+  "auswirkung", "auswirkungen",
 ]);
 
 const STOPWORDS_EN = new Set([
   "which", "what", "how", "is", "are", "for", "and", "or", "the", "a", "an",
   "of", "in", "on", "to", "at", "by", "with", "not", "do", "does", "can",
-  "that", "this", "your", "you",
+  "that", "this", "your", "you", "have", "has", "had",
+  // English counterpart to the German effect-nouns above — same rationale.
+  "effect", "effects", "influence", "impact", "impacts",
 ]);
 
 function tokenize(text: string, locale: Locale): string[] {
