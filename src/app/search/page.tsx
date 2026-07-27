@@ -202,7 +202,13 @@ export default async function SearchPage({
     );
   }
 
-  const searchResult = await runSearch(question, confirmedTopic.slug, filters, seedDoi ?? undefined);
+  const searchResult = await runSearch(
+    question,
+    confirmedTopic.slug,
+    locale,
+    filters,
+    seedDoi ?? undefined,
+  );
   const allSourcesFailed =
     searchResult.perSource.length > 0 && searchResult.perSource.every((status) => !status.ok);
 

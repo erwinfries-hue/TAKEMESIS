@@ -30,7 +30,7 @@ export default async function AdminReportPreviewPage({
 
   let reportView = null;
   if (question && domain) {
-    const searchResult = await runSearch(question, domain);
+    const searchResult = await runSearch(question, domain, locale);
     const eligibility = assessEligibility(searchResult);
     const baseReport = buildPremiumReportData({ searchResult, eligibility, locale });
     const detailedRecords = searchResult.detailed.map((scored) => scored.deduped.record);

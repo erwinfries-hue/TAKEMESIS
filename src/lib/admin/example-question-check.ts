@@ -38,7 +38,7 @@ export async function checkExampleQuestionsForTopicWithAdapters(
 
   const results: ExampleQuestionCheckResult[] = [];
   for (const question of copy.examples) {
-    const searchResult = await runSearchWithAdapters(question, topicSlug, adapters);
+    const searchResult = await runSearchWithAdapters(question, topicSlug, adapters, locale);
     const eligibility = assessEligibility(searchResult);
     results.push({
       question,

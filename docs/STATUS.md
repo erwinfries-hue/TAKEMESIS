@@ -1556,6 +1556,63 @@ roher Abstracts (Lizenz-Vorsicht), Phasierung und offene Fragen für Erwin.
 **Nicht implementiert** — reines Konzept-Dokument, wartet auf Freigabe per
 `CLAUDE.md`'s "No implementation before concept approval".
 
+### Studien-Wissensspeicher implementiert, Phase A (Erwin approved)
+Erwin gab grünes Licht ohne die einzelnen offenen Fragen aus §5 des
+Konzeptdokuments zu beantworten — die bleiben offen, insbesondere die
+Source-ToS-Prüfung. Umgesetzt: `studies`-Tabelle exakt nach Skizze
+(`supabase/migrations/20260727090000_add_studies_cache.sql`),
+`src/lib/studies/` (Repository-Interface, In-Memory- und
+Supabase-Implementierung), Read-through-Cache in
+`src/lib/ai/report-enrichment.ts` (Cache-Hit überspringt den Anthropic-Aufruf,
+Cache-Miss extrahiert live und schreibt fire-and-forget zurück, Cache-Fehler
+werden abgefangen und geloggt statt propagiert). `npm run verify` grün.
+Bekannte Lücke, im Konzeptdokument vermerkt: `report-enrichment.ts` wird
+aktuell nur von `/example-report` und der Admin-Vorschau aufgerufen — es gibt
+noch keine echte Live-Pipeline für bezahlte Reports, die den Cache mit echtem
+Traffic füllen würde.
+
+### Erwin richtet echten ANTHROPIC_API_KEY ein — dabei kritischer Live-Bug gefunden und behoben
+Erwin hat einen echten Anthropic-API-Key besorgt und in Vercel unter
+`ANTHROPIC_API_KEY` (Production Environment Variables) hinterlegt — Anleitung
+dazu in `docs/ANTHROPIC_API_KEY_ANLEITUNG.md`. `AI_EXTRACTION_ENABLED` bleibt
+bewusst `false`, bis eine echte Report-Pipeline existiert, die es nutzt (siehe
+oben). Verifikation der KI-Anbindung selbst konnte nicht von dieser Session
+aus erfolgen — die Sandbox blockiert ausgehende Verbindungen zu beliebigen
+externen Domains (Egress-Policy, bestätigt über die Proxy-Diagnose); Erwin
+prüfte stattdessen selbst über `/example-report` im Browser.
+
+Beim Versuch, live einen echten Report über `/search` zu erzeugen, scheiterten
+3 von 3 ausprobierten Fragen (aus der Auswahl der 60 Beispielfragen) mit "zu
+wenige vergleichbare Studien gefunden". Die Live-Status-Seite (`/sources`)
+zeigte alle 4 Datenquellen als erreichbar — kein Netzwerk-/Konnektivitätsproblem.
+
+**Root cause gefunden:** Kein Adapter (OpenAlex, Crossref, Europe PMC, NCBI)
+hatte jemals eine Übersetzung oder Stichwort-Extraktion vor dem Absenden der
+Suchanfrage — die rohe, oft deutsche Frage ging wortwörtlich als `query`/
+`search`/`term`-Parameter an alle 4 APIs. Diese Datenbanken sind faktisch
+englischsprachig indexiert; ein deutscher Fragesatz (inkl. Füllwörtern)
+findet dort praktisch nie etwas. Betraf jede deutsche Suche seit Phase 4–6 —
+nie aufgefallen, weil alle bisherigen Tests (inkl. des Live-Verify-Admin-Tools
+aus Task #86) entweder gegen gemockte Adapter liefen oder nie tatsächlich mit
+echtem Netzwerkzugriff ausgeführt wurden.
+
+**Fix (Erwins Entscheidung: Wörterbuch zuerst, KI-Rückfalllösung als
+separater, eigens freizugebender zweiter Schritt später):**
+`src/lib/search/de-en-dictionary.ts` (kuratiertes DE→EN-Fachbegriff-Wörterbuch,
+~250 Einträge, aus den bereits vorhandenen zweisprachigen Themen-Texten in
+`content/topics.ts` plus allgemeinem Fachvokabular abgeleitet) +
+`src/lib/search/query-translation.ts` (`buildSearchQuery(question, locale)`:
+tokenisiert, übersetzt erkannte deutsche Begriffe, lässt unbekannte/bereits
+englische Begriffe unverändert durch, entfernt Füllwörter). `runSearch`/
+`runSearchWithAdapters` (neuer `locale`-Parameter) übergeben jetzt die
+übersetzte Anfrage an die 4 Adapter — die Original-Frage bleibt unverändert
+für Anzeige, Relevanzprüfung und künftige KI-Auswertung erhalten. Kein neuer
+Kostenfaktor, keine neue Umgebungsvariable, funktioniert unabhängig vom
+Anthropic-Key. `npm run verify` grün (581 Unit-Tests, +7 neue). Die
+KI-Rückfalllösung (eigener Schalter `AI_QUERY_TRANSLATION_ENABLED`, nur
+ausgelöst wenn die Wörterbuch-Suche zu wenige Treffer liefert) ist noch nicht
+gebaut — nächster Schritt auf Erwins Zuruf.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

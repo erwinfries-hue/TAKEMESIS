@@ -35,6 +35,7 @@ describe("runSearchWithAdapters", () => {
       "spaced repetition active recall study",
       "lernen-bildung",
       [a, b],
+      "en",
     );
 
     expect(result.candidateCount).toBe(2);
@@ -56,7 +57,7 @@ describe("runSearchWithAdapters", () => {
     const result = await runSearchWithAdapters("Fixture Study", "lernen-bildung", [
       working,
       broken,
-    ]);
+    ], "en");
 
     expect(result.includedCount).toBe(1);
     const crossrefStatus = result.perSource.find((s) => s.source === "crossref");
@@ -70,7 +71,7 @@ describe("runSearchWithAdapters", () => {
     const a = fakeAdapter("openalex", { records: [duplicate, retracted] });
     const b = fakeAdapter("crossref", { records: [{ ...duplicate, source: "crossref" }] });
 
-    const result = await runSearchWithAdapters("study", "lernen-bildung", [a, b]);
+    const result = await runSearchWithAdapters("study", "lernen-bildung", [a, b], "en");
 
     expect(result.candidateCount).toBe(3);
     expect(result.duplicatesRemoved).toBe(1);
@@ -84,7 +85,7 @@ describe("runSearchWithAdapters", () => {
     );
     const a = fakeAdapter("openalex", { records: many });
 
-    const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a]);
+    const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a], "en");
 
     expect(result.rankedIncluded.length).toBe(DETAILED_RESULTS_CAP + 5);
     expect(result.detailed.length).toBe(DETAILED_RESULTS_CAP);
@@ -92,7 +93,7 @@ describe("runSearchWithAdapters", () => {
 
   it("records the screening version and search date", async () => {
     const a = fakeAdapter("openalex", { records: [] });
-    const result = await runSearchWithAdapters("x", "lernen-bildung", [a]);
+    const result = await runSearchWithAdapters("x", "lernen-bildung", [a], "en");
     expect(result.screeningVersion).toBe("screening-v2");
     expect(() => new Date(result.searchDate).toISOString()).not.toThrow();
   });
@@ -101,7 +102,7 @@ describe("runSearchWithAdapters", () => {
     const a = fakeAdapter("openalex", {
       records: [makeRecord({ year: 1999, publicationType: "case_report" })],
     });
-    const result = await runSearchWithAdapters("study", "lernen-bildung", [a]);
+    const result = await runSearchWithAdapters("study", "lernen-bildung", [a], "en");
     expect(result.filtersApplied).toEqual(NO_FILTERS);
     expect(result.excludedByFilterCount).toBe(0);
     expect(result.includedCount).toBe(1);
@@ -126,7 +127,7 @@ describe("runSearchWithAdapters", () => {
     });
     const a = fakeAdapter("openalex", { records: [recentRct, oldRct, recentCohort] });
 
-    const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a], {
+    const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a], "en", {
       maxAgeYears: 5,
       studyTypes: ["rct"],
     });
@@ -146,6 +147,7 @@ describe("runSearchWithAdapters", () => {
       "spaced repetition",
       "lernen-bildung",
       [a],
+      "en",
       NO_FILTERS,
       "10.1000/seed-study",
     );
@@ -163,6 +165,7 @@ describe("runSearchWithAdapters", () => {
       "seed study topic",
       "lernen-bildung",
       [a],
+      "en",
       NO_FILTERS,
       "https://doi.org/10.1000/seed-study",
     );
@@ -172,7 +175,7 @@ describe("runSearchWithAdapters", () => {
 
   it("does not filter anything when excludeDoi is omitted, even for records with a null doi", async () => {
     const a = fakeAdapter("openalex", { records: [makeRecord({ doi: null })] });
-    const result = await runSearchWithAdapters("x", "lernen-bildung", [a]);
+    const result = await runSearchWithAdapters("x", "lernen-bildung", [a], "en");
     expect(result.candidateCount).toBe(1);
   });
 });

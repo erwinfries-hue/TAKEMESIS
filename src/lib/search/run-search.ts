@@ -1,10 +1,12 @@
 import "server-only";
+import type { Locale } from "@/lib/i18n/config";
 import { adaptersForTopic } from "@/lib/source-adapters/registry";
 import type { NormalizedRecord, SourceAdapter, SourceId } from "@/lib/source-adapters/types";
 import { dedupeRecords, normalizeDoi } from "./dedupe";
 import { screenRecords, SCREENING_VERSION, type ExclusionReason } from "./screening";
 import { rankRecords, type ScoredRecord } from "./ranking";
 import { applyFilters, NO_FILTERS, type SearchFilters } from "./filters";
+import { buildSearchQuery } from "./query-translation";
 
 /** Decision #8: max 15 studies in the detailed comparison/profile sections. */
 export const DETAILED_RESULTS_CAP = 15;
@@ -53,6 +55,7 @@ export async function runSearchWithAdapters(
   question: string,
   topicSlug: string,
   adapters: SourceAdapter[],
+  locale: Locale,
   filters: SearchFilters = NO_FILTERS,
   /**
    * Omits a specific DOI from the candidate pool entirely (before
@@ -67,6 +70,10 @@ export async function runSearchWithAdapters(
   const perSource: PerSourceResult[] = [];
   const allRecords: NormalizedRecord[] = [];
   const normalizedExcludeDoi = excludeDoi ? normalizeDoi(excludeDoi) : null;
+  // Only the string sent to the 4 external adapters changes — display,
+  // screening relevance, and everything else downstream keeps using the
+  // original `question` (see query-translation.ts's module doc).
+  const sourceQuery = buildSearchQuery(question, locale);
 
   // Each source's failure is isolated — one adapter being down must not
   // prevent results from the others (docs/10, "Resilience").
@@ -74,7 +81,7 @@ export async function runSearchWithAdapters(
     adapters.map(async (adapter) => {
       try {
         const records = (
-          await adapter.search({ query: question, limit: DETAILED_RESULTS_CAP })
+          await adapter.search({ query: sourceQuery, limit: DETAILED_RESULTS_CAP })
         ).filter(
           (record) => normalizedExcludeDoi === null || normalizeDoi(record.doi) !== normalizedExcludeDoi,
         );
@@ -125,8 +132,16 @@ export async function runSearchWithAdapters(
 export async function runSearch(
   question: string,
   topicSlug: string,
+  locale: Locale,
   filters: SearchFilters = NO_FILTERS,
   excludeDoi?: string,
 ): Promise<SearchRunResult> {
-  return runSearchWithAdapters(question, topicSlug, adaptersForTopic(topicSlug), filters, excludeDoi);
+  return runSearchWithAdapters(
+    question,
+    topicSlug,
+    adaptersForTopic(topicSlug),
+    locale,
+    filters,
+    excludeDoi,
+  );
 }
