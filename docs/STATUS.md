@@ -1753,6 +1753,28 @@ bevor diese neue Beispielfrage mit derselben Sicherheit wie die anderen 60
 gelten kann. `npm run verify` grün (593 Unit-Tests) plus alle 60 E2E-Tests
 und ein produktiver Build.
 
+### Erwin führt den ausstehenden Live-Check für die neue Beispielfrage durch
+Nach Einrichtung des Admin-Zugangs (`ADMIN_AUTH_SECRET`/`ADMIN_EMAILS` in
+Vercel gesetzt) lief Erwin `/admin/example-questions` für "Arbeit,
+Produktivität & Organisation" gegen die echten 4 Quellen — in beiden
+Sprachen:
+
+- **DE:** alle 6 Fragen "Eignet sich" (5× uneingeschränkt, "Welche
+  Meetingformate sind effizienter?" weiterhin "mit Einschränkungen", wie
+  bei allen anderen Themen üblich). Die neue Frage "Welche Zusatzleistungen
+  verbessern die Mitarbeiterzufriedenheit am stärksten?" → 25 eingeschlossen,
+  17 ergebnistragend, eignet sich.
+- **EN:** ebenfalls alle 6 "Eignet sich". "Which employee benefits most
+  improve job satisfaction?" → 27 eingeschlossen, 18 ergebnistragend.
+- Keine Quellenfehler in beiden Läufen.
+
+Damit ist die zuvor offen gelassene Recherchierbarkeits-/Evidenz-Prüfung
+(Broad-Domain-Regel) für die 6. Beispielfrage jetzt echt live bestätigt,
+nicht nur fachlich plausibilisiert — und die bestehenden 5 Fragen zeigen
+keine Regression durch die Wörterbuch-/Klassifizierer-Änderungen dieser
+Session. Damit ist auch der zuvor letzte offene Punkt aus dem
+"Admin tool: live-verify example questions"-Abschnitt abgeschlossen.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
