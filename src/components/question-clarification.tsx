@@ -69,11 +69,18 @@ export function QuestionClarification({
             key={option.slug}
             className="flex items-center gap-2 rounded-lg border border-brand-neutral-200 px-3 py-2 text-sm has-[:checked]:border-brand-teal-600 has-[:checked]:bg-brand-teal-100"
           >
-            <input type="radio" name="domain" value={option.slug} defaultChecked={index === 0} />
+            <input
+              type="checkbox"
+              name="domain"
+              value={option.slug}
+              defaultChecked={index === 0}
+              className="h-4 w-4 rounded border-brand-neutral-200 text-brand-teal-600 focus:ring-brand-teal-400"
+            />
             {option.name}
           </label>
         ))}
       </fieldset>
+      <p className="text-xs text-brand-neutral-600">{dict.searchPage.clarificationMultiSelectHint}</p>
 
       <div className="flex flex-col gap-3 border-t border-brand-neutral-200 pt-4">
         <h3 className="text-sm font-semibold text-brand-navy-900">{dict.searchFilters.heading}</h3>

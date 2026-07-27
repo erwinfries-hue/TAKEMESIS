@@ -306,6 +306,7 @@
     ],
     "clarificationHeading": "We're assigning your question to this domain",
     "clarificationIntro": "This assignment is based on a rule-based analysis of your input — not yet a full AI-powered interpretation. Please confirm the domain or choose a different one.",
+    "clarificationMultiSelectHint": "Does your question span two domains? You can select up to 2 at once.",
     "notClassifiedHeading": "We couldn't clearly assign your question to a domain",
     "notClassifiedBody": "Please choose the most fitting domain yourself.",
     "confirmButton": "Confirm and search sources",

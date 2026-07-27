@@ -8,7 +8,8 @@ import { detectHighRisk } from "@/lib/classification/high-risk";
 import { topDomainCandidates } from "@/lib/classification/domain";
 import { HighRiskNotice } from "@/components/high-risk-notice";
 import { QuestionClarification, type CandidateOption } from "@/components/question-clarification";
-import { runSearch } from "@/lib/search/run-search";
+import { runSearchWithAdapters } from "@/lib/search/run-search";
+import { adaptersForTopics } from "@/lib/source-adapters/registry";
 import { parseFiltersFromParams } from "@/lib/search/filters";
 import { parseDoiInput } from "@/lib/search/study-lookup";
 import { lookupByDoi } from "@/lib/source-adapters/crossref";
@@ -34,12 +35,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: `${dict.searchPage.heading} — ${dict.brand.name}` };
 }
 
+/** A question can span at most this many domains at once — more would dilute focus and unnecessarily broaden the source query. */
+const MAX_SELECTED_DOMAINS = 2;
+
 export default async function SearchPage({
   searchParams,
 }: {
   searchParams: Promise<{
     q?: string;
-    domain?: string;
+    domain?: string | string[];
     maxAgeYears?: string;
     studyTypeGroup?: string | string[];
     doi?: string;
@@ -136,9 +140,17 @@ export default async function SearchPage({
     );
   }
 
-  const confirmedTopic = domain ? getTopic(domain) : undefined;
+  // Deduplicated, capped at MAX_SELECTED_DOMAINS, invalid slugs dropped —
+  // a user who (or a form that) checks more than the cap just has the
+  // extras silently ignored rather than erroring; this is a search-quality
+  // knob, not a hard validation boundary.
+  const requestedDomains = Array.isArray(domain) ? domain : domain ? [domain] : [];
+  const confirmedTopics = Array.from(new Set(requestedDomains))
+    .map((slug) => getTopic(slug))
+    .filter((topic): topic is NonNullable<typeof topic> => topic !== undefined)
+    .slice(0, MAX_SELECTED_DOMAINS);
 
-  if (!confirmedTopic) {
+  if (confirmedTopics.length === 0) {
     const candidateScores = topDomainCandidates(question, locale);
     const candidates: CandidateOption[] = candidateScores.map((score) => {
       const topic = topics.find((t) => t.slug === score.slug)!;
@@ -173,15 +185,20 @@ export default async function SearchPage({
     );
   }
 
-  // Domain confirmed — record this regardless of the rate-limit outcome
-  // below, since it reflects genuine visitor interest in the domain, not
-  // just successful searches; feeds the /topics "N questions already
-  // asked" social-proof line once a domain crosses SOCIAL_PROOF_MIN_COUNT.
-  // Awaited (not fire-and-forget): on a serverless platform, an un-awaited
-  // promise can be cut off once the response is sent. track() never throws
-  // even if Supabase is unreachable (see analytics/track.ts), so this never
-  // breaks the page — it only ever adds a small, bounded delay.
-  await track({ eventName: "domain_classified", metadata: { domainSlug: confirmedTopic.slug } });
+  // Domain(s) confirmed — record one event per selected domain, regardless
+  // of the rate-limit outcome below, since it reflects genuine visitor
+  // interest, not just successful searches; feeds the /topics "N questions
+  // already asked" social-proof line and "trending topics" once a domain
+  // crosses SOCIAL_PROOF_MIN_COUNT. Awaited (not fire-and-forget): on a
+  // serverless platform, an un-awaited promise can be cut off once the
+  // response is sent. track() never throws even if Supabase is unreachable
+  // (see analytics/track.ts), so this never breaks the page — it only ever
+  // adds a small, bounded delay.
+  await Promise.all(
+    confirmedTopics.map((topic) =>
+      track({ eventName: "domain_classified", metadata: { domainSlug: topic.slug } }),
+    ),
+  );
 
   // Domain confirmed: check the free-search limit (decision #7) right before
   // the costly step — the classification/clarification above is free/local.
@@ -202,9 +219,14 @@ export default async function SearchPage({
     );
   }
 
-  const searchResult = await runSearch(
+  // `topicSlug` on the result is bookkeeping only (cache tagging, admin
+  // display) — not consumed for eligibility/ranking — so the first
+  // confirmed domain stands in as "primary" while the adapter list already
+  // covers every selected domain's sources.
+  const searchResult = await runSearchWithAdapters(
     question,
-    confirmedTopic.slug,
+    confirmedTopics[0].slug,
+    adaptersForTopics(confirmedTopics.map((topic) => topic.slug)),
     locale,
     filters,
     seedDoi ?? undefined,
@@ -212,8 +234,15 @@ export default async function SearchPage({
   const allSourcesFailed =
     searchResult.perSource.length > 0 && searchResult.perSource.every((status) => !status.ok);
 
+  const domainParams = (base: URLSearchParams) => {
+    for (const topic of confirmedTopics) {
+      base.append("domain", topic.slug);
+    }
+    return base;
+  };
+
   if (allSourcesFailed) {
-    const retryParams = new URLSearchParams({ q: question, domain: confirmedTopic.slug });
+    const retryParams = domainParams(new URLSearchParams({ q: question }));
     if (maxAgeYears) retryParams.set("maxAgeYears", maxAgeYears);
     if (rawDoi) retryParams.set("doi", rawDoi);
     for (const group of Array.isArray(studyTypeGroup) ? studyTypeGroup : studyTypeGroup ? [studyTypeGroup] : []) {
@@ -238,13 +267,13 @@ export default async function SearchPage({
 
   const teaser = buildTeaserData(searchResult, eligibility);
   const priceConfig = getPriceConfig();
-  const topicName = topicCopy(confirmedTopic, locale).name;
-  const historyHref = `/search?${new URLSearchParams({ q: question, domain: confirmedTopic.slug }).toString()}`;
+  const topicName = confirmedTopics.map((topic) => topicCopy(topic, locale).name).join(" / ");
+  const historyHref = `/search?${domainParams(new URLSearchParams({ q: question })).toString()}`;
 
   return (
     <main className="flex flex-1 flex-col items-center gap-8 px-6 py-16 sm:px-10">
       <RecordSearchHistory question={question} href={historyHref} />
-      {confirmedTopic.riskProfile === "elevated" && (
+      {confirmedTopics.some((topic) => topic.riskProfile === "elevated") && (
         <p className="w-full max-w-3xl rounded-lg bg-brand-warning-100 p-3 text-sm text-brand-warning-600">
           {dict.ownQuestionForm.warningHealth}
         </p>

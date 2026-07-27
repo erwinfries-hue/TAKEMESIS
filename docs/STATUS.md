@@ -1630,6 +1630,45 @@ Regressionstest in `run-search.test.ts` deckt den vollen Pfad ab (deutsche
 Frage → englischsprachiger Fund → tatsächlich eingeschlossen). `npm run
 verify` grün (582 Unit-Tests). Noch nicht erneut von Erwin live bestätigt.
 
+### Erwin bestätigt den Fix live, dann: Mehrfachauswahl von Themenbereichen (Erwin's request)
+Beide Fixes oben funktionieren — Erwin bestätigte live mit derselben
+Koffein/Schlaf-Frage: 56 Treffer, 36 eingeschlossen, drei klar passende
+2025er-Studien in der Vorschau. Ein zweiter Test mit einer eigenen,
+domänenübergreifenden Frage ("fringe benefits" / Mitarbeiterzufriedenheit
+unter "Gesundheit & Prävention") lieferte schwächere, aber ehrlich als
+"Begrenzte Evidenzsicherheit" gekennzeichnete Ergebnisse — kein Regressions-
+Bug, sondern zwei echte, separate Beobachtungen: (a) mögliche
+Fehlklassifizierung des Themenbereichs (HR-Frage landete unter dem
+biomedizinischen Bereich, der primär PubMed/Europe PMC statt OpenAlex
+abfragt) und (b) eine Wörterbuch-Lücke ("Mitarbeiterzufriedenheit" als
+zusammengesetztes Wort nicht enthalten).
+
+Erwin schlug vor, bei der Themen-Klärung eine Mehrfachauswahl (statt nur
+einer Radio-Button-Wahl) zu erlauben — hätte das Fringe-Benefits-Beispiel
+durch Kombination beider Quellenrouten direkt gelöst. Umgesetzt mit von
+Erwin bestätigten Defaults:
+
+- Max. 2 gleichzeitig wählbare Bereiche (`MAX_SELECTED_DOMAINS` in
+  `src/app/search/page.tsx`); Checkboxen statt Radio-Buttons in
+  `question-clarification.tsx`, weiterhin ohne Client-JS (reines GET-Formular).
+- `adaptersForTopics()` (neu, `source-adapters/registry.ts`) — Vereinigung
+  der Quellenrouten aller gewählten Bereiche, dedupliziert nach Adapter-ID.
+- Report/Teaser zeigen beide Themennamen (`" / "`-getrennt); der
+  "erhöhtes Risiko"-Hinweis erscheint, wenn mindestens ein gewählter Bereich
+  `riskProfile: "elevated"` ist.
+- `domain_classified`-Analytics-Event wird für jeden gewählten Bereich
+  einzeln aufgezeichnet, zählt also für beide in "Meistgefragte Themen".
+- `SearchRunResult.topicSlug` bleibt bewusst einwertig (nur Cache-Tagging/
+  Admin-Anzeige, nicht eligibility-relevant) — der erste gewählte Bereich
+  dient als "primär", während die Quellenabfrage bereits beide abdeckt.
+
+`npm run verify` grün (585 Unit-Tests) plus alle 22 E2E-Tests in
+`e2e/search.spec.ts` (inkl. neuem Mehrfachauswahl-Test und einem a11y-Check),
+da die Radio→Checkbox-Änderung zwei bestehende E2E-Assertions betraf. Die
+ursprüngliche Fehlklassifizierungs-/Wörterbuch-Lücke (a/b oben) bleibt eine
+separate, noch offene Beobachtung — kein Blocker, aber ein Kandidat für die
+geplante KI-Rückfalllösung.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

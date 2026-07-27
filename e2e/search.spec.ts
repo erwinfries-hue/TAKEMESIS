@@ -93,7 +93,7 @@ test("a high-risk question is restricted, not classified", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "Diese Frage können wir nicht automatisiert einordnen" }),
   ).toBeVisible();
-  await expect(page.getByRole("radio")).toHaveCount(0);
+  await expect(page.locator('input[name="domain"]')).toHaveCount(0);
 });
 
 test("a question with no keyword matches falls back to the full topic list", async ({
@@ -103,7 +103,22 @@ test("a question with no keyword matches falls back to the full topic list", asy
   await expect(
     page.getByRole("heading", { name: "Wir konnten deine Frage keinem Bereich eindeutig zuordnen" }),
   ).toBeVisible();
-  await expect(page.getByRole("radio")).toHaveCount(12);
+  // Domain options are checkboxes (multi-select) — scoped by name so this
+  // doesn't also pick up the unrelated study-type-filter checkboxes below.
+  await expect(page.locator('input[name="domain"]')).toHaveCount(12);
+});
+
+test("selecting two domains carries both through as separate domain params", async ({ page }) => {
+  // No-keyword-match question so the full 12-topic fallback list renders —
+  // guarantees both labels used below are present, unlike relying on
+  // whichever 3 candidates the classifier happens to rank for a real question.
+  await page.goto("/search?q=" + encodeURIComponent("qwertyzzz foobarbaz"));
+  await page.getByLabel("Gesundheit & Prävention").check();
+  await page.getByLabel("Fitness & körperliche Leistungsfähigkeit").check();
+  await page.getByRole("button", { name: "Bestätigen und Quellen durchsuchen" }).click();
+
+  const url = new URL(page.url());
+  expect(url.searchParams.getAll("domain").length).toBe(2);
 });
 
 test("/search without a question prompts to go back to topics", async ({ page }) => {

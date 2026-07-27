@@ -52,6 +52,26 @@ export function adaptersForTopic(slug: string): SourceAdapter[] {
   return TOPIC_ROUTES[slug] ?? BROAD_ROUTE;
 }
 
+/**
+ * Union of routes across multiple confirmed topics (multi-domain question
+ * clarification), deduplicated by adapter identity and order-preserving —
+ * a source already pulled in by an earlier slug's route isn't queried
+ * twice. A single slug behaves identically to `adaptersForTopic`.
+ */
+export function adaptersForTopics(slugs: string[]): SourceAdapter[] {
+  const seen = new Set<string>();
+  const combined: SourceAdapter[] = [];
+  for (const slug of slugs) {
+    for (const adapter of adaptersForTopic(slug)) {
+      if (!seen.has(adapter.capabilities.id)) {
+        seen.add(adapter.capabilities.id);
+        combined.push(adapter);
+      }
+    }
+  }
+  return combined;
+}
+
 export async function checkAllSourceStatuses(): Promise<SourceStatus[]> {
   return Promise.all(allAdapters.map((adapter) => adapter.checkStatus()));
 }

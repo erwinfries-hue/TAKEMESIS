@@ -309,6 +309,7 @@
     ],
     "clarificationHeading": "Wir ordnen deine Frage folgendem Bereich zu",
     "clarificationIntro": "Diese Zuordnung basiert auf einer regelbasierten Analyse deiner Eingabe — noch nicht auf einer vollständigen KI-gestützten Interpretation. Bitte bestätige den Bereich oder wähle einen anderen.",
+    "clarificationMultiSelectHint": "Betrifft deine Frage zwei Bereiche? Du kannst bis zu 2 gleichzeitig auswählen.",
     "notClassifiedHeading": "Wir konnten deine Frage keinem Bereich eindeutig zuordnen",
     "notClassifiedBody": "Bitte wähle selbst den passendsten Bereich.",
     "confirmButton": "Bestätigen und Quellen durchsuchen",
