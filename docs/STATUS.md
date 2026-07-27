@@ -1542,6 +1542,20 @@ Kleinigkeiten:
   braucht echten Netzwerkzugriff zu den 4 Quellen. Siehe
   `OPEN_RISKS.md` #26.
 
+### Konzept: wachsender Studien-Wissensspeicher (Erwin's request, not implemented)
+Erwin fragte, wie ich die Idee eines dynamisch aktualisierten Verzeichnisses
+aller Studien beurteile. Antwort: als "alle Studien" nicht sinnvoll (siehe
+Chat — das wäre der Aufbau einer Konkurrenz-Datenbank zu OpenAlex/Crossref/
+Europe PMC/NCBI, widerspricht der bewussten "kein eigener Korpus,
+Live-Suche"-Architektur). Die kleinere, sinnvolle Variante — nur bereits
+durch echte TEKMESIS-Suchen gefundene Studien lokal cachen, primär für
+KI-Extraktions-Kosten/Konsistenz, nie als Ersatz für die Live-Suche — wurde
+auf Wunsch in `docs/CONCEPT_STUDY_KNOWLEDGE_BASE.md` ausgearbeitet:
+Datenmodell, Speicherwachstums-Schätzung, bewusster Verzicht auf das Cachen
+roher Abstracts (Lizenz-Vorsicht), Phasierung und offene Fragen für Erwin.
+**Nicht implementiert** — reines Konzept-Dokument, wartet auf Freigabe per
+`CLAUDE.md`'s "No implementation before concept approval".
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
