@@ -202,6 +202,13 @@ export const DE_EN_DICTIONARY: Record<string, string> = {
   konzentration: "concentration",
   arbeit: "work",
   organisation: "organization",
+  arbeitsplatz: "workplace",
+  zusatzleistungen: "employee benefits",
+  zusatzleistung: "employee benefit",
+  mitarbeiterzufriedenheit: "job satisfaction",
+  vergütung: "compensation",
+  gehalt: "salary",
+  lohn: "wage",
 
   // Psychologie, Wohlbefinden & Gewohnheiten / Psychology, Well-being & Habits
   gewohnheiten: "habits",

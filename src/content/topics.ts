@@ -198,26 +198,30 @@ export const topics: Topic[] = [
     sourceRoute: "OpenAlex (primär) · Crossref (ergänzend)",
     de: {
       name: "Arbeit, Produktivität & Organisation",
-      description: "Fragen zu Arbeitsformen, Produktivität und Organisation im Berufsalltag.",
+      description:
+        "Fragen zu Arbeitsformen, Produktivität, Vergütung/Zusatzleistungen und Organisation im Berufsalltag.",
       examples: [
         "Wie beeinflusst Homeoffice die Produktivität?",
         "Welche Meetingformate sind effizienter?",
         "Unterstützen Fokuszeiten die Arbeitsleistung?",
         "Welche Arbeitszeitmodelle verbessern Leistung und Wohlbefinden?",
         "Wie wirken sich Unterbrechungen auf konzentrierte Arbeit aus?",
+        "Welche Zusatzleistungen verbessern die Mitarbeiterzufriedenheit am stärksten?",
       ],
       limitations:
         "Ergebnisse sind stark kontextabhängig (Branche, Rolle, Unternehmenskultur) und nicht universell übertragbar.",
     },
     en: {
       name: "Work, Productivity & Organization",
-      description: "Questions about work formats, productivity, and organization at work.",
+      description:
+        "Questions about work formats, productivity, compensation/benefits, and organization at work.",
       examples: [
         "How does remote work affect productivity?",
         "Which meeting formats are more efficient?",
         "Do focus blocks support work performance?",
         "Which work-time models improve performance and well-being?",
         "How do interruptions affect focused work?",
+        "Which employee benefits most improve job satisfaction?",
       ],
       limitations:
         "Results are highly context-dependent (industry, role, company culture) and don't transfer universally.",

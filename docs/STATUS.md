@@ -1710,6 +1710,49 @@ unbeantwortete Frage an Erwin (jede neue Beispielfrage braucht dieselbe
 Recherchierbarkeits-/Evidenz-Prüfung wie die bestehenden 60, nicht einfach
 hinzufügbar).
 
+### Erwin bestätigt den Klassifizierer-Fix live, dann: Vergütungs-/Zusatzleistungs-Lücke geschlossen (Erwin's request)
+Erwin bestätigte live: dieselbe Frage (mit Mehrfachauswahl "Umwelt,
+Nachhaltigkeit & Alltag" + "Gesundheit & Prävention") liefert jetzt korrekt
+"nicht eindeutig zuordenbar" statt eines falschen Vorschlags — der
+Klassifizierer-Fix funktioniert. Danach: explizite Zustimmung, die oben
+offen gelassene Vergütungs-/Zusatzleistungs-Lücke zu schliessen.
+
+Umgesetzt in `src/content/topics.ts` (Themen-Bereich "Arbeit, Produktivität
+& Organisation", DE + EN):
+- Description erweitert um "Vergütung/Zusatzleistungen" bzw.
+  "compensation/benefits".
+- Neue, 6. Beispielfrage: "Welche Zusatzleistungen verbessern die
+  Mitarbeiterzufriedenheit am stärksten?" / "Which employee benefits most
+  improve job satisfaction?" — einzige Ausnahme von der bisherigen
+  Fünf-Beispiele-pro-Thema-Konvention (kein technischer Zwang dazu, nur bis
+  jetzt so gewachsen).
+
+Zusätzlich `src/lib/search/de-en-dictionary.ts` um die zugehörigen
+Fachbegriffe ergänzt (Zusatzleistungen, Mitarbeiterzufriedenheit, Vergütung,
+Gehalt, Lohn, Arbeitsplatz) — schliesst damit auch die beim Suchanfrage-Fix
+weiter oben offen gelassene Wörterbuch-Lücke für exakt dieses Beispiel.
+
+Verifiziert (lokal, ohne Live-Netzwerkzugriff — reine Logikprüfung):
+- `classifyDomain()` ordnet die neue Beispielfrage jetzt eindeutig "Arbeit,
+  Produktivität & Organisation" zu (Score 5 vs. 1 für alle anderen).
+- Erwins ursprüngliche Frage (jetzt mit Vokabular-Abdeckung) matcht ebenfalls
+  eindeutig denselben Bereich, statt leer zu bleiben.
+- `detectHighRisk()` schlägt für beide Formulierungen nicht an (keine
+  versehentliche Restriktion).
+- Alle 60 Beispielfragen klassifizieren weiterhin korrekt auf ihr eigenes
+  Thema (`topics-example-questions.test.ts`, jetzt 61 Fragen).
+
+**Ehrlich offen, per Broad-Domain-Regel:** Die "Recherchierbarkeit"/
+"Evidenzausreichend"-Prüfung für die neue Beispielfrage stützt sich auf
+Fachwissen (Vergütung/Zusatzleistungen und Mitarbeiterzufriedenheit sind ein
+gut erforschtes Feld der Arbeits-/Organisationspsychologie), **nicht** auf
+einen echten Suchlauf gegen die 4 Live-Quellen — diese Sandbox hat weiterhin
+keinen Netzwerkzugriff dorthin. Ein Live-Check über `/admin/example-questions`
+nach dem nächsten Deployment (dasselbe Tool aus Task #86) steht noch aus,
+bevor diese neue Beispielfrage mit derselben Sicherheit wie die anderen 60
+gelten kann. `npm run verify` grün (593 Unit-Tests) plus alle 60 E2E-Tests
+und ein produktiver Build.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

@@ -51,6 +51,15 @@ describe("buildSearchQuery", () => {
     expect(query).not.toMatch(/\bhave\b/);
   });
 
+  it("translates employee-benefits/compensation vocabulary (dictionary gap closed 2026-07-27)", () => {
+    const query = buildSearchQuery(
+      "Welche Zusatzleistungen verbessern die Mitarbeiterzufriedenheit am stärksten?",
+      "de",
+    );
+    expect(query).toContain("employee benefits");
+    expect(query).toContain("job satisfaction");
+  });
+
   it("falls back to the original question if every token is a stopword", () => {
     const question = "Wie ist das?";
     expect(buildSearchQuery(question, "de")).toBe(question);
