@@ -14,6 +14,8 @@ import { buildPremiumReportData } from "@/lib/reports/premium-report";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import type { SearchRunResult } from "@/lib/search/run-search";
 import { NO_FILTERS } from "@/lib/search/filters";
+import { InMemoryStudyCacheRepository } from "@/lib/studies/in-memory-study-cache-repository";
+import type { StudyCacheRepository } from "@/lib/studies/study-cache-repository";
 import type { ExtractedStudyFields } from "./study-extraction";
 import type { ReportSynthesisResult } from "./report-synthesis";
 import { enrichPremiumReportWithAi } from "./report-enrichment";
@@ -102,5 +104,83 @@ describe("enrichPremiumReportWithAi (AI_EXTRACTION_ENABLED=true, mocked env)", (
     expect(enriched).toEqual(report);
     expect(enriched.keyFindings).toBeNull();
     expect(enriched.synthesisAvailable).toBe(false);
+  });
+});
+
+describe("enrichPremiumReportWithAi — study cache (read-through)", () => {
+  it("reuses a cached extraction and never calls the AI client on a cache hit", async () => {
+    const { result, record } = fakeSearchResult();
+    const report = buildPremiumReportData({
+      searchResult: result,
+      eligibility: assessEligibility(result),
+      locale: "de",
+    });
+
+    const studyCache = new InMemoryStudyCacheRepository();
+    await studyCache.upsert({ record, aiFields: FIELDS });
+
+    const extractStudyFields = vi.fn();
+    const synthesizeReport = vi.fn().mockResolvedValue(SYNTHESIS);
+
+    const enriched = await enrichPremiumReportWithAi(
+      { report, detailedRecords: [record] },
+      { extractStudyFields, synthesizeReport, studyCache },
+    );
+
+    expect(extractStudyFields).not.toHaveBeenCalled();
+    expect(enriched.profiles[0]).toMatchObject(FIELDS);
+  });
+
+  it("extracts live on a cache miss and writes the result through to the cache", async () => {
+    const { result, record } = fakeSearchResult();
+    const report = buildPremiumReportData({
+      searchResult: result,
+      eligibility: assessEligibility(result),
+      locale: "de",
+    });
+
+    const studyCache = new InMemoryStudyCacheRepository();
+    const extractStudyFields = vi.fn().mockResolvedValue(FIELDS);
+    const synthesizeReport = vi.fn().mockResolvedValue(SYNTHESIS);
+
+    const enriched = await enrichPremiumReportWithAi(
+      { report, detailedRecords: [record], topicSlug: result.topicSlug },
+      { extractStudyFields, synthesizeReport, studyCache },
+    );
+
+    expect(extractStudyFields).toHaveBeenCalledTimes(1);
+    expect(enriched.profiles[0]).toMatchObject(FIELDS);
+
+    // Write-through happens fire-and-forget — flush microtasks before asserting.
+    await new Promise((resolve) => setTimeout(resolve, 0));
+    const cached = await studyCache.findByKey(
+      record.doi ? { doi: record.doi } : { source: record.source, sourceId: record.sourceId },
+    );
+    expect(cached?.aiFields).toEqual(FIELDS);
+    expect(cached?.topicSlugs).toEqual([result.topicSlug]);
+  });
+
+  it("extracts live when the cache lookup itself fails, without crashing", async () => {
+    const { result, record } = fakeSearchResult();
+    const report = buildPremiumReportData({
+      searchResult: result,
+      eligibility: assessEligibility(result),
+      locale: "de",
+    });
+
+    const studyCache: StudyCacheRepository = {
+      findByKey: vi.fn().mockRejectedValue(new Error("cache unavailable")),
+      upsert: vi.fn().mockRejectedValue(new Error("cache unavailable")),
+    };
+    const extractStudyFields = vi.fn().mockResolvedValue(FIELDS);
+    const synthesizeReport = vi.fn().mockResolvedValue(SYNTHESIS);
+
+    const enriched = await enrichPremiumReportWithAi(
+      { report, detailedRecords: [record] },
+      { extractStudyFields, synthesizeReport, studyCache },
+    );
+
+    expect(extractStudyFields).toHaveBeenCalledTimes(1);
+    expect(enriched.profiles[0]).toMatchObject(FIELDS);
   });
 });

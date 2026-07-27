@@ -34,7 +34,11 @@ export default async function AdminReportPreviewPage({
     const eligibility = assessEligibility(searchResult);
     const baseReport = buildPremiumReportData({ searchResult, eligibility, locale });
     const detailedRecords = searchResult.detailed.map((scored) => scored.deduped.record);
-    const report = await enrichPremiumReportWithAi({ report: baseReport, detailedRecords });
+    const report = await enrichPremiumReportWithAi({
+      report: baseReport,
+      detailedRecords,
+      topicSlug: searchResult.topicSlug,
+    });
     reportView = <PremiumReportView dict={dict} report={report} />;
   }
 

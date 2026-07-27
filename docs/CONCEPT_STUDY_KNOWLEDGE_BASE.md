@@ -1,10 +1,34 @@
 # Concept: A Growing Study Knowledge Base (not a full study index)
 
-Status: **proposal, not approved, not implemented.** Written at Erwin's request
-to work out the smaller, scoped-down version of "index all studies" that was
-recommended over the full version in chat. Needs Erwin's sign-off, and the
-open questions at the end answered, before any code is written — per
-`CLAUDE.md`'s "no implementation before concept approval."
+Status: **approved and implemented (2026-07-27), Phase A only.** Erwin
+approved implementation without waiting for the open questions in §5 to be
+answered individually; treat those as still open (particularly #2, the
+source-ToS re-check) rather than resolved by this implementation. Scope
+delivered:
+
+- `supabase/migrations/20260727090000_add_studies_cache.sql` — the `studies`
+  table from §3, exactly as sketched (bibliographic metadata + AI fields
+  only, DOI or source+sourceId keyed, no raw abstracts, no query-relative
+  fields).
+- `src/lib/studies/` — `StudyCacheRepository` interface,
+  `InMemoryStudyCacheRepository` (tests), `SupabaseStudyCacheRepository`
+  (untested against a live database — no Supabase project provisioned yet,
+  same caveat as every other Supabase repository in this codebase).
+- `src/lib/ai/report-enrichment.ts` — read-through cache wrapper around
+  `extractStudyFields`: cache hit skips the AI call; miss extracts live and
+  writes through, fire-and-forget, keyed by `topicSlug` when the caller has
+  one. Cache I/O failures are swallowed and logged, never propagated — a
+  cache outage degrades to "no caching today," never to a broken or
+  fabricated report.
+- No change to the live search/screening/eligibility pipeline, no new
+  public page — matches §4's non-goals.
+
+Not yet true, and out of scope for this pass: `report-enrichment.ts` is
+currently only called from `/example-report` and the admin-only
+`/admin/report-preview` preview (task #92's "demo + admin-only preview"
+scope) — there is no live paid-report generation job wired up yet, so the
+cache has no real production traffic to grow from until that pipeline
+exists. The cache is correctly wired for whenever that pipeline is built.
 
 ## 1. What was rejected, and why
 
