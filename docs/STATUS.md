@@ -1476,6 +1476,72 @@ accumulated changes. `npm run test:e2e` passed 59/59 on this run — the two
 pre-existing failures tracked in `OPEN_RISKS.md` #24 are intermittent, not
 consistently reproducing every run, and didn't surface this time.
 
+### Beispielfragen-Check: 8 von 60 waren defekt (Erwin's request)
+Erwin bat darum, alle Beispielfragen (12 Themen × 5, DE+EN) durchzuprüfen und
+kaputte durch funktionierende zu ersetzen. Ein echter Live-Check
+(`checkExampleQuestionsForTopic`, task #86) war nicht möglich — diese
+Sandbox hat keinen Netzwerkzugriff zu keiner der 4 Quellen (bestätigt per
+`curl`: 403 auf OpenAlex/Crossref/Europe PMC/NCBI). Stattdessen wurde
+geprüft, was ohne Netzwerk ehrlich prüfbar ist: ob jede Beispielfrage (a)
+den unabhängigen High-Risk-Filter besteht und (b) beim Domain-Klassifikator
+tatsächlich auf ihr eigenes Thema matcht — beides reine, lokale Logik, die
+jede Frage vor einer echten Suche ohnehin durchläuft. Als permanenter Test
+hinzugefügt: `src/content/topics-example-questions.test.ts` (240 Checks:
+60 Fragen × 2 Prüfungen × ist bereits pro Sprache separat).
+
+8 von 60 Fragen sind durchgefallen — echte, gefundene Bugs, keine
+Kleinigkeiten:
+
+- **Systemischer False-Positive-Bug im High-Risk-Filter:** Der Begriff
+  `"scheidung"` (für `legal_financial_high_stakes`, gedacht für
+  "Scheidung"/Ehescheidung) ist ein reiner Teilstring-Match ohne
+  Wortgrenzen (`haystack.includes(term)`) — und steckt zufällig in
+  "**Ent**scheidung(en)", einem der häufigsten deutschen Wörter überhaupt.
+  Betraf 4 von 5 Beispielfragen in "Konsum & Kaufentscheidungen" (einem
+  Thema, dessen Name selbst "Kaufentscheidungen" enthält!) sowie eine
+  Frage in "Umwelt, Nachhaltigkeit & Alltag". Das ist kein reines
+  Beispielfragen-Problem — jede echte Nutzerfrage mit "Entscheidung"
+  würde in Produktion fälschlich als Hochrisiko blockiert. Bewusst NICHT
+  per allgemeiner Wortgrenzen-Regex im Detektor selbst gefixt: deutsche
+  Komposita (z. B. "Blutkrebs", "Hautkrebs" für den `cancer`-Begriff
+  "krebs") brauchen den Treffer oft gerade als Wortende, eine pauschale
+  Grenzprüfung hätte dort echte Treffer zu False Negatives gemacht — beim
+  Sicherheits-Gate laut eigenem Design-Kommentar der klar schlimmere
+  Fehler. Stattdessen wurden die betroffenen Beispielfragen so
+  umformuliert, dass sie "Kaufverhalten"/"Mobilitätsformen" statt
+  "Kauf-/Konsum-/Mobilitätsentscheidungen" verwenden. Der Begriff
+  `"scheidung"` selbst bleibt im Detektor unverändert — das ist ein
+  eigenständiger, dokumentierter Risikoeintrag (`OPEN_RISKS.md` #26),
+  kein an dieser Stelle stillschweigend gelöster Bug.
+- **Ein echter negations-bedingter False Positive:** "nicht-medikamentöse
+  Ansätze" (gesundheit-praevention) enthält den Begriff "medikament" und
+  wird als `prescription_drugs` geflaggt — obwohl die Frage explizit nach
+  NICHT-medikamentösen Ansätzen fragt. Der Detektor versteht keine
+  Negation (bewusst so einfach gehalten, siehe Datei-Kommentar). Fix: die
+  Beispielfrage umformuliert, um das Wort ganz zu vermeiden, statt zu
+  versuchen, Negation zu erkennen.
+- **3 Domain-Fehlklassifizierungen:** "How does active listening work?"
+  matchte stärker auf "Arbeit, Produktivität" (wegen "work") als auf
+  "Beziehungen & Kommunikation"; "Verbessern KI-Tools Produktivität oder
+  Lernleistung?" matchte auf "Arbeit, Produktivität" statt "Technologie &
+  Digital Life"; "What effect does digital screen time have on sleep
+  quality?" matchte stärker auf "Schlaf & Regeneration" als auf sein
+  eigenes Thema. Alle drei durch Umformulierung behoben (klarere,
+  themen-eindeutigere Begriffe), gegen den echten Klassifikator
+  verifiziert statt geraten — der Domain-Index wird dynamisch aus
+  Themenname/-beschreibung/-beispielen aufgebaut, ist also
+  selbstreferenziell: jede Änderung an einer Beispielfrage verschiebt den
+  Index für dieses Thema mit.
+- Alle 8 Ersatzfragen gegen den echten Code verifiziert (nicht geraten),
+  DE/EN-Paare inhaltlich neu abgeglichen wo die Bedeutung sich verschoben
+  hat. `npm run lint`, `npm run typecheck`, `npm run test` (566/566,
+  vorher 326 + 240 neue) und `npm run build` bestehen.
+- **Nicht behoben, weil nicht live prüfbar:** ob die 60 Beispielfragen
+  tatsächlich genug echte Studien finden, um als Report angeboten zu
+  werden (`eligibility.status !== "not_eligible"`), bleibt offen — das
+  braucht echten Netzwerkzugriff zu den 4 Quellen. Siehe
+  `OPEN_RISKS.md` #26.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

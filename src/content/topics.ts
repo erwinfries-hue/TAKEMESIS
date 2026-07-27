@@ -43,7 +43,7 @@ export const topics: Topic[] = [
       examples: [
         "Welche Massnahmen senken das Risiko häufiger Rückenschmerzen?",
         "Welche Präventionsmassnahmen sind für gesunde Erwachsene gut belegt?",
-        "Wie wirksam sind bestimmte nicht-medikamentöse Ansätze?",
+        "Welche Massnahmen zeigen die stärkste präventive Wirkung bei gesunden Erwachsenen?",
         "Welchen Einfluss hat regelmässige Bewegung auf das allgemeine Erkrankungsrisiko?",
         "Welche Massnahmen unterstützen ein gesundes Immunsystem im Alltag?",
       ],
@@ -57,7 +57,7 @@ export const topics: Topic[] = [
       examples: [
         "Which measures reduce the risk of common back pain?",
         "Which prevention measures are well supported for healthy adults?",
-        "How effective are certain non-drug approaches?",
+        "Which measures show the strongest preventive effect for healthy adults?",
         "What effect does regular exercise have on general disease risk?",
         "Which everyday measures support a healthy immune system?",
       ],
@@ -277,7 +277,7 @@ export const topics: Topic[] = [
       examples: [
         "Which communication methods improve conflict resolution?",
         "What factors support long-term relationship satisfaction?",
-        "How does active listening work?",
+        "How effective is active listening for resolving conflict?",
         "What role does shared time play in relationship quality?",
         "How does appreciation affect satisfaction in relationships?",
       ],
@@ -327,10 +327,10 @@ export const topics: Topic[] = [
       description: "Fragen zu Kaufverhalten, Produktentscheidungen und Konsumpsychologie.",
       examples: [
         "Welche Produktmerkmale beeinflussen nachweislich Haltbarkeit?",
-        "Wie wirken Preisanker auf Kaufentscheidungen?",
-        "Welche Labels unterstützen bessere Konsumentscheidungen?",
+        "Wie beeinflussen Preisanker das Kaufverhalten?",
+        "Welche Labels beeinflussen das Kaufverhalten nachweislich?",
         "Welche Haushaltsmassnahmen sparen tatsächlich Energie?",
-        "Wie beeinflussen Bewertungen anderer Nutzer Kaufentscheidungen?",
+        "Wie beeinflussen Bewertungen anderer Nutzer das Kaufverhalten?",
       ],
       limitations:
         "Forschungsabdeckung zu Konsumentscheidungen ist unregelmässiger als in Gesundheit/Bildung; häufiger nur eingeschränkte Eignung.",
@@ -340,10 +340,10 @@ export const topics: Topic[] = [
       description: "Questions about buying behavior, product decisions, and consumer psychology.",
       examples: [
         "Which product features demonstrably influence durability?",
-        "How do price anchors affect purchasing decisions?",
-        "Which labels support better consumer decisions?",
+        "How do price anchors affect buying behavior?",
+        "Which labels demonstrably influence buying behavior?",
         "Which household measures actually save energy?",
-        "How do other users' reviews influence purchasing decisions?",
+        "How do other users' reviews influence buying behavior?",
       ],
       limitations:
         "Research coverage for consumer decisions is less consistent than in health/education; limited eligibility is more common.",
@@ -359,7 +359,7 @@ export const topics: Topic[] = [
       examples: [
         "Welche Alltagsmassnahmen reduzieren den persönlichen Energieverbrauch?",
         "Welche Verpackungsalternativen schneiden in Studien besser ab?",
-        "Welche Mobilitätsentscheidungen haben den grössten messbaren Effekt?",
+        "Welche Mobilitätsformen haben den grössten messbaren ökologischen Effekt?",
         "Wie wirksam ist Recycling im Vergleich zu Konsumreduktion?",
         "Welche Ernährungsumstellungen haben den grössten ökologischen Effekt?",
       ],
@@ -372,7 +372,7 @@ export const topics: Topic[] = [
       examples: [
         "Which everyday measures reduce personal energy consumption?",
         "Which packaging alternatives perform better in studies?",
-        "Which mobility choices have the largest measurable effect?",
+        "Which mobility choices have the largest measurable ecological effect?",
         "How effective is recycling compared to reducing consumption?",
         "Which dietary changes have the largest ecological effect?",
       ],
@@ -389,10 +389,10 @@ export const topics: Topic[] = [
       description: "Fragen zu digitalen Gewohnheiten, Tools und deren Wirkung auf Alltag und Leistung.",
       examples: [
         "Wie beeinflussen soziale Medien Konzentration und Wohlbefinden?",
-        "Verbessern KI-Tools Produktivität oder Lernleistung?",
+        "Wie beeinflusst der Einsatz von KI-Tools das digitale Lernverhalten?",
         "Welche Passwort- und Sicherheitsgewohnheiten sind wirksam?",
         "Wie wirken digitale Unterbrechungen auf Leistung?",
-        "Welchen Effekt hat digitale Bildschirmzeit auf die Schlafqualität?",
+        "Wie wirken sich Smartphone-Benachrichtigungen auf das digitale Wohlbefinden aus?",
       ],
       limitations:
         "Schnelllebiges Forschungsfeld; viele Studien beziehen sich auf spezifische Plattformen oder Altersgruppen.",
@@ -402,10 +402,10 @@ export const topics: Topic[] = [
       description: "Questions about digital habits, tools, and their effect on everyday life and performance.",
       examples: [
         "How do social media affect concentration and well-being?",
-        "Do AI tools improve productivity or learning performance?",
+        "How does the use of AI tools affect digital learning behavior?",
         "Which password and security habits are effective?",
         "How do digital interruptions affect performance?",
-        "What effect does digital screen time have on sleep quality?",
+        "How do smartphone notifications affect digital well-being?",
       ],
       limitations:
         "Fast-moving research field; many studies relate to specific platforms or age groups.",
