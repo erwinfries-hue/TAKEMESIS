@@ -70,9 +70,15 @@ export async function runSearchWithAdapters(
   const perSource: PerSourceResult[] = [];
   const allRecords: NormalizedRecord[] = [];
   const normalizedExcludeDoi = excludeDoi ? normalizeDoi(excludeDoi) : null;
-  // Only the string sent to the 4 external adapters changes — display,
-  // screening relevance, and everything else downstream keeps using the
-  // original `question` (see query-translation.ts's module doc).
+  // Used for both the adapter fetch AND the relevance screening/ranking
+  // below — the fetched records' title/abstract text is realistically
+  // always English (see query-translation.ts's module doc), so relevance
+  // scoring has to compare against that same English-leaning query, not
+  // the raw (often German) `question`. Screening the original German text
+  // against English abstracts would reproduce the exact bug this module
+  // fixes, just one step later. Only the *returned* `query` (below) and
+  // anything downstream of this function (display, AI extraction) still
+  // use the original, untranslated `question`.
   const sourceQuery = buildSearchQuery(question, locale);
 
   // Each source's failure is isolated — one adapter being down must not
@@ -100,7 +106,7 @@ export async function runSearchWithAdapters(
 
   const candidateCount = allRecords.length;
   const { records: deduped, duplicatesRemoved } = dedupeRecords(allRecords);
-  const { included, excluded } = screenRecords(deduped, question);
+  const { included, excluded } = screenRecords(deduped, sourceQuery);
 
   const excludedByReason: Record<ExclusionReason, number> = { ...EMPTY_EXCLUSION_COUNTS };
   for (const decision of excluded) {
@@ -109,7 +115,7 @@ export async function runSearchWithAdapters(
 
   const { records: filteredIncluded, excludedByFilterCount } = applyFilters(included, filters);
 
-  const rankedIncluded = rankRecords(filteredIncluded, question);
+  const rankedIncluded = rankRecords(filteredIncluded, sourceQuery);
   const detailed = rankedIncluded.slice(0, DETAILED_RESULTS_CAP);
 
   return {

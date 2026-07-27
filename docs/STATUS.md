@@ -1613,6 +1613,23 @@ KI-Rückfalllösung (eigener Schalter `AI_QUERY_TRANSLATION_ENABLED`, nur
 ausgelöst wenn die Wörterbuch-Suche zu wenige Treffer liefert) ist noch nicht
 gebaut — nächster Schritt auf Erwins Zuruf.
 
+### Nachtrag: derselbe Bug steckte noch ein zweites Mal im Screening
+Erwin testete den obigen Fix live erneut mit derselben Frage — weiterhin "zu
+wenige Studien gefunden". `runSearchWithAdapters` übersetzte zwar korrekt die
+an die Adapter geschickte Suchanfrage, aber `screenRecords`/`rankRecords`
+bekamen weiterhin die rohe, unübersetzte (deutsche) `question` — die
+Relevanzprüfung (`relevance.ts`) verglich also deutsche Fragebegriffe gegen
+die jetzt korrekt gefundenen, aber englischsprachigen Abstracts und sortierte
+praktisch alles als "not_relevant" wieder aus. Derselbe Root Cause, zweite
+Stelle im selben Code-Pfad, beim ersten Fix übersehen. Fix: `screenRecords`
+und `rankRecords` in `src/lib/search/run-search.ts` bekommen jetzt ebenfalls
+die übersetzte `sourceQuery` statt der rohen Frage — nur der zurückgegebene
+`query`/`originalQuestion` (Anzeige) und alles nach dieser Funktion (KI-
+Auswertung später) bleiben unverändert an der Original-Frage. Neuer
+Regressionstest in `run-search.test.ts` deckt den vollen Pfad ab (deutsche
+Frage → englischsprachiger Fund → tatsächlich eingeschlossen). `npm run
+verify` grün (582 Unit-Tests). Noch nicht erneut von Erwin live bestätigt.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)

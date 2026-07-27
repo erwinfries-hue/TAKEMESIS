@@ -41,9 +41,10 @@ function tokenize(text: string, stopwords: Set<string>): string[] {
  * unchanged rather than being dropped — a coverage gap can only leave a
  * term untranslated, never remove it from the query.
  *
- * The original, untranslated question is never replaced anywhere else in
- * the pipeline (display, screening relevance, AI extraction later) — only
- * the string actually dispatched to the source adapters changes.
+ * Also used by run-search.ts for relevance screening/ranking against the
+ * fetched (realistically always English) record text — not just the
+ * initial adapter fetch. Only display (the report's "original question")
+ * and later AI extraction still use the untranslated question.
  */
 export function buildSearchQuery(question: string, locale: Locale): string {
   const stopwords = locale === "de" ? STOPWORDS_DE : STOPWORDS_EN;

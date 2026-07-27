@@ -44,10 +44,14 @@ describe("checkExampleQuestionsForTopicWithAdapters", () => {
 
   it("reports eligible when enough genuinely matching, result-bearing records come back", async () => {
     const question = "Welche Lernmethode verbessert den Lernerfolg?";
+    // English title/abstract — real adapters return English-indexed
+    // content (docs/STATUS.md, 2026-07-27 query-translation fix); a German
+    // fixture here would defeat the point of this test now that screening
+    // compares against the translated query, not the raw German question.
     const records = Array.from({ length: 5 }, (_, i) =>
       makeRecord({
-        title: `Lernmethode Nummer ${i} und Lernerfolg`,
-        abstract: "Diese Studie untersucht Lernmethode und Lernerfolg im Detail.",
+        title: `Study ${i}: learning method improves learning outcome`,
+        abstract: "This study examines how the learning method improves the learning outcome in detail.",
         dataCompleteness: "abstract",
       }),
     );

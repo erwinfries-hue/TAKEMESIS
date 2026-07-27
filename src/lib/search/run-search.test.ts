@@ -178,4 +178,24 @@ describe("runSearchWithAdapters", () => {
     const result = await runSearchWithAdapters("x", "lernen-bildung", [a], "en");
     expect(result.candidateCount).toBe(1);
   });
+
+  it("includes an English-language record found for a German question — screening compares against the translated query, not the raw German text", async () => {
+    const record = makeRecord({
+      title: "Effects of afternoon caffeine consumption on sleep quality",
+      abstract:
+        "This study examines caffeine consumption in the afternoon and its effect on sleep quality and sleep onset in healthy adults.",
+      dataCompleteness: "abstract",
+    });
+    const a = fakeAdapter("openalex", { records: [record] });
+
+    const result = await runSearchWithAdapters(
+      "Welchen Effekt hat Koffeinkonsum am Nachmittag auf den Schlaf?",
+      "schlaf-regeneration",
+      [a],
+      "de",
+    );
+
+    expect(result.includedCount).toBe(1);
+    expect(result.excludedByReason.not_relevant).toBe(0);
+  });
 });
