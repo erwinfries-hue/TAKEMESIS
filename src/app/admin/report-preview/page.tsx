@@ -63,6 +63,20 @@ export default async function AdminReportPreviewPage({
             </li>
           ))}
         </ul>
+        {searchResult.excludedSample && searchResult.excludedSample.length > 0 && (
+          <>
+            <p className="mt-3 font-semibold text-brand-navy-900">
+              Ausgeschlossene Titel (Stichprobe, max. 15)
+            </p>
+            <ul className="mt-1 list-disc pl-5">
+              {searchResult.excludedSample.map((sample, index) => (
+                <li key={index}>
+                  [{sample.source}/{sample.reason}] {sample.title ?? "(kein Titel)"}
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     );
   }

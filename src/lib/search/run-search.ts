@@ -36,6 +36,13 @@ export interface SearchRunResult {
   rankedIncluded: ScoredRecord[];
   /** Top DETAILED_RESULTS_CAP of rankedIncluded — what gets a full comparison/profile. */
   detailed: ScoredRecord[];
+  /**
+   * Debug aid only (`/admin/report-preview`) — a capped sample of excluded
+   * records' titles + why, so a "0 included" result can be diagnosed from a
+   * screenshot instead of guessed at. Optional so existing fixtures/tests
+   * that construct a SearchRunResult literal don't need updating.
+   */
+  excludedSample?: Array<{ title: string | null; source: SourceId; reason: ExclusionReason }>;
 }
 
 const EMPTY_EXCLUSION_COUNTS: Record<ExclusionReason, number> = {
@@ -132,6 +139,11 @@ export async function runSearchWithAdapters(
     perSource,
     rankedIncluded,
     detailed,
+    excludedSample: excluded.slice(0, 15).map((decision) => ({
+      title: decision.record.record.title,
+      source: decision.record.record.source,
+      reason: decision.reason,
+    })),
   };
 }
 
