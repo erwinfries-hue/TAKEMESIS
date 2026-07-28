@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { startCheckoutAction } from "@/app/search/checkout-actions";
 
 /** Matches the 24x24/currentColor/rounded-cap line style of src/components/icons — kept local since it's a one-off list marker, not a reusable topic/process icon. */
 function CheckIcon() {
@@ -23,10 +24,15 @@ export function PaywallPanel({
   dict,
   priceDisplay,
   priceVersion,
+  reportId,
+  reportToken,
 }: {
   dict: Dictionary;
   priceDisplay: string;
   priceVersion: string;
+  /** Null when report creation itself failed (e.g. the database is unreachable) — the buy form degrades to a disabled state rather than submitting to a report that doesn't exist. */
+  reportId: string | null;
+  reportToken: string | null;
 }) {
   return (
     <div className="flex w-full max-w-3xl flex-col gap-6 rounded-xl border-2 border-brand-teal-600 bg-white p-6 text-left">
@@ -57,9 +63,27 @@ export function PaywallPanel({
         <p className="text-xs text-brand-neutral-600">{dict.paywallPanel.refundNote}</p>
       </div>
 
-      <p className="rounded-lg bg-brand-neutral-100 p-3 text-xs text-brand-neutral-600">
-        {dict.paywallPanel.checkoutComingSoon}
-      </p>
+      {reportId && reportToken ? (
+        <form action={startCheckoutAction} className="flex flex-col gap-3">
+          <input type="hidden" name="reportId" value={reportId} />
+          <input type="hidden" name="reportToken" value={reportToken} />
+          <label className="flex items-start gap-2 text-xs text-brand-neutral-600">
+            <input type="checkbox" name="withdrawalConsent" required className="mt-0.5" />
+            <span>{dict.paywallPanel.withdrawalConsent}</span>
+          </label>
+          <button
+            type="submit"
+            className="self-start rounded-full bg-brand-navy-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
+          >
+            {dict.paywallPanel.buyCta}
+          </button>
+          <p className="text-xs text-brand-neutral-600">{dict.paywallPanel.redirectNote}</p>
+        </form>
+      ) : (
+        <p className="rounded-lg bg-brand-warning-100 p-3 text-xs text-brand-warning-600">
+          {dict.paywallPanel.checkoutUnavailable}
+        </p>
+      )}
     </div>
   );
 }

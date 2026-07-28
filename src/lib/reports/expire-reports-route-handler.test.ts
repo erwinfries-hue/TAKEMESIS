@@ -7,6 +7,7 @@ vi.mock("@/lib/env/server", () => ({
 import { handleExpireReportsRequest } from "./expire-reports-route-handler";
 import { InMemoryReportRepository } from "./in-memory-report-repository";
 import { transitionReportStatus } from "./report-service";
+import { FAKE_SEARCH_STATS_FIXTURE, FAKE_TEASER_FIXTURE } from "./report-test-fixtures";
 
 function request(headers: Record<string, string> = {}) {
   return new Request("http://localhost/api/cron/expire-reports", { headers });
@@ -33,8 +34,11 @@ describe("handleExpireReportsRequest", () => {
       originalQuestion: "q",
       locale: "de",
       domainSlug: "lernen-bildung",
+      sourceRoute: null,
       eligibility: "eligible",
       priceVersion: "MVP-01",
+      searchStats: FAKE_SEARCH_STATS_FIXTURE,
+      previewPayload: FAKE_TEASER_FIXTURE,
     });
     await transitionReportStatus(repository, report.id, "preview_ready");
     await transitionReportStatus(repository, report.id, "checkout_started");

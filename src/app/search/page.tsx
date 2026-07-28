@@ -16,6 +16,10 @@ import { lookupByDoi } from "@/lib/source-adapters/crossref";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { getPriceConfig, formatPrice } from "@/lib/pricing/price-config";
+import { generateReportToken } from "@/lib/reports/token";
+import { SupabaseReportRepository } from "@/lib/reports/supabase-report-repository";
+import { transitionReportStatus } from "@/lib/reports/report-service";
+import { buildSearchStatsSummary } from "@/lib/reports/search-stats";
 import { FreeTeaser } from "@/components/free-teaser";
 import { PaywallPanel } from "@/components/paywall-panel";
 import { NotEligibleNotice } from "@/components/not-eligible-notice";
@@ -270,6 +274,33 @@ export default async function SearchPage({
   const topicName = confirmedTopics.map((topic) => topicCopy(topic, locale).name).join(" / ");
   const historyHref = `/search?${domainParams(new URLSearchParams({ q: question })).toString()}`;
 
+  // Creates the report row the "buy" button will check out (OPEN_RISKS.md
+  // #14: "create a report record when a teaser renders"). Fails soft: if
+  // Supabase is unreachable, the teaser still renders — PaywallPanel just
+  // shows a degraded "checkout unavailable" state instead of a broken page.
+  let reportId: string | null = null;
+  let reportToken: string | null = null;
+  try {
+    const { token, tokenHash } = generateReportToken();
+    const reportRepository = new SupabaseReportRepository();
+    const created = await reportRepository.create({
+      tokenHash,
+      originalQuestion: question,
+      locale,
+      domainSlug: confirmedTopics[0].slug,
+      sourceRoute: confirmedTopics[0].sourceRoute,
+      eligibility: eligibility.status,
+      priceVersion: priceConfig.version,
+      searchStats: buildSearchStatsSummary(searchResult),
+      previewPayload: teaser,
+    });
+    await transitionReportStatus(reportRepository, created.id, "preview_ready");
+    reportId = created.id;
+    reportToken = token;
+  } catch (error) {
+    console.error("Failed to create the report row for this teaser", error);
+  }
+
   return (
     <main className="flex flex-1 flex-col items-center gap-8 px-6 py-16 sm:px-10">
       <RecordSearchHistory question={question} href={historyHref} />
@@ -297,6 +328,8 @@ export default async function SearchPage({
         dict={dict}
         priceDisplay={formatPrice(priceConfig, locale)}
         priceVersion={priceConfig.version}
+        reportId={reportId}
+        reportToken={reportToken}
       />
     </main>
   );

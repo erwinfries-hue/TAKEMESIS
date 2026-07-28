@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { InMemoryReportRepository } from "./in-memory-report-repository";
 import { InvalidReportTransitionError } from "./lifecycle";
 import { ReportNotFoundError, transitionReportStatus } from "./report-service";
+import { FAKE_SEARCH_STATS_FIXTURE, FAKE_TEASER_FIXTURE } from "./report-test-fixtures";
 
 async function createTestReport(repository: InMemoryReportRepository) {
   return repository.create({
@@ -9,8 +10,11 @@ async function createTestReport(repository: InMemoryReportRepository) {
     originalQuestion: "Welche Lernmethode verbessert den Lernerfolg?",
     locale: "de",
     domainSlug: "lernen-bildung",
+    sourceRoute: null,
     eligibility: "eligible",
     priceVersion: "MVP-01",
+    searchStats: FAKE_SEARCH_STATS_FIXTURE,
+    previewPayload: FAKE_TEASER_FIXTURE,
   });
 }
 

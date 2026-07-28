@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { InMemoryReportRepository } from "./in-memory-report-repository";
 import { transitionReportStatus } from "./report-service";
 import { expireDueReports } from "./expire-reports";
+import { FAKE_SEARCH_STATS_FIXTURE, FAKE_TEASER_FIXTURE } from "./report-test-fixtures";
 
 async function createReadyReport(
   repository: InMemoryReportRepository,
@@ -12,8 +13,11 @@ async function createReadyReport(
     originalQuestion: "q",
     locale: "de",
     domainSlug: "lernen-bildung",
+    sourceRoute: null,
     eligibility: "eligible",
     priceVersion: "MVP-01",
+    searchStats: FAKE_SEARCH_STATS_FIXTURE,
+    previewPayload: FAKE_TEASER_FIXTURE,
   });
   await transitionReportStatus(repository, report.id, "preview_ready");
   await transitionReportStatus(repository, report.id, "checkout_started");
@@ -52,8 +56,11 @@ describe("expireDueReports", () => {
       originalQuestion: "q",
       locale: "de",
       domainSlug: "lernen-bildung",
+      sourceRoute: null,
       eligibility: "eligible",
       priceVersion: "MVP-01",
+      searchStats: FAKE_SEARCH_STATS_FIXTURE,
+      previewPayload: FAKE_TEASER_FIXTURE,
     });
 
     const result = await expireDueReports(repository, new Date("2026-07-26T00:00:00.000Z"));

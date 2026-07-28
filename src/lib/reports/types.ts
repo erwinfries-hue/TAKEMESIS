@@ -1,5 +1,8 @@
 import type { Locale } from "@/lib/i18n/config";
 import type { ReportStatus } from "./lifecycle";
+import type { TeaserData } from "@/lib/eligibility/teaser";
+import type { PremiumReportData } from "./premium-report";
+import type { SearchStatsSummary } from "./search-stats";
 
 export type ReportEligibility =
   | "eligible"
@@ -17,6 +20,12 @@ export interface Report {
   interpretedQuestion: string | null;
   locale: Locale;
   sourceRoute: string | null;
+  /** Lightweight run stats, captured at preview time — for admin visibility only, not a full record archive (see docs/OPEN_RISKS.md on report_sources/search_runs being deliberately unused). */
+  searchStats: SearchStatsSummary | null;
+  /** The free-teaser data shown before payment, persisted so it's reproducible later even if a re-search would return slightly different results. */
+  previewPayload: TeaserData | null;
+  /** The full premium report, populated once generation succeeds (paid → processing → ready). */
+  finalPayload: PremiumReportData | null;
   reportVersion: string | null;
   priceVersion: string | null;
   stripeCheckoutSessionId: string | null;
@@ -34,6 +43,9 @@ export interface CreateReportInput {
   originalQuestion: string;
   locale: Locale;
   domainSlug: string;
+  sourceRoute: string | null;
   eligibility: ReportEligibility;
   priceVersion: string;
+  searchStats: SearchStatsSummary;
+  previewPayload: TeaserData;
 }

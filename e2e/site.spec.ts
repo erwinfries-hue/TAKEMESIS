@@ -11,6 +11,11 @@ const contentPages = [
   { path: "/about", heading: "Über TEKMESIS" },
   { path: "/checkout/success", heading: "Danke für deine Zahlung" },
   { path: "/checkout/cancel", heading: "Zahlung abgebrochen" },
+  // No SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY in the e2e webServer env
+  // (playwright.config.ts), so this exercises the fail-soft "database
+  // unreachable" branch (a graceful notice, not a 500) rather than the
+  // "token genuinely doesn't exist" branch, which has its own heading.
+  { path: "/report/some-random-token", heading: "Report nicht verfügbar" },
   { path: "/this-page-does-not-exist", heading: "Diese Seite konnten wir nicht finden" },
 ];
 

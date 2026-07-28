@@ -7,11 +7,23 @@ import type { Locale } from "@/lib/i18n/config";
 
 export interface CreateCheckoutSessionParams {
   reportId: string;
+  /** Raw report token — never persisted (docs/10: "secure hashed report tokens"); flows through Stripe's own metadata storage so the webhook can build the "ready" email's report link without us ever storing it ourselves. */
+  reportToken: string;
   priceVersion: string;
   amountMinor: number;
   currency: string;
   locale: Locale;
 }
+
+/**
+ * Shown on the buyer's card statement (max 22 characters, letters/digits/
+ * spaces only per card-network rules) — set per-session rather than as the
+ * Stripe account's default, since the same account is also used for an
+ * unrelated project (Erwin's explicit choice, 2026-07-28: one Stripe
+ * account, revenue kept distinguishable via the `project` metadata below
+ * rather than a second account).
+ */
+const STATEMENT_DESCRIPTOR = "AXIA4 EF TEKMESIS";
 
 /** Minimal slice of the Stripe SDK this module needs — lets tests pass a fake client instead of constructing a real one (which requires STRIPE_SECRET_KEY). */
 export interface CheckoutCapableStripeClient {
@@ -55,13 +67,21 @@ export async function createCheckoutSession(
     metadata: {
       reportId: params.reportId,
       priceVersion: params.priceVersion,
+      // Lets Erwin filter/export TEKMESIS revenue separately from other
+      // projects sharing this Stripe account in the Dashboard (2026-07-28
+      // decision — metadata-based separation, not a second account).
+      project: "tekmesis",
+      reportToken: params.reportToken,
+    },
+    payment_intent_data: {
+      statement_descriptor: STATEMENT_DESCRIPTOR,
     },
     // Lets Stripe show its own "gift/discount code" field on the Checkout
     // page — no custom code-validation logic needed. Codes themselves are
     // created and managed in the Stripe Dashboard (Erwin's side, once a
     // real account exists); nothing here invents or hardcodes a discount.
     allow_promotion_codes: true,
-    success_url: `${baseUrl}/checkout/success?report=${params.reportId}`,
+    success_url: `${baseUrl}/checkout/success?report=${params.reportId}&token=${params.reportToken}`,
     cancel_url: `${baseUrl}/checkout/cancel?report=${params.reportId}`,
     locale: params.locale,
   });

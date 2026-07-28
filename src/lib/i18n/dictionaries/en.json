@@ -387,7 +387,10 @@
     "heading": "Full Report",
     "contentsHeading": "Included in the report",
     "priceVersionLabel": "Price version",
-    "checkoutComingSoon": "Stripe checkout will be wired up in a later build step (Phase 7). The full report can't be purchased yet.",
+    "withdrawalConsent": "I explicitly waive my 14-day right of withdrawal, since delivery (access to the report) happens immediately after payment.",
+    "buyCta": "Buy now",
+    "redirectNote": "You'll be redirected to Stripe's secure payment page.",
+    "checkoutUnavailable": "Checkout isn't technically possible right now. Please reload the page or try again later.",
     "exampleReportCta": "See what a full report looks like",
     "refundNote": "Technical failures are detected automatically and refunded. For anything else: support@tekmesis.com (response within 3–5 business days)."
   },
@@ -414,6 +417,8 @@
     "heading": "Thank you for your payment",
     "body": "Your payment is being processed. Once your full evidence report is ready, you'll receive it by email as well as via a secure report link.",
     "notProofNote": "This page alone does not confirm a successful payment — unlocking happens only after verified confirmation from Stripe.",
+    "reportLinkIntro": "Your personal report link (works once generation is complete):",
+    "viewReportCta": "View report",
     "homeCta": "Back to homepage"
   },
   "checkoutCancelPage": {
@@ -421,6 +426,24 @@
     "body": "Your payment wasn't completed. Your report draft is still there — you can try again anytime.",
     "retryCta": "Try again",
     "homeCta": "Back to homepage"
+  },
+  "reportViewerPage": {
+    "notFoundHeading": "Report not found",
+    "notFoundBody": "This link is invalid or the report no longer exists. Please check that you used the full link.",
+    "processingHeading": "Your report is being generated",
+    "processingBody": "Your payment has been received. We're searching scholarly sources and building your evidence report right now — this usually only takes a few minutes. Reload this page shortly, or wait for our email.",
+    "reloadCta": "Reload page",
+    "failedHeading": "Delay with your report",
+    "failedBody": "There's been a delay generating this report. Your payment remains valid — we're on it and will follow up by email once it's ready.",
+    "expiredHeading": "Report expired",
+    "expiredBody": "This report is no longer available under our 12-month retention policy. Contact us if you have questions.",
+    "revokedHeading": "Access revoked",
+    "revokedBody": "Access to this report link has been revoked.",
+    "refundedHeading": "Report refunded",
+    "refundedBody": "This report was refunded, so access is no longer active.",
+    "unavailableHeading": "Report unavailable",
+    "unavailableBody": "This report is not currently accessible.",
+    "supportNote": "Questions? Write to us at"
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",

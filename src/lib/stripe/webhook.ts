@@ -4,6 +4,10 @@ import { getStripeClient } from "./client";
 import { serverEnv } from "@/lib/env/server";
 import { transitionReportStatus } from "@/lib/reports/report-service";
 import { computeReportExpiry } from "@/lib/reports/retention";
+import {
+  generateReportContent as defaultGenerateReportContent,
+  type GenerateReportContentDeps,
+} from "@/lib/reports/generate-report-content";
 import type { ReportRepository } from "@/lib/reports/report-repository";
 import type { PaymentRepository } from "@/lib/payments/payment-repository";
 import type { WebhookEventRepository } from "@/lib/payments/webhook-event-repository";
@@ -37,6 +41,11 @@ export interface FulfillmentDeps {
   reportRepository: ReportRepository;
   paymentRepository: PaymentRepository;
   webhookEventRepository: WebhookEventRepository;
+  generateReportContent?: (
+    deps: GenerateReportContentDeps,
+    reportId: string,
+    reportToken: string | null,
+  ) => Promise<void>;
 }
 
 export interface ProcessEventResult {
@@ -112,6 +121,7 @@ async function fulfillCheckoutSession(
     stripeCheckoutSessionId: session.id,
     stripePaymentIntentId: paymentIntentId,
     expiresAt: expiresAt.toISOString(),
+    email: session.customer_details?.email ?? null,
   });
 
   const payment = await deps.paymentRepository.findByCheckoutSessionId(session.id);
@@ -121,4 +131,16 @@ async function fulfillCheckoutSession(
       stripePaymentIntentId: paymentIntentId,
     });
   }
+
+  // Generates the actual report content (search + AI enrichment) and moves
+  // paid → processing → ready/failed. The raw report token only ever exists
+  // transiently — created at draft time, carried here via Stripe's own
+  // metadata storage (never our database, docs/10: "secure hashed report
+  // tokens") — so it's used now to build the "ready" email's link, then gone.
+  const generateReportContent = deps.generateReportContent ?? defaultGenerateReportContent;
+  await generateReportContent(
+    { reportRepository: deps.reportRepository },
+    reportId,
+    session.metadata?.reportToken ?? null,
+  );
 }

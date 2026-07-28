@@ -20,6 +20,9 @@ interface ReportRow {
   interpreted_question: string | null;
   locale: Report["locale"];
   source_route: string | null;
+  search_stats: Report["searchStats"];
+  preview_payload: Report["previewPayload"];
+  final_payload: Report["finalPayload"];
   report_version: string | null;
   price_version: string | null;
   stripe_checkout_session_id: string | null;
@@ -43,6 +46,9 @@ function toDomain(row: ReportRow): Report {
     interpretedQuestion: row.interpreted_question,
     locale: row.locale,
     sourceRoute: row.source_route,
+    searchStats: row.search_stats,
+    previewPayload: row.preview_payload,
+    finalPayload: row.final_payload,
     reportVersion: row.report_version,
     priceVersion: row.price_version,
     stripeCheckoutSessionId: row.stripe_checkout_session_id,
@@ -66,6 +72,9 @@ function toRowPatch(patch: Partial<Omit<Report, "id" | "createdAt">>): Record<st
   if (patch.interpretedQuestion !== undefined) row.interpreted_question = patch.interpretedQuestion;
   if (patch.locale !== undefined) row.locale = patch.locale;
   if (patch.sourceRoute !== undefined) row.source_route = patch.sourceRoute;
+  if (patch.searchStats !== undefined) row.search_stats = patch.searchStats;
+  if (patch.previewPayload !== undefined) row.preview_payload = patch.previewPayload;
+  if (patch.finalPayload !== undefined) row.final_payload = patch.finalPayload;
   if (patch.reportVersion !== undefined) row.report_version = patch.reportVersion;
   if (patch.priceVersion !== undefined) row.price_version = patch.priceVersion;
   if (patch.stripeCheckoutSessionId !== undefined)
@@ -88,8 +97,11 @@ export class SupabaseReportRepository implements ReportRepository {
         original_question: input.originalQuestion,
         locale: input.locale,
         domain_slug: input.domainSlug,
+        source_route: input.sourceRoute,
         eligibility: input.eligibility,
         price_version: input.priceVersion,
+        search_stats: input.searchStats,
+        preview_payload: input.previewPayload,
       })
       .select()
       .single();

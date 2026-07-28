@@ -1848,6 +1848,89 @@ teilweise resolved markiert (Migration + Verbindung bestätigt; Stripe-Teil
 und die eigentliche Report-Erstellung/Checkout-Verdrahtung — `OPEN_RISKS.md`
 #14 — bleiben offen).
 
+### Echte Checkout-Verdrahtung gebaut: Report-Erstellung, Kaufen-Button, Report-Generierung, teilbare Report-Seite (Erwin's request)
+Erwin bat darum, den Stripe-Teil zu Ende zu bauen, bevor der zuvor besprochene
+kostenlose Admin-Pfad für persistente Reports drankommt — beide brauchen
+dieselbe teilbare Report-Seite, die es bisher gar nicht gab. Erwin nutzt
+denselben Stripe-Account wie ein anderes Projekt (mygoogledna.com): gleiche
+rechtliche Einheit (Privatperson), daher kein zweiter Account nötig. Auf
+Nachfrage geklärt: physische Auszahlungstrennung ist mit einem Account nicht
+möglich (Stripe zahlt kontoweit gemeinsam aus) — Metadaten-Trennung
+(`project: "tekmesis"`) reicht Erwin. Kontoauszug-Text final "AXIA4 EF
+TEKMESIS" (17 Zeichen, unter dem 22-Zeichen-Limit).
+
+Umgesetzt (grösster einzelner Implementierungsschritt seit Projektbeginn):
+- **Report-Datenmodell erweitert:** `Report`/`CreateReportInput` um
+  `searchStats` (schlanke Lauf-Statistik), `previewPayload` (`TeaserData`)
+  und `finalPayload` (`PremiumReportData`) ergänzt — die JSONB-Spalten
+  existierten in der Migration schon, die Repository-Zuordnung fehlte
+  komplett. Beide Repository-Implementierungen (in-memory + Supabase)
+  nachgezogen.
+- **`src/lib/reports/generate-report-content.ts` (komplett neu):** der
+  bisher fehlende Kernschritt — verwandelt einen "paid"/"failed" Report in
+  einen echten "ready" Report (Live-Suche erneut ausführen, KI-Anreicherung,
+  `finalPayload` speichern). Vorher tat "Retry" im Admin-Bereich nur den
+  Status auf "processing" setzen, ohne dass je etwas generiert wurde — echte
+  Lücke, jetzt geschlossen. Schlägt nie fehl (fängt jeden Fehler ab, setzt
+  Status auf "failed" mit `failureCode`, damit nichts in "processing"
+  hängen bleibt), verschickt bei Erfolg/Misserfolg die passende E-Mail.
+- **Roher Report-Token nie gespeichert, fliesst durch Stripe-Metadaten:**
+  bei Teaser-Erstellung generiert, für den Kaufen-Button in einem
+  versteckten Formularfeld gehalten, in der Stripe-Checkout-Success-URL und
+  in `session.metadata.reportToken` mitgegeben — der Webhook liest ihn von
+  dort für die "Report fertig"-E-Mail, ohne dass er je in unserer
+  Datenbank landet (nur der Hash wird gespeichert, wie schon immer).
+- **`/search`:** legt jetzt bei "eligible"/"eligible_with_limitations" einen
+  echten Report-Datensatz (`draft` → `preview_ready`) an, bevor der Teaser
+  gerendert wird — schlägt weich fehl (Teaser bleibt trotzdem sichtbar,
+  Kaufen-Button zeigt einen degradierten "aktuell technisch nicht möglich"
+  Hinweis), falls Supabase kurz nicht erreichbar ist.
+- **`PaywallPanel`:** der Platzhaltertext "Checkout kommt später" ist weg —
+  echtes Formular mit `startCheckoutAction` (Server Action), inkl. der vom
+  Treuhänder geforderten **Pflicht-Checkbox zum Verzicht auf das
+  14-tägige EU-Widerrufsrecht** (native HTML-Validierung, kein JS nötig).
+- **`src/lib/checkout/start-checkout.ts` (neu):** die eigentliche
+  Kauf-Button-Logik — erstellt die Stripe-Session, setzt
+  `preview_ready` → `checkout_started`; ein erneuter Klick nach
+  abgebrochenem Stripe-Checkout erzeugt einfach eine neue Session, ohne
+  eine ungültige Statusmaschinen-Transition zu erzwingen.
+- **`src/lib/stripe/checkout.ts`:** Kontoauszug-Text
+  (`payment_intent_data.statement_descriptor`, "AXIA4 EF TEKMESIS") und
+  `project: "tekmesis"`-Metadaten-Tag hinzugefügt.
+- **`src/lib/stripe/webhook.ts`:** erfasst jetzt die Käufer-E-Mail aus
+  `session.customer_details.email` und stösst nach erfolgreicher
+  Zahlungsbestätigung sofort `generateReportContent` an — alles innerhalb
+  desselben Webhook-Aufrufs (gleiches Muster wie `/admin/report-preview`s
+  60-Sekunden-Budget).
+- **`/report/[token]` (komplett neue Route):** liest den Report anhand des
+  gehashten Tokens, zeigt je nach Status den vollständigen Premium-Report
+  (`ready`) oder eine ehrliche Zwischenmeldung (wird erstellt / Verzögerung
+  / abgelaufen / widerrufen / zurückerstattet / nicht gefunden) — inklusive
+  eines eigenen, weichen Fehlerpfads, falls Supabase kurz nicht erreichbar
+  ist (ein echter Bug wurde hier während der lokalen Prüfung gefunden und
+  behoben: die Seite crashte vorher hart mit einem 500er statt sich wie der
+  Rest der App gnädig zu degradieren).
+- **`/checkout/success`:** zeigt jetzt den echten, funktionierenden
+  Report-Link (`?token=...`), sobald einer vorhanden ist — vorher nur ein
+  Textversprechen ohne echten Link.
+- Ein echter Barrierefreiheits-Fehler wurde von axe gefunden und behoben:
+  ein reiner `hover:underline`-Link innerhalb eines Fliesstexts hatte zu
+  wenig Kontrast zum Umgebungstext und keine dauerhafte visuelle
+  Unterscheidung — jetzt permanent unterstrichen.
+
+`npm run verify` grün (607 Unit-Tests, davon ~24 neu für dieses Feature),
+volle 62-Spec-E2E-Suite grün (inkl. neuem `/report/[token]`-Test +
+a11y-Scan), produktiver Build lokal visuell bestätigt (Screenshots:
+Report-nicht-verfügbar-Zustand, Checkout-Success mit echtem Link).
+
+**Noch offen, bevor das live end-to-end funktioniert:** Erwin hat
+`STRIPE_SECRET_KEY`/`NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` bereits in Vercel
+gesetzt und redeployed; `STRIPE_WEBHOOK_SECRET` und `STRIPE_PRICE_ID_MVP_01`
+(bzw. bewusster Verzicht darauf zugunsten des inline-`price_data`-Fallbacks)
+folgen als nächster Schritt. Kein echter Stripe-Testkauf in dieser Session
+durchgeführt — diese Sandbox hat keinen Netzwerkzugriff zu Stripe; das
+erste echte Ende-zu-Ende-Testkauf steht noch aus.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved

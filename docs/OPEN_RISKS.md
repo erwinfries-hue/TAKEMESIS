@@ -81,20 +81,24 @@ checkpoint (decision #15) and before each production-readiness gate.
     Stripe test-mode checkout (success, cancellation, bad signature,
     duplicate webhook delivery — `00_START_HERE_ERWIN.md` §9) is still
     unverified. Owner: Erwin or next session with Stripe credentials.
-14. **The live UI still can't sell anything.** `PaywallPanel` on `/search` has
-    no working "buy" button, and no `reports` row is created when a teaser is
-    shown — Phase 7 built the checkout/webhook/lifecycle *library*, not the
-    end-to-end wiring, because that wiring is only meaningfully testable once
-    #13's real credentials exist. First task once they do: create a report
-    record (`draft` → `preview_ready`) when a teaser renders, wire the buy
-    button to `createCheckoutSession`, and swap the in-memory repositories
-    for the Supabase ones everywhere. **Added 2026-07-28 (Treuhänder, decision
-    #17):** this same checkout build must include a mandatory checkbox where
-    the buyer confirms they waive the EU 14-day withdrawal right, since
-    delivery is immediate — Stripe Checkout's built-in `consent_collection`
-    (terms-of-service acceptance) is a good technical fit for this, confirmed
-    not a launch blocker by the Treuhänder but must ship together with the
-    real buy button, not be retrofitted later.
+14. **Mostly resolved 2026-07-28 — the checkout is now wired end to end.**
+    `/search` creates a real `preview_ready` report when a teaser renders;
+    `PaywallPanel` has a working "buy" form (including the EU
+    withdrawal-right waiver checkbox, decision #17) that hands off to
+    `startCheckoutForReport` → a real Stripe Checkout Session; the webhook
+    marks the report paid, captures the buyer's email, and immediately runs
+    `generateReportContent` (the previously-missing step — search + AI
+    enrichment → `ready`, or `failed` with a retry path); `/report/[token]`
+    is a new route that renders the finished report or an honest interim
+    status. See `STATUS.md`'s "Echte Checkout-Verdrahtung" entry for the
+    full breakdown. **Still open:** no real Stripe test-mode purchase has
+    been run yet — `STRIPE_WEBHOOK_SECRET` and `STRIPE_PRICE_ID_MVP_01`
+    aren't set yet (secret key + publishable key are). This sandbox has no
+    network access to Stripe either way, so the actual test-mode checkout
+    (success, cancellation, bad signature, duplicate webhook — the
+    `00_START_HERE_ERWIN.md` §9 list) is still unverified against a real
+    account. Owner: Erwin, next step once the remaining two Stripe values
+    are set in Vercel.
 
 ## Non-blocking, monitor through beta
 

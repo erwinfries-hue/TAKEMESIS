@@ -390,7 +390,10 @@
     "heading": "Vollständiger Report",
     "contentsHeading": "Im Report enthalten",
     "priceVersionLabel": "Preisversion",
-    "checkoutComingSoon": "Der Stripe-Checkout wird in einem der nächsten Ausbauschritte angebunden (Phase 7). Aktuell kann der vollständige Report noch nicht gekauft werden.",
+    "withdrawalConsent": "Ich verzichte ausdrücklich auf mein 14-tägiges Widerrufsrecht, da die Lieferung (der Zugriff auf den Report) sofort nach Zahlung erfolgt.",
+    "buyCta": "Jetzt kaufen",
+    "redirectNote": "Du wirst zur sicheren Zahlungsseite von Stripe weitergeleitet.",
+    "checkoutUnavailable": "Der Kauf ist gerade technisch nicht möglich. Bitte lade die Seite neu oder versuche es später erneut.",
     "exampleReportCta": "So sieht ein vollständiger Report aus",
     "refundNote": "Technisches Fehlschlagen wird automatisch erkannt und rückerstattet. Sonst: support@tekmesis.com (Antwort in 3–5 Werktagen)."
   },
@@ -417,6 +420,8 @@
     "heading": "Danke für deine Zahlung",
     "body": "Deine Zahlung wird verarbeitet. Sobald dein vollständiger Evidence Report bereit ist, erhältst du ihn per E-Mail sowie über einen sicheren Report-Link.",
     "notProofNote": "Diese Seite allein bestätigt keine erfolgreiche Zahlung — die Freischaltung erfolgt erst nach verifizierter Bestätigung durch Stripe.",
+    "reportLinkIntro": "Dein persönlicher Report-Link (funktioniert, sobald die Erstellung abgeschlossen ist):",
+    "viewReportCta": "Report ansehen",
     "homeCta": "Zurück zur Startseite"
   },
   "checkoutCancelPage": {
@@ -424,6 +429,24 @@
     "body": "Deine Zahlung wurde nicht abgeschlossen. Dein Report-Entwurf bleibt bestehen — du kannst es jederzeit erneut versuchen.",
     "retryCta": "Erneut versuchen",
     "homeCta": "Zurück zur Startseite"
+  },
+  "reportViewerPage": {
+    "notFoundHeading": "Report nicht gefunden",
+    "notFoundBody": "Dieser Link ist ungültig oder der Report existiert nicht (mehr). Prüfe bitte, ob du den vollständigen Link verwendet hast.",
+    "processingHeading": "Dein Report wird erstellt",
+    "processingBody": "Deine Zahlung ist eingegangen. Wir durchsuchen gerade die wissenschaftlichen Quellen und erstellen deinen Evidence Report — das dauert normalerweise nur wenige Minuten. Lade diese Seite in Kürze neu, oder warte auf unsere E-Mail.",
+    "reloadCta": "Seite neu laden",
+    "failedHeading": "Verzögerung bei deinem Report",
+    "failedBody": "Bei der Erstellung ist eine Verzögerung aufgetreten. Deine Zahlung bleibt gültig — wir arbeiten daran und melden uns per E-Mail, sobald der Report bereit ist.",
+    "expiredHeading": "Report abgelaufen",
+    "expiredBody": "Dieser Report ist gemäss unserer Aufbewahrungsfrist (12 Monate) nicht mehr verfügbar. Kontaktiere uns, falls du Fragen dazu hast.",
+    "revokedHeading": "Zugriff widerrufen",
+    "revokedBody": "Der Zugriff auf diesen Report-Link wurde widerrufen.",
+    "refundedHeading": "Report zurückerstattet",
+    "refundedBody": "Für diesen Report wurde eine Rückerstattung verarbeitet, der Zugriff ist daher nicht mehr aktiv.",
+    "unavailableHeading": "Report nicht verfügbar",
+    "unavailableBody": "Dieser Report ist aktuell nicht zugänglich.",
+    "supportNote": "Fragen? Schreib uns an"
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",

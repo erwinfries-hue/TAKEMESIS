@@ -2,6 +2,11 @@ import "server-only";
 import { transitionReportStatus } from "@/lib/reports/report-service";
 import type { ReportRepository } from "@/lib/reports/report-repository";
 import type { Report } from "@/lib/reports/types";
+import { generateReportToken } from "@/lib/reports/token";
+import {
+  generateReportContent as defaultGenerateReportContent,
+  type GenerateReportContentDeps,
+} from "@/lib/reports/generate-report-content";
 import type { AuditLogRepository } from "./audit-log-repository";
 
 export interface AdminActionDeps {
@@ -57,8 +62,28 @@ export async function recordRefunded(deps: AdminActionDeps, reportId: string): P
   return report;
 }
 
-export async function retryReport(deps: AdminActionDeps, reportId: string): Promise<Report> {
-  const report = await transitionReportStatus(deps.reportRepository, reportId, "processing");
+/**
+ * A "failed" report was never successfully emailed a working link (that
+ * only happens once generation reaches "ready"), so it's safe — and
+ * necessary, since the original raw token was never persisted anywhere —
+ * to mint a fresh token here rather than trying to recover the old one.
+ */
+export async function retryReport(
+  deps: AdminActionDeps,
+  reportId: string,
+  generateContent: (
+    contentDeps: GenerateReportContentDeps,
+    id: string,
+    token: string | null,
+  ) => Promise<void> = defaultGenerateReportContent,
+): Promise<Report> {
+  const { token, tokenHash } = generateReportToken();
+  await deps.reportRepository.update(reportId, { tokenHash });
+  await generateContent({ reportRepository: deps.reportRepository }, reportId, token);
+  const report = await deps.reportRepository.findById(reportId);
+  if (!report) {
+    throw new Error(`Report ${reportId} not found after retry`);
+  }
   await deps.auditLogRepository.record({
     adminEmail: deps.adminEmail,
     action: "retry_report",

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { InMemoryReportRepository } from "@/lib/reports/in-memory-report-repository";
 import { transitionReportStatus } from "@/lib/reports/report-service";
 import { InMemoryAuditLogRepository } from "./in-memory-audit-log-repository";
@@ -19,8 +19,32 @@ async function setUp(): Promise<AdminActionDeps & { reportId: string }> {
     originalQuestion: "q",
     locale: "de",
     domainSlug: "lernen-bildung",
+    sourceRoute: null,
     eligibility: "eligible",
     priceVersion: "MVP-01",
+    searchStats: {
+      query: "q",
+      searchDate: new Date().toISOString(),
+      screeningVersion: "screening-v2",
+      candidateCount: 10,
+      duplicatesRemoved: 1,
+      includedCount: 5,
+      excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
+      perSource: [],
+    },
+    previewPayload: {
+      query: "q",
+      searchDate: new Date().toISOString(),
+      candidateCount: 10,
+      duplicatesRemoved: 1,
+      includedCount: 5,
+      studyTypeDistribution: [],
+      topStudies: [],
+      confidenceLabel: "moderate",
+      sourcesUnavailable: [],
+      filtersApplied: { maxAgeYears: null, studyTypes: null },
+      excludedByFilterCount: 0,
+    },
   });
   return {
     reportRepository,
@@ -76,7 +100,7 @@ describe("blockReport / markRefundPending / recordRefunded", () => {
 });
 
 describe("retryReport", () => {
-  it("moves a failed report back to processing", async () => {
+  it("rotates the report token, hands off to content generation, and logs the action", async () => {
     const deps = await setUp();
     await transitionReportStatus(deps.reportRepository, deps.reportId, "preview_ready");
     await transitionReportStatus(deps.reportRepository, deps.reportId, "checkout_started");
@@ -84,7 +108,31 @@ describe("retryReport", () => {
     await transitionReportStatus(deps.reportRepository, deps.reportId, "processing");
     await transitionReportStatus(deps.reportRepository, deps.reportId, "failed");
 
-    const retried = await retryReport(deps, deps.reportId);
-    expect(retried.status).toBe("processing");
+    const before = await deps.reportRepository.findById(deps.reportId);
+
+    // A fake standing in for generateReportContent — a failed report was
+    // never emailed a working link, so retryReport must mint a fresh token
+    // before calling this, and this fake performs the failed → processing →
+    // ready transitions the real implementation would do.
+    const generateContent = vi.fn(async (contentDeps, reportId, token) => {
+      expect(token).toEqual(expect.any(String));
+      await transitionReportStatus(contentDeps.reportRepository, reportId, "processing");
+      await transitionReportStatus(contentDeps.reportRepository, reportId, "ready", {
+        reportVersion: "premium-v1",
+      });
+    });
+
+    const retried = await retryReport(deps, deps.reportId, generateContent);
+
+    expect(generateContent).toHaveBeenCalledTimes(1);
+    expect(retried.status).toBe("ready");
+    expect(retried.tokenHash).not.toBe(before?.tokenHash);
+
+    const log = await deps.auditLogRepository.listRecent();
+    expect(log[0]).toMatchObject({
+      adminEmail: "admin@tekmesis.com",
+      action: "retry_report",
+      targetId: deps.reportId,
+    });
   });
 });
