@@ -45,6 +45,7 @@ export interface SearchRunResult {
   excludedSample?: Array<{
     title: string | null;
     source: SourceId;
+    mergedFromSources: SourceId[];
     reason: ExclusionReason;
     hasAbstract: boolean;
   }>;
@@ -144,9 +145,10 @@ export async function runSearchWithAdapters(
     perSource,
     rankedIncluded,
     detailed,
-    excludedSample: excluded.slice(0, 15).map((decision) => ({
+    excludedSample: excluded.slice(0, 40).map((decision) => ({
       title: decision.record.record.title,
       source: decision.record.record.source,
+      mergedFromSources: decision.record.mergedFromSources,
       reason: decision.reason,
       hasAbstract: Boolean(decision.record.record.abstract),
     })),

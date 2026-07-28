@@ -64,6 +64,11 @@ export default async function AdminReportPreviewPage({
             </li>
           ))}
         </ul>
+        <p className="mt-3 font-semibold text-brand-navy-900">Kandidaten & Duplikate</p>
+        <p className="mt-1">
+          {searchResult.candidateCount} Rohtreffer insgesamt, {searchResult.duplicatesRemoved} als
+          Duplikate zusammengeführt.
+        </p>
         <p className="mt-3 font-semibold text-brand-navy-900">Ausschlussgründe</p>
         <ul className="mt-1 list-disc pl-5">
           {Object.entries(searchResult.excludedByReason).map(([reason, count]) => (
@@ -75,12 +80,15 @@ export default async function AdminReportPreviewPage({
         {searchResult.excludedSample && searchResult.excludedSample.length > 0 && (
           <>
             <p className="mt-3 font-semibold text-brand-navy-900">
-              Ausgeschlossene Titel (Stichprobe, max. 15)
+              Ausgeschlossene Titel ({searchResult.excludedSample.length})
             </p>
             <ul className="mt-1 list-disc pl-5">
               {searchResult.excludedSample.map((sample, index) => (
                 <li key={index}>
-                  [{sample.source}/{sample.reason}/{sample.hasAbstract ? "mit Abstract" : "ohne Abstract"}]{" "}
+                  [{sample.source}
+                  {sample.mergedFromSources.length > 1 &&
+                    ` +${sample.mergedFromSources.filter((s) => s !== sample.source).join(",")}`}
+                  /{sample.reason}/{sample.hasAbstract ? "mit Abstract" : "ohne Abstract"}]{" "}
                   {sample.title ?? "(kein Titel)"}
                 </li>
               ))}
