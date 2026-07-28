@@ -276,8 +276,33 @@ checkpoint (decision #15) and before each production-readiness gate.
     lock to still prevent concurrent duplicate processing), or (2) add an
     admin view that flags reports stuck in `paid`/`processing` past some age
     threshold, so a human can trigger the existing `processing → ready|
-    failed` admin retry path manually. Not attempted here — real design
-    work, not a quick fix.
+    failed` admin retry path manually.
+
+    **Update (2026-07-28): direction (2) built — mitigation, not a fix for
+    the underlying gap.** `src/lib/reports/stuck-report.ts` (`isReportStuck`,
+    30-minute threshold — a real paid checkout this session finished in
+    ~15-20s, so 30 minutes is a wide margin) is wired into `/admin`: a
+    warning banner + a per-row ⚠️ mark any report stuck in `paid`/
+    `processing`. While building this, found and fixed an adjacent real bug
+    it depends on: `SupabaseReportRepository.update()` never actually
+    refreshed `updated_at` (no DB trigger exists either — only `default
+    now()` on INSERT), unlike the in-memory repository which always does.
+    In production, every report's `updatedAt` would have stayed frozen at
+    creation time forever, silently breaking anything — including this new
+    stuck-report check — that trusts it to mean "last changed." Fixed in
+    `toRowPatch()`. Also discovered the "paid" and "processing" cases need
+    different admin actions: `retryReport()`'s underlying
+    `transitionReportStatus(..., "processing")` call is only valid from
+    `paid` (`paid → processing` is allowed) or `failed`
+    (`failed → processing`) — `processing → processing` is **not** a valid
+    transition (no self-loop in `lifecycle.ts`), so a report already stuck
+    in `processing` cannot be safely retried this way. The "Erneut
+    versuchen" button now also appears for a stuck `paid` report (it didn't
+    before — only for `failed`); a stuck `processing` report still only
+    offers "Blockieren", with the banner explaining why. Direction (1), the
+    actual fix for the underlying claim-before-completion race, is still
+    not attempted — this only makes the failure mode visible and, for one
+    of its two stuck states, manually recoverable.
 
 ## Non-blocking, monitor through beta
 

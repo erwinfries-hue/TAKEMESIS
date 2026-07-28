@@ -5,6 +5,7 @@ import { describeUnknownError } from "@/lib/errors/describe-unknown-error";
 import { SupabaseReportRepository } from "@/lib/reports/supabase-report-repository";
 import type { Report } from "@/lib/reports/types";
 import type { ReportStatus } from "@/lib/reports/lifecycle";
+import { isReportStuck, STUCK_REPORT_THRESHOLD_MINUTES } from "@/lib/reports/stuck-report";
 import { adminLogoutAction } from "./login/actions";
 import {
   blockReportAction,
@@ -47,6 +48,9 @@ export default async function AdminOverviewPage() {
     counts.set(report.status, (counts.get(report.status) ?? 0) + 1);
   }
 
+  const now = new Date();
+  const stuckReports = reports.filter((report) => isReportStuck(report, now));
+
   return (
     <main className="flex flex-1 flex-col gap-8 px-6 py-12 sm:px-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -83,6 +87,21 @@ export default async function AdminOverviewPage() {
         </div>
       )}
 
+      {stuckReports.length > 0 && (
+        <div
+          role="alert"
+          className="rounded-lg border border-brand-warning-500 bg-brand-warning-100 p-4 text-sm text-brand-warning-600"
+        >
+          {stuckReports.length} Report{stuckReports.length === 1 ? "" : "s"} seit über{" "}
+          {STUCK_REPORT_THRESHOLD_MINUTES} Minuten in &quot;paid&quot;/&quot;processing&quot; ohne
+          Fortschritt (Zeile unten mit ⚠️ markiert) — mögliches Zeichen für eine unterbrochene
+          Report-Erstellung ohne automatische Wiederaufnahme. Bei &quot;paid&quot; steht direkt
+          &quot;Erneut versuchen&quot; zur Verfügung. Bei &quot;processing&quot; gibt es aktuell keinen
+          sicheren automatischen Neustart (kein gültiger Status-Übergang) — dort zunächst
+          &quot;Blockieren&quot; und die Rückerstattung prüfen.
+        </div>
+      )}
+
       <section>
         <h2 className="mb-3 font-semibold text-brand-navy-900">Reports nach Status</h2>
         <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
@@ -114,12 +133,23 @@ export default async function AdminOverviewPage() {
                   <td className="px-3 py-2 text-brand-neutral-600">
                     {new Date(report.createdAt).toLocaleString("de-CH")}
                   </td>
-                  <td className="px-3 py-2 font-medium text-brand-navy-900">{report.status}</td>
+                  <td className="px-3 py-2 font-medium text-brand-navy-900">
+                    {report.status}
+                    {isReportStuck(report, now) && (
+                      <span
+                        title={`Seit über ${STUCK_REPORT_THRESHOLD_MINUTES} Minuten ohne Fortschritt`}
+                        className="ml-1"
+                      >
+                        ⚠️
+                      </span>
+                    )}
+                  </td>
                   <td className="px-3 py-2 text-brand-neutral-600">{report.eligibility ?? "–"}</td>
                   <td className="px-3 py-2 text-brand-neutral-600">{report.domainSlug ?? "–"}</td>
                   <td className="px-3 py-2">
                     <div className="flex flex-wrap gap-3 text-xs">
-                      {report.status === "failed" && (
+                      {(report.status === "failed" ||
+                        (report.status === "paid" && isReportStuck(report, now))) && (
                         <form action={retryReportAction}>
                           <input type="hidden" name="reportId" value={report.id} />
                           <button type="submit" className="text-brand-teal-700 hover:underline">

@@ -85,6 +85,11 @@ function toRowPatch(patch: Partial<Omit<Report, "id" | "createdAt">>): Record<st
   if (patch.expiresAt !== undefined) row.expires_at = patch.expiresAt;
   if (patch.revokedAt !== undefined) row.revoked_at = patch.revokedAt;
   if (patch.failureCode !== undefined) row.failure_code = patch.failureCode;
+  // No DB trigger bumps this on UPDATE (only `default now()` on INSERT), and
+  // the in-memory repository always sets it — without this, updatedAt would
+  // stay frozen at creation time forever, silently breaking anything that
+  // trusts it to mean "last changed" (e.g. detecting a report stuck in paid).
+  row.updated_at = new Date().toISOString();
   return row;
 }
 
