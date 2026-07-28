@@ -51,8 +51,35 @@ checkpoint (decision #15) and before each production-readiness gate.
    across both live rounds, but **not exhaustively tuned** — revisit once
    more real questions/traffic are observed, in case it's too strict (a
    genuinely relevant record using a synonym for one of only 2 terms would
-   now be excluded) or still too loose for phrasings not yet seen. **Still
-   open:** one of the two live
+   now be excluded) or still too loose for phrasings not yet seen. **Update
+   (2026-07-28), the predicted "too strict" failure mode actually
+   materialized:** live-tested via a new debug panel on
+   `/admin/report-preview` (shows the translated query + `excludedByReason`
+   counts — the premium report itself has no exclusion breakdown anywhere,
+   which made this otherwise undiagnosable from a screenshot alone), the
+   exact canonical example from this file's own code comments — "Hilft
+   Kreatin beim Muskelaufbau?" — came back **23 found, 0 included, all 23
+   `not_relevant`**. Root cause is upstream of `meetsRelevanceThreshold`
+   itself: `query-translation.ts`'s own `STOPWORDS_DE` list is smaller than
+   and independent from `relevance.ts`'s `STOPWORDS` — "hilft" and "beim"
+   aren't in `STOPWORDS_DE`, so `buildSearchQuery` leaves them untranslated
+   in the query sent to `meetsRelevanceThreshold` as
+   `"hilft creatine beim muscle growth"`. Both words happen to *also* be in
+   `relevance.ts`'s own `STOPWORDS` and get filtered back out there, so the
+   final `queryTerms` is `{"creatine", "muscle", "growth"}` (3 terms, the
+   ≥0.4-fraction rule, not the 2-term all-must-match rule) — meaning a real
+   record needs "creatine" plus at least one of "muscle"/"growth" literally
+   in its title+abstract. Real creatine-research titles commonly say
+   "strength", "performance", "resistance training", "body composition", or
+   "hypertrophy" instead — genuinely relevant records with none of exactly
+   "muscle" or "growth" in the title (and no abstract at all for
+   NCBI-sourced records, `OPEN_RISKS.md` #11) fail this. Not fixed here —
+   needs actual investigation with real title/abstract text, not a blind
+   threshold tweak, and ideally the debug panel extended to show excluded
+   record titles (currently only aggregate counts), not just a guess under
+   time pressure. Owner: next session, start from
+   `/admin/report-preview`'s debug panel.
+   **Still open:** one of the two live
    runs showed an "OpenAlex nicht erreichbar" notice; Erwin was asked to check
    Vercel's Runtime Logs for the OpenAlex-specific error line to determine
    whether this is a genuine OpenAlex outage or a fixable timeout/serverless-
