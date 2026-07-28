@@ -333,8 +333,7 @@ checkpoint (decision #15) and before each production-readiness gate.
     from this item's email scope.
 
 16. **Report retention/expiry job (decision #5) is built; `CRON_SECRET` is
-    now provisioned and the schedule live-verified. There's still no page
-    that reads an expired report back.** `src/lib/reports/
+    now provisioned and the schedule live-verified.** `src/lib/reports/
     expire-reports.ts` (12-month expiry, `REPORT_RETENTION_MONTHS`) is wired
     to `GET /api/cron/expire-reports`, scheduled daily via `vercel.json`
     (`0 3 * * *`), and gated on `CRON_SECRET` (`Authorization: Bearer
@@ -343,14 +342,21 @@ checkpoint (decision #15) and before each production-readiness gate.
     `openssl rand -hex 32` value) is now set in Vercel Production; manually
     triggered twice via Vercel's Dashboard → Settings → Cron Jobs → Run, and
     both invocations logged `200` against the real Supabase project — the
-    daily 03:00 UTC schedule can now actually fire. **Still not done:** there
-    is still no secure-link report-viewer page (`/report/[token]` or
-    similar) — Phase 7/8 built the checkout/lifecycle/report-rendering
-    *pieces*, but nothing in the app currently reads a report by token and
-    shows/blocks it based on status, so an expired report has no
-    user-visible effect yet (only visible in `/admin`). This viewer is the
-    same "live UI can't sell anything" gap as #14, extended to the
-    post-purchase side.
+    daily 03:00 UTC schedule can now actually fire. **Correction (2026-07-28):
+    the secure-link report-viewer page this item previously flagged as
+    missing already exists** (`src/app/report/[token]/page.tsx`, added in
+    "Wire the real Stripe checkout end to end") — this note was stale. It
+    hashes the URL token (`hashReportToken`), looks the report up via
+    `findByTokenHash`, and renders a distinct notice per `ReportStatus`
+    (not-found, processing, failed, expired, revoked, refunded) using the
+    same `PremiumReportView` the admin preview uses; `/checkout/success`
+    already links to it correctly. Live-verified in this session: the real
+    Resend confirmation email's "Report ansehen" link opened this exact page
+    and rendered the full 46-study Intervallfasten report. Only remaining
+    gap: no dedicated test file for the page itself (`src/app/report/
+    [token]/page.test.tsx` doesn't exist yet), though the token
+    hashing/lookup and lifecycle transitions it depends on are unit-tested
+    elsewhere.
 
 17. **Marketing differentiation pass: three small live-validation gaps.**
     (a) **Resolved (2026-07-26):** a branded Open Graph image now exists —
