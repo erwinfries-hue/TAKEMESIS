@@ -17,7 +17,6 @@ export const clientEnvSchema = z.object({
   NEXT_PUBLIC_APP_NAME: z.string().min(1).default("TEKMESIS"),
   NEXT_PUBLIC_APP_BASE_URL: z.string().url().default("http://localhost:3000"),
   NEXT_PUBLIC_APP_VERSION: z.string().min(1).default("0.1.0"),
-  NEXT_PUBLIC_AXIA4_DIGITAL_URL: z.string().url().default("https://axia4.ch/digital"),
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional(),
   NEXT_PUBLIC_ANALYTICS_ENABLED: booleanFromString.default(false),
   NEXT_PUBLIC_ANALYTICS_PROVIDER: z.string().optional(),

@@ -6,7 +6,6 @@ describe("clientEnvSchema", () => {
     const result = clientEnvSchema.parse({});
     expect(result.NEXT_PUBLIC_APP_NAME).toBe("TEKMESIS");
     expect(result.NEXT_PUBLIC_APP_BASE_URL).toBe("http://localhost:3000");
-    expect(result.NEXT_PUBLIC_AXIA4_DIGITAL_URL).toBe("https://axia4.ch/digital");
     expect(result.NEXT_PUBLIC_ANALYTICS_ENABLED).toBe(false);
   });
 

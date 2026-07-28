@@ -519,16 +519,16 @@ checkpoint (decision #15) and before each production-readiness gate.
     direct instruction from Erwin, not inferred). Revisit only if Erwin
     later wants a real logo treatment (would need a transparent PNG/SVG
     requested directly from AXIA4). Not blocking anything.
-21. **`NEXT_PUBLIC_AXIA4_DIGITAL_URL` on the live Vercel deployment points
-    at `axia4.lovable.app/digital` without a locale segment.** Not a repo
-    issue — the codebase's own default is `https://axia4.ch/digital` (the
-    real domain per `CLAUDE.md`); Erwin set the Vercel env var to the
-    interim Lovable-hosted URL since `axia4.ch` DNS isn't live yet (see
-    risk #2 in `16_DEPLOYMENT_TEKMESIS_DOMAIN_AND_AXIA4.md`'s "AXIA4 remains
-    at Lovable"). Needs a `/de/` segment (`axia4.lovable.app/de/digital`).
-    This session has no Vercel dashboard access — one exact action for
-    Erwin: Vercel project → Settings → Environment Variables →
-    `NEXT_PUBLIC_AXIA4_DIGITAL_URL` → update value → redeploy.
+21. **RESOLVED 2026-07-28 — moot, not just fixed.** This item used to track
+    a stale Vercel env var (`NEXT_PUBLIC_AXIA4_DIGITAL_URL` pointing at an
+    interim Lovable-hosted URL). The actual footer/`/about` AXIA4 link was
+    since hardcoded straight to `https://axia4.ch` (Erwin: "Dann verlinke
+    einfach auf AXIA4.ch") rather than fixed by updating the env var —
+    which left the var declared but never read anywhere in `src/`. Removed
+    the now-dead `NEXT_PUBLIC_AXIA4_DIGITAL_URL` entirely: `schema.ts`,
+    `client.ts`, `schema.test.ts`, and both `.env.example` files. No
+    Vercel action needed — nothing consumes it, so there was nothing left
+    to configure.
 
 22. **A country-of-study search filter was requested (Erwin) and
     deliberately not built.** Publication-age and study-type filters were
