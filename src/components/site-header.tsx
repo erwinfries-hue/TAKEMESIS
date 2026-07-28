@@ -3,6 +3,7 @@ import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { TekmesisLogo } from "@/components/brand/tekmesis-logo";
+import { SiteNav } from "@/components/site-nav";
 
 export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   const navItems: Array<{ href: string; label: string }> = [
@@ -14,21 +15,12 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
   ];
 
   return (
-    <header className="border-b border-brand-neutral-200 px-6 py-4 print:hidden sm:px-10">
+    <header className="sticky top-0 z-40 border-b border-brand-neutral-200 bg-white px-6 py-4 print:hidden sm:px-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link href="/" className="shrink-0">
           <TekmesisLogo name={dict.brand.name} />
         </Link>
-        <nav
-          aria-label={locale === "de" ? "Hauptnavigation" : "Main navigation"}
-          className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-brand-neutral-600"
-        >
-          {navItems.map((item) => (
-            <Link key={item.href} href={item.href} className="hover:text-brand-teal-700">
-              {item.label}
-            </Link>
-          ))}
-        </nav>
+        <SiteNav items={navItems} ariaLabel={locale === "de" ? "Hauptnavigation" : "Main navigation"} />
         <LocaleSwitcher current={locale} />
       </div>
     </header>

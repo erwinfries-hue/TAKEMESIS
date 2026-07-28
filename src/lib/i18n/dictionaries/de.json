@@ -228,6 +228,7 @@
     "liveStatusIntro": "Jetzt live geprüft — genau die Verbindung, die auch bei einer echten Suche verwendet wird.",
     "liveStatusOk": "Erreichbar",
     "liveStatusError": "Nicht erreichbar",
+    "liveStatusCorpusSizeLabel": "ca. {{count}} Einträge (Datenbankgrösse laut Anbieter)",
     "liveStatusCheckedAtLabel": "Geprüft um",
     "liveStatusLoading": "Prüfe Quellen …"
   },
@@ -281,9 +282,7 @@
     "heading": "Über TEKMESIS",
     "body": "TEKMESIS macht aus einer Frage einen Evidence Report — echte Studien gefunden, verglichen und verständlich erklärt. Mit sichtbaren Quellen, offenen Limitationen und ganz ohne falsche Gewissheit.",
     "nameOriginHeading": "Der Name TEKMESIS",
-    "nameOriginBody": "Der Name TEKMESIS hat seinen Ursprung im Altgriechischen und steht für Beweis, Evidenz und begründete Schlussfolgerung. Genau dafür steht unsere Plattform: Wir suchen, vergleichen und strukturieren wissenschaftliche Erkenntnisse, damit aus komplexen Studien klare und nachvollziehbare Orientierung entsteht.",
-    "axia4Body": "TEKMESIS ist ein Produkt von AXIA4 by EF.",
-    "axia4Cta": "AXIA4 by EF entdecken"
+    "nameOriginBody": "Der Name TEKMESIS hat seinen Ursprung im Altgriechischen und steht für Beweis, Evidenz und begründete Schlussfolgerung. Genau dafür steht unsere Plattform: Wir suchen, vergleichen und strukturieren wissenschaftliche Erkenntnisse, damit aus komplexen Studien klare und nachvollziehbare Orientierung entsteht."
   },
   "footer": {
     "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung."

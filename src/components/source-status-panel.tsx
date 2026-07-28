@@ -2,6 +2,7 @@ import "server-only";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import { allAdapters } from "@/lib/source-adapters/registry";
+import { CORPUS_SIZES, formatApproxCount } from "@/lib/source-adapters/corpus-size";
 
 /**
  * Async server component — the actual live pings happen here, on the
@@ -20,6 +21,7 @@ export async function SourceStatusPanel({
   const statuses = await Promise.all(
     allAdapters.map(async (adapter) => ({
       name: adapter.capabilities.name,
+      corpusSize: CORPUS_SIZES[adapter.capabilities.id],
       status: await adapter.checkStatus(),
     })),
   );
@@ -33,13 +35,21 @@ export async function SourceStatusPanel({
       </h2>
       <p className="mb-4 text-sm text-brand-neutral-600">{dict.sourcesPage.liveStatusIntro}</p>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        {statuses.map(({ name, status }) => (
+        {statuses.map(({ name, corpusSize, status }) => (
           <div
             key={status.source}
             className="flex items-start justify-between gap-3 rounded-xl border border-brand-neutral-200 bg-white p-4"
           >
             <div>
               <p className="font-medium text-brand-navy-900">{name}</p>
+              {corpusSize && (
+                <p className="text-xs text-brand-neutral-600">
+                  {dict.sourcesPage.liveStatusCorpusSizeLabel.replace(
+                    "{{count}}",
+                    formatApproxCount(corpusSize.approxCount, locale),
+                  )}
+                </p>
+              )}
               <p className="text-xs text-brand-neutral-600">
                 {dict.sourcesPage.liveStatusCheckedAtLabel}{" "}
                 {new Date(status.checkedAt).toLocaleTimeString(dateFormat)}

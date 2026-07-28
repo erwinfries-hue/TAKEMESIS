@@ -225,6 +225,7 @@
     "liveStatusIntro": "Checked live, right now — the exact same connection a real search would use.",
     "liveStatusOk": "Reachable",
     "liveStatusError": "Not reachable",
+    "liveStatusCorpusSizeLabel": "approx. {{count}} entries (database size per provider)",
     "liveStatusCheckedAtLabel": "Checked at",
     "liveStatusLoading": "Checking sources …"
   },
@@ -278,9 +279,7 @@
     "heading": "About TEKMESIS",
     "body": "TEKMESIS turns a question into an Evidence Report — real studies found, compared, and explained in plain language. With visible sources, honest limitations, and no false certainty.",
     "nameOriginHeading": "The name TEKMESIS",
-    "nameOriginBody": "The name TEKMESIS originates from Ancient Greek and means proof, evidence, and reasoned conclusion. That's exactly what our platform stands for: we search, compare, and structure scientific findings so that complex studies become clear, traceable orientation.",
-    "axia4Body": "TEKMESIS is a product of AXIA4 by EF.",
-    "axia4Cta": "Discover AXIA4 by EF"
+    "nameOriginBody": "The name TEKMESIS originates from Ancient Greek and means proof, evidence, and reasoned conclusion. That's exactly what our platform stands for: we search, compare, and structure scientific findings so that complex studies become clear, traceable orientation."
   },
   "footer": {
     "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."
