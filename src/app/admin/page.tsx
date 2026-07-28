@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
+import { describeUnknownError } from "@/lib/errors/describe-unknown-error";
 import { SupabaseReportRepository } from "@/lib/reports/supabase-report-repository";
 import type { Report } from "@/lib/reports/types";
 import type { ReportStatus } from "@/lib/reports/lifecycle";
@@ -37,7 +38,8 @@ export default async function AdminOverviewPage() {
   try {
     reports = await new SupabaseReportRepository().listAll();
   } catch (error) {
-    dbError = error instanceof Error ? error.message : "Unbekannter Fehler";
+    console.error("Admin overview: failed to load reports from Supabase", error);
+    dbError = describeUnknownError(error);
   }
 
   const counts = new Map<ReportStatus, number>(STATUS_ORDER.map((status) => [status, 0]));

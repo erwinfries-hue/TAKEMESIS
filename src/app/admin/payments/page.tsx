@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
+import { describeUnknownError } from "@/lib/errors/describe-unknown-error";
 import { SupabasePaymentRepository } from "@/lib/payments/supabase-payment-repository";
 import type { Payment } from "@/lib/payments/types";
 import { refundPaymentAction } from "@/app/admin/actions";
@@ -15,7 +16,8 @@ export default async function AdminPaymentsPage() {
   try {
     payments = await new SupabasePaymentRepository().listAll();
   } catch (error) {
-    dbError = error instanceof Error ? error.message : "Unbekannter Fehler";
+    console.error("Admin payments: failed to load payments from Supabase", error);
+    dbError = describeUnknownError(error);
   }
 
   return (

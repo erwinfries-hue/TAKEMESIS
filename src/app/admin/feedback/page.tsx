@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
+import { describeUnknownError } from "@/lib/errors/describe-unknown-error";
 import { SupabaseFeedbackRepository } from "@/lib/feedback/supabase-feedback-repository";
 import { SupabaseIssueReportRepository } from "@/lib/feedback/supabase-issue-report-repository";
 import type { FeedbackEntry, IssueReport } from "@/lib/feedback/types";
@@ -26,7 +27,8 @@ export default async function AdminFeedbackPage() {
       new SupabaseIssueReportRepository().listAll(),
     ]);
   } catch (error) {
-    dbError = error instanceof Error ? error.message : "Unbekannter Fehler";
+    console.error("Admin feedback: failed to load feedback/issues from Supabase", error);
+    dbError = describeUnknownError(error);
   }
 
   return (
