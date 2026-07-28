@@ -77,14 +77,13 @@ Zahlungsmethode → Schlüssel erstellen bleibt aber gleich.)*
    - Falls Vercel eine Option "Sensitive" oder "Encrypt" anbietet: diese
      aktivieren.
 4. Speichern.
-5. **`AI_EXTRACTION_ENABLED` NICHT auf `true` setzen.** Dieser Schalter
-   existiert im Programmcode bereits als Vorbereitung, aber es gibt
-   aktuell noch keine Funktion, die ihn nutzt. Das Aktivieren geschieht
-   automatisch als Teil der nächsten Coding-Sitzung, sobald die
-   KI-Anbindung tatsächlich gebaut ist.
+5. **Zusätzlich `AI_EXTRACTION_ENABLED` auf `true` setzen** (Bereich
+   ebenfalls "Production"). **Update 2026-07-28:** Die KI-Anbindung ist
+   inzwischen fertig gebaut und bereits in den echten Bezahl-Report-Ablauf
+   eingebunden (`generate-report-content.ts`) — dieser Schalter aktiviert
+   sie jetzt tatsächlich, nicht nur als Vorbereitung.
 6. Redeploy anstossen (Deployments → letztes Deployment → "Redeploy"),
-   damit die neue Umgebungsvariable wirksam wird — auch wenn sich optisch
-   auf der Website noch nichts ändert.
+   damit die neuen Umgebungsvariablen wirksam werden.
 
 ## Was passiert danach?
 
