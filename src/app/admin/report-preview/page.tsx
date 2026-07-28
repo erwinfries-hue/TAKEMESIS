@@ -4,6 +4,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { defaultLocale, isLocale } from "@/lib/i18n/config";
 import { topics, topicCopy } from "@/content/topics";
 import { runSearch } from "@/lib/search/run-search";
+import { buildSearchQuery } from "@/lib/search/query-translation";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildPremiumReportData } from "@/lib/reports/premium-report";
 import { enrichPremiumReportWithAi } from "@/lib/ai/report-enrichment";
@@ -29,6 +30,7 @@ export default async function AdminReportPreviewPage({
   const domain = params.domain && topics.some((t) => t.slug === params.domain) ? params.domain : null;
 
   let reportView = null;
+  let debugPanel = null;
   if (question && domain) {
     const searchResult = await runSearch(question, domain, locale);
     const eligibility = assessEligibility(searchResult);
@@ -40,6 +42,29 @@ export default async function AdminReportPreviewPage({
       topicSlug: searchResult.topicSlug,
     });
     reportView = <PremiumReportView dict={dict} report={report} />;
+
+    // Temporary admin-only diagnostic (not shown to real users) — the
+    // premium report has no built-in exclusion-reason breakdown, which
+    // made a live "0 included, 23 found" result impossible to debug
+    // without this. Safe to remove once the underlying gap is understood.
+    debugPanel = (
+      <div className="rounded-lg border border-brand-warning-600 bg-brand-warning-100 p-4 text-sm">
+        <p className="font-semibold text-brand-navy-900">Debug: Übersetzte Suchanfrage & Ausschlussgründe</p>
+        <p className="mt-1">
+          Original: <code>{question}</code>
+        </p>
+        <p className="mt-1">
+          Übersetzt/an Quellen gesendet: <code>{buildSearchQuery(question, locale)}</code>
+        </p>
+        <ul className="mt-2 list-disc pl-5">
+          {Object.entries(searchResult.excludedByReason).map(([reason, count]) => (
+            <li key={reason}>
+              {reason}: {count}
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   }
 
   return (
@@ -101,6 +126,7 @@ export default async function AdminReportPreviewPage({
         </button>
       </form>
 
+      {debugPanel}
       {reportView}
     </main>
   );
