@@ -67,9 +67,16 @@ checkpoint (decision #15) and before each production-readiness gate.
    its official docs that it has a genuine free-text search API (unlike
    RePEc/IDEAS, whose public API turned out to be lookup-by-known-ID only, and
    unlike SSRN, which has no public API at all — neither was implemented for
-   that reason). Same live-verification gap as the original four: this
-   sandbox's egress policy blocks arxiv.org too, so arXiv is also
-   fixture-tested only, not yet run against the real API.
+   that reason). Same live-verification gap as the original four applied
+   initially (this sandbox's egress policy blocks arxiv.org too) — but
+   **resolved same day**: Erwin tested the arXiv deployment
+   (`tekmesis-gijacmx65-axia-4.vercel.app`) directly. `/sources`'s live-status
+   panel showed arXiv "Erreichbar", and a real search on a
+   Technologie-&-Digital-Life question returned a genuine arXiv result
+   ("Quantitative measurements of biological/chemical concentrations using
+   smartphone cameras", arXiv, 2026) correctly labeled and flowing through
+   screening/eligibility/teaser end-to-end. arXiv is now live-verified, same
+   status as the original four.
 
 ## Blocking (must resolve before Phase 7 is signed off as production-ready)
 
