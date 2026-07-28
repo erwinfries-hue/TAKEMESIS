@@ -2,7 +2,8 @@
   "brand": {
     "name": "TEKMESIS",
     "claim": "FROM STUDIES TO CLARITY.",
-    "parent": "A product of AXIA4 by EF"
+    "parent": "A product of AXIA4 by EF",
+    "parentPrefix": "A product of"
   },
   "nav": {
     "skipToContent": "Skip to content",

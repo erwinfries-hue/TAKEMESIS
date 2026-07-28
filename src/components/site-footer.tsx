@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 const AXIA4_ROOT_URL = "https://axia4.ch";
+const AXIA4_BRAND_NAME = "AXIA4 by EF";
 
 export function SiteFooter({ dict }: { dict: Dictionary }) {
   return (
@@ -21,15 +22,13 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
         </Link>
       </nav>
       <p className="mb-2 flex flex-wrap items-center justify-center gap-2">
-        <a
-          href={AXIA4_ROOT_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-semibold text-brand-navy-900 hover:underline"
-        >
-          {dict.brand.name}
-        </a>
-        <span>{dict.brand.parent}</span>
+        <span className="font-semibold text-brand-navy-900">{dict.brand.name}</span>
+        <span>
+          {dict.brand.parentPrefix}{" "}
+          <a href={AXIA4_ROOT_URL} target="_blank" rel="noopener noreferrer" className="hover:underline">
+            {AXIA4_BRAND_NAME}
+          </a>
+        </span>
       </p>
       <p className="mt-1">{dict.footer.disclaimer}</p>
     </footer>
