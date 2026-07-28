@@ -608,6 +608,93 @@ checkpoint (decision #15) and before each production-readiness gate.
     explicitly relabeled as such (not "country of study") and scoped to
     OpenAlex-only with a visible coverage caveat.
 
+    **Concept prepared 2026-07-29, awaiting Erwin's decision — no code
+    written yet (`CLAUDE.md`: "No implementation before concept
+    approval").** Re-researched all four adapters plus two new candidate
+    sources to see if anything changed since the original finding above.
+    Important caveat up front: this sandbox has no outbound network access
+    to any of these APIs (same block as everywhere else in this project),
+    so every finding below is doc/search-sourced, not a live-verified JSON
+    response — a real spot-check (e.g. from `/admin`) is needed before
+    committing to any option.
+
+    *Research findings:*
+    - **OpenAlex, Crossref:** unchanged. Confirmed via each provider's own
+      published API schema (not just search results) that both only expose
+      author-institution or publisher/funder geography — nothing
+      population-level. Crossref's funder *country* additionally requires
+      a second lookup against the separate Funder Registry endpoint; still
+      institution-level even then.
+    - **Europe PMC / PubMed (new finding):** both index MEDLINE MeSH
+      headings, and MeSH has a real "Geographicals" tree (Z, e.g.
+      descriptor `D005842`) that NLM's own documentation says describes
+      physical/study location, not just subject content — genuinely
+      population-adjacent, unlike author affiliation. But coverage is
+      real-but-sparse: MeSH indexing only applies to the MEDLINE-indexed
+      subset (preprints and non-MEDLINE Europe PMC content have none at
+      all), and geographic tagging in practice skews toward
+      epidemiology/public-health articles. A filter built on this would
+      need a loud, permanent "based on medical indexing, only available for
+      some studies — missing doesn't mean not relevant" disclaimer, not a
+      quiet gap.
+    - **ClinicalTrials.gov API v2 (new candidate, not previously
+      considered):** no API key required; each registered trial has a
+      genuinely structured, population/site-level `locations[]` field
+      (city/state/country per site) — the most honest "country of study"
+      data of anything researched. Reachable only for the subset of
+      records that carry a registered NCT ID: Crossref has an explicit
+      "Linked Clinical Trials" metadata feature or PubMed's
+      `SecondaryID`/`DataBankList` sometimes carries the same ID.
+      Realistic scope: RCTs only, and only the ones actually
+      linked/registered with an ID present in the metadata we already
+      fetch — likely a minority of included studies, not a general filter.
+
+    *Three options, effort-ordered:*
+    1. **Institution-country badge, not a filter (OpenAlex only).** Map
+       the already-fetched `authorships[].institutions[].country_code`
+       into a new optional `NormalizedRecord` field, show it as a small,
+       clearly-labeled "Forschungseinrichtung: [Land]" line on study
+       cards/profiles — no filtering, so no risk of narrowing results on
+       shaky grounds. Smallest effort (one adapter mapping change + one UI
+       line + dictionary strings), but doesn't deliver an actual filter,
+       just more transparency about what's already shown.
+    2. **MeSH geographic-location filter (Europe PMC + NCBI), explicitly
+       caveated.** A real optional filter ("Studienregion, soweit
+       erfasst"), scored against extracted MeSH Z-tree terms, with a
+       permanent, prominent incompleteness disclaimer and a distinct
+       "nicht erfasst" bucket rather than silently dropping unindexed
+       studies. Medium effort: extend the Europe PMC adapter and the NCBI
+       efetch call (already being parsed for abstracts this session — the
+       MeSH heading list is available in the same response, low
+       incremental cost there) to extract geographic MeSH terms, add the
+       field to `NormalizedRecord`, build a new filter following the
+       existing `filters.ts` pattern (age/study-type), add scope-filter UI
+       + dictionary strings. Delivers a real filter, but only for two of
+       four/five sources, with real sparsity.
+    3. **ClinicalTrials.gov cross-reference for linked RCTs.** The most
+       honest data, the most work: extract an NCT ID when present in
+       Crossref/PubMed metadata, add a new outbound lookup to
+       ClinicalTrials.gov v2 (new base-URL env var, new adapter-shaped
+       module with its own tests/fixtures, matching the existing adapter
+       pattern), wire `LocationCountries` into `NormalizedRecord`, build
+       filter UI. Coverage would likely be a small minority of included
+       studies (only linked, registered RCTs), so worth sizing that
+       percentage with a real query before committing engineering time.
+
+    *Recommendation, not a decision:* option 1 is a safe, quick way to
+    add real transparency without the honesty risk a half-covered filter
+    carries, but doesn't fulfil the original ask (an actual filter).
+    Option 2 is the most realistic path to a genuine filter at reasonable
+    effort, provided the incompleteness is surfaced loudly rather than
+    quietly. Option 3 is the gold-standard answer if a real "country of
+    study population" filter matters enough to justify a new source
+    integration, but its actual coverage percentage is unknown and should
+    be checked live before scoping further. Owner: Erwin — pick an option
+    (or none, keeping the filter deferred) once back; live-verifying the
+    exact OpenAlex/Europe PMC/PubMed/ClinicalTrials.gov JSON shapes from an
+    environment with real network access should happen before writing any
+    adapter code, regardless of which option is chosen.
+
 23. **RESOLVED 2026-07-28 — live-verified end to end.** Same
     live-network-validation gap as the four search adapters
     (`OPEN_RISKS.md` #2) meant this sandbox could never test it (no
