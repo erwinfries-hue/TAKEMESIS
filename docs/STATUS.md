@@ -1775,10 +1775,80 @@ keine Regression durch die Wörterbuch-/Klassifizierer-Änderungen dieser
 Session. Damit ist auch der zuvor letzte offene Punkt aus dem
 "Admin tool: live-verify example questions"-Abschnitt abgeschlossen.
 
+### Treuhänder-Antworten umgesetzt: Impressum, Preishinweis, AXIA4-Branding (Erwin's request)
+Erwin liess die Fragen aus `docs/TREUHAENDER_FRAGEN.md` von seinem Treuhänder
+beantworten und lud die ausgefüllte Word-Datei hoch. Kernaussagen: keine
+Schweizer MWST-Pflicht (unter CHF 100'000), keine EU-OSS-Registrierung zum
+Start (bewusster Treuhänder-Entscheid, Mitigation: Stripe Tax aktivieren),
+kein Handelsregister-/UID-Eintrag nötig, EU-Widerrufsrecht kein Blocker aber
+braucht eine Verzichts-Checkbox im künftigen echten Checkout — und die
+wichtige neue Information, dass das Geschäft als **Privatperson** (Erwin
+Fries) läuft, nicht als "AXIA4 GROUP, Einzelunternehmen". Nach zwei kurzen
+Rückfragen (Adresse Hofmatt/Hagendorn vs. "6332 Cham" → dieselbe Adresse, nur
+diskreter dargestellt; Umfang der Branding-Änderung → auch "Digital"
+entfernen, nicht nur "GROUP") umgesetzt:
+- `/legal`: Anbieterin jetzt "Inhaber: Erwin Fries, 6332 Cham, Schweiz";
+  Preis-/Steuerhinweis neu mit den vom Treuhänder vorgegebenen Formulierungen
+  (CH: nicht MWST-pflichtig; Ausland: Reverse Charge gemäss Art. 8 MWSTG),
+  beide gleichzeitig sichtbar, da die Herkunft des Käufers technisch nicht
+  erkannt wird.
+- "AXIA4 GROUP" → "AXIA4" und "AXIA4 Digital" → "AXIA4" überall (Footer,
+  `/about`, E-Mail-Footer, `brand.parent`) inkl. der `CLAUDE.md`-Identitätszeile
+  (Root + docs, identisch gehalten) — eine explizite Instruktion, keine eigene
+  Interpretation.
+- `FINAL_CONCEPT_DECISIONS.md`, `OPEN_RISKS.md` (#1 resolved, #14 um die
+  Widerrufsrecht-Checkbox ergänzt, #20 aktualisiert), `PRODUCTION_RUNBOOK.md`
+  entsprechend nachgeführt.
+`npm run verify` grün (593 Unit-Tests), volle 60-Spec-E2E-Suite grün, `/legal`
+und `/about` visuell gegen einen echten Production-Build bestätigt.
+
+### Datenbank-Live-Einrichtung: Supabase-Projekt, drei Blocker gefunden und behoben
+Erwin richtete ein neues Supabase-Projekt ein (Region Zürich) und führte alle
+drei bestehenden SQL-Migrationen im SQL Editor aus — live bestätigt
+("Success" bei allen drei). Danach zeigte `/admin` weiterhin "Datenbank nicht
+verbunden", drei verschiedene, nacheinander gefundene und behobene Ursachen:
+
+1. **`SUPABASE_URL` initial nur für "Preview" statt "Production" gespeichert**
+   in Vercel — nach Korrektur (Environment auf "Production and Preview")
+   bestätigt via Zeitstempel/Scope-Anzeige.
+2. **"Unbekannter Fehler" ohne Details** — `src/app/admin/page.tsx` (und die
+   beiden anderen Supabase-gestützten Admin-Seiten) zeigten nur
+   `error instanceof Error ? error.message : "Unbekannter Fehler"`; ein
+   Supabase/PostgREST-Fehlerobjekt ist aber nicht zwangsläufig eine echte
+   `Error`-Instanz. Vercels Runtime-Logs zeigen den Response-Body ausgehender
+   Requests nur hinter einer kostenpflichtigen Funktion (Projekt läuft auf
+   dem Hobby-Plan) — daher neu `src/lib/errors/describe-unknown-error.ts`
+   (Duck-Typing auf ein `message`-Feld, Fallback `JSON.stringify`) plus
+   `console.error(...)`-Logging in allen drei Admin-Seiten, damit der echte
+   Fehler sowohl auf der Seite selbst als auch in den normalen Vercel-Logs
+   sichtbar wird. 4 neue Unit-Tests.
+3. **Eigentliche Root Cause, dank Punkt 2 sichtbar geworden: "permission
+   denied for table reports".** Bei der Projekt-Neuanlage hatte ich Erwin
+   empfohlen, die Supabase-Option "Automatically expose new tables" zu
+   deaktivieren — mit der falschen Begründung, der Service-Role-Key umgehe
+   Row-Level-Security ohnehin. RLS-Umgehung und grundlegende
+   Postgres-GRANT-Rechte sind aber zwei getrennte Ebenen: ohne diese Option
+   vergibt Supabase bei neuen Tabellen **keiner** Rolle automatisch Rechte,
+   und keine der bisherigen Migrationen enthielt ein explizites `GRANT`.
+   Ergebnis: alle 14 Tabellen waren für jede Rolle inkl. `service_role`
+   komplett gesperrt. Fix: neue Migration
+   `20260728110000_grant_service_role_privileges.sql` — `GRANT ALL ON ALL
+   TABLES/SEQUENCES IN SCHEMA public TO service_role` plus `ALTER DEFAULT
+   PRIVILEGES`, damit auch künftige Migrationen automatisch die richtigen
+   Rechte bekommen. Bewusst nur `service_role`, nicht `anon`/`authenticated`
+   — die sollen laut Sicherheitsmodell (keine Nutzerkonten, ausschliesslich
+   serverseitiger Service-Key) weiterhin keinerlei Zugriff haben.
+
+Noch nicht final live bestätigt: ob `/admin` nach Ausführen von Migration 4
+tatsächlich "Datenbank nicht verbunden" nicht mehr zeigt — nächster Schritt
+mit Erwin.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
-- Treuhänder confirmation on Swiss MWST / EU cross-border VAT (`OPEN_RISKS.md` #1)
-  — blocks live Stripe mode and real payments only.
+- ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved
+  2026-07-28**, see the entry above and `OPEN_RISKS.md` #1. Remaining before
+  live Stripe: activating Stripe Tax (Stripe dashboard action) and the EU
+  withdrawal-right checkbox at checkout (`OPEN_RISKS.md` #14).
 - Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — the
   resilience path (all sources down) is confirmed working live in this
   sandbox; the success path (sources actually returning data) still needs a
