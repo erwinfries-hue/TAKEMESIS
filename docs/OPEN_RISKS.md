@@ -632,33 +632,24 @@ checkpoint (decision #15) and before each production-readiness gate.
       showing a fake trend or silently doing nothing, neither of which
       is better than not having it).
 
-26. **The high-risk detector's `"scheidung"` term (for
-    `legal_financial_high_stakes`, meant to catch "Scheidung"/divorce)
-    is a substring of "Entscheidung(en)" — one of the most common German
-    words — because matching is plain `haystack.includes(term)` with no
-    word-boundary awareness.** Found via the offline example-question
-    audit (`STATUS.md`'s "Beispielfragen-Check" entry): 5 of 60 example
-    questions tripped this before being reworded. The reword fixes those
-    5 examples but not the underlying term, which will still
-    false-positive on any real user question containing "Entscheidung"
-    — a genuinely common word, not an edge case, and directly relevant
-    since one whole topic category is literally named "Konsum &
-    Kaufentscheidungen". Deliberately not fixed with a general
-    word-boundary regex across all terms in this pass: German
-    compounding means some real matches legitimately need the term as a
-    *suffix* with a letter immediately before it (e.g. "Blutkrebs",
-    "Hautkrebs" for the `cancer` term "krebs") — a blanket boundary
-    check would turn those into false negatives, which
-    `high-risk.ts`'s own design comment calls the unacceptable failure
-    mode for a safety gate ("a false positive is the acceptable failure
-    mode — a false negative is not"). Owner: whoever next touches
-    `high-risk.ts` — the safer fix is almost certainly per-term, not
-    global (e.g. replace bare `"scheidung"` with more specific compound
-    forms like `"scheidungsverfahren"`, `"scheidungsanwalt"`,
-    `"ehescheidung"` that don't collide with "Entscheidung", rather than
-    changing the matching algorithm itself). Worth an actual audit of
-    every DE/EN term in `TERMS`/`CHILD_TERMS`/`TREATMENT_TERMS` for
-    similar accidental-substring risk, not just this one found instance.
+26. **RESOLVED 2026-07-28.** The high-risk detector's `"scheidung"` term (for
+    `legal_financial_high_stakes`) false-positived on "Entscheidung(en)"
+    (decision) — a genuinely common German word, not an edge case, and
+    directly relevant since one whole topic category is literally named
+    "Konsum & Kaufentscheidungen". Fixed per-term (not with a blanket
+    word-boundary change, for the reason this item originally laid out:
+    German compounding needs the term to still match as a *suffix*, e.g.
+    "Blutkrebs"/"Hautkrebs" for `cancer`'s "krebs" term, which a global
+    boundary check would break into false negatives — the unacceptable
+    failure mode per `high-risk.ts`'s own design comment). The actual fix:
+    a negative-lookbehind regex (`/(?<!ent)scheidung/`) scoped only to this
+    one term, excluding the "entscheid*" family while still matching
+    genuine divorce terms (Scheidung, Ehescheidung, Scheidungsanwalt).
+    Live-verified with new test cases in `high-risk.test.ts`. **Still
+    open:** the broader suggestion this item made — auditing every DE/EN
+    term in `TERMS`/`CHILD_TERMS`/`TREATMENT_TERMS` for similar
+    accidental-substring risk, not just this one found instance — was not
+    done; only the one live-found case was fixed.
 
 27. **The 60 example questions' domain classification and high-risk
     status are now verified (offline, see `STATUS.md`), but whether they
