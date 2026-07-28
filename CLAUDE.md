@@ -2,7 +2,7 @@
 
 ## Identity
 
-TEKMESIS is an AXIA4 Digital product.
+TEKMESIS is an AXIA4 product.
 
 - Main domain: `https://tekmesis.com`
 - AXIA4 introduction: `https://axia4.ch/digital`

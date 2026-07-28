@@ -2,7 +2,7 @@
   "brand": {
     "name": "TEKMESIS",
     "claim": "FROM STUDIES TO CLARITY.",
-    "parent": "Ein Produkt von AXIA4 Digital"
+    "parent": "Ein Produkt von AXIA4"
   },
   "nav": {
     "skipToContent": "Zum Inhalt springen",
@@ -17,7 +17,7 @@
   "home": {
     "description": "TEKMESIS macht aus deiner Frage einen Evidence Report — echte Studien gefunden, verglichen und verständlich erklärt.",
     "comingSoon": "Die Plattform befindet sich im Aufbau.",
-    "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo.",
+    "priceNote": "CHF 9.90, Einmalzahlung, Preis ohne Mehrwertsteuer (Schweiz: nicht MWST-pflichtig; Ausland: Reverse-Charge-Verfahren gemäss Art. 8 MWSTG). Kein Abo.",
     "priceAnchor": "Eine falsche Kaufentscheidung oder ein wirkungsloses Vorgehen kostet meist mehr als CHF 9.90 — dieser Report hilft dir, das vorher zu wissen.",
     "heroCta": "Themen entdecken",
     "liveDemoBadge": "Beispielhafte Darstellung",
@@ -264,23 +264,23 @@
     "heading": "Impressum & AGB",
     "sellerHeading": "Anbieterin",
     "seller": [
-      "AXIA4 GROUP, Einzelunternehmen von Erwin Fries",
-      "Hofmatt 9, 6332 Hagendorn, Schweiz"
+      "Inhaber: Erwin Fries",
+      "6332 Cham, Schweiz"
     ],
     "contactHeading": "Kontakt",
     "supportEmail": "support@tekmesis.com",
     "responseTime": "Antwort innerhalb von 3–5 Werktagen.",
     "priceHeading": "Preis",
-    "priceNote": "CHF 9.90, Einmalzahlung, keine MWST ausgewiesen (Kleinunternehmerregelung / Gründungsphase). Kein Abo.",
-    "taxNote": "Die Klärung der grenzüberschreitenden Mehrwertsteuerpflicht (DACH) mit dem Treuhänder ist im Gang. Diese Seite wird nach Abschluss aktualisiert.",
+    "priceNote": "CHF 9.90, Einmalzahlung. Preis ohne Mehrwertsteuer. Kein Abo.",
+    "taxNote": "Schweiz: nicht MWST-pflichtig. Ausland: Leistungsort im Ausland gemäss Art. 8 MWSTG – nicht der Schweizer MWST unterliegend (Reverse Charge / Steuerschuldnerschaft des Leistungsempfängers).",
     "disclaimerHeading": "Haftungsausschluss",
     "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung, Diagnose oder Behandlung."
   },
   "aboutPage": {
     "heading": "Über TEKMESIS",
     "body": "TEKMESIS macht aus einer Frage einen Evidence Report — echte Studien gefunden, verglichen und verständlich erklärt. Mit sichtbaren Quellen, offenen Limitationen und ganz ohne falsche Gewissheit.",
-    "axia4Body": "TEKMESIS ist ein Produkt von AXIA4 Digital.",
-    "axia4Cta": "AXIA4 Digital entdecken"
+    "axia4Body": "TEKMESIS ist ein Produkt von AXIA4.",
+    "axia4Cta": "AXIA4 entdecken"
   },
   "footer": {
     "disclaimer": "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung."

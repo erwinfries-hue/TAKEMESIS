@@ -2,7 +2,7 @@
   "brand": {
     "name": "TEKMESIS",
     "claim": "FROM STUDIES TO CLARITY.",
-    "parent": "A product of AXIA4 Digital"
+    "parent": "A product of AXIA4"
   },
   "nav": {
     "skipToContent": "Skip to content",
@@ -17,7 +17,7 @@
   "home": {
     "description": "TEKMESIS turns your question into an Evidence Report — real studies found, compared, and explained in plain language.",
     "comingSoon": "The platform is under construction.",
-    "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription.",
+    "priceNote": "CHF 9.90, one-time payment, price excludes VAT (Switzerland: not subject to VAT; abroad: reverse-charge mechanism under Art. 8 Swiss VAT Act). No subscription.",
     "priceAnchor": "A wrong purchase or an ineffective approach usually costs more than CHF 9.90 — this report helps you know that in advance.",
     "heroCta": "Explore topics",
     "liveDemoBadge": "Illustrative example",
@@ -261,23 +261,23 @@
     "heading": "Legal & Terms",
     "sellerHeading": "Seller",
     "seller": [
-      "AXIA4 GROUP, sole proprietorship of Erwin Fries",
-      "Hofmatt 9, 6332 Hagendorn, Switzerland"
+      "Owner: Erwin Fries",
+      "6332 Cham, Switzerland"
     ],
     "contactHeading": "Contact",
     "supportEmail": "support@tekmesis.com",
     "responseTime": "Response within 3–5 business days.",
     "priceHeading": "Price",
-    "priceNote": "CHF 9.90, one-time payment, no VAT shown (small-business regime / formation phase). No subscription.",
-    "taxNote": "Clarification of cross-border VAT obligations (DACH) with our tax advisor is in progress. This page will be updated once resolved.",
+    "priceNote": "CHF 9.90, one-time payment. Price excludes VAT. No subscription.",
+    "taxNote": "Switzerland: not subject to VAT. Abroad: place of supply outside Switzerland under Art. 8 Swiss VAT Act — not subject to Swiss VAT (reverse charge / VAT accounted for by the recipient).",
     "disclaimerHeading": "Disclaimer",
     "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice, diagnosis, or treatment."
   },
   "aboutPage": {
     "heading": "About TEKMESIS",
     "body": "TEKMESIS turns a question into an Evidence Report — real studies found, compared, and explained in plain language. With visible sources, honest limitations, and no false certainty.",
-    "axia4Body": "TEKMESIS is a product of AXIA4 Digital.",
-    "axia4Cta": "Discover AXIA4 Digital"
+    "axia4Body": "TEKMESIS is a product of AXIA4.",
+    "axia4Cta": "Discover AXIA4"
   },
   "footer": {
     "disclaimer": "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice."

@@ -45,7 +45,7 @@ describe("email templates", () => {
   it("every template includes the AXIA4 disclaimer footer", () => {
     for (const build of [buildReportReadyEmail, buildReportFailedEmail, buildRefundConfirmationEmail]) {
       const de = build({ locale: "de", ...baseParams });
-      expect(de.text).toContain("AXIA4 Digital");
+      expect(de.text).toContain("AXIA4");
       expect(de.text).toMatch(/ersetzt keine individuelle Fachberatung/);
     }
   });

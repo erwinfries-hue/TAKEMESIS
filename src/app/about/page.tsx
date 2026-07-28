@@ -30,7 +30,7 @@ export default async function AboutPage() {
           rel="noopener noreferrer"
           className="text-sm font-semibold text-brand-navy-900 hover:underline"
         >
-          AXIA4 GROUP
+          AXIA4
         </a>
         <p className="text-brand-neutral-600">{dict.aboutPage.axia4Body}</p>
         <a

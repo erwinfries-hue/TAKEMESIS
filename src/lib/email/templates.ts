@@ -20,13 +20,13 @@ export interface ReportEmailParams {
 const FOOTER = {
   de: {
     signature: "TEKMESIS – FROM STUDIES TO CLARITY.",
-    parent: "Ein Produkt von AXIA4 Digital.",
+    parent: "Ein Produkt von AXIA4.",
     disclaimer:
       "TEKMESIS bietet allgemeine wissenschaftliche Informationen und evidenzbasierte Orientierung für Fragen des Lebens. Es ersetzt keine individuelle Fachberatung.",
   },
   en: {
     signature: "TEKMESIS – FROM STUDIES TO CLARITY.",
-    parent: "A product of AXIA4 Digital.",
+    parent: "A product of AXIA4.",
     disclaimer:
       "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice.",
   },

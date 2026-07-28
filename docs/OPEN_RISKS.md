@@ -5,12 +5,20 @@ checkpoint (decision #15) and before each production-readiness gate.
 
 ## Blocking (must resolve before live Stripe / real payments)
 
-1. **EU cross-border VAT/OSS treatment undetermined.** AXIA4 GROUP (Einzelunternehmen
-   Erwin Fries) is not yet Swiss-MWST-registered and hasn't clarified DACH
-   cross-border digital-services VAT obligations with a Treuhänder. Blocks: Stripe
-   live mode, real payments from DE/AT customers, final `/legal` tax wording.
-   Owner: Erwin, with Treuhänder. Interim mitigation: decision #12's neutral wording,
-   test-mode Stripe only until resolved.
+1. **RESOLVED 2026-07-28.** EU cross-border VAT/OSS treatment was undetermined;
+   Erwin's Treuhänder has now answered all questions from
+   `docs/TREUHAENDER_FRAGEN.md` (full answers preserved in the uploaded, filled-in
+   docx). Outcome: Erwin Fries operates TEKMESIS as a private individual, not
+   as "AXIA4 GROUP" (AXIA4 is an umbrella brand only) — `/legal` and the price
+   note were updated accordingly (decisions #11/#12/#16/#17 in
+   `FINAL_CONCEPT_DECISIONS.md`). Confirmed not Swiss-MWST-liable (under CHF
+   100'000). No EU OSS registration at launch — deliberate Treuhänder call,
+   mitigated by activating **Stripe Tax** from day one (still to do as an
+   account action once Stripe live credentials exist — not code). Remaining
+   before Stripe can go live: real Stripe account/credentials (unrelated to
+   this VAT question) and the EU withdrawal-right waiver checkbox at checkout
+   (new item, see #14 below — the checkout UI itself doesn't exist yet
+   either way).
 
 ## Blocking (must resolve before Phase 4 is signed off as production-ready)
 
@@ -77,7 +85,13 @@ checkpoint (decision #15) and before each production-readiness gate.
     #13's real credentials exist. First task once they do: create a report
     record (`draft` → `preview_ready`) when a teaser renders, wire the buy
     button to `createCheckoutSession`, and swap the in-memory repositories
-    for the Supabase ones everywhere.
+    for the Supabase ones everywhere. **Added 2026-07-28 (Treuhänder, decision
+    #17):** this same checkout build must include a mandatory checkbox where
+    the buyer confirms they waive the EU 14-day withdrawal right, since
+    delivery is immediate — Stripe Checkout's built-in `consent_collection`
+    (terms-of-service acceptance) is a good technical fit for this, confirmed
+    not a launch blocker by the Treuhänder but must ship together with the
+    real buy button, not be retrofitted later.
 
 ## Non-blocking, monitor through beta
 
@@ -271,13 +285,20 @@ checkpoint (decision #15) and before each production-readiness gate.
     Erwin explicitly decided (2026-07-26) against embedding
     `docs/assets/brand/AXIA4_OFFICIAL_LOGO_REFERENCE.png` (a non-transparent
     baseline JPEG) on-site at all — superseding the brief earlier attempt to
-    wrap it in a white badge. Footer and `/about` now show plain text
-    "AXIA4 GROUP" linking to `https://axia4.ch`, matching the legal-entity
-    name already used on `/legal` ("AXIA4 GROUP, Einzelunternehmen von Erwin
-    Fries"). `src/components/brand/axia4-logo.tsx` and the copied asset were
-    removed as unused. Revisit only if Erwin later wants a real logo
-    treatment (would need a transparent PNG/SVG requested directly from
-    AXIA4). Not blocking anything.
+    wrap it in a white badge. Footer and `/about` show plain text linking to
+    `https://axia4.ch`. `src/components/brand/axia4-logo.tsx` and the copied
+    asset were removed as unused. **Update 2026-07-28 (Treuhänder session):**
+    the link text and the legal-entity wording it used to match were both
+    changed — "AXIA4 GROUP" → "AXIA4" everywhere (footer, `/about`, email
+    footer, `brand.parent`), and `/legal`'s seller line no longer says
+    "AXIA4 GROUP, Einzelunternehmen von Erwin Fries" at all: AXIA4 is
+    confirmed to be an umbrella brand only, the actual legal seller is Erwin
+    Fries as a private individual ("Inhaber: Erwin Fries, 6332 Cham,
+    Schweiz" — see decision #11). `CLAUDE.md`'s identity line was updated
+    from "AXIA4 Digital product" to "AXIA4 product" to match (an explicit,
+    direct instruction from Erwin, not inferred). Revisit only if Erwin
+    later wants a real logo treatment (would need a transparent PNG/SVG
+    requested directly from AXIA4). Not blocking anything.
 21. **`NEXT_PUBLIC_AXIA4_DIGITAL_URL` on the live Vercel deployment points
     at `axia4.lovable.app/digital` without a locale segment.** Not a repo
     issue — the codebase's own default is `https://axia4.ch/digital` (the

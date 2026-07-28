@@ -1,6 +1,15 @@
 # Fragen an den Treuhänder — MWST/VAT-Klärung vor Stripe-Live-Schaltung
 
-Kontext für den Treuhänder: TEKMESIS ist ein digitales Produkt der AXIA4 GROUP
+> **Beantwortet 2026-07-28.** Alle 12 Fragen wurden vom Treuhänder
+> beantwortet (Erwin hat die ausgefüllte Word-Datei hochgeladen). Ergebnisse
+> und Umsetzung: `FINAL_CONCEPT_DECISIONS.md` Entscheidungen #11/#12/#16/#17,
+> `OPEN_RISKS.md` #1 (jetzt resolved) und #14, `STATUS.md`. Der Kontext und
+> die ursprünglichen Fragen unten bleiben als Aufzeichnung erhalten, sind
+> aber teils durch die Antworten überholt (z. B. war "AXIA4 GROUP,
+> Einzelunternehmen" die zum Zeitpunkt der Fragen angenommene Rechtsform —
+> die Antwort ergab, dass es sich um eine Privatperson handelt).
+
+Kontext für den Treuhänder (Stand bei Fragestellung): TEKMESIS ist ein digitales Produkt der AXIA4 GROUP
 (Einzelunternehmen Erwin Fries, Hofmatt 9, 6332 Hagendorn, Schweiz). Verkauft
 wird ein einmaliger, digital gelieferter Evidence-Report für CHF 9.90 pro
 Kauf (kein Abo, keine physische Ware, sofortiger digitaler Zugriff nach

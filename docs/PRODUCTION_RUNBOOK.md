@@ -93,9 +93,12 @@ then reports back so the next session can verify and continue.
 
 ## 2. Production preparation (Phase 12)
 
-1. **Treuhänder VAT sign-off** (`OPEN_RISKS.md` #1) — must land before
-   Stripe live mode or any real DE/AT payment. Blocks the rest of this
-   section until resolved.
+1. **Treuhänder VAT sign-off — resolved 2026-07-28** (`OPEN_RISKS.md` #1).
+   No Swiss MWST liability, no EU OSS registration at launch (deliberate
+   Treuhänder call). Before flipping `STRIPE_MODE=live`: activate **Stripe
+   Tax** in the Stripe dashboard (confirmed sufficient mitigation by the
+   Treuhänder) and make sure the checkout flow includes the EU
+   withdrawal-right waiver checkbox (`OPEN_RISKS.md` #14).
 2. **DNS at Hostpoint** — in Vercel, add `tekmesis.com` as a production
    domain; Vercel will show the exact A/CNAME records to set. Set only
    those website records at Hostpoint; **do not touch existing MX/mail

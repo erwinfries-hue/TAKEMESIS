@@ -41,7 +41,7 @@ export default async function LegalPage() {
             {dict.legalPage.priceHeading}
           </h2>
           <p className="text-sm text-brand-neutral-600">{dict.legalPage.priceNote}</p>
-          <p className="mt-2 text-sm text-brand-warning-600">{dict.legalPage.taxNote}</p>
+          <p className="mt-2 text-sm text-brand-neutral-600">{dict.legalPage.taxNote}</p>
         </section>
 
         <section>
