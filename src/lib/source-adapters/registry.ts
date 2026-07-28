@@ -1,4 +1,5 @@
 import "server-only";
+import { arxivAdapter } from "./arxiv";
 import { crossrefAdapter } from "./crossref";
 import { europePmcAdapter } from "./europe-pmc";
 import { ncbiAdapter } from "./ncbi";
@@ -17,6 +18,7 @@ export const allAdapters: SourceAdapter[] = [
   crossrefAdapter,
   europePmcAdapter,
   ncbiAdapter,
+  arxivAdapter,
 ];
 
 const BIOMEDICAL_ROUTE: SourceAdapter[] = [
@@ -31,6 +33,7 @@ const BROAD_WITH_BIOMEDICAL_ENRICHMENT: SourceAdapter[] = [
   europePmcAdapter,
   crossrefAdapter,
 ];
+const TECHNOLOGY_ROUTE: SourceAdapter[] = [openAlexAdapter, arxivAdapter, crossrefAdapter];
 
 const TOPIC_ROUTES: Record<string, SourceAdapter[]> = {
   "gesundheit-praevention": BIOMEDICAL_ROUTE,
@@ -44,7 +47,7 @@ const TOPIC_ROUTES: Record<string, SourceAdapter[]> = {
   "kinder-erziehung": BROAD_WITH_BIOMEDICAL_ENRICHMENT,
   "konsum-kaufentscheidungen": BROAD_ROUTE,
   "umwelt-nachhaltigkeit": BROAD_ROUTE,
-  "technologie-digital-life": BROAD_ROUTE,
+  "technologie-digital-life": TECHNOLOGY_ROUTE,
 };
 
 /** Falls back to the broad route for an unmapped slug rather than throwing — routing is a search-quality concern, not a hard failure. */

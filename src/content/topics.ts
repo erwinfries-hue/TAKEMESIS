@@ -387,7 +387,7 @@ export const topics: Topic[] = [
   {
     slug: "technologie-digital-life",
     riskProfile: "standard",
-    sourceRoute: "OpenAlex (primär) · Crossref (ergänzend)",
+    sourceRoute: "OpenAlex (primär) · arXiv, Crossref (ergänzend)",
     de: {
       name: "Technologie & Digital Life",
       description: "Fragen zu digitalen Gewohnheiten, Tools und deren Wirkung auf Alltag und Leistung.",

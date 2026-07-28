@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { fetchJson } from "./http";
+import { fetchJson, fetchText } from "./http";
 import { SourceAdapterError } from "./types";
 
 function jsonResponse(body: unknown, ok = true, status = 200): Response {
@@ -76,5 +76,30 @@ describe("fetchJson", () => {
         timeoutMs: 1000,
       }),
     ).rejects.toMatchObject({ status: 404 });
+  });
+});
+
+describe("fetchText", () => {
+  it("returns the raw response body as text (arXiv's Atom XML, not JSON)", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      text: async () => "<feed><entry/></feed>",
+    } as Response);
+
+    const result = await fetchText("https://example.test", { source: "arxiv", fetchImpl });
+    expect(result).toBe("<feed><entry/></feed>");
+  });
+
+  it("throws a SourceAdapterError on a non-2xx response", async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
+      ok: false,
+      status: 503,
+      text: async () => "",
+    } as Response);
+
+    await expect(
+      fetchText("https://example.test", { source: "arxiv", fetchImpl, maxRetries: 0 }),
+    ).rejects.toBeInstanceOf(SourceAdapterError);
   });
 });

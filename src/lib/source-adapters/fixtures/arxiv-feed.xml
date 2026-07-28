@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom">
+  <link href="http://export.arxiv.org/api/query?search_query=all:fixture" rel="self" type="application/atom+xml"/>
+  <title type="text">ArXiv Query: search_query=all:fixture</title>
+  <id>http://arxiv.org/api/fixture</id>
+  <updated>2026-07-28T00:00:00-04:00</updated>
+  <opensearch:totalResults xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">2</opensearch:totalResults>
+  <opensearch:startIndex xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">0</opensearch:startIndex>
+  <opensearch:itemsPerPage xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/">15</opensearch:itemsPerPage>
+  <entry>
+    <id>http://arxiv.org/abs/2301.00001v2</id>
+    <updated>2023-01-15T00:00:00Z</updated>
+    <published>2023-01-01T00:00:00Z</published>
+    <title>
+   A Fixture Study on Distributed Systems Reliability
+    </title>
+    <summary>
+   This fixture paper examines reliability patterns in distributed
+   systems under network partition. Results are simulated for test purposes.
+    </summary>
+    <author>
+      <name>Ada Fixture</name>
+    </author>
+    <author>
+      <name>Grace Testcase</name>
+    </author>
+    <link href="http://arxiv.org/abs/2301.00001v2" rel="alternate" type="text/html"/>
+    <link title="pdf" href="http://arxiv.org/pdf/2301.00001v2" rel="related" type="application/pdf"/>
+    <arxiv:primary_category xmlns:arxiv="http://arxiv.org/schemas/atom" term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.NI" scheme="http://arxiv.org/schemas/atom"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2301.00002v1</id>
+    <updated>2023-02-10T00:00:00Z</updated>
+    <published>2023-02-10T00:00:00Z</published>
+    <title>Fixture Note on Quantum Error Correction</title>
+    <summary>A short fixture note, later published in a journal.</summary>
+    <author>
+      <name>Fixture Research Group</name>
+    </author>
+    <link href="http://arxiv.org/abs/2301.00002v1" rel="alternate" type="text/html"/>
+    <link title="pdf" href="http://arxiv.org/pdf/2301.00002v1" rel="related" type="application/pdf"/>
+    <arxiv:primary_category xmlns:arxiv="http://arxiv.org/schemas/atom" term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="quant-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <arxiv:doi xmlns:arxiv="http://arxiv.org/schemas/atom">10.1000/fixture.arxiv.002</arxiv:doi>
+    <arxiv:journal_ref xmlns:arxiv="http://arxiv.org/schemas/atom">Phys. Rev. Fixture 12 (2023) 345</arxiv:journal_ref>
+  </entry>
+</feed>

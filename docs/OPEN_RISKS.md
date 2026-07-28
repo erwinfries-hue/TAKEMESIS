@@ -61,7 +61,15 @@ checkpoint (decision #15) and before each production-readiness gate.
    unconfirmed: whether the orphaned `takemesis-preview` Vercel project
    (created by an initial clone-flow misstep before the real import) was ever
    deleted — cosmetic, not a functional risk. Owner: Erwin or next session
-   with access to the live Vercel logs.
+   with access to the live Vercel logs. **Update (2026-07-28): a 5th adapter,
+   arXiv, was added** (routed into "Technologie & Digital Life" alongside
+   OpenAlex/Crossref — see `SOURCE_COVERAGE_MATRIX.md`) after confirming via
+   its official docs that it has a genuine free-text search API (unlike
+   RePEc/IDEAS, whose public API turned out to be lookup-by-known-ID only, and
+   unlike SSRN, which has no public API at all — neither was implemented for
+   that reason). Same live-verification gap as the original four: this
+   sandbox's egress policy blocks arxiv.org too, so arXiv is also
+   fixture-tested only, not yet run against the real API.
 
 ## Blocking (must resolve before Phase 7 is signed off as production-ready)
 

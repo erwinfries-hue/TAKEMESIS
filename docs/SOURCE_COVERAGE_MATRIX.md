@@ -18,7 +18,7 @@ this matrix defines routing intent, not final query parameters.
 | Kinder, Erziehung & Entwicklung | OpenAlex | Europe PMC/NCBI (developmental-health-adjacent), Crossref | Heightened safeguarding language; individual-child-assessment questions routed to `restricted_high_risk` |
 | Konsum & Kaufentscheidungen | OpenAlex | Crossref | Weaker biomedical relevance; expect more `eligible_with_limitations` |
 | Umwelt, Nachhaltigkeit & Alltag | OpenAlex | Crossref | |
-| Technologie & Digital Life | OpenAlex | Crossref | |
+| Technologie & Digital Life | OpenAlex | arXiv, Crossref | arXiv added for CS/physics/engineering preprint coverage (2026-07) |
 
 ## Layer roles (all categories)
 
@@ -27,7 +27,16 @@ this matrix defines routing intent, not final query parameters.
   candidate record regardless of domain.
 - **Biomedical/health enrichment:** Europe PMC + NCBI E-utilities — used where the
   category or the specific question is health/biomedical-adjacent.
+- **Technology/preprint enrichment:** arXiv — used for Technologie & Digital Life
+  (CS/physics/math/engineering). Preprints are not peer-reviewed; always disclosed
+  as such (no journal_ref → `venue: "arXiv"`, never presented as a peer-reviewed
+  journal article).
 - **Optional:** Semantic Scholar — only if approved later; not in P0 build.
+- **Considered and rejected:** SSRN has no legitimate free search API (would
+  require scraping, which the evidence-integrity rules forbid). RePEc/IDEAS'
+  public API supports only lookup-by-known-ID, not free-text search, so it
+  can't serve this app's "search from a user question" flow either — no
+  economics/social-science-specific source added for now.
 - **Content layer:** abstracts and legally available open-access full text only,
   from whichever of the above returns it — no scraping, no paywall bypass.
 

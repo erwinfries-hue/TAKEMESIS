@@ -50,7 +50,12 @@ describe("checkAllSourceStatuses", () => {
   it("returns one status per adapter", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({}) } as Response),
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({}),
+        text: async () => "<feed></feed>",
+      } as Response),
     );
 
     const statuses = await checkAllSourceStatuses();

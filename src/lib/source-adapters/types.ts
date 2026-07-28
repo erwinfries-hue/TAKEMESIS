@@ -9,7 +9,7 @@
  * a record came from.
  */
 
-export type SourceId = "openalex" | "crossref" | "europe_pmc" | "ncbi_pubmed";
+export type SourceId = "openalex" | "crossref" | "europe_pmc" | "ncbi_pubmed" | "arxiv";
 
 export type PublicationType =
   | "meta_analysis"
@@ -65,7 +65,7 @@ export interface SourceSearchParams {
 export interface SourceAdapterCapabilities {
   id: SourceId;
   name: string;
-  domainCoverage: "broad_discovery" | "metadata_verification" | "biomedical";
+  domainCoverage: "broad_discovery" | "metadata_verification" | "biomedical" | "technology_research";
   requiresApiKey: boolean;
 }
 

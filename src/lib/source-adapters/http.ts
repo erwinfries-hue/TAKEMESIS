@@ -8,7 +8,7 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export interface FetchJsonOptions {
+export interface FetchOptions {
   source: SourceId;
   headers?: Record<string, string>;
   timeoutMs?: number;
@@ -17,13 +17,17 @@ export interface FetchJsonOptions {
   fetchImpl?: typeof fetch;
 }
 
+export type FetchJsonOptions = FetchOptions;
+
 /**
- * Shared GET-JSON helper: bounded timeout, bounded retries with backoff, and
- * response validation (non-2xx → SourceAdapterError). Adapters must degrade
- * safely when a source is unavailable (10_TECHNICAL_ARCHITECTURE...md,
+ * Shared bounded-timeout, bounded-retry-with-backoff GET, with response
+ * validation (non-2xx → SourceAdapterError). Adapters must degrade safely
+ * when a source is unavailable (10_TECHNICAL_ARCHITECTURE...md,
  * "Resilience") — this is the one place that behavior is enforced.
+ * `fetchJson`/`fetchText` below just pick how to read the body — JSON for
+ * every adapter except arXiv, which returns Atom XML.
  */
-export async function fetchJson(url: string, options: FetchJsonOptions): Promise<unknown> {
+async function fetchWithRetry(url: string, options: FetchOptions): Promise<Response> {
   const {
     source,
     headers,
@@ -47,7 +51,7 @@ export async function fetchJson(url: string, options: FetchJsonOptions): Promise
           response.status,
         );
       }
-      return await response.json();
+      return response;
     } catch (error) {
       lastError = error;
       if (attempt < maxRetries) {
@@ -64,4 +68,14 @@ export async function fetchJson(url: string, options: FetchJsonOptions): Promise
     lastError,
     lastError instanceof SourceAdapterError ? lastError.status : undefined,
   );
+}
+
+export async function fetchJson(url: string, options: FetchJsonOptions): Promise<unknown> {
+  const response = await fetchWithRetry(url, options);
+  return response.json();
+}
+
+export async function fetchText(url: string, options: FetchOptions): Promise<string> {
+  const response = await fetchWithRetry(url, options);
+  return response.text();
 }

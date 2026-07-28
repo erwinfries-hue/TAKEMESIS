@@ -36,6 +36,7 @@ export const serverEnvSchema = z.object({
     .string()
     .url()
     .default("https://eutils.ncbi.nlm.nih.gov/entrez/eutils"),
+  ARXIV_BASE_URL: z.string().url().default("https://export.arxiv.org/api/query"),
   NCBI_API_KEY: z.string().optional(),
   NCBI_TOOL: z.string().min(1).default("TEKMESIS"),
   NCBI_EMAIL: z.string().email().optional(),
