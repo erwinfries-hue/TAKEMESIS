@@ -3,8 +3,6 @@ import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { clientEnv } from "@/lib/env/client";
 
-const AXIA4_ROOT_URL = "https://axia4.ch";
-
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
@@ -24,14 +22,6 @@ export default async function AboutPage() {
       <p className="max-w-2xl text-brand-neutral-600">{dict.aboutPage.body}</p>
 
       <section className="flex flex-col items-center gap-2">
-        <a
-          href={AXIA4_ROOT_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-sm font-semibold text-brand-navy-900 hover:underline"
-        >
-          AXIA4
-        </a>
         <p className="text-brand-neutral-600">{dict.aboutPage.axia4Body}</p>
         <a
           href={clientEnv.NEXT_PUBLIC_AXIA4_DIGITAL_URL}

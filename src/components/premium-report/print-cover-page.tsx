@@ -49,7 +49,9 @@ export function PrintCoverPage({
       <div className="flex justify-center">
         <ConfidenceGauge label={report.confidenceLabel} dict={dict} />
       </div>
-      <p className="mt-8 text-xs text-brand-neutral-600">{dict.brand.parent} · tekmesis.com</p>
+      <p className="mt-8 text-xs text-brand-neutral-600">
+        {dict.brand.name} {dict.brand.parent} · tekmesis.com
+      </p>
     </div>
   );
 }
