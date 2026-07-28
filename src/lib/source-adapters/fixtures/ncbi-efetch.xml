@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2024//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_240101.dtd">
+<PubmedArticleSet>
+  <PubmedArticle>
+    <MedlineCitation>
+      <PMID Version="1">30000001</PMID>
+      <Article>
+        <Abstract>
+          <AbstractText Label="BACKGROUND" NlmCategory="BACKGROUND">Interval training is widely used to improve cardiorespiratory fitness.</AbstractText>
+          <AbstractText Label="METHODS" NlmCategory="METHODS">Fixture participants completed a randomized controlled trial.</AbstractText>
+          <AbstractText Label="RESULTS" NlmCategory="RESULTS">VO2max increased significantly in the intervention group.</AbstractText>
+        </Abstract>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+  <PubmedArticle>
+    <MedlineCitation>
+      <PMID Version="1">30000002</PMID>
+      <Article>
+        <Abstract>
+          <AbstractText>This narrative review summarizes fixture evidence on cold exposure and recovery.</AbstractText>
+        </Abstract>
+      </Article>
+    </MedlineCitation>
+  </PubmedArticle>
+</PubmedArticleSet>

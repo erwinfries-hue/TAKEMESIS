@@ -344,11 +344,25 @@ checkpoint (decision #15) and before each production-readiness gate.
     handle. Acceptable for beta (falls back to a manual 12-topic picker rather
     than guessing), but should be revisited once `ANTHROPIC_API_KEY` is
     provisioned and AI-based query interpretation is built.
-11. **NCBI adapter has no abstract text.** `esummary` doesn't return abstracts;
-    every NCBI-sourced record is `metadata_only`. Fetching abstracts would need an
-    additional `efetch` call with XML parsing — deliberately deferred (P1) rather
-    than half-built. Europe PMC and OpenAlex cover abstract-level biomedical/broad
-    content in the meantime.
+11. **RESOLVED 2026-07-28.** `esummary` doesn't return abstracts, so every
+    NCBI-sourced record used to stay `metadata_only`. Added a second,
+    separate `efetch` call (`db=pubmed&retmode=xml&rettype=abstract`) over
+    the same id list, parsed with `fast-xml-parser` (same library as the
+    arXiv adapter). Handles both plain abstracts and structured ones
+    (BACKGROUND/METHODS/RESULTS/CONCLUSIONS paragraphs, common for RCTs and
+    systematic reviews — joined with their `Label` kept as a prefix, not
+    discarded). A real found-and-fixed bug along the way: fast-xml-parser
+    coerces purely-numeric element text (a PMID) into a JS `number`, which
+    silently broke the `Map<pmid, abstract>` lookup against `sourceId`
+    (always a string) until `extractPmid` explicitly normalizes with
+    `String(...)`. The efetch call is a best-effort enrichment, not a hard
+    requirement (docs/10: "Resilience") — on any failure it degrades
+    silently to the metadata-only records already produced by
+    esearch+esummary, rather than failing the whole NCBI source. Unit-tested
+    (`ncbi.test.ts`) against a realistic two-article fixture (one
+    structured, one plain abstract) and an efetch-failure case; not yet
+    live-verified against the real E-utilities endpoint (same live-network
+    gap as the rest of the source adapters, `OPEN_RISKS.md` #2).
 12. **Screening only excludes what's mechanically computable.** `retracted`,
     `protocol_only`, and `insufficient_detail` are implemented; the doc's other
     exclusion reasons (wrong topic, wrong population/context, non-comparable
