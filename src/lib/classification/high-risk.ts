@@ -94,7 +94,17 @@ const TREATMENT_TERMS: Partial<Record<Locale, string[]>> = {
   en: ["medication", "dosage", "treatment", "diagnosis", "symptom", "vaccine", "therapy"],
 };
 
+// "entscheidung"/"entscheiden" (decision/to decide) contain "scheidung"
+// (divorce) as a plain substring — a live-found false positive that wrongly
+// hard-blocked ordinary questions like "Welche Kaufentscheidung...". The
+// lookbehind keeps genuine matches (Scheidung, Ehescheidung, Scheidungsanwalt)
+// while excluding only the "entscheid*" family.
+const SCHEIDUNG_TERM = /(?<!ent)scheidung/;
+
 function includesTerm(haystack: string, term: string): boolean {
+  if (term === "scheidung") {
+    return SCHEIDUNG_TERM.test(haystack);
+  }
   return haystack.includes(term);
 }
 

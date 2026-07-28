@@ -44,5 +44,11 @@ describe("detectHighRisk", () => {
 
   it("flags legal/financial high-stakes questions", () => {
     expect(isHighRisk("Wie läuft eine Scheidung rechtlich ab?", "de")).toBe(true);
+    expect(isHighRisk("Was sind die Vor- und Nachteile einer Ehescheidung?", "de")).toBe(true);
+  });
+
+  it("does not flag 'Entscheidung' as divorce (live bug 2026-07-28: substring match)", () => {
+    expect(isHighRisk("Welche Kaufentscheidung ist bei Elektroautos sinnvoll?", "de")).toBe(false);
+    expect(isHighRisk("Wie triffst du eine gute Entscheidung unter Unsicherheit?", "de")).toBe(false);
   });
 });
