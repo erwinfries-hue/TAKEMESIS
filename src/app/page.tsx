@@ -9,7 +9,7 @@ import { LiveDemoPreview } from "@/components/live-demo-preview";
 import { buildExampleReportPreviewSearchResult } from "@/content/example-report-preview";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
-import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
+import { ProcessTimeline } from "@/components/process-timeline";
 import { HeroIllustration } from "@/components/hero-illustration";
 import { StudyLookupForm } from "@/components/study-lookup-form";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
@@ -100,29 +100,9 @@ export default async function Home() {
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.howItWorksHeading}
         </h2>
-        {/* flex-wrap + justify-center rather than a 4-column grid: 7 steps
-            don't divide evenly into 4 columns, so a grid leaves an empty
-            gap in the last row. This centers the incomplete last row
-            instead. */}
-        <ol className="flex w-full max-w-4xl flex-wrap justify-center gap-4">
-          {dict.home.howItWorksSteps.map((step, index) => {
-            const StepIcon = PROCESS_STEP_ICONS[index];
-            return (
-              <li
-                key={step}
-                className="flex w-full flex-col gap-2 rounded-lg border border-brand-neutral-200 bg-white p-4 sm:w-[calc(50%-0.5rem)] lg:w-[calc(25%-0.75rem)]"
-              >
-                <div className="flex items-center gap-2">
-                  {StepIcon && <StepIcon className="h-5 w-5 text-brand-teal-600" />}
-                  <span className="text-xs font-semibold text-brand-teal-700">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <span className="text-sm text-brand-neutral-950">{step}</span>
-              </li>
-            );
-          })}
-        </ol>
+        <ProcessTimeline
+          steps={dict.home.howItWorksSteps.map((step) => ({ title: step }))}
+        />
         <p className="max-w-xl text-center text-sm text-brand-neutral-600">
           {dict.home.howItWorksNote}
         </p>

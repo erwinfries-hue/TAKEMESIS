@@ -27,7 +27,7 @@ export function SiteFooter({ dict }: { dict: Dictionary }) {
           rel="noopener noreferrer"
           className="font-semibold text-brand-navy-900 hover:underline"
         >
-          AXIA4
+          {dict.brand.name}
         </a>
         <span>{dict.brand.parent}</span>
       </p>
