@@ -65,19 +65,22 @@ checkpoint (decision #15) and before each production-readiness gate.
 
 ## Blocking (must resolve before Phase 7 is signed off as production-ready)
 
-13. **Supabase migration and Stripe checkout/webhook code have never touched a
-    real system.** No Supabase project and no Stripe account are provisioned
-    in this session — Erwin explicitly chose (2026-07-25) to have this code
-    built against documented contracts and unit-tested with in-memory
-    repositories / a mocked Stripe SDK rather than wait for real test
-    credentials first, same tradeoff as the Phase 4 adapters. **Before
-    trusting Phase 7 in production:** run `supabase/migrations/
-    20260725220000_init_core_schema.sql` against a real Supabase project,
-    swap the in-memory repositories for the Supabase ones in a real request
-    path, and complete a full Stripe test-mode checkout (success, cancellation,
-    bad signature, duplicate webhook delivery — the full test list in
-    `00_START_HERE_ERWIN.md` §9). Owner: Erwin or next session with
-    credentials.
+13. **Partially resolved 2026-07-28: Supabase side is now live and confirmed
+    working.** Erwin provisioned a real Supabase project (Zurich region),
+    ran all 4 migrations (including the new `service_role` GRANT fix, see
+    `STATUS.md`'s "Datenbank-Live-Einrichtung" entry for the full story —
+    3 separate blockers found and fixed: env var scoped to the wrong Vercel
+    environment, an unhelpful "Unbekannter Fehler" message masking the real
+    cause, and the actual root cause — no table-level GRANTs because
+    "Automatically expose new tables" was disabled at project creation).
+    `/admin` now genuinely connects and shows real (empty) data instead of
+    the "database not connected" fallback — the first real confirmation any
+    Supabase-backed code path in this app has worked outside a unit test.
+    **Still not done:** no Stripe account/credentials exist yet, so
+    `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` remain unset and a full
+    Stripe test-mode checkout (success, cancellation, bad signature,
+    duplicate webhook delivery — `00_START_HERE_ERWIN.md` §9) is still
+    unverified. Owner: Erwin or next session with Stripe credentials.
 14. **The live UI still can't sell anything.** `PaywallPanel` on `/search` has
     no working "buy" button, and no `reports` row is created when a teaser is
     shown — Phase 7 built the checkout/webhook/lifecycle *library*, not the

@@ -1839,9 +1839,14 @@ verbunden", drei verschiedene, nacheinander gefundene und behobene Ursachen:
    — die sollen laut Sicherheitsmodell (keine Nutzerkonten, ausschliesslich
    serverseitiger Service-Key) weiterhin keinerlei Zugriff haben.
 
-Noch nicht final live bestätigt: ob `/admin` nach Ausführen von Migration 4
-tatsächlich "Datenbank nicht verbunden" nicht mehr zeigt — nächster Schritt
-mit Erwin.
+**Live bestätigt:** Erwin führte Migration 4 im SQL Editor aus ("Success"),
+lud `/admin` neu — die "Datenbank nicht verbunden"-Meldung ist verschwunden,
+die Seite zeigt echte (leere) Status-Zähler und "Noch keine Reports.". Damit
+ist die Supabase-Anbindung zum ersten Mal in diesem Projekt vollständig live
+bestätigt, nicht nur code-vollständig. `OPEN_RISKS.md` #13 entsprechend als
+teilweise resolved markiert (Migration + Verbindung bestätigt; Stripe-Teil
+und die eigentliche Report-Erstellung/Checkout-Verdrahtung — `OPEN_RISKS.md`
+#14 — bleiben offen).
 
 ## Blocking items tracked for later (do not block continued implementation)
 
