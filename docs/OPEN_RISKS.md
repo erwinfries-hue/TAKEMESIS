@@ -431,10 +431,12 @@ checkpoint (decision #15) and before each production-readiness gate.
     making `forwardToPostHog` async and awaiting `client.flush()` after
     `capture()`, and by awaiting it (wrapped in try/catch, same
     "analytics must never break the page" principle as the repository
-    write) from `track()` instead of firing it and forgetting. Not yet
-    re-verified live after this fix (found near the end of this session) —
-    next step is repeating the same `/search` domain-confirmation test and
-    confirming `domain_classified` actually appears in PostHog's Live tab.
+    write) from `track()` instead of firing it and forgetting.
+    **Re-verified live immediately after the fix deployed:** repeated the
+    `/search` domain-confirmation test and confirmed real `domain_classified`
+    events (library: `posthog-node`, several distinct runs) in PostHog's
+    Events view — PostHog forwarding is now genuinely live-verified, not
+    just configured.
 
 16. **Report retention/expiry job (decision #5) is built; `CRON_SECRET` is
     now provisioned and the schedule live-verified.** `src/lib/reports/
