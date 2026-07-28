@@ -77,9 +77,18 @@ checkpoint (decision #15) and before each production-readiness gate.
    needs actual investigation with real title/abstract text, not a blind
    threshold tweak, and ideally the debug panel extended to show excluded
    record titles (currently only aggregate counts), not just a guess under
-   time pressure. Owner: next session, start from
-   `/admin/report-preview`'s debug panel. **Second live case confirms this
-   is systemic, not one unlucky example:** "Welche Wirkung hat regelmässiger
+   time pressure. **Update (2026-07-28, fixed): root cause was two
+   independently-drifted stopword lists** — `query-translation.ts` had its
+   own smaller list than `relevance.ts`'s, so connector words like "hilft"/
+   "beim" passed through untranslated into the sent query, then got
+   silently dropped during *screening* by `relevance.ts`'s different list —
+   shifting the meaningful-term count and picking a stricter matching rule
+   than intended. Fixed by exporting `relevance.ts`'s `STOPWORDS` and
+   merging it into both of `query-translation.ts`'s locale-specific lists,
+   plus closing the two dictionary gaps below. Not yet re-verified live
+   (needs a redeploy + another `/admin/report-preview` run) — do that
+   before considering this fully closed. **Second live case confirmed this
+   was systemic, not one unlucky example, before the fix:** "Welche Wirkung hat regelmässiger
    Ausdauersport auf das Herz-Kreislauf-System bei Erwachsenen?" → 6 found,
    0 included, all `not_relevant`. Translated query:
    `"effect regelmässiger ausdauersport herz kreislauf system adults"` —
