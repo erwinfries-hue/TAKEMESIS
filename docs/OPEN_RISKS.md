@@ -313,6 +313,24 @@ checkpoint (decision #15) and before each production-readiness gate.
     `report_ready`, etc.) are still not called anywhere — wiring them is
     real, separate work for whenever the admin funnel dashboards from this
     item are actually built (no value in tracking events nothing reads yet).
+    **Update (2026-07-28): Resend email sending is now live-verified.**
+    `tekmesis.com` was added and verified as a Resend sending domain (DKIM
+    TXT + SPF MX/TXT records added at Hostpoint, scoped to the `send`
+    subdomain so the existing Hostpoint mailbox MX at the root domain is
+    untouched); `EMAIL_API_KEY` and `EMAIL_FROM` are set in Vercel
+    Production. Confirmed end-to-end via a real Stripe test-mode purchase:
+    the "Dein TEKMESIS Evidence Report ist bereit" email arrived with a
+    working report link. While fixing this, also found and fixed a
+    pre-existing DNS misconfiguration unrelated to email: both
+    `tekmesis.com` and `www.tekmesis.com` were resolving to Hostpoint's
+    default hosting IP instead of Vercel (no dedicated `www` record
+    existed; both fell through to a `*.tekmesis.com` wildcard A record
+    pointing at Hostpoint), which made the live site itself unreachable
+    over HTTPS. Fixed by pointing the root A record at Vercel's IP, adding
+    an explicit `www` CNAME to Vercel, and removing the stale root AAAA
+    record; both domains now show "Valid Configuration" in Vercel.
+    PostHog forwarding remains unverified (site ID still unset) — separate
+    from this item's email scope.
 
 16. **Report retention/expiry job (decision #5) is built but never triggered
     live, and there's still no page that reads it back.** `src/lib/reports/
