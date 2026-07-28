@@ -232,6 +232,53 @@ checkpoint (decision #15) and before each production-readiness gate.
     account. Owner: Erwin, next step once the remaining two Stripe values
     are set in Vercel.
 
+    **Update (2026-07-28): live-verified against the real Stripe test-mode
+    account.** (a) **Cancellation:** aborting at Stripe Checkout correctly
+    lands on `/checkout/cancel` with a working "erneut versuchen" CTA. (b)
+    **Duplicate webhook / idempotency:** Stripe's own dashboard (Developers →
+    Webhooks → Ereignisübermittlungen) showed a real, organic case — a
+    `checkout.session.completed` delivery failed with "Zeitüberschreitung"
+    (timeout), and Stripe's automatic retry 18s later succeeded with no
+    double-fulfillment (matches the unit-tested idempotency behavior in
+    `webhook.test.ts`). (c) **Bad signature:** covered by
+    `webhook-route-handler.test.ts` (400 on a failing `verifyWebhookSignature`)
+    — not re-run live, since crafting an invalid-signature request against
+    the real endpoint needs direct HTTP access this sandbox's network policy
+    blocks (`www.tekmesis.com` gets a proxy 403); low-value to chase further
+    given the unit coverage.
+
+    **Root cause of the observed timeout, found and fixed:**
+    `/api/stripe/webhook/route.ts` had no `maxDuration`, unlike
+    `/admin/report-preview` which explicitly sets `maxDuration = 60` for the
+    identical reason — `fulfillCheckoutSession` awaits
+    `generateReportContent` (live search + AI extraction/synthesis)
+    synchronously before responding to Stripe, well past a default 10s
+    serverless budget. Fixed by adding the same `maxDuration = 60`.
+
+    **Residual gap, not fixed (needs a real architecture decision, out of
+    scope for a quick fix):** `SupabaseWebhookEventRepository.recordIfNew()`
+    claims an event (unique-constraint insert) *before* fulfillment runs,
+    and `markProcessed()` only happens at the very end. If the function is
+    killed mid-`generateReportContent` (a slow AI call, a Vercel redeploy,
+    an actual timeout even at 60s) after the event is recorded but before
+    `markProcessed`, a Stripe retry of the same event ID hits the unique
+    violation, `recordIfNew` returns `false`, and `processStripeEvent`
+    short-circuits at the top (`if (!isNewEvent) return { processed: false
+    }`) — the report's own `status !== "checkout_started"` fallback check
+    inside `fulfillCheckoutSession` is never reached, because execution
+    never gets that far again. Net effect: a paid report can get
+    permanently stuck in `paid` with no automatic recovery, and nothing
+    currently flags this state as an error in `/admin` (CLAUDE.md: "failures
+    visible in admin" — not yet true for this specific failure mode). Two
+    directions for a future session: (1) move the "claim" to happen
+    atomically with completion (e.g. only call `recordIfNew` after
+    fulfillment succeeds, using the Stripe event ID plus a shorter-lived
+    lock to still prevent concurrent duplicate processing), or (2) add an
+    admin view that flags reports stuck in `paid`/`processing` past some age
+    threshold, so a human can trigger the existing `processing → ready|
+    failed` admin retry path manually. Not attempted here — real design
+    work, not a quick fix.
+
 ## Non-blocking, monitor through beta
 
 4. **Single-founder operational load.** Refunds, corrections, deletions, and safety
