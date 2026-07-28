@@ -124,7 +124,33 @@ checkpoint (decision #15) and before each production-readiness gate.
    likely candidates: build the deferred NCBI `efetch` abstract call from
    #11, or route biomedical topics away from title-only NCBI results when
    Europe PMC's overlapping PubMed-derived coverage can serve the same
-   records with abstracts). **Second live case confirmed this
+   records with abstracts). **RESOLVED (2026-07-28) — re-tested live a
+   fourth time with the fuller debug panel and the "0 included" framing
+   turned out to be a diagnostic gap, not the current real state: 60 raw
+   hits, 3 merged as duplicates, 30 correctly excluded as `not_relevant`
+   (Europe PMC results with generic/tangential titles — e.g. rabbit-meat-
+   tenderness and poultry-feed studies that happen to also discuss
+   "guanidinoacetic acid," creatine's metabolic precursor), and
+   **27 genuinely included** — the report rendered real, substantive,
+   appropriately-hedged AI-synthesized findings ("Kreatin ist am
+   wirksamsten für Muskelwachstum bei jungen, gesunden Menschen mit
+   ausreichendem Krafttraining," correctly flagging limited evidence in
+   older populations and non-human-to-human caveats), not the "Noch nicht
+   verfügbar" placeholder. This is the first live confirmation that both
+   the search/relevance pipeline and the AI extraction/synthesis pipeline
+   (`OPEN_RISKS.md` #18) work end-to-end together, for a real question,
+   with `AI_EXTRACTION_ENABLED`/`ANTHROPIC_API_KEY` genuinely active in
+   Vercel Production. Since `generate-report-content.ts` (the real paid-
+   checkout path) calls the exact same `enrichPremiumReportWithAi()`, this
+   is now confirmed live for actual paid reports too, not just the admin
+   preview tool. The stopword-sync + dictionary-gap fixes earlier in this
+   entry were real and worth keeping; the NCBI explicit-`AND` change turned
+   out to be a no-op (see above) but is harmless. No further action needed
+   here — the temporary debug panel additions to `/admin/report-preview`
+   (query/exclusion-reason/per-source/dedup-provenance diagnostics) can
+   stay as a permanent troubleshooting tool or be trimmed later; neither is
+   urgent.
+   **Second live case confirmed this
    was systemic, not one unlucky example, before the fix:** "Welche Wirkung hat regelmässiger
    Ausdauersport auf das Herz-Kreislauf-System bei Erwachsenen?" → 6 found,
    0 included, all `not_relevant`. Translated query:
@@ -355,13 +381,20 @@ checkpoint (decision #15) and before each production-readiness gate.
     Erwin's chosen "Option A": wired into `/example-report`'s cached
     fictional demo and a new admin-only `/admin/report-preview` against
     real search results, deliberately **not** into the public `/search`
-    flow or a persisted report yet. What's still open: (a) real quality
-    judgment — no session with a live `ANTHROPIC_API_KEY` has actually run
-    this against genuine evidence yet, so whether Haiku-tier extraction is
-    good enough is still unverified (use `/admin/report-preview` once the
-    key exists); (b) the persisted-report flow itself (`OPEN_RISKS.md`
-    #14) is unchanged and still needed before AI synthesis can be part of
-    the real paid product, not just a preview tool.
+    flow or a persisted report yet. **RESOLVED (2026-07-28): both open
+    items here are closed.** (a) Real quality judgment: `ANTHROPIC_API_KEY`
+    + `AI_EXTRACTION_ENABLED` were confirmed set in Vercel Production, and a
+    live `/admin/report-preview` run ("Hilft Kreatin beim Muskelaufbau?", 27
+    included studies) produced genuinely good, appropriately-hedged
+    Haiku-tier synthesis — see the resolution note under item #2 above for
+    the actual text. Quality looks solid at first read; keep spot-checking
+    as more real questions run through it, but this is no longer
+    unverified. (b) The persisted-report flow (`OPEN_RISKS.md` #14) was
+    built and live-tested (real Stripe purchase → real generated report)
+    earlier in this session, and `generate-report-content.ts` calls the
+    same `enrichPremiumReportWithAi()` unconditionally — so AI synthesis is
+    confirmed wired into the real paid product now, not just the preview
+    tool.
     **Update (2026-07-26): hardened against malformed model output.** A
     bug-hunt pass found that `study-extraction.ts`/`report-synthesis.ts`
     trusted the Anthropic tool-use response with an unchecked `as` cast —
