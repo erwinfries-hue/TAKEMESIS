@@ -587,6 +587,24 @@ checkpoint (decision #15) and before each production-readiness gate.
     more than one process/worker, which would explain why a module-level
     singleton doesn't see all requests.
 
+    **Update (2026-07-28): not reproduced in 3 separate attempts today —
+    downgrading confidence, not marking resolved.** Ran (a) the rate-limit
+    test in isolation, (b) `search.spec.ts` + `security-headers.spec.ts`
+    together, and (c) the full 62-test suite via `npm run test:e2e` — all
+    three runs passed cleanly, zero failures, first try each time. No code
+    in `in-memory-rate-limiter.ts`, `get-rate-limiter.ts`,
+    `check-free-search-limit.ts`, or the e2e `webServer` config was touched
+    this session, so nothing was actually fixed here — either this is a
+    genuinely intermittent/timing-dependent flake that didn't trigger today
+    (sandbox load, scheduling luck), or something about this particular
+    sandbox instance differs from whatever produced the original failure.
+    Per `CLAUDE.md` ("never claim a test passed if it was not run"): it was
+    run, three times, and passed each time — that's what's being reported,
+    not a claim that the underlying flake is fixed. Left as-is rather than
+    closed; if it recurs, the reproduction commands above and the
+    single-vs-multi-process `next start` hypothesis are still the next
+    thing to check.
+
 25. **Two items from the "WOW-Zusatzleistungen" marketing brainstorm
     (Erwin's request) were deliberately not built, on top of the 13 that
     were.** Both need a real product/data decision first, not just code:
