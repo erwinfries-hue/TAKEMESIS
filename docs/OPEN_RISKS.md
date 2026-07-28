@@ -78,7 +78,25 @@ checkpoint (decision #15) and before each production-readiness gate.
    threshold tweak, and ideally the debug panel extended to show excluded
    record titles (currently only aggregate counts), not just a guess under
    time pressure. Owner: next session, start from
-   `/admin/report-preview`'s debug panel.
+   `/admin/report-preview`'s debug panel. **Second live case confirms this
+   is systemic, not one unlucky example:** "Welche Wirkung hat regelmässiger
+   Ausdauersport auf das Herz-Kreislauf-System bei Erwachsenen?" → 6 found,
+   0 included, all `not_relevant`. Translated query:
+   `"effect regelmässiger ausdauersport herz kreislauf system adults"` —
+   "herz" and "kreislauf" (two of the most common German medical terms,
+   arguably core vocabulary for a health-focused product) aren't in
+   `DE_EN_DICTIONARY` at all, and "ausdauersport" isn't either even though
+   "ausdauer" alone is — German's heavy compounding means a flat
+   token-lookup dictionary structurally can't cover compound words via their
+   parts. This is a bigger issue than adding missing entries one at a time:
+   the dictionary approach itself has a ceiling for German medical/compound
+   vocabulary. Worth considering for the next session: either a much larger
+   sustained effort filling the dictionary, a lightweight compound-word
+   splitter (match known component words when the whole compound isn't
+   found), or revisiting whether this whole translation step should become
+   an AI call now that `ANTHROPIC_API_KEY` exists — the tradeoff (cost,
+   latency, an extra failure mode to handle safely) needs a real decision,
+   not a default.
    **Still open:** one of the two live
    runs showed an "OpenAlex nicht erreichbar" notice; Erwin was asked to check
    Vercel's Runtime Logs for the OpenAlex-specific error line to determine
