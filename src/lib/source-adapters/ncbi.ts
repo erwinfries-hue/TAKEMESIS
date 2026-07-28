@@ -78,10 +78,23 @@ function commonParams(url: URL): void {
   }
 }
 
+/**
+ * PubMed's Automatic Term Mapping treats a bare space-separated phrase
+ * loosely — confirmed live (2026-07-28, OPEN_RISKS.md #2): a query for
+ * "creatine muscle growth" returned results about heart failure and
+ * unrelated muscle physiology, none mentioning creatine at all. Explicit
+ * `AND` between every term forces a strict intersection instead, per
+ * NCBI's own documented search syntax (https://www.ncbi.nlm.nih.gov/books/NBK25501/).
+ */
+function buildPubmedTerm(query: string): string {
+  const terms = query.split(/\s+/).filter(Boolean);
+  return terms.length > 1 ? terms.join(" AND ") : query;
+}
+
 function buildEsearchUrl(params: SourceSearchParams): string {
   const url = new URL(`${BASE_URL()}/esearch.fcgi`);
   url.searchParams.set("db", "pubmed");
-  url.searchParams.set("term", params.query);
+  url.searchParams.set("term", buildPubmedTerm(params.query));
   url.searchParams.set("retmode", "json");
   url.searchParams.set("retmax", String(params.limit ?? 15));
   commonParams(url);

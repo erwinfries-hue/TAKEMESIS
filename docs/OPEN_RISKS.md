@@ -85,8 +85,26 @@ checkpoint (decision #15) and before each production-readiness gate.
    shifting the meaningful-term count and picking a stricter matching rule
    than intended. Fixed by exporting `relevance.ts`'s `STOPWORDS` and
    merging it into both of `query-translation.ts`'s locale-specific lists,
-   plus closing the two dictionary gaps below. Not yet re-verified live
-   (needs a redeploy + another `/admin/report-preview` run) — do that
+   plus closing the two dictionary gaps below. **Re-verified live
+   (2026-07-28): the stopword/dictionary fix worked** — the sent query was
+   clean ("creatine muscle growth", no leftover noise words) — **but the
+   live re-test still showed 0/30 included, revealing a second, deeper bug**
+   one layer below the one this fix addressed. Added `SearchRunResult.
+   excludedSample` (`run-search.ts`, capped at 15) to `/admin/report-preview`'s
+   debug panel to see actual excluded titles instead of guessing further —
+   this showed all 12 of the sampled `ncbi_pubmed` titles were genuinely
+   unrelated to creatine at all (heart failure, Chinese herbal cardiac
+   studies, meat tenderness in rabbits — none mentioning "creatine").
+   Root-caused to `ncbi.ts`: PubMed's Automatic Term Mapping treats a bare
+   space-separated `term` param loosely rather than as a strict
+   intersection. **Fixed:** `buildPubmedTerm()` now explicitly joins
+   multi-word queries with `AND` (`"creatine AND muscle AND growth"`), per
+   NCBI's documented E-utilities search syntax. Crossref's one excluded
+   sample ("Skeletal Muscle Metabolism in Heart Failure") was genuinely
+   correctly excluded by our own relevance filter — no fix needed there,
+   Crossref's `query` param is inherently relevance-ranked free text, not
+   boolean, and returning an imperfect "closest match" is expected/normal
+   for that API. **Not yet re-verified live a third time** — do that next
    before considering this fully closed. **Second live case confirmed this
    was systemic, not one unlucky example, before the fix:** "Welche Wirkung hat regelmässiger
    Ausdauersport auf das Herz-Kreislauf-System bei Erwachsenen?" → 6 found,

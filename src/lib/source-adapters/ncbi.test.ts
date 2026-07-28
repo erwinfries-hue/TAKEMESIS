@@ -8,6 +8,20 @@ function jsonResponse(body: unknown, ok = true, status = 200): Response {
 }
 
 describe("ncbiAdapter.search", () => {
+  it("joins multi-word queries with explicit AND (live bug 2026-07-28: bare terms returned unrelated results)", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(esearchFixture))
+      .mockResolvedValueOnce(jsonResponse(esummaryFixture));
+    vi.stubGlobal("fetch", fetchImpl);
+
+    await ncbiAdapter.search({ query: "creatine muscle growth" });
+    const esearchUrl = new URL(fetchImpl.mock.calls[0][0] as string);
+    expect(esearchUrl.searchParams.get("term")).toBe("creatine AND muscle AND growth");
+
+    vi.unstubAllGlobals();
+  });
+
   it("chains esearch -> esummary and normalizes into NormalizedRecord shape", async () => {
     const fetchImpl = vi
       .fn()
