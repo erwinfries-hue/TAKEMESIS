@@ -60,6 +60,30 @@ describe("buildSearchQuery", () => {
     expect(query).toContain("job satisfaction");
   });
 
+  it("drops connector verbs ('hilft'/'wirkt'/...) from the translated query (live bug 2026-07-28)", () => {
+    // Previously "hilft"/"beim" passed through untranslated, which then
+    // got silently dropped by relevance.ts's *different* stopword set
+    // during screening — shifting the term count and picking a stricter
+    // matching rule than intended. See OPEN_RISKS.md #2.
+    const query = buildSearchQuery("Hilft Kreatin beim Muskelaufbau?", "de");
+    expect(query).toBe("creatine muscle growth");
+  });
+
+  it("translates core cardiovascular vocabulary (dictionary gap closed 2026-07-28)", () => {
+    const query = buildSearchQuery(
+      "Welche Wirkung hat regelmässiger Ausdauersport auf das Herz-Kreislauf-System bei Erwachsenen?",
+      "de",
+    );
+    // Hyphens are stripped before tokenizing, so "Herz-Kreislauf-System"
+    // becomes 3 separate tokens, each translated individually.
+    expect(query).toContain("heart");
+    expect(query).toContain("circulation");
+    expect(query).toContain("endurance sport");
+    expect(query).toContain("regular");
+    expect(query).toContain("adults");
+    expect(query).not.toMatch(/\bhat\b/);
+  });
+
   it("falls back to the original question if every token is a stopword", () => {
     const question = "Wie ist das?";
     expect(buildSearchQuery(question, "de")).toBe(question);

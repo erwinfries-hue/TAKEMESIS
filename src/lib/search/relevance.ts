@@ -9,7 +9,7 @@ import type { NormalizedRecord } from "@/lib/source-adapters/types";
  * every topic's example questions); without this, those words alone could
  * make a totally unrelated record look relevant.
  */
-const STOPWORDS = new Set([
+export const STOPWORDS = new Set([
   // German
   "der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem",
   "einer", "eines", "und", "oder", "aber", "wie", "was", "wer", "wen", "wem",

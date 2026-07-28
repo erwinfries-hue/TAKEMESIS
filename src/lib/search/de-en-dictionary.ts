@@ -67,6 +67,8 @@ export const DE_EN_DICTIONARY: Record<string, string> = {
   regelmässige: "regular",
   regelmässig: "regular",
   regelmässigen: "regular",
+  regelmässiger: "regular",
+  regelmässiges: "regular",
   langfristige: "long-term",
   langfristig: "long-term",
   kurzfristig: "short-term",
@@ -120,6 +122,26 @@ export const DE_EN_DICTIONARY: Record<string, string> = {
   bewegung: "exercise",
   diagnose: "diagnosis",
   behandlung: "treatment",
+  // Confirmed missing live (2026-07-28, OPEN_RISKS.md #2) — "herz" and
+  // "kreislauf" are core German health vocabulary that had no entry at all.
+  herz: "heart",
+  // Hyphens are stripped before tokenizing (query-translation.ts's
+  // tokenize()), so "Herz-Kreislauf-System" becomes 3 separate tokens —
+  // "herz"/"kreislauf"/"system" above already cover that case. This entry
+  // is only reached for the one-word compound spelling some users type.
+  herzkreislaufsystem: "cardiovascular system",
+  kreislauf: "circulation",
+  kreislaufsystem: "circulatory system",
+  herzgesundheit: "heart health",
+  herzerkrankung: "heart disease",
+  herzerkrankungen: "heart disease",
+  blutdruck: "blood pressure",
+  bluthochdruck: "high blood pressure",
+  cholesterin: "cholesterol",
+  puls: "pulse",
+  herzfrequenz: "heart rate",
+  ausdauersport: "endurance sport",
+  ausdauertraining: "endurance training",
 
   // Ernährung & Supplements / Nutrition & Supplements
   ernährung: "nutrition",
