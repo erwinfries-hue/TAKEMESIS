@@ -332,22 +332,25 @@ checkpoint (decision #15) and before each production-readiness gate.
     PostHog forwarding remains unverified (site ID still unset) — separate
     from this item's email scope.
 
-16. **Report retention/expiry job (decision #5) is built but never triggered
-    live, and there's still no page that reads it back.** `src/lib/reports/
+16. **Report retention/expiry job (decision #5) is built; `CRON_SECRET` is
+    now provisioned and the schedule live-verified. There's still no page
+    that reads an expired report back.** `src/lib/reports/
     expire-reports.ts` (12-month expiry, `REPORT_RETENTION_MONTHS`) is wired
     to `GET /api/cron/expire-reports`, scheduled daily via `vercel.json`
     (`0 3 * * *`), and gated on `CRON_SECRET` (`Authorization: Bearer
     <CRON_SECRET>` — unset means the route always 401s, live-verified in
-    this sandbox). **Not done:** `CRON_SECRET` isn't provisioned anywhere, so
-    the schedule can't actually fire yet in production; and there is still no
-    secure-link report-viewer page (`/report/[token]` or similar) — Phase 7/8
-    built the checkout/lifecycle/report-rendering *pieces*, but nothing in the
-    app currently reads a report by token and shows/blocks it based on
-    status, so an expired report has no user-visible effect yet (only visible
-    in `/admin`). This viewer is the same "live UI can't sell anything" gap
-    as #14, extended to the post-purchase side. Owner: Erwin or next session
-    with a deployed Vercel project (to provision `CRON_SECRET` and confirm
-    the cron actually fires).
+    this sandbox). **Update (2026-07-28):** `CRON_SECRET` (random
+    `openssl rand -hex 32` value) is now set in Vercel Production; manually
+    triggered twice via Vercel's Dashboard → Settings → Cron Jobs → Run, and
+    both invocations logged `200` against the real Supabase project — the
+    daily 03:00 UTC schedule can now actually fire. **Still not done:** there
+    is still no secure-link report-viewer page (`/report/[token]` or
+    similar) — Phase 7/8 built the checkout/lifecycle/report-rendering
+    *pieces*, but nothing in the app currently reads a report by token and
+    shows/blocks it based on status, so an expired report has no
+    user-visible effect yet (only visible in `/admin`). This viewer is the
+    same "live UI can't sell anything" gap as #14, extended to the
+    post-purchase side.
 
 17. **Marketing differentiation pass: three small live-validation gaps.**
     (a) **Resolved (2026-07-26):** a branded Open Graph image now exists —
