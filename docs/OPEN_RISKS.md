@@ -95,17 +95,36 @@ checkpoint (decision #15) and before each production-readiness gate.
    this showed all 12 of the sampled `ncbi_pubmed` titles were genuinely
    unrelated to creatine at all (heart failure, Chinese herbal cardiac
    studies, meat tenderness in rabbits — none mentioning "creatine").
-   Root-caused to `ncbi.ts`: PubMed's Automatic Term Mapping treats a bare
-   space-separated `term` param loosely rather than as a strict
-   intersection. **Fixed:** `buildPubmedTerm()` now explicitly joins
-   multi-word queries with `AND` (`"creatine AND muscle AND growth"`), per
-   NCBI's documented E-utilities search syntax. Crossref's one excluded
-   sample ("Skeletal Muscle Metabolism in Heart Failure") was genuinely
-   correctly excluded by our own relevance filter — no fix needed there,
-   Crossref's `query` param is inherently relevance-ranked free text, not
-   boolean, and returning an imperfect "closest match" is expected/normal
-   for that API. **Not yet re-verified live a third time** — do that next
-   before considering this fully closed. **Second live case confirmed this
+   Hypothesized PubMed's Automatic Term Mapping was treating a bare
+   space-separated `term` loosely and added explicit `AND` between terms
+   (`buildPubmedTerm()`) to force a strict intersection. **Re-tested live a
+   third time (2026-07-28) — the explicit-AND change had zero effect: the
+   exact same 30 records, same order, came back.** Retracting that as the
+   fix; PubMed's ATM already implicitly ANDs bare space-separated terms
+   (standard, long-documented PubMed search-box behavior), so the change,
+   while harmless and arguably more explicit, was not the actual cause.
+   Left in place since it's a no-op-or-better, not reverted. **Real
+   hypothesis now, added to the debug panel to test it directly:** NCBI's
+   `esearch` matches against the *full* server-side indexed record
+   (abstract, MeSH terms, substance names — e.g. "creatine kinase," a
+   completely different concept from creatine supplementation, is a classic
+   biomarker mentioned across huge numbers of unrelated cardiac/muscle-
+   damage papers), but `esummary` — what `ncbi.ts` actually reads back —
+   never returns abstract text (`OPEN_RISKS.md` #11, `dataCompleteness:
+   "metadata_only"` for every NCBI record). So NCBI can "find" a record via
+   its abstract, but our own relevance screening can only ever see that
+   record's *title*, and correctly excludes it when the title alone doesn't
+   establish relevance — arguably correct, safe, conservative behavior
+   given the evidence-integrity rules, not a bug in the exclusion logic
+   itself. Added `excludedSample[].hasAbstract` and a `perSource` count
+   breakdown to the debug panel to actually confirm this (do all-excluded-
+   NCBI-samples show `hasAbstract: false`? did Europe PMC/OpenAlex — which
+   do carry abstracts — return anything at all for this query, and if so
+   was it included or also excluded?) before deciding on a real fix (most
+   likely candidates: build the deferred NCBI `efetch` abstract call from
+   #11, or route biomedical topics away from title-only NCBI results when
+   Europe PMC's overlapping PubMed-derived coverage can serve the same
+   records with abstracts). **Second live case confirmed this
    was systemic, not one unlucky example, before the fix:** "Welche Wirkung hat regelmässiger
    Ausdauersport auf das Herz-Kreislauf-System bei Erwachsenen?" → 6 found,
    0 included, all `not_relevant`. Translated query:

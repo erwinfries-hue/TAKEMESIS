@@ -56,7 +56,16 @@ export default async function AdminReportPreviewPage({
         <p className="mt-1">
           Übersetzt/an Quellen gesendet: <code>{buildSearchQuery(question, locale)}</code>
         </p>
-        <ul className="mt-2 list-disc pl-5">
+        <p className="mt-3 font-semibold text-brand-navy-900">Treffer pro Quelle</p>
+        <ul className="mt-1 list-disc pl-5">
+          {searchResult.perSource.map((s) => (
+            <li key={s.source}>
+              {s.source}: {s.ok ? `${s.recordCount} Treffer` : `Fehler (${s.error})`}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-3 font-semibold text-brand-navy-900">Ausschlussgründe</p>
+        <ul className="mt-1 list-disc pl-5">
           {Object.entries(searchResult.excludedByReason).map(([reason, count]) => (
             <li key={reason}>
               {reason}: {count}
@@ -71,7 +80,8 @@ export default async function AdminReportPreviewPage({
             <ul className="mt-1 list-disc pl-5">
               {searchResult.excludedSample.map((sample, index) => (
                 <li key={index}>
-                  [{sample.source}/{sample.reason}] {sample.title ?? "(kein Titel)"}
+                  [{sample.source}/{sample.reason}/{sample.hasAbstract ? "mit Abstract" : "ohne Abstract"}]{" "}
+                  {sample.title ?? "(kein Titel)"}
                 </li>
               ))}
             </ul>

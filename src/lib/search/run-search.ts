@@ -42,7 +42,12 @@ export interface SearchRunResult {
    * screenshot instead of guessed at. Optional so existing fixtures/tests
    * that construct a SearchRunResult literal don't need updating.
    */
-  excludedSample?: Array<{ title: string | null; source: SourceId; reason: ExclusionReason }>;
+  excludedSample?: Array<{
+    title: string | null;
+    source: SourceId;
+    reason: ExclusionReason;
+    hasAbstract: boolean;
+  }>;
 }
 
 const EMPTY_EXCLUSION_COUNTS: Record<ExclusionReason, number> = {
@@ -143,6 +148,7 @@ export async function runSearchWithAdapters(
       title: decision.record.record.title,
       source: decision.record.record.source,
       reason: decision.reason,
+      hasAbstract: Boolean(decision.record.record.abstract),
     })),
   };
 }
