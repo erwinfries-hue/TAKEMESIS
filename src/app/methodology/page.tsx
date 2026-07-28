@@ -21,7 +21,19 @@ export default async function MethodologyPage() {
         <h1 className="text-3xl font-semibold text-brand-navy-900">
           {dict.methodologyPage.heading}
         </h1>
-        <p className="text-brand-neutral-600">{dict.methodologyPage.intro}</p>
+        <p className="text-brand-neutral-600">
+          {dict.methodologyPage.intro.split(" — ").map((part, index, parts) => (
+            <span key={part}>
+              {part}
+              {index < parts.length - 1 && (
+                <>
+                  {" —"}
+                  <br />
+                </>
+              )}
+            </span>
+          ))}
+        </p>
         <MethodologyFunnelIllustration className="h-24 w-auto sm:h-28" />
       </div>
 

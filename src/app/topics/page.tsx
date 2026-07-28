@@ -38,7 +38,19 @@ export default async function TopicsPage() {
         <h1 className="text-3xl font-semibold text-brand-navy-900">
           {dict.topicsPage.heading}
         </h1>
-        <p className="text-brand-neutral-600">{dict.topicsPage.intro}</p>
+        <p className="text-brand-neutral-600">
+          {dict.topicsPage.intro.split("; ").map((part, index, parts) => (
+            <span key={part}>
+              {part}
+              {index < parts.length - 1 && (
+                <>
+                  {";"}
+                  <br />
+                </>
+              )}
+            </span>
+          ))}
+        </p>
       </div>
 
       {trendingWithCopy.length > 0 && (
