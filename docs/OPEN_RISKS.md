@@ -418,6 +418,24 @@ checkpoint (decision #15) and before each production-readiness gate.
     PostHog forwarding remains unverified (site ID still unset) — separate
     from this item's email scope.
 
+    **Update (2026-07-28): PostHog set up (EU Cloud) and a real reliability
+    bug found and fixed while live-testing it.** A PostHog EU Cloud project
+    was created and `NEXT_PUBLIC_ANALYTICS_ENABLED`/`_PROVIDER`/`_SITE_ID`
+    set in Vercel. First live test (confirming a domain on `/search`, which
+    triggers `domain_classified`) produced no event in PostHog's Live view.
+    Root cause: `posthog-node` batches captured events and sends them on an
+    internal timer rather than immediately; `forwardToPostHog` never called
+    `flush()`, so on Vercel's serverless runtime the execution environment
+    could freeze right after the response was sent, before that timer ever
+    fired — the event was queued but never actually transmitted. Fixed by
+    making `forwardToPostHog` async and awaiting `client.flush()` after
+    `capture()`, and by awaiting it (wrapped in try/catch, same
+    "analytics must never break the page" principle as the repository
+    write) from `track()` instead of firing it and forgetting. Not yet
+    re-verified live after this fix (found near the end of this session) —
+    next step is repeating the same `/search` domain-confirmation test and
+    confirming `domain_classified` actually appears in PostHog's Live tab.
+
 16. **Report retention/expiry job (decision #5) is built; `CRON_SECRET` is
     now provisioned and the schedule live-verified.** `src/lib/reports/
     expire-reports.ts` (12-month expiry, `REPORT_RETENTION_MONTHS`) is wired

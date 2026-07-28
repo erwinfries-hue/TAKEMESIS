@@ -43,5 +43,13 @@ export async function track(
     console.error(`Analytics: failed to record "${params.eventName}"`, error);
   }
 
-  forwardToPostHog(params.eventName, safeMetadata, params.anonymizedSessionId ?? undefined);
+  try {
+    // Awaited (not fire-and-forget) so the flush this now performs actually
+    // completes before a serverless function can freeze/return — see
+    // posthog.ts's CaptureCapableClient.flush doc comment. A network hiccup
+    // reaching PostHog must still never break the page, same as above.
+    await forwardToPostHog(params.eventName, safeMetadata, params.anonymizedSessionId ?? undefined);
+  } catch (error) {
+    console.error(`Analytics: failed to forward "${params.eventName}" to PostHog`, error);
+  }
 }
