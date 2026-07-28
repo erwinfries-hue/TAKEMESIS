@@ -23,7 +23,7 @@ export interface CreateCheckoutSessionParams {
  * account, revenue kept distinguishable via the `project` metadata below
  * rather than a second account).
  */
-const STATEMENT_DESCRIPTOR = "AXIA4 EF TEKMESIS";
+const STATEMENT_DESCRIPTOR = "AXIA4 by EF TEKMESIS";
 
 /** Minimal slice of the Stripe SDK this module needs — lets tests pass a fake client instead of constructing a real one (which requires STRIPE_SECRET_KEY). */
 export interface CheckoutCapableStripeClient {

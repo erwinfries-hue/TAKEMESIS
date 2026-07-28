@@ -110,7 +110,11 @@ function OwnQuestionFormFields({
           placeholder={dict.ownQuestionForm.placeholder}
           maxLength={MAX_QUESTION_LENGTH}
           aria-describedby={suggestedTopicName ? "own-question-suggestion" : undefined}
-          className="w-full resize-none rounded-lg border border-brand-neutral-200 p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400"
+          className={`w-full resize-none rounded-lg border p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400 ${
+            value.trim().length > 0
+              ? "border-brand-teal-600 ring-2 ring-brand-teal-400"
+              : "border-brand-neutral-200"
+          }`}
         />
         {suggestedTopicName && (
           <p id="own-question-suggestion" role="status" className="text-xs text-brand-teal-700">

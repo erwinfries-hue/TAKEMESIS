@@ -37,7 +37,7 @@ describe("createCheckoutSession", () => {
     await createCheckoutSession(BASE_PARAMS, client);
     const call = create.mock.calls[0][0];
     expect(call.payment_intent_data.statement_descriptor.length).toBeLessThanOrEqual(22);
-    expect(call.payment_intent_data.statement_descriptor).toBe("AXIA4 EF TEKMESIS");
+    expect(call.payment_intent_data.statement_descriptor).toBe("AXIA4 by EF TEKMESIS");
   });
 
   it("creates a one-time payment session, not a subscription", async () => {
