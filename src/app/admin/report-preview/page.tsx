@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { XMLParser } from "fast-xml-parser";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { defaultLocale, isLocale } from "@/lib/i18n/config";
@@ -9,8 +10,108 @@ import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildPremiumReportData } from "@/lib/reports/premium-report";
 import { enrichPremiumReportWithAi } from "@/lib/ai/report-enrichment";
 import { PremiumReportView } from "@/components/premium-report/premium-report-view";
+import { serverEnv } from "@/lib/env/server";
 
 export const metadata: Metadata = { title: "Report-Vorschau (mit KI) — Admin — TEKMESIS" };
+
+interface ClinicalTrialCheckInput {
+  title: string | null;
+  source: string;
+  sourceId: string;
+  doi: string | null;
+}
+
+interface ClinicalTrialCheckResult {
+  checked: number;
+  linked: Array<{ title: string | null; source: string; trialIds: string[] }>;
+}
+
+const trialXmlParser = new XMLParser({
+  ignoreAttributes: false,
+  isArray: (tagName) => ["PubmedArticle", "DataBank", "AccessionNumber"].includes(tagName),
+});
+
+/**
+ * Temporary, admin-only diagnostic for the country-filter concept
+ * (docs/OPEN_RISKS.md #22, "Option 3") — checks how many of a real search's
+ * included studies carry a linked clinical-trial registry ID (Crossref's
+ * top-level `clinical-trial-number` array, or a PubMed
+ * DataBankList/ClinicalTrials.gov accession number), the only honest
+ * per-study population-country signal found in research. Not a shipped
+ * feature — no NormalizedRecord/adapter changes, just a one-off count to
+ * see whether Option 3's coverage is worth the engineering effort before
+ * building it for real. Safe to delete once that decision is made.
+ */
+async function checkClinicalTrialCoverage(
+  records: ClinicalTrialCheckInput[],
+): Promise<ClinicalTrialCheckResult> {
+  const linked: ClinicalTrialCheckResult["linked"] = [];
+  let checked = 0;
+
+  await Promise.all(
+    records.map(async (record) => {
+      try {
+        if (record.source === "crossref" && record.doi) {
+          checked += 1;
+          const res = await fetch(
+            `${serverEnv.CROSSREF_BASE_URL}/works/${encodeURIComponent(record.doi)}`,
+          );
+          if (!res.ok) return;
+          const data = (await res.json()) as {
+            message?: { "clinical-trial-number"?: Array<{ "clinical-trial-number"?: string }> };
+          };
+          const ids = (data.message?.["clinical-trial-number"] ?? [])
+            .map((entry) => entry["clinical-trial-number"])
+            .filter((id): id is string => Boolean(id));
+          if (ids.length > 0) {
+            linked.push({ title: record.title, source: "crossref", trialIds: ids });
+          }
+        } else if (record.source === "ncbi_pubmed") {
+          checked += 1;
+          const url = new URL(`${serverEnv.NCBI_EUTILS_BASE_URL}/efetch.fcgi`);
+          url.searchParams.set("db", "pubmed");
+          url.searchParams.set("id", record.sourceId);
+          url.searchParams.set("retmode", "xml");
+          url.searchParams.set("rettype", "abstract");
+          url.searchParams.set("tool", serverEnv.NCBI_TOOL);
+          if (serverEnv.NCBI_EMAIL) url.searchParams.set("email", serverEnv.NCBI_EMAIL);
+          if (serverEnv.NCBI_API_KEY) url.searchParams.set("api_key", serverEnv.NCBI_API_KEY);
+          const res = await fetch(url.toString());
+          if (!res.ok) return;
+          const xml = await res.text();
+          const parsed = trialXmlParser.parse(xml) as {
+            PubmedArticleSet?: {
+              PubmedArticle?: Array<{
+                MedlineCitation?: {
+                  Article?: {
+                    DataBankList?: {
+                      DataBank?: Array<{
+                        DataBankName?: string;
+                        AccessionNumberList?: { AccessionNumber?: string[] };
+                      }>;
+                    };
+                  };
+                };
+              }>;
+            };
+          };
+          const article = parsed.PubmedArticleSet?.PubmedArticle?.[0];
+          const banks = article?.MedlineCitation?.Article?.DataBankList?.DataBank ?? [];
+          const ids = banks
+            .filter((bank) => bank.DataBankName === "ClinicalTrials.gov" || bank.DataBankName === "NCT")
+            .flatMap((bank) => bank.AccessionNumberList?.AccessionNumber ?? []);
+          if (ids.length > 0) {
+            linked.push({ title: record.title, source: "ncbi_pubmed", trialIds: ids });
+          }
+        }
+      } catch {
+        // Best-effort diagnostic only — a failed check just doesn't count, never breaks the page.
+      }
+    }),
+  );
+
+  return { checked, linked };
+}
 
 // Real live search + AI extraction/synthesis against a genuine question —
 // several sequential network calls, well past a default 10s serverless
@@ -42,6 +143,15 @@ export default async function AdminReportPreviewPage({
       topicSlug: searchResult.topicSlug,
     });
     reportView = <PremiumReportView dict={dict} report={report} />;
+
+    const trialCoverage = await checkClinicalTrialCoverage(
+      detailedRecords.map((record) => ({
+        title: record.title,
+        source: record.source,
+        sourceId: record.sourceId,
+        doi: record.doi,
+      })),
+    );
 
     // Temporary admin-only diagnostic (not shown to real users) — the
     // premium report has no built-in exclusion-reason breakdown, which
@@ -94,6 +204,25 @@ export default async function AdminReportPreviewPage({
               ))}
             </ul>
           </>
+        )}
+        <p className="mt-3 font-semibold text-brand-navy-900">
+          Diagnose: Klinische-Studien-Verknüpfung (Länderfilter-Konzept, Option 3)
+        </p>
+        <p className="mt-1">
+          {trialCoverage.linked.length} von {trialCoverage.checked} geprüften Studien (Crossref/NCBI)
+          haben eine verknüpfte Registrierungsnummer
+          {trialCoverage.checked > 0 &&
+            ` (${Math.round((trialCoverage.linked.length / trialCoverage.checked) * 100)} %)`}
+          .
+        </p>
+        {trialCoverage.linked.length > 0 && (
+          <ul className="mt-1 list-disc pl-5">
+            {trialCoverage.linked.map((entry, index) => (
+              <li key={index}>
+                [{entry.source}] {entry.title ?? "(kein Titel)"} — {entry.trialIds.join(", ")}
+              </li>
+            ))}
+          </ul>
         )}
       </div>
     );
