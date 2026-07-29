@@ -208,11 +208,12 @@ checkpoint (decision #15) and before each production-readiness gate.
     `/admin` now genuinely connects and shows real (empty) data instead of
     the "database not connected" fallback — the first real confirmation any
     Supabase-backed code path in this app has worked outside a unit test.
-    **Still not done:** no Stripe account/credentials exist yet, so
-    `STRIPE_SECRET_KEY`/`STRIPE_WEBHOOK_SECRET` remain unset and a full
-    Stripe test-mode checkout (success, cancellation, bad signature,
-    duplicate webhook delivery — `00_START_HERE_ERWIN.md` §9) is still
-    unverified. Owner: Erwin or next session with Stripe credentials.
+    **Fully resolved 2026-07-29.** Stripe test-mode Product/Price
+    (`STRIPE_PRICE_ID_MVP_01`), the webhook endpoint
+    (`STRIPE_WEBHOOK_SECRET`), and `STRIPE_SECRET_KEY`/publishable key are
+    all set in Vercel for both Production and Preview. See item 14's
+    2026-07-29 update below for the real end-to-end purchase this
+    unblocked.
 14. **Mostly resolved 2026-07-28 — the checkout is now wired end to end.**
     `/search` creates a real `preview_ready` report when a teaser renders;
     `PaywallPanel` has a working "buy" form (including the EU
@@ -303,6 +304,23 @@ checkpoint (decision #15) and before each production-readiness gate.
     actual fix for the underlying claim-before-completion race, is still
     not attempted — this only makes the failure mode visible and, for one
     of its two stuck states, manually recoverable.
+
+    **Update (2026-07-29): first real end-to-end purchase confirmed on the
+    live production domain.** Every previous live verification (the
+    2026-07-28 entries above) was run from `localhost:3000` against the
+    real Stripe test account — the checkout session's own `success_url`/
+    `cancel_url` in that event data confirm it. Today Erwin ran a full
+    purchase through **`tekmesis.com` itself**: real Stripe Checkout page
+    (showing the "TEKMESIS Evidence Report" product created this session),
+    test card, redirect to `/checkout/success` with a real report token,
+    webhook-triggered report generation, the "Report fertig" email
+    received, and the finished premium report rendering correctly at
+    `/report/[token]`. This is the first time the complete paid path has
+    been confirmed working through the actual public domain rather than a
+    local dev server. `STRIPE_PRICE_ID_MVP_01` needed a Vercel Production
+    redeploy after being added (env var changes don't apply to an
+    already-running deployment) — noted here in case that trips up a future
+    env var change too.
 
 ## Non-blocking, monitor through beta
 

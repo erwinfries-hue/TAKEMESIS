@@ -1983,6 +1983,34 @@ bewusst noch nicht:
 `npm run verify` grün (Lint, Typecheck, 644 Unit-Tests, Integration-Test,
 Build) nach jedem Schritt erneut ausgeführt.
 
+### Stripe live konfiguriert + erster echter End-to-End-Kauf (2026-07-29)
+
+Erwin durch die Stripe-Live-Konfiguration geführt (Chat-Session, kein Code):
+
+- Echtes Stripe-Produkt "TEKMESIS Evidence Report" im Test-Modus angelegt
+  (CHF 9.90, Einmalzahlung), Price-ID als `STRIPE_PRICE_ID_MVP_01` in
+  Vercel (Production + Preview) hinterlegt.
+- Bestehenden Webhook-Endpoint (`tekmesis-webhook`, zeigt bereits korrekt
+  auf `https://takemesis.vercel.app/api/stripe/webhook`) geprüft:
+  abonniert genau `checkout.session.completed` (passt zum Code — Refunds
+  laufen bewusst manuell übers Admin-Dashboard, kein Webhook nötig), ein
+  historischer Timeout-Fehlversuch vom Vortag war bereits durch den
+  bekannten `maxDuration = 60`-Fix (siehe `OPEN_RISKS.md` #14) behoben,
+  Retry lief erfolgreich durch.
+- **Erster echter Testkauf direkt über `tekmesis.com`** (nicht mehr nur
+  `localhost`): Stripe-Checkout mit Testkarte, Weiterleitung zu
+  `/checkout/success` mit echtem Report-Token, "Report fertig"-E-Mail
+  erhalten, vollständiger Premium-Report unter `/report/[token]` korrekt
+  angezeigt. Damit ist der komplette bezahlte Pfad zum ersten Mal über die
+  echte öffentliche Domain bestätigt, nicht nur lokal. Details in
+  `OPEN_RISKS.md` #13/#14.
+
+**Noch offen:** `tekmesis.com` ist zwar technisch live erreichbar, aber
+noch nicht beworben/bekannt (Erwins eigene Aussage) — kein echter
+Kunden-Traffic bisher. Live-Stripe-Aktivierung (`STRIPE_MODE=live`, echte
+Keys, Stripe Tax) ist ein separater, späterer Schritt, kein Teil dieser
+Session.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved
