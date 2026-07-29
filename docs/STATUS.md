@@ -2011,6 +2011,39 @@ Kunden-Traffic bisher. Live-Stripe-Aktivierung (`STRIPE_MODE=live`, echte
 Keys, Stripe Tax) ist ein separater, späterer Schritt, kein Teil dieser
 Session.
 
+### Kritischer Bug live gefunden und behoben: Deutsch bekam ungewollt die KI-Fallback-Übersetzung (2026-07-29)
+
+Erwin schickte den echten Report aus dem Testkauf oben (PDF) — die Frage
+"Welche Methoden helfen beim Aufbau stabiler Gewohnheiten?" lieferte 20
+"eingeschlossene Studien", von denen die meisten thematisch komplett
+fachfremd waren: ein Buch von 1849 über Pferdeställe, drei Arbeiten über
+Spinnenverhalten, eine Bodenstruktur-Studie, eine Neutronen-Polarimeter-
+Arbeit — während eine tatsächlich relevante Studie zur
+Gewohnheitsmessung (SRBAI) fehlte.
+
+**Ursache:** Der heute für Französisch gebaute Auto-Lern-Mechanismus
+(#143/#144) war versehentlich generisch für jede Locale mit Wörterbuch
+implementiert, nicht wie beschlossen exklusiv für Französisch — dadurch
+bekam Deutsch dieselbe KI-Fallback-Übersetzung. Die KI übersetzte das
+einzelne Wort "stabiler" ganz ohne Satzkontext zu "stable" — technisch
+vertretbar, aber katastrophal für die reine Stichwortsuche, da "stable"
+in wissenschaftlicher Literatur extrem überladen ist (stabile Isotope,
+stabiler Betrieb, Bodenstabilität, sogar wörtlich Pferdeställe). Lokal
+(ohne Netzwerk) mit den echten Titeln aus dem PDF nachgestellt und
+mechanisch bestätigt: Mit "stabiler" unübersetzt (alter, bewährter
+Zustand) werden alle Fehltreffer korrekt ausgeschlossen.
+
+**Fix:** `AUTO_LEARN_LOCALES` in `query-translation.ts` jetzt explizit
+auf `["fr"]` beschränkt — Deutsch bekommt wieder ausschliesslich das
+statische Wörterbuch, unbekannte Wörter bleiben unübersetzt (sicher).
+Zusätzlich bekommt der KI-Fallback (weiterhin aktiv für Französisch) jetzt
+die komplette Originalfrage als Kontext mit, nicht nur das isolierte
+Wort — reduziert (aber eliminiert nicht) dasselbe Risiko für Französisch.
+Regressionstest ergänzt. `npm run verify`-relevante Teile erneut grün
+(98 Search-Tests, 645 Unit-Tests gesamt). Details inkl. optionalem
+Cleanup-SQL für die verwaiste `learned_search_terms`-Zeile in
+`OPEN_RISKS.md` #29.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved

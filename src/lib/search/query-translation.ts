@@ -81,6 +81,28 @@ const DICTIONARIES: Partial<Record<Locale, Record<string, string>>> = {
   fr: FR_EN_DICTIONARY,
 };
 
+/**
+ * Locales that also get the learned-term cache + AI fallback tier (see
+ * translateUnknownTokens) for tokens the static dictionary misses.
+ *
+ * Deliberately French-only, not "every locale with a dictionary" — that's
+ * what this constant used to be implicitly, until a real production
+ * purchase (2026-07-29, German query "Welche Methoden helfen beim Aufbau
+ * stabiler Gewohnheiten?") showed why that's dangerous: the AI fallback
+ * translates one bare word at a time, with only the source-language name as
+ * context (no surrounding sentence — see term-translation-ai.ts), so a
+ * polysemous word like "stabiler" ("stable" in the habit-formation sense of
+ * "lasting") came back as the bare adjective "stable" — a word so generic
+ * in scientific literature (stable isotopes, stable operation, water-stable
+ * aggregates, even an 1849 book about horse stables) that it flooded the
+ * report with false positives and, worse, pushed out a genuinely relevant
+ * study whose abstract never says "stable". German's static dictionary +
+ * plain pass-through for gaps was already correct and tested; only French
+ * was ever approved to get this tier ("für den Moment würde ich
+ * französisch noch implementieren wollen" — Erwin, French-locale rollout).
+ */
+const AUTO_LEARN_LOCALES = new Set<Locale>(["fr"]);
+
 function tokenize(text: string, stopwords: Set<string>): string[] {
   return text
     .toLowerCase()
@@ -109,6 +131,7 @@ export interface BuildSearchQueryDeps {
 async function translateUnknownTokens(
   tokens: string[],
   locale: Locale,
+  question: string,
   dictionary: Record<string, string>,
   deps: BuildSearchQueryDeps,
 ): Promise<Map<string, string>> {
@@ -116,10 +139,16 @@ async function translateUnknownTokens(
   const unknown = Array.from(new Set(tokens.filter((token) => !dictionary[token])));
 
   // The learned-term cache is only ever written by the AI fallback below —
-  // with AI off/unconfigured, it can never hold anything, so skip the
+  // with AI off/unconfigured, or this locale not opted into the tier at
+  // all (see AUTO_LEARN_LOCALES), it can never hold anything, so skip the
   // lookup entirely rather than making a doomed Supabase call on every
   // dictionary gap (same early-return shape as enrichPremiumReportWithAi).
-  if (unknown.length === 0 || !serverEnv.AI_EXTRACTION_ENABLED || !serverEnv.ANTHROPIC_API_KEY) {
+  if (
+    unknown.length === 0 ||
+    !AUTO_LEARN_LOCALES.has(locale) ||
+    !serverEnv.AI_EXTRACTION_ENABLED ||
+    !serverEnv.ANTHROPIC_API_KEY
+  ) {
     return learned;
   }
 
@@ -142,7 +171,7 @@ async function translateUnknownTokens(
 
   try {
     const translateTermsWithAi = deps.translateTermsWithAi ?? defaultTranslateTermsWithAi;
-    const aiTranslations = await translateTermsWithAi(stillUnknown, locale);
+    const aiTranslations = await translateTermsWithAi(stillUnknown, locale, question);
     for (const [term, translation] of aiTranslations) {
       learned.set(term, translation);
       // Best effort: a failed write never blocks using the translation for
@@ -193,7 +222,7 @@ export async function buildSearchQuery(
     return tokens.join(" ");
   }
 
-  const learned = await translateUnknownTokens(tokens, locale, dictionary, deps);
+  const learned = await translateUnknownTokens(tokens, locale, question, dictionary, deps);
 
   return tokens.map((token) => dictionary[token] ?? learned.get(token) ?? token).join(" ");
 }

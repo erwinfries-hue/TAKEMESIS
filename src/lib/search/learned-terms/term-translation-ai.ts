@@ -45,23 +45,33 @@ const LOCALE_NAME: Partial<Record<Locale, string>> = { de: "German", fr: "French
 /**
  * AI fallback for query-translation.ts's static dictionaries
  * (de-en-dictionary.ts / fr-en-dictionary.ts): translates tokens that
- * aren't in the static dictionary or the learned-terms cache. This is a
- * one-word-at-a-time lookup, not a sentence translator — no surrounding
- * question context is given, deliberately, so the model can't "helpfully"
- * rephrase or drop terms; it only ever returns a 1:1 term→translation pair
- * per input.
+ * aren't in the static dictionary or the learned-terms cache. Always
+ * returns exactly one translation per input term — never lets the model
+ * add, merge, or drop terms — enforced both by the tool schema and by
+ * post-filtering the response to only the terms actually requested (see
+ * below), so passing sentence context (added after a live bug, see
+ * query-translation.ts's AUTO_LEARN_LOCALES comment) can't reopen that
+ * failure mode.
+ *
+ * The original question is passed as context specifically so the model can
+ * disambiguate a polysemous word by its actual sense in the sentence (e.g.
+ * German "stabiler" in "stabiler Gewohnheiten" means lasting/consistent,
+ * not physically stable) — translating the bare word alone, with no
+ * sentence, previously produced a technically-defensible but contextually
+ * wrong translation that flooded search results with unrelated hits.
  */
-const SYSTEM_PROMPT = `You translate individual single-word search-query terms to English for a scientific/biomedical literature search.
+const SYSTEM_PROMPT = `You translate individual single-word search-query terms to English for a scientific/biomedical literature search. You are given the full original question for context only, to disambiguate a term's meaning — never translate or return the question itself.
 
 Rules:
-- Translate each given term to its single best English equivalent — a common word or short phrase used in English scientific writing.
+- Translate each given term to its single best English equivalent given how it's actually used in the question — a common word or short phrase used in English scientific writing.
 - If a term is a proper noun, brand name, acronym, or already English, return it unchanged.
-- Do not add, merge, or omit terms — return exactly one translation per input term.
+- Do not add, merge, or omit terms — return exactly one translation per input term, and nothing for the question itself.
 - Return only the translation itself, lowercase, no explanation, no punctuation.`;
 
 export async function translateTermsWithAi(
   terms: string[],
   locale: Locale,
+  question: string,
   client: AiMessagesClient = getAnthropicClient().messages,
 ): Promise<Map<string, string>> {
   const result = new Map<string, string>();
@@ -83,7 +93,7 @@ export async function translateTermsWithAi(
     messages: [
       {
         role: "user",
-        content: `Source language: ${localeName}\nTerms: ${terms.join(", ")}`,
+        content: `Source language: ${localeName}\nOriginal question (context only): ${question}\nTerms to translate: ${terms.join(", ")}`,
       },
     ],
   });

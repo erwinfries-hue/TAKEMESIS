@@ -875,6 +875,72 @@ checkpoint (decision #15) and before each production-readiness gate.
     does. If the wording is ever substantively edited (not just
     re-translated), that edit needs its own sign-off.
 
+29. **RESOLVED same day, found via the first real paying-path purchase
+    (2026-07-29) — a genuinely bad report was sold (to Erwin, in test
+    mode) before this was caught.** Erwin's real end-to-end Stripe test
+    purchase (item 14's 2026-07-29 update) used the German question
+    "Welche Methoden helfen beim Aufbau stabiler Gewohnheiten?" — a
+    legitimate habit-formation question. The delivered report's 20
+    "included" studies were dominated by completely unrelated hits: an
+    1849 book about horse stables, three papers on spider anatomy
+    ("structure and habits of spiders"), a soil-structure paper on
+    "water-stable aggregates", "Stable Isotope Probing" in plant biology,
+    and a neutron polarimeter paper — while a genuinely relevant study on
+    habit-measurement scales (SRBAI) was pushed out.
+
+    **Root cause:** the same-day French auto-learn mechanism (tasks
+    #143/#144, `learned_search_terms` cache + AI fallback in
+    `query-translation.ts`) was implemented generically over every locale
+    with a static dictionary, not scoped to French only as actually
+    approved ("für den Moment würde ich französisch noch implementieren
+    wollen"). This silently gave German the same AI-fallback tier. The AI
+    translated the single word "stabiler" with no sentence context (only
+    the source-language name — see the old `term-translation-ai.ts`
+    prompt) to the bare adjective "stable" — technically defensible, but
+    catastrophic for literal keyword search: "stable" is one of the most
+    overloaded words in scientific literature (stable isotopes, stable
+    operation, water-stable soil, even literal horse stables), so it
+    matched broadly across completely unrelated fields. Confirmed
+    mechanically (not just theorized): a local, no-network reproduction
+    using `relevance.ts`'s actual `meetsRelevanceThreshold` logic against
+    the real record titles from the PDF showed the false positives are
+    only included when the query contains "stable"; with "stabiler" left
+    untranslated (the pre-existing, tested German behavior), all of them
+    are correctly excluded.
+
+    **Fix:** `AUTO_LEARN_LOCALES` in `query-translation.ts` now explicitly
+    restricts the learned-term cache + AI fallback tier to `["fr"]`.
+    German is back to its original, proven behavior: static dictionary
+    only, unknown tokens pass through untranslated (safe — a German word
+    essentially never spuriously matches English record text). Also
+    hardened the AI fallback itself for French (still in scope): the
+    full original question is now passed to the model as disambiguation
+    context (not just the isolated word), which should reduce — though,
+    since "stable" itself would still be a risky bare-word translation
+    even with context, not eliminate — this class of mistranslation
+    happening again for French. Regression test added
+    (`query-translation-ai-enabled.test.ts`) asserting German never calls
+    the learned-term repository or the AI fallback even with AI fully
+    configured.
+
+    **Residual, not fixed:** the underlying fragility — that a single
+    generic English word can flood literal keyword-overlap search across
+    an entire multi-disciplinary database like Crossref — still exists
+    for any term (static-dictionary or AI-sourced) that happens to be
+    common outside its intended sense, for any locale. No broader
+    safeguard (e.g. penalizing very common English words, phrase-level
+    matching instead of bag-of-words) was attempted here; worth
+    considering if this pattern recurs.
+
+    **Not cleaned up:** if `AI_EXTRACTION_ENABLED`/`ANTHROPIC_API_KEY`
+    were live at the time (they were — the purchased report has real
+    AI-synthesized key findings), a `locale: "de"` row for `term:
+    "stabiler"` (`translation: "stable"`) was likely written to
+    `learned_search_terms`. Harmless dead data now that German never
+    reads this table again, but can be deleted manually if desired:
+    `delete from learned_search_terms where locale = 'de';` (German never
+    uses this table going forward, so deleting all `de` rows is safe).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

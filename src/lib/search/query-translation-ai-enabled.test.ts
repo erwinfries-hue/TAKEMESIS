@@ -36,18 +36,21 @@ describe("buildSearchQuery — AI fallback + learned-term cache (AI_EXTRACTION_E
 
   it("falls back to a live AI translation for a term unknown to both the dictionary and the cache, then persists it", async () => {
     const learnedTermRepository = new InMemoryLearnedTermRepository();
+    const question = "Quel effet a la poudremagique sur la concentration ?";
 
-    const query = await buildSearchQuery(
-      "Quel effet a la poudremagique sur la concentration ?",
-      "fr",
-      {
-        learnedTermRepository,
-        translateTermsWithAi: async (terms) => {
-          expect(terms).toEqual(["poudremagique"]);
-          return new Map([["poudremagique", "magic powder"]]);
-        },
+    const query = await buildSearchQuery(question, "fr", {
+      learnedTermRepository,
+      translateTermsWithAi: async (terms, locale, contextQuestion) => {
+        expect(terms).toEqual(["poudremagique"]);
+        // The full original question must reach the AI fallback as
+        // disambiguation context (live bug fix 2026-07-29 — see
+        // AUTO_LEARN_LOCALES's comment in query-translation.ts): a bare
+        // word translated with no sentence context can pick the wrong
+        // sense of a polysemous term.
+        expect(contextQuestion).toBe(question);
+        return new Map([["poudremagique", "magic powder"]]);
       },
-    );
+    });
 
     expect(query).toContain("magic powder");
     const cached = await learnedTermRepository.findMany("fr", ["poudremagique"]);
@@ -93,5 +96,46 @@ describe("buildSearchQuery — AI fallback + learned-term cache (AI_EXTRACTION_E
     );
 
     expect(query).toContain("magic powder");
+  });
+});
+
+describe("buildSearchQuery — German never uses the AI fallback (live bug fix 2026-07-29)", () => {
+  it("leaves unknown German tokens untranslated even with AI fully configured, never calling the learned-term cache or AI", async () => {
+    // Real production purchase, 2026-07-29: "Welche Methoden helfen beim
+    // Aufbau stabiler Gewohnheiten?" — the AI fallback (only ever intended
+    // for French, see AUTO_LEARN_LOCALES) translated the bare word
+    // "stabiler" to "stable" with no sentence context, which flooded the
+    // report with false-positive matches (an 1849 book about horse
+    // stables, "water-stable aggregates", "stable isotope probing") and
+    // even excluded a genuinely relevant study because its abstract never
+    // says "stable". German must only ever use the static dictionary.
+    let learnedTermRepositoryCalled = false;
+    let aiCalled = false;
+    const learnedTermRepository = {
+      findMany: vi.fn(async () => {
+        learnedTermRepositoryCalled = true;
+        return new Map<string, string>();
+      }),
+      upsert: vi.fn(),
+    };
+
+    const query = await buildSearchQuery(
+      "Welche Methoden helfen beim Aufbau stabiler Gewohnheiten?",
+      "de",
+      {
+        learnedTermRepository,
+        translateTermsWithAi: async () => {
+          aiCalled = true;
+          return new Map();
+        },
+      },
+    );
+
+    expect(query).toContain("methods");
+    expect(query).toContain("aufbau");
+    expect(query).toContain("stabiler");
+    expect(query).not.toMatch(/\bstable\b/);
+    expect(learnedTermRepositoryCalled).toBe(false);
+    expect(aiCalled).toBe(false);
   });
 });
