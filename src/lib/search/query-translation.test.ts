@@ -24,6 +24,34 @@ describe("buildSearchQuery", () => {
     expect(query).toContain("concentration");
   });
 
+  it("translates a German elliptical shared-suffix compound (live bug 2026-07-29: 0 results found live for this example question)", async () => {
+    // "Dankbarkeits- oder Achtsamkeitsübungen" — German drops the first
+    // word's own "-übungen" suffix since the second word supplies it,
+    // leaving the truncated stem "dankbarkeits" as a token distinct from
+    // the dictionary's "dankbarkeit" entry.
+    const query = await buildSearchQuery(
+      "Wie wirksam sind Dankbarkeits- oder Achtsamkeitsübungen?",
+      "de",
+    );
+    expect(query).toContain("gratitude");
+    expect(query).toContain("mindfulness");
+    expect(query).not.toMatch(/\bdankbarkeits\b/);
+    expect(query).not.toMatch(/\bachtsamkeitsübungen\b/);
+  });
+
+  it("drops the 'hängen zusammen' connector phrase instead of diluting the query with untranslated filler (live bug 2026-07-29: 0 results found live for this example question)", async () => {
+    const query = await buildSearchQuery(
+      "Wie hängen soziale Kontakte und allgemeines Wohlbefinden zusammen?",
+      "de",
+    );
+    expect(query).toContain("social");
+    expect(query).toContain("contacts");
+    expect(query).toContain("general");
+    expect(query).toContain("well-being");
+    expect(query).not.toMatch(/\bhängen\b/);
+    expect(query).not.toMatch(/\bzusammen\b/);
+  });
+
   it("translates a compound noun to its English phrase", async () => {
     const query = await buildSearchQuery(
       "Welche Rolle spielt Proteinzufuhr für den Muskelerhalt?",

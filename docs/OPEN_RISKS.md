@@ -864,15 +864,11 @@ checkpoint (decision #15) and before each production-readiness gate.
     already documented in item 5. Two questions in Psychologie,
     Wohlbefinden & Gewohnheiten came back `not_eligible` with **zero**
     included studies and **no** source error (gratitude/mindfulness
-    exercises; social contacts and general well-being) — not obviously a
-    bug (their German terms are all in `DE_EN_DICTIONARY`: "dankbarkeit",
-    "achtsamkeit", "kontakte"), more likely a genuine thin intersection
-    for those exact phrasings in the 4 sources. Per this item's original
-    instruction ("replace any example that comes back not_eligible"),
-    worth swapping these two curated examples for better-supported
-    phrasings in a future content pass — not urgent, the system is
-    behaving honestly (declining to sell an unsupported question) rather
-    than incorrectly.
+    exercises; social contacts and general well-being) — the same
+    questions in English came back with 18 and 24 included studies
+    respectively, proving this was a translation bug, not a real
+    evidence gap. **Root-caused and fixed same day**, see the
+    `DE_EN_DICTIONARY`/`STOPWORDS` update below.
 
     **New finding from this sweep:** 6 of the 61 questions (~10%) hit a
     `crossref: crossref request failed after 3 attempt(s)` source error,
@@ -884,6 +880,49 @@ checkpoint (decision #15) and before each production-readiness gate.
     live network access to Crossref to reproduce/diagnose directly) —
     worth a closer look at Crossref's current rate limits/reliability
     from a real network next.
+
+    **Second sweep, same day, English locale, worse pattern with
+    OpenAlex:** starting partway through (Sleep & Regeneration onward),
+    every OpenAlex request failed for the rest of that batch (Fitness:
+    5/5 questions, Learning: 5/5) before recovering on its own after a
+    pause. Checked `src/lib/source-adapters/http.ts`'s shared
+    `fetchWithRetry`: 2 retries with ~300ms/600ms backoff, no special
+    handling for HTTP 429 or a `Retry-After` header — nowhere near
+    enough to survive an actual rate-limit window once tripped, which
+    plausibly explains the "once it starts failing, it keeps failing for
+    the rest of the batch" shape (unlike Crossref's scattered single
+    failures above). Very likely self-inflicted by `/admin/example-
+    questions` firing many searches back to back with no delay between
+    them — worth eventually either spacing out that admin tool's
+    requests, or honoring `Retry-After`/backing off harder specifically
+    on 429 in `fetchWithRetry`. Not fixed here (touches a shared
+    abstraction all 4 adapters use — deserves its own careful pass, not
+    a same-session patch). Real-traffic implication: a genuine burst of
+    concurrent users could trip the same limit, though the existing
+    per-source resilience design means a report still generates from the
+    remaining working sources rather than failing outright.
+
+    **Two Psychologie translation gaps found and fixed same day**
+    (`src/lib/search/de-en-dictionary.ts`, `relevance.ts`'s `STOPWORDS`):
+    reproduced locally (no network needed — German query building is pure
+    dictionary lookup since item 29's fix) against the exact two
+    questions above.
+    1. "Dankbarkeits- oder Achtsamkeitsübungen" — German's elliptical
+       shared-suffix compounding drops the first word's own "-übungen"
+       since the second word supplies it, leaving the token "dankbarkeits"
+       (not "dankbarkeit") and the untruncated "achtsamkeitsübungen"
+       (not "achtsamkeit") — neither matched the dictionary's exact-word
+       entries. Added both forms.
+    2. "Wie hängen X und Y zusammen?" — "hängen"/"zusammen" (the
+       "are related" connector phrase) were real, untranslated German
+       words that diluted the query alongside the correctly-translated
+       content words. Added to the generic-connector-word stopword list
+       (same treatment as "hilft"/"wirkt"/"verbessert").
+
+    Verified: both questions now translate to clean English queries
+    ("gratitude mindfulness exercises effective" /
+    "social contacts general well-being"). Regression tests added
+    (`query-translation.test.ts`); full suite green (647 unit tests).
 
 28. **RESOLVED 2026-07-29 — Erwin approved.** French `/legal` and
     `/privacy` page content (added with the French locale rollout) is a

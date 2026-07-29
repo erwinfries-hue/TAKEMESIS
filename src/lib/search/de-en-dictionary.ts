@@ -80,6 +80,7 @@ export const DE_EN_DICTIONARY: Record<string, string> = {
   kinder: "children",
   allgemeine: "general",
   allgemeinen: "general",
+  allgemeines: "general",
   individuelle: "individual",
   besser: "better",
   beste: "best",
@@ -239,7 +240,16 @@ export const DE_EN_DICTIONARY: Record<string, string> = {
   alltagsstress: "everyday stress",
   stress: "stress",
   dankbarkeit: "gratitude",
+  // Live bug found 2026-07-29 (OPEN_RISKS.md): German elliptical shared-
+  // suffix compounds ("Dankbarkeits- oder Achtsamkeitsübungen" — the first
+  // word drops its own "-übungen" since the second word supplies it) leave
+  // the truncated stem as a token this dictionary's exact-match lookup
+  // never covers. The full compound is covered too, for whichever form a
+  // user actually types.
+  dankbarkeits: "gratitude",
+  dankbarkeitsübungen: "gratitude exercises",
   achtsamkeit: "mindfulness",
+  achtsamkeitsübungen: "mindfulness exercises",
   übungen: "practices",
   begünstigen: "favor",
   durchhalten: "sticking with",

@@ -2060,13 +2060,38 @@ Ergebnisse geschickt. Schliesst `OPEN_RISKS.md` #27 endgültig ab:
   Quellenabdeckung dieser Kategorie.
 - Zwei Fragen (Dankbarkeits-/Achtsamkeitsübungen; soziale Kontakte &
   Wohlbefinden) liefern 0 eingeschlossene Studien ohne Quellenfehler —
-  vermutlich eine echte dünne Schnittmenge für diese Formulierungen,
-  keine offensichtliche Übersetzungslücke (Begriffe sind im Wörterbuch).
-  Kandidaten für einen künftigen Content-Tausch, nicht dringend.
+  dieselben Fragen auf Englisch lieferten 18 bzw. 24 Treffer, also ein
+  echter Übersetzungsbug, keine dünne Evidenzlage. **Noch am selben Tag
+  gefunden und behoben** (siehe unten).
 - **Neuer Befund:** 6 von 61 Fragen (~10%) scheiterten an einem
   Crossref-Timeout, über 5 Themen verteilt — zu häufig für Zufall,
   noch nicht weiter untersucht (diese Sandbox hat weiterhin keinen
   Netzwerkzugriff auf Crossref).
+
+### Zweiter Sweep auf Englisch: OpenAlex-Rate-Limit + zwei Wörterbuch-Lücken behoben (2026-07-29)
+
+Erwin liess denselben Live-Test auch auf Englisch über alle 12 Themen
+laufen:
+
+- **OpenAlex fiel ab "Sleep & Regeneration" komplett aus** und blieb für
+  den Rest des Batches (Fitness 5/5, Lernen 5/5) tot, erholte sich aber
+  nach einer Pause von selbst — sieht nach einem selbstverursachten
+  Rate-Limit aus (viele Suchen schnell hintereinander über
+  `/admin/example-questions`). Code-Check bestätigt: `http.ts`s
+  Retry-Mechanismus wartet insgesamt nur ~1 Sekunde und behandelt HTTP
+  429 nicht speziell — bei weitem nicht genug, um ein echtes Rate-Limit
+  zu überstehen. Nicht behoben (betrifft alle 4 Adapter gemeinsam,
+  verdient einen eigenen sorgfältigen Durchgang), als `OPEN_RISKS.md`
+  #27 dokumentiert.
+- **Zwei Übersetzungslücken gefunden und noch am selben Tag behoben:**
+  lokal (ohne Netzwerk) nachvollzogen, da Deutsch jetzt rein
+  wörterbuchbasiert läuft. (1) "Dankbarkeits- oder
+  Achtsamkeitsübungen" — deutsche Sparschreibung liess "dankbarkeits"
+  und "achtsamkeitsübungen" unübersetzt (Wörterbuch hatte nur
+  "dankbarkeit"/"achtsamkeit"). (2) "Wie hängen X und Y zusammen?" —
+  "hängen"/"zusammen" blieben als unübersetzte Störwörter in der Anfrage.
+  Beide Fälle ergänzt (`de-en-dictionary.ts`, `relevance.ts`s
+  Stopwortliste), Regressionstests ergänzt, alle 647 Unit-Tests grün.
 
 ## Blocking items tracked for later (do not block continued implementation)
 

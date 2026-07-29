@@ -42,6 +42,12 @@ export const STOPWORDS = new Set([
   "steigert", "steigerst", "steigern", "steigerte", "steigerten",
   "schadet", "schadest", "schaden", "schadete", "schadeten", "geschadet",
   "schützt", "schützen", "schützte", "schützten", "geschützt",
+  // "hängen zusammen" ("are related") — live bug found 2026-07-29: a
+  // "Wie hängen X und Y zusammen?" question left both words untranslated
+  // and, being real (if generic) German content words, diluted the
+  // relevance match against otherwise-correct English record text down
+  // below the threshold for a topic with genuinely good source coverage.
+  "hängt", "hängen", "hing", "hingen", "gehangen", "zusammen",
   // English
   "the", "and", "or", "but", "if", "then", "than", "as", "of", "to", "in",
   "on", "at", "by", "for", "with", "about", "against", "between", "into",
