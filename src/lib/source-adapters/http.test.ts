@@ -77,6 +77,111 @@ describe("fetchJson", () => {
       }),
     ).rejects.toMatchObject({ status: 404 });
   });
+
+  // Live bug found 2026-07-29 (OPEN_RISKS.md #27): a real rate limit (429)
+  // used to get the same ~300-600ms backoff as a transient network blip,
+  // nowhere near enough to survive an actual rate-limit window.
+  it("honors a Retry-After header (delta-seconds) on a 429 instead of the generic short backoff", async () => {
+    vi.useFakeTimers();
+    try {
+      const response429 = {
+        ok: false,
+        status: 429,
+        headers: { get: (name: string) => (name === "retry-after" ? "2" : null) },
+        json: async () => ({}),
+      } as unknown as Response;
+      const fetchImpl = vi
+        .fn()
+        .mockResolvedValueOnce(response429)
+        .mockResolvedValueOnce(jsonResponse({ ok: true }));
+
+      const promise = fetchJson("https://example.test", {
+        source: "openalex",
+        fetchImpl,
+        maxRetries: 1,
+        timeoutMs: 1000,
+      });
+
+      // Advancing only 1000ms (the generic-error backoff) must not be
+      // enough — the 2-second Retry-After hint has to be respected.
+      await vi.advanceTimersByTimeAsync(1000);
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(1000);
+      const result = await promise;
+      expect(result).toEqual({ ok: true });
+      expect(fetchImpl).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("caps the Retry-After-derived delay so a slow source can't blow the caller's own time budget", async () => {
+    vi.useFakeTimers();
+    try {
+      const response429 = {
+        ok: false,
+        status: 429,
+        headers: { get: (name: string) => (name === "retry-after" ? "60" : null) },
+        json: async () => ({}),
+      } as unknown as Response;
+      const fetchImpl = vi
+        .fn()
+        .mockResolvedValueOnce(response429)
+        .mockResolvedValueOnce(jsonResponse({ ok: true }));
+
+      const promise = fetchJson("https://example.test", {
+        source: "openalex",
+        fetchImpl,
+        maxRetries: 1,
+        timeoutMs: 1000,
+      });
+
+      // A 60s Retry-After must be capped, not honored verbatim — 3s (the
+      // documented cap) is already enough for the retry to fire.
+      await vi.advanceTimersByTimeAsync(3000);
+      const result = await promise;
+      expect(result).toEqual({ ok: true });
+      expect(fetchImpl).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("still backs off (longer than a generic error) on a 429 with no Retry-After header", async () => {
+    vi.useFakeTimers();
+    try {
+      const response429 = {
+        ok: false,
+        status: 429,
+        headers: { get: () => null },
+        json: async () => ({}),
+      } as unknown as Response;
+      const fetchImpl = vi
+        .fn()
+        .mockResolvedValueOnce(response429)
+        .mockResolvedValueOnce(jsonResponse({ ok: true }));
+
+      const promise = fetchJson("https://example.test", {
+        source: "crossref",
+        fetchImpl,
+        maxRetries: 1,
+        timeoutMs: 1000,
+      });
+
+      // The generic backoff for attempt 0 would be 300ms — a 429 without
+      // Retry-After must wait longer than that.
+      await vi.advanceTimersByTimeAsync(300);
+      expect(fetchImpl).toHaveBeenCalledTimes(1);
+
+      await vi.advanceTimersByTimeAsync(1000);
+      const result = await promise;
+      expect(result).toEqual({ ok: true });
+      expect(fetchImpl).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
 });
 
 describe("fetchText", () => {

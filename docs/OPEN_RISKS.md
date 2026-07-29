@@ -895,12 +895,23 @@ checkpoint (decision #15) and before each production-readiness gate.
     questions` firing many searches back to back with no delay between
     them — worth eventually either spacing out that admin tool's
     requests, or honoring `Retry-After`/backing off harder specifically
-    on 429 in `fetchWithRetry`. Not fixed here (touches a shared
-    abstraction all 4 adapters use — deserves its own careful pass, not
-    a same-session patch). Real-traffic implication: a genuine burst of
-    concurrent users could trip the same limit, though the existing
+    on 429 in `fetchWithRetry`. Real-traffic implication: a genuine burst
+    of concurrent users could trip the same limit, though the existing
     per-source resilience design means a report still generates from the
     remaining working sources rather than failing outright.
+
+    **RESOLVED same day.** `fetchWithRetry` now treats HTTP 429
+    differently from a generic error: it honors the response's
+    `Retry-After` header (delta-seconds or HTTP-date, per RFC 9110
+    §10.2.3) when present, capped at 3 seconds so a slow/misbehaving
+    source can't blow the caller's own function-duration budget (e.g.
+    `/admin/report-preview` and the Stripe webhook route's `maxDuration =
+    60`); with no `Retry-After` header, 429s still get a longer base
+    backoff (1000ms vs. the generic 300ms) than a transient network blip.
+    Deliberately did not touch `/admin/example-questions`'s
+    request-spacing — the shared retry fix addresses the root cause for
+    real traffic too, not just this one admin tool. 3 new tests added
+    (`http.test.ts`, fake timers); full suite green (650 unit tests).
 
     **Two Psychologie translation gaps found and fixed same day**
     (`src/lib/search/de-en-dictionary.ts`, `relevance.ts`'s `STOPWORDS`):
