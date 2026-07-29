@@ -924,6 +924,25 @@ checkpoint (decision #15) and before each production-readiness gate.
     "social contacts general well-being"). Regression tests added
     (`query-translation.test.ts`); full suite green (647 unit tests).
 
+    **Live-confirmed deployed and working (2026-07-29, same day):** Erwin
+    re-ran Psychologie, Wohlbefinden & Gewohnheiten in German after the
+    fix shipped — "Dankbarkeits- oder Achtsamkeitsübungen" now returns
+    13 included/7 result-bearing (was 0/0), "Wie hängen soziale Kontakte
+    und allgemeines Wohlbefinden zusammen?" now returns 21/10 (was 0/0).
+
+    **Full 12-topic × 3-locale live sweep completed this session.**
+    Every topic checked in German, English, and French via
+    `/admin/example-questions` (36 topic/locale combinations, ~180
+    question checks total). Picture across all of it: healthy — no
+    domain mismatches, no other zero-result-without-error surprises, the
+    Umwelt/Environnement/Environment coverage gap consistently shows up
+    across all three locales as expected (item 5), and the two
+    translation-gap fixes above are the only real bugs this sweep
+    surfaced (both fixed and confirmed same day). Remaining known
+    issues from this sweep are the Crossref intermittent-timeout pattern
+    and the OpenAlex rate-limit-under-burst-load finding, both above,
+    neither fixed.
+
 28. **RESOLVED 2026-07-29 — Erwin approved.** French `/legal` and
     `/privacy` page content (added with the French locale rollout) is a
     faithful translation of the already-approved German/English wording

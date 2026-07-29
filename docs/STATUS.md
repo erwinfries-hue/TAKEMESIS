@@ -2092,6 +2092,22 @@ laufen:
   "hängen"/"zusammen" blieben als unübersetzte Störwörter in der Anfrage.
   Beide Fälle ergänzt (`de-en-dictionary.ts`, `relevance.ts`s
   Stopwortliste), Regressionstests ergänzt, alle 647 Unit-Tests grün.
+- **Live bestätigt, noch am selben Tag:** Erwin liess "Psychologie,
+  Wohlbefinden & Gewohnheiten" auf Deutsch nach dem Fix nochmal laufen —
+  beide vorher leeren Fragen liefern jetzt echte Treffer (13/7 und
+  21/10 statt 0/0).
+
+### Vollständiger Sweep abgeschlossen: 12 Themen × 3 Sprachen live geprüft (2026-07-29)
+
+`/admin/example-questions` bekam heute auch die fehlende
+Französisch-Option in der Sprachauswahl (war seit dem Bau des Tools nur
+Deutsch/Englisch). Erwin hat danach alle 12 Themen auch auf Französisch
+durchgeklickt — komplett fehlerfrei, keine Quellenfehler im gesamten
+Batch. Damit ist die komplette Matrix (12 Themen × Deutsch/Englisch/
+Französisch, ~180 Einzelprüfungen) einmal live durchgetestet. Fazit:
+durchgehend gesund, die einzigen zwei echten Bugs dieses Sweeps
+(Dankbarkeits-/Achtsamkeitsübungen, "hängen zusammen") sind gefunden,
+behoben und live bestätigt.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
