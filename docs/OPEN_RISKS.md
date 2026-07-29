@@ -850,19 +850,40 @@ checkpoint (decision #15) and before each production-readiness gate.
     accidental-substring risk, not just this one found instance — was not
     done; only the one live-found case was fixed.
 
-27. **The 60 example questions' domain classification and high-risk
-    status are now verified (offline, see `STATUS.md`), but whether they
-    actually yield an eligible report (`assessEligibility` via a real
-    search) has never been checked.** Same live-network gap as
-    `OPEN_RISKS.md` #2 — this sandbox has no outbound access to any of
-    the 4 source adapters (confirmed via direct `curl`, all four return
-    403 through the proxy). The admin tool built for exactly this
-    (`checkExampleQuestionsForTopic`, task #86,
-    `/admin/example-questions`) has never actually run against live
-    data. Owner: whoever first has real network access to a deployed
-    instance — run the live-verify admin tool against all 12 topics and
-    replace any example that comes back `not_eligible` or
-    source-unreachable-only.
+27. **RESOLVED 2026-07-29 — live-verified against all 12 topics via
+    `/admin/example-questions`.** Erwin ran all 61 example questions
+    (some topics have 6, not 5, after task #134's addition) through the
+    real search+eligibility pipeline on the live production domain.
+    Overall picture: healthy. Notably, the same "stabiler Gewohnheiten"
+    question from item 29's bug report dropped from 20 (mostly
+    irrelevant) included studies to 3 genuinely relevant ones, correctly
+    now labeled "eignet sich mit Einschränkungen" instead of falsely
+    looking well-supported — direct live confirmation the item-29 fix is
+    deployed and working. Umwelt/Nachhaltigkeit questions all came back
+    "mit Einschränkungen" on small counts, matching the coverage gap
+    already documented in item 5. Two questions in Psychologie,
+    Wohlbefinden & Gewohnheiten came back `not_eligible` with **zero**
+    included studies and **no** source error (gratitude/mindfulness
+    exercises; social contacts and general well-being) — not obviously a
+    bug (their German terms are all in `DE_EN_DICTIONARY`: "dankbarkeit",
+    "achtsamkeit", "kontakte"), more likely a genuine thin intersection
+    for those exact phrasings in the 4 sources. Per this item's original
+    instruction ("replace any example that comes back not_eligible"),
+    worth swapping these two curated examples for better-supported
+    phrasings in a future content pass — not urgent, the system is
+    behaving honestly (declining to sell an unsupported question) rather
+    than incorrectly.
+
+    **New finding from this sweep:** 6 of the 61 questions (~10%) hit a
+    `crossref: crossref request failed after 3 attempt(s)` source error,
+    spread across 5 different topics (Gesundheit, Lernen, Beziehungen,
+    Konsum ×2, Umwelt) — too frequent and too spread out to be one-off
+    noise. Two of those (`Eignet sich nicht`, 0/0) means the *only*
+    source for that question's candidates was Crossref and it failed
+    outright. Not investigated further here (this sandbox still has no
+    live network access to Crossref to reproduce/diagnose directly) —
+    worth a closer look at Crossref's current rate limits/reliability
+    from a real network next.
 
 28. **RESOLVED 2026-07-29 — Erwin approved.** French `/legal` and
     `/privacy` page content (added with the French locale rollout) is a

@@ -2044,6 +2044,30 @@ Regressionstest ergänzt. `npm run verify`-relevante Teile erneut grün
 Cleanup-SQL für die verwaiste `learned_search_terms`-Zeile in
 `OPEN_RISKS.md` #29.
 
+### Alle 61 Beispielfragen live gegen echte Suche verifiziert (2026-07-29)
+
+Erwin hat `/admin/example-questions` (kostenloses Admin-Tool, kein
+Stripe-Kauf nötig) über alle 12 Themen laufen lassen und mir die
+Ergebnisse geschickt. Schliesst `OPEN_RISKS.md` #27 endgültig ab:
+
+- **Direkte Live-Bestätigung des #29-Fixes:** dieselbe Frage
+  "Welche Methoden helfen beim Aufbau stabiler Gewohnheiten?" liefert
+  jetzt 3 statt 20 eingeschlossene Studien — die Fehltreffer sind weg,
+  und das System kennzeichnet die dünne Evidenzlage jetzt ehrlich
+  ("mit Einschränkungen") statt sie zu verschleiern.
+- Umwelt/Nachhaltigkeit durchgehend "mit Einschränkungen" bei kleinen
+  Zahlen — deckt sich mit der bereits dokumentierten schwächeren
+  Quellenabdeckung dieser Kategorie.
+- Zwei Fragen (Dankbarkeits-/Achtsamkeitsübungen; soziale Kontakte &
+  Wohlbefinden) liefern 0 eingeschlossene Studien ohne Quellenfehler —
+  vermutlich eine echte dünne Schnittmenge für diese Formulierungen,
+  keine offensichtliche Übersetzungslücke (Begriffe sind im Wörterbuch).
+  Kandidaten für einen künftigen Content-Tausch, nicht dringend.
+- **Neuer Befund:** 6 von 61 Fragen (~10%) scheiterten an einem
+  Crossref-Timeout, über 5 Themen verteilt — zu häufig für Zufall,
+  noch nicht weiter untersucht (diese Sandbox hat weiterhin keinen
+  Netzwerkzugriff auf Crossref).
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved
