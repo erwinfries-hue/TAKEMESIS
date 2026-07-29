@@ -176,3 +176,35 @@ create unique index studies_source_key_idx on studies (source, source_id) where 
 
 Once these are answered, this becomes a normal implementation task, sized
 similarly to Phase 7 (persistence) rather than a new phase of its own.
+
+## 6. Phase B — "strategic asset" framing (2026-07-29, deferred by design)
+
+A later strategic-potential discussion asked what would turn this cache
+from an internal cost/consistency optimization into something with visible
+business value. Four directions were considered:
+
+1. A public "questions we've already examined" page (teaser-level only,
+   trust/SEO value).
+2. Feeding the existing "most-asked topics this week" widget (task #81)
+   and the digest-email infrastructure (task #119) with real index data
+   instead of one-off snapshots.
+3. Faster/cheaper follow-up reports when a study has been seen before —
+   note this only speeds up the AI-extraction step, not the live search
+   itself (the search-date trust model in `07_EVIDENCE_SOURCES_...md`
+   means every report still re-queries all 4 sources fresh).
+4. Long-term: licensing aggregated, anonymized trend data to third
+   parties — meaningfully more effort and its own legal review; not
+   currently in scope.
+
+Recommendation given, if one of these is pursued later: #2, since it's the
+lowest effort, reuses infrastructure that already exists, and carries the
+least legal/content risk of the four.
+
+**Decision (Erwin, 2026-07-29): defer all four.** None of them should be
+built now — the cache currently holds close to no real entries (no live
+Stripe/Supabase, no real paid traffic yet), so building a "strategic
+asset" on top of an effectively empty or synthetic index would misrepresent
+what TEKMESIS has actually examined, which cuts against the product's own
+evidence-integrity principle of never presenting more than what's actually
+there. Revisit only once real production search volume exists
+post-launch. No code changes made for this item.
