@@ -752,6 +752,22 @@ checkpoint (decision #15) and before each production-readiness gate.
     single-vs-multi-process `next start` hypothesis are still the next
     thing to check.
 
+    **Update (2026-07-29): 4th clean run, after the French-locale
+    rollout's changes.** Ran the full `npm run test:e2e` suite (62 specs,
+    including `search.spec.ts`'s rate-limit test and
+    `security-headers.spec.ts`) against a fresh `npm run build && npm run
+    start` — **62/62 passed, zero failures**, ~1.3 min. This is now 4
+    consecutive clean full-suite/targeted runs across two different
+    sessions with substantial code changes in between (marketing pass,
+    then the entire French-locale rollout), none of which touched
+    `in-memory-rate-limiter.ts`, `get-rate-limiter.ts`, or the e2e
+    `webServer` config. Confidence this was sandbox-instance-specific
+    flake (not a real bug) is now fairly high — still not marking fully
+    resolved per `CLAUDE.md`'s "never claim a test passed if it was not
+    run" (a flake that reproduced once could recur), but this item no
+    longer needs proactive attention; only revisit if it's actually seen
+    failing again.
+
 25. **Two items from the "WOW-Zusatzleistungen" marketing brainstorm
     (Erwin's request) were deliberately not built, on top of the 13 that
     were.** Both need a real product/data decision first, not just code:
