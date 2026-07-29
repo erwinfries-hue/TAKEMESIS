@@ -26,7 +26,7 @@ export async function SourceStatusPanel({
     })),
   );
 
-  const dateFormat = locale === "de" ? "de-CH" : "en-CH";
+  const dateFormat: Record<Locale, string> = { de: "de-CH", en: "en-CH", fr: "fr-CH" };
 
   return (
     <section className="w-full max-w-4xl">
@@ -52,7 +52,7 @@ export async function SourceStatusPanel({
               )}
               <p className="text-xs text-brand-neutral-600">
                 {dict.sourcesPage.liveStatusCheckedAtLabel}{" "}
-                {new Date(status.checkedAt).toLocaleTimeString(dateFormat)}
+                {new Date(status.checkedAt).toLocaleTimeString(dateFormat[locale])}
               </p>
               {!status.ok && status.error && (
                 <p className="mt-1 text-xs text-brand-warning-600">{status.error}</p>

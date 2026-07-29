@@ -830,6 +830,21 @@ checkpoint (decision #15) and before each production-readiness gate.
     replace any example that comes back `not_eligible` or
     source-unreachable-only.
 
+28. **French `/legal` and `/privacy` page content (added with the French
+    locale rollout, 2026-07-29) has not had legal/tax sign-off.** The
+    French translation in `fr.json`'s `legalPage`/`privacyPage` sections
+    is a faithful translation of the already-approved German/English
+    wording (same seller entity, same Art. 8 MWSTG reverse-charge
+    language, same retention/privacy commitments) — not new legal
+    content, no new claims. Still, per `CLAUDE.md`'s human stop condition
+    for "legal/tax approval", a translation of legally operative text is
+    not self-approving. **Human stop condition — one exact action:**
+    Erwin (or a French-speaking legal reviewer) reads
+    `src/lib/i18n/dictionaries/fr.json`'s `legalPage` and `privacyPage`
+    sections end to end and confirms the French wording matches the
+    approved German/English legal position before the `fr` locale is
+    enabled for real customers.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

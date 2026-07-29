@@ -1931,6 +1931,58 @@ folgen als nächster Schritt. Kein echter Stripe-Testkauf in dieser Session
 durchgeführt — diese Sandbox hat keinen Netzwerkzugriff zu Stripe; das
 erste echte Ende-zu-Ende-Testkauf steht noch aus.
 
+### Französische Lokalisierung (fr) — vollständiger Rollout (2026-07-29)
+
+Auf Erwins Entscheidung ("für den Moment würde ich französisch noch
+implementieren wollen", Option A + Auto-Lern-Mechanismus von Anfang an)
+wurde Französisch als dritte vollwertige Locale ausgerollt — Italienisch
+bewusst noch nicht:
+
+- **UI/Content:** `fr` zu `locales` hinzugefügt; vollständiges
+  `dictionaries/fr.json` (alle 365 Schlüssel, gegen `de.json` per Skript
+  auf Vollständigkeit geprüft); alle 12 Themen in `content/topics.ts` um
+  einen `fr`-Block ergänzt (compiler-erzwungen über `Topic { fr: ... }`);
+  französischer Branch in allen 3 Transaktions-E-Mail-Buildern
+  (`templates.ts`).
+- **Sicherheitskritisch:** französische Begriffslisten im unabhängigen
+  High-Risk-Detektor (`high-risk.ts`, alle 9 Kategorien inkl.
+  Kind+Behandlung-Kombination) und im Domain-Klassifizierer
+  (`domain.ts`, `STOPWORDS_FR`) ergänzt — beide mit eigenen Tests.
+- **Kritischer Bugfix (hätte sonst Französisch von Anfang an lautlos
+  kaputt gemacht):** `query-translation.ts` war fest auf
+  `locale === "de"` verdrahtet — jede andere Locale (inkl. des neuen
+  `fr`) hätte serverseitig **keinerlei** Übersetzung erhalten und wäre
+  unübersetzt an die 4 überwiegend englischsprachigen Quellen gegangen
+  (derselbe Fehlerklasse wie der bereits diese Session behobene
+  Live-Bug für Deutsch). Auf einen generischen `Record<Locale, ...>`-
+  Dispatch umgebaut; `relevance.ts`s Tokenizer-Regex um französische
+  Akzentzeichen erweitert (sonst wären unübersetzte französische
+  Fallback-Wörter beim Relevanz-Scoring an jedem Akzent zerschnitten
+  worden).
+- **`fr-en-dictionary.ts`** (neu, ~150 Einträge): statisches
+  Französisch→Englisch-Wörterbuch, analog zu `de-en-dictionary.ts`.
+- **Auto-Lern-Mechanismus** (Erwins explizite Vorgabe, gleich mitgebaut
+  statt später): dreistufige Übersetzung in `buildSearchQuery` —
+  (1) statisches Wörterbuch, (2) `learned_search_terms`-Cache
+  (neue Supabase-Migration + In-Memory/Supabase-Repository-Pattern,
+  gleiche Konvention wie der Studien-Cache), (3) nur falls beides keinen
+  Treffer liefert und KI konfiguriert ist: ein günstiger KI-Fallback-Call
+  (`term-translation-ai.ts`, wiederverwendet die bestehende
+  Anthropic-Anbindung), dessen Ergebnis persistiert wird — jeder
+  spätere gleiche Begriff, über alle Nutzer hinweg, kostet dann keinen
+  KI-Call mehr. Jede Stufe degradiert weich (Cache-Fehler, fehlender
+  KI-Key, KI-Fehler) auf unübersetzt-durchreichen, nie auf einen
+  kaputten Search.
+- **Rechtstext:** `/legal` und `/privacy` sind über `fr.json` bereits
+  vollständig übersetzt (treue Übersetzung der bereits freigegebenen
+  DE/EN-Rechtsposition, keine neuen Aussagen) — aber noch **nicht** von
+  Erwin/einer Rechtsperson gegengelesen. Als `OPEN_RISKS.md` #28
+  dokumentiert (human-stop-condition "legal/tax approval" aus
+  `CLAUDE.md`).
+
+`npm run verify` grün (Lint, Typecheck, 644 Unit-Tests, Integration-Test,
+Build) nach jedem Schritt erneut ausgeführt.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved

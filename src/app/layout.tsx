@@ -3,9 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 import { clientEnv } from "@/lib/env/client";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+
+const OG_LOCALE: Record<Locale, string> = { de: "de_CH", en: "en_US", fr: "fr_CH" };
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: dict.home.description,
       url: "/",
       siteName: dict.brand.name,
-      locale: locale === "de" ? "de_CH" : "en_US",
+      locale: OG_LOCALE[locale],
       type: "website",
     },
     twitter: {

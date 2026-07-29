@@ -43,10 +43,22 @@ export const CORPUS_SIZES: Partial<Record<SourceId, CorpusSize>> = {
   },
 };
 
-/** "477 Mio." / "3,1 Mio." — always rounded, never a false-precision exact figure. */
-export function formatApproxCount(count: number, locale: "de" | "en"): string {
+const INTL_LOCALE: Record<"de" | "en" | "fr", string> = {
+  de: "de-CH",
+  en: "en-US",
+  fr: "fr-CH",
+};
+
+const MILLIONS_SUFFIX: Record<"de" | "en" | "fr", (formatted: string) => string> = {
+  de: (formatted) => `${formatted} Mio.`,
+  en: (formatted) => `${formatted}M`,
+  fr: (formatted) => `${formatted} mio`,
+};
+
+/** "477 Mio." / "3,1 Mio." / "477 mio" — always rounded, never a false-precision exact figure. */
+export function formatApproxCount(count: number, locale: "de" | "en" | "fr"): string {
   const millions = count / 1_000_000;
   const rounded = millions >= 100 ? Math.round(millions) : Math.round(millions * 10) / 10;
-  const formatted = rounded.toLocaleString(locale === "de" ? "de-CH" : "en-US");
-  return locale === "de" ? `${formatted} Mio.` : `${formatted}M`;
+  const formatted = rounded.toLocaleString(INTL_LOCALE[locale]);
+  return MILLIONS_SUFFIX[locale](formatted);
 }

@@ -36,8 +36,24 @@ const STOPWORDS_EN = new Set([
   "effect", "effects", "influence", "impact", "impacts",
 ]);
 
+const STOPWORDS_FR = new Set([
+  "quelle", "quel", "quels", "quelles", "comment", "pourquoi", "est", "sont",
+  "pour", "et", "ou", "le", "la", "les", "un", "une", "des", "du", "de",
+  "dans", "sur", "à", "au", "aux", "avec", "ne", "pas", "se", "être", "sera",
+  "peut", "peuvent", "par", "qui", "que", "quoi", "cette", "ce", "ces",
+  "son", "sa", "ses", "avoir", "a", "ont", "avait", "avaient",
+  // French counterpart to the German/English effect-nouns above — same rationale.
+  "effet", "effets", "influence", "impact", "impacts",
+]);
+
+const STOPWORDS: Record<Locale, Set<string>> = {
+  de: STOPWORDS_DE,
+  en: STOPWORDS_EN,
+  fr: STOPWORDS_FR,
+};
+
 function tokenize(text: string, locale: Locale): string[] {
-  const stopwords = locale === "de" ? STOPWORDS_DE : STOPWORDS_EN;
+  const stopwords = STOPWORDS[locale];
   return text
     .toLowerCase()
     .replace(/[?.,;:!()„""]/g, " ")

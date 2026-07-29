@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import { SPEECH_LOCALE } from "@/lib/i18n/speech-locale";
 import { useBrowserFeatureSupported } from "@/lib/browser/use-browser-feature";
 
 /** Browser-native SpeechSynthesis — no server round-trip, no extra dependency. Silently unavailable (button hidden) rather than shown-but-broken where the API doesn't exist (e.g. some older mobile browsers). */
@@ -39,7 +40,7 @@ export function ReadAloudButton({
       return;
     }
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = locale === "de" ? "de-CH" : "en-US";
+    utterance.lang = SPEECH_LOCALE[locale];
     utterance.onend = () => setSpeaking(false);
     utterance.onerror = () => setSpeaking(false);
     window.speechSynthesis.speak(utterance);

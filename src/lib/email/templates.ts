@@ -30,6 +30,12 @@ const FOOTER = {
     disclaimer:
       "TEKMESIS provides general scientific information and evidence-based orientation for life questions. It does not replace individual professional advice.",
   },
+  fr: {
+    signature: "TEKMESIS – FROM STUDIES TO CLARITY.",
+    parent: "Un produit d'AXIA4 by EF.",
+    disclaimer:
+      "TEKMESIS propose des informations scientifiques générales et une orientation fondée sur des preuves pour des questions de vie. Cela ne remplace pas un conseil professionnel individuel.",
+  },
 } as const;
 
 /** Same navy/teal/neutral tokens as globals.css (--color-navy-900, --color-teal-600, --color-neutral-*), inlined because email clients don't load stylesheets. */
@@ -90,6 +96,12 @@ export function buildReportReadyEmail(params: ReportEmailParams): EmailContent {
     return { subject: "Dein TEKMESIS Evidence Report ist bereit", ...wrapEmail(locale, bodyHtml, bodyText) };
   }
 
+  if (locale === "fr") {
+    const bodyHtml = `<p style="margin:0 0 16px;">Bonjour,</p><p style="margin:0 0 24px;">ton Evidence Report est prêt et accessible via le lien sécurisé suivant :</p><p style="margin:0 0 20px;">${emailButton(reportUrl, "Voir le rapport")}</p><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">Si le bouton ne fonctionne pas : ${emailLink(reportUrl, reportUrl)}</p><p style="margin:0 0 16px;">Ce lien est personnel — merci de ne le partager qu'avec des personnes de confiance.</p><p style="margin:0;">Des questions ou remarques ? Écris-nous à ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Bonjour,\n\nton Evidence Report est prêt et accessible via le lien sécurisé suivant :\n${reportUrl}\n\nCe lien est personnel — merci de ne le partager qu'avec des personnes de confiance.\n\nDes questions ou remarques ? Écris-nous à ${supportEmail}.`;
+    return { subject: "Ton Evidence Report TEKMESIS est prêt", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
   const bodyHtml = `<p style="margin:0 0 16px;">Hi,</p><p style="margin:0 0 24px;">your Evidence Report is ready and available via the following secure link:</p><p style="margin:0 0 20px;">${emailButton(reportUrl, "View report")}</p><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">If the button doesn't work: ${emailLink(reportUrl, reportUrl)}</p><p style="margin:0 0 16px;">This link is personal — please only share it with people you trust.</p><p style="margin:0;">Questions or feedback? Write to us at ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
   const bodyText = `Hi,\n\nyour Evidence Report is ready and available via the following secure link:\n${reportUrl}\n\nThis link is personal — please only share it with people you trust.\n\nQuestions or feedback? Write to us at ${supportEmail}.`;
   return { subject: "Your TEKMESIS Evidence Report is ready", ...wrapEmail(locale, bodyHtml, bodyText) };
@@ -104,6 +116,12 @@ export function buildReportFailedEmail(params: ReportEmailParams): EmailContent 
     return { subject: "Verzögerung bei deinem TEKMESIS Report", ...wrapEmail(locale, bodyHtml, bodyText) };
   }
 
+  if (locale === "fr") {
+    const bodyHtml = `<p style="margin:0 0 16px;">Bonjour,</p><p style="margin:0 0 16px;">un retard est survenu lors de la génération de ton Evidence Report. Nous y travaillons et te contacterons dès qu'il sera prêt. Ton paiement reste valable.</p><p style="margin:0;">Des questions ? Écris-nous à ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Bonjour,\n\nun retard est survenu lors de la génération de ton Evidence Report. Nous y travaillons et te contacterons dès qu'il sera prêt. Ton paiement reste valable.\n\nDes questions ? Écris-nous à ${supportEmail}.`;
+    return { subject: "Retard concernant ton rapport TEKMESIS", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
   const bodyHtml = `<p style="margin:0 0 16px;">Hi,</p><p style="margin:0 0 16px;">there's been a delay generating your Evidence Report. We're on it and will follow up once it's ready. Your payment remains valid.</p><p style="margin:0;">Questions? Write to us at ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
   const bodyText = `Hi,\n\nthere's been a delay generating your Evidence Report. We're on it and will follow up once it's ready. Your payment remains valid.\n\nQuestions? Write to us at ${supportEmail}.`;
   return { subject: "Delay with your TEKMESIS report", ...wrapEmail(locale, bodyHtml, bodyText) };
@@ -116,6 +134,12 @@ export function buildRefundConfirmationEmail(params: ReportEmailParams): EmailCo
     const bodyHtml = `<p style="margin:0 0 16px;">Hallo,</p><p style="margin:0 0 16px;">wir bestätigen die Rückerstattung deiner Zahlung. Die Gutschrift erfolgt über deinen ursprünglichen Zahlungsweg.</p><p style="margin:0;">Fragen? Schreib uns an ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
     const bodyText = `Hallo,\n\nwir bestätigen die Rückerstattung deiner Zahlung. Die Gutschrift erfolgt über deinen ursprünglichen Zahlungsweg.\n\nFragen? Schreib uns an ${supportEmail}.`;
     return { subject: "Rückerstattung bestätigt", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
+  if (locale === "fr") {
+    const bodyHtml = `<p style="margin:0 0 16px;">Bonjour,</p><p style="margin:0 0 16px;">nous confirmons le remboursement de ton paiement. Le montant sera crédité via ton moyen de paiement d'origine.</p><p style="margin:0;">Des questions ? Écris-nous à ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Bonjour,\n\nnous confirmons le remboursement de ton paiement. Le montant sera crédité via ton moyen de paiement d'origine.\n\nDes questions ? Écris-nous à ${supportEmail}.`;
+    return { subject: "Remboursement confirmé", ...wrapEmail(locale, bodyHtml, bodyText) };
   }
 
   const bodyHtml = `<p style="margin:0 0 16px;">Hi,</p><p style="margin:0 0 16px;">we confirm the refund of your payment. It will be credited back via your original payment method.</p><p style="margin:0;">Questions? Write to us at ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;

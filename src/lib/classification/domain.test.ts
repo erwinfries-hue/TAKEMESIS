@@ -61,4 +61,17 @@ describe("classifyDomain", () => {
     const en = classifyDomain("Which employee benefits most improve job satisfaction?", "en");
     expect(en[0]?.slug).toBe("arbeit-produktivitaet");
   });
+
+  it("classifies a French-language question", () => {
+    const scores = classifyDomain(
+      "Quelle méthode d'apprentissage améliore la réussite scolaire ?",
+      "fr",
+    );
+    expect(scores[0]?.slug).toBe("lernen-bildung");
+  });
+
+  it("returns an empty array for a French question with no matching terms", () => {
+    const scores = classifyDomain("xyz qwerty zzz", "fr");
+    expect(scores).toEqual([]);
+  });
 });

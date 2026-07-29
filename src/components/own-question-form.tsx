@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import { SPEECH_LOCALE } from "@/lib/i18n/speech-locale";
 import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { topDomainCandidates } from "@/lib/classification/domain";
 import { topics, topicCopy } from "@/content/topics";
@@ -93,7 +94,7 @@ function OwnQuestionFormFields({
             {dict.ownQuestionForm.label}
           </label>
           <VoiceInputButton
-            lang={locale === "de" ? "de-CH" : "en-US"}
+            lang={SPEECH_LOCALE[locale]}
             onResult={(transcript) =>
               setValue((prev) => (prev.trim().length > 0 ? `${prev} ${transcript}` : transcript))
             }

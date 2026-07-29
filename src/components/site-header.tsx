@@ -20,7 +20,7 @@ export function SiteHeader({ dict, locale }: { dict: Dictionary; locale: Locale 
         <Link href="/" className="shrink-0">
           <TekmesisLogo name={dict.brand.name} />
         </Link>
-        <SiteNav items={navItems} ariaLabel={locale === "de" ? "Hauptnavigation" : "Main navigation"} />
+        <SiteNav items={navItems} ariaLabel={dict.nav.mainNavigation} />
         <LocaleSwitcher current={locale} />
       </div>
     </header>

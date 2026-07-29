@@ -29,6 +29,7 @@ export interface Topic {
   sourceRoute: string;
   de: TopicCopy;
   en: TopicCopy;
+  fr: TopicCopy;
 }
 
 export const topics: Topic[] = [
@@ -64,6 +65,20 @@ export const topics: Topic[] = [
       limitations:
         "Questions about diagnosis, medication, dosing, acute symptoms, or other high-risk topics are not answered individually and do not replace professional medical advice.",
     },
+    fr: {
+      name: "Santé & Prévention",
+      description:
+        "Questions générales et non diagnostiques sur la prévention et un mode de vie sain — aucun diagnostic, aucun traitement individuel.",
+      examples: [
+        "Quelles mesures réduisent le risque de douleurs dorsales fréquentes ?",
+        "Quelles mesures de prévention sont bien étayées pour les adultes en bonne santé ?",
+        "Quelles mesures montrent l'effet préventif le plus marqué chez les adultes en bonne santé ?",
+        "Quel est l'effet de l'activité physique régulière sur le risque général de maladie ?",
+        "Quelles mesures soutiennent un système immunitaire sain au quotidien ?",
+      ],
+      limitations:
+        "Les questions portant sur des diagnostics, médicaments, dosages, symptômes aigus ou autres thèmes à risque élevé ne reçoivent pas de réponse individuelle et ne remplacent pas un avis médical spécialisé.",
+    },
   },
   {
     slug: "ernaehrung-supplements",
@@ -97,6 +112,20 @@ export const topics: Topic[] = [
       limitations:
         "No individual dosing recommendations or statements about drug interactions.",
     },
+    fr: {
+      name: "Alimentation & Compléments",
+      description:
+        "Questions sur les habitudes alimentaires, les compléments alimentaires et leur utilité pour des objectifs précis.",
+      examples: [
+        "Quels bénéfices des oméga-3 sont bien étayés ?",
+        "La créatine améliore-t-elle la performance mentale ou physique ?",
+        "Quels sont les effets du jeûne intermittent ?",
+        "Les probiotiques sont-ils utiles pour des objectifs précis ?",
+        "Quel rôle joue l'apport en protéines pour le maintien musculaire avec l'âge ?",
+      ],
+      limitations:
+        "Aucune recommandation de dosage individuelle ni indication sur les interactions médicamenteuses.",
+    },
   },
   {
     slug: "schlaf-regeneration",
@@ -127,6 +156,19 @@ export const topics: Topic[] = [
       ],
       limitations:
         "No assessment of diagnosed sleep disorders or individual medication.",
+    },
+    fr: {
+      name: "Sommeil & Récupération",
+      description: "Questions sur la qualité du sommeil, la récupération et les facteurs qui les influencent.",
+      examples: [
+        "Quelles mesures améliorent démontrablement la qualité du sommeil ?",
+        "Quel effet a la mélatonine selon les groupes ?",
+        "Comment l'utilisation des écrans influence-t-elle le sommeil ?",
+        "Quel effet a la consommation de caféine l'après-midi sur le sommeil ?",
+        "Comment un rythme de sommeil régulier influence-t-il la récupération ?",
+      ],
+      limitations:
+        "Aucune évaluation des troubles du sommeil diagnostiqués ni de la médication individuelle.",
     },
   },
   {
@@ -160,6 +202,19 @@ export const topics: Topic[] = [
       limitations:
         "No individual training or rehabilitation planning for existing injuries.",
     },
+    fr: {
+      name: "Fitness & Performance physique",
+      description: "Questions sur l'entraînement, l'endurance, la récupération et la performance physique.",
+      examples: [
+        "Quelle méthode d'entraînement soutient le mieux la prise de muscle ?",
+        "Qu'est-ce qui améliore l'endurance le plus efficacement ?",
+        "Quel bénéfice a l'exposition au froid pour la récupération ?",
+        "Comment la fréquence d'entraînement influence-t-elle les gains de force ?",
+        "Quel rôle joue l'étirement dans la prévention des blessures ?",
+      ],
+      limitations:
+        "Aucune planification individuelle d'entraînement ou de rééducation en cas de blessures existantes.",
+    },
   },
   {
     slug: "lernen-bildung",
@@ -190,6 +245,19 @@ export const topics: Topic[] = [
       ],
       limitations:
         "Results mostly come from studies with specific populations (e.g. students) and don't automatically transfer to every learning situation.",
+    },
+    fr: {
+      name: "Apprentissage & Éducation",
+      description: "Questions sur les méthodes d'apprentissage, la mémoire et la réussite scolaire.",
+      examples: [
+        "Quelle méthode d'apprentissage améliore la réussite scolaire ?",
+        "Le rappel actif fonctionne-t-il mieux que la relecture ?",
+        "Quel rôle joue la répétition espacée ?",
+        "La prise de notes manuscrite améliore-t-elle la rétention ?",
+        "Comment l'entrelacement influence-t-il la réussite de l'apprentissage ?",
+      ],
+      limitations:
+        "Les résultats proviennent surtout d'études portant sur des populations spécifiques (p. ex. étudiant·es) et ne se transposent pas automatiquement à toute situation d'apprentissage.",
     },
   },
   {
@@ -226,6 +294,21 @@ export const topics: Topic[] = [
       limitations:
         "Results are highly context-dependent (industry, role, company culture) and don't transfer universally.",
     },
+    fr: {
+      name: "Travail, Productivité & Organisation",
+      description:
+        "Questions sur les formes de travail, la productivité, la rémunération/les avantages et l'organisation au travail.",
+      examples: [
+        "Comment le télétravail influence-t-il la productivité ?",
+        "Quels formats de réunion sont plus efficaces ?",
+        "Les plages de concentration soutiennent-elles la performance au travail ?",
+        "Quels modèles de temps de travail améliorent la performance et le bien-être ?",
+        "Comment les interruptions influencent-elles le travail concentré ?",
+        "Quels avantages sociaux améliorent le plus la satisfaction des employé·es ?",
+      ],
+      limitations:
+        "Les résultats dépendent fortement du contexte (secteur, fonction, culture d'entreprise) et ne se transposent pas universellement.",
+    },
   },
   {
     slug: "psychologie-wohlbefinden",
@@ -257,6 +340,19 @@ export const topics: Topic[] = [
       limitations:
         "Acute mental-health crises or clinical questions are not addressed individually; users are pointed to qualified support instead.",
     },
+    fr: {
+      name: "Psychologie, Bien-être & Habitudes",
+      description: "Questions sur la formation des habitudes, la régulation du stress et le bien-être au quotidien.",
+      examples: [
+        "Quelles méthodes aident à instaurer des habitudes durables ?",
+        "Quelles interventions réduisent le stress quotidien ?",
+        "Quelle est l'efficacité des exercices de gratitude ou de pleine conscience ?",
+        "Quels facteurs favorisent le maintien de nouvelles habitudes ?",
+        "Quel est le lien entre les contacts sociaux et le bien-être général ?",
+      ],
+      limitations:
+        "Les crises psychiques aiguës ou les questions cliniques ne sont pas traitées individuellement ; un renvoi vers des services spécialisés est proposé.",
+    },
   },
   {
     slug: "beziehungen-kommunikation",
@@ -287,6 +383,19 @@ export const topics: Topic[] = [
       ],
       limitations:
         "No individual couples or family counseling; general, non-personalized orientation only.",
+    },
+    fr: {
+      name: "Relations & Communication",
+      description: "Questions sur la communication, la résolution de conflits et la satisfaction relationnelle.",
+      examples: [
+        "Quelles méthodes de communication améliorent la résolution de conflits ?",
+        "Quels facteurs soutiennent la satisfaction relationnelle à long terme ?",
+        "Quelle est l'efficacité de l'écoute active ?",
+        "Quel rôle joue le temps partagé pour la qualité de la relation ?",
+        "Comment la reconnaissance influence-t-elle la satisfaction dans les relations ?",
+      ],
+      limitations:
+        "Aucun conseil individuel de couple ou familial ; orientation générale, non personnalisée.",
     },
   },
   {
@@ -321,6 +430,20 @@ export const topics: Topic[] = [
       limitations:
         "No individual assessment or treatment of specific children; heightened safeguarding care for sensitive topics.",
     },
+    fr: {
+      name: "Enfants, Éducation & Développement",
+      description:
+        "Questions générales sur les approches éducatives et le développement de l'enfant — aucune évaluation d'enfants individuels.",
+      examples: [
+        "Quelles approches éducatives favorisent l'autorégulation ?",
+        "Comment le temps d'écran influence-t-il certains domaines du développement ?",
+        "Quel environnement d'apprentissage soutient le mieux les enfants ?",
+        "Quel rôle joue la routine dans le développement de l'enfant ?",
+        "Comment la lecture partagée influence-t-elle le développement du langage ?",
+      ],
+      limitations:
+        "Aucune évaluation ou traitement individuel d'enfants spécifiques ; vigilance accrue pour les sujets sensibles (protection de l'enfance).",
+    },
   },
   {
     slug: "konsum-kaufentscheidungen",
@@ -351,6 +474,19 @@ export const topics: Topic[] = [
       ],
       limitations:
         "Research coverage for consumer decisions is less consistent than in health/education; limited eligibility is more common.",
+    },
+    fr: {
+      name: "Consommation & Décisions d'achat",
+      description: "Questions sur le comportement d'achat, les décisions relatives aux produits et la psychologie de la consommation.",
+      examples: [
+        "Quelles caractéristiques de produit influencent démontrablement la durabilité ?",
+        "Comment les ancrages de prix influencent-ils le comportement d'achat ?",
+        "Quels labels influencent démontrablement le comportement d'achat ?",
+        "Quelles mesures ménagères permettent réellement d'économiser de l'énergie ?",
+        "Comment les avis d'autres utilisateur·rices influencent-ils le comportement d'achat ?",
+      ],
+      limitations:
+        "La couverture de recherche sur les décisions de consommation est moins homogène que dans la santé/l'éducation ; une éligibilité limitée est plus fréquente.",
     },
   },
   {
@@ -383,6 +519,19 @@ export const topics: Topic[] = [
       limitations:
         "Evidence is often context- and country-specific; results don't always generalize.",
     },
+    fr: {
+      name: "Environnement, Durabilité & Quotidien",
+      description: "Questions sur les comportements durables et leur effet mesurable au quotidien.",
+      examples: [
+        "Quelles mesures quotidiennes réduisent la consommation d'énergie personnelle ?",
+        "Quelles alternatives d'emballage obtiennent de meilleurs résultats dans les études ?",
+        "Quels modes de mobilité ont l'effet écologique mesurable le plus important ?",
+        "Quelle est l'efficacité du recyclage par rapport à la réduction de la consommation ?",
+        "Quels changements alimentaires ont l'effet écologique le plus important ?",
+      ],
+      limitations:
+        "Les données sont souvent spécifiques au contexte et au pays ; les résultats ne se généralisent pas toujours.",
+    },
   },
   {
     slug: "technologie-digital-life",
@@ -413,6 +562,19 @@ export const topics: Topic[] = [
       ],
       limitations:
         "Fast-moving research field; many studies relate to specific platforms or age groups.",
+    },
+    fr: {
+      name: "Technologie & Vie numérique",
+      description: "Questions sur les habitudes numériques, les outils et leur effet sur le quotidien et la performance.",
+      examples: [
+        "Comment les réseaux sociaux influencent-ils la concentration et le bien-être ?",
+        "Comment l'utilisation d'outils d'IA influence-t-elle le comportement d'apprentissage numérique ?",
+        "Quelles habitudes en matière de mots de passe et de sécurité sont efficaces ?",
+        "Comment les interruptions numériques influencent-elles la performance ?",
+        "Comment les notifications sur smartphone influencent-elles le bien-être numérique ?",
+      ],
+      limitations:
+        "Domaine de recherche en évolution rapide ; de nombreuses études portent sur des plateformes ou tranches d'âge spécifiques.",
     },
   },
 ];

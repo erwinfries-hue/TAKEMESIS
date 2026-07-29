@@ -153,6 +153,8 @@ export default async function AdminReportPreviewPage({
       })),
     );
 
+    const translatedQuery = await buildSearchQuery(question, locale);
+
     // Temporary admin-only diagnostic (not shown to real users) — the
     // premium report has no built-in exclusion-reason breakdown, which
     // made a live "0 included, 23 found" result impossible to debug
@@ -164,7 +166,7 @@ export default async function AdminReportPreviewPage({
           Original: <code>{question}</code>
         </p>
         <p className="mt-1">
-          Übersetzt/an Quellen gesendet: <code>{buildSearchQuery(question, locale)}</code>
+          Übersetzt/an Quellen gesendet: <code>{translatedQuery}</code>
         </p>
         <p className="mt-3 font-semibold text-brand-navy-900">Treffer pro Quelle</p>
         <ul className="mt-1 list-disc pl-5">

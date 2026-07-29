@@ -21,9 +21,15 @@ export function getPriceConfig(): PriceConfig {
   };
 }
 
-export function formatPrice(config: PriceConfig, locale: "de" | "en" = "de"): string {
+const PRICE_INTL_LOCALE: Record<"de" | "en" | "fr", string> = {
+  de: "de-CH",
+  en: "en-CH",
+  fr: "fr-CH",
+};
+
+export function formatPrice(config: PriceConfig, locale: "de" | "en" | "fr" = "de"): string {
   const amount = config.amountMinor / 100;
-  return new Intl.NumberFormat(locale === "de" ? "de-CH" : "en-CH", {
+  return new Intl.NumberFormat(PRICE_INTL_LOCALE[locale], {
     style: "currency",
     currency: config.currency,
   }).format(amount);

@@ -91,11 +91,23 @@ export interface PremiumSourceEntry {
   venue: string | null;
 }
 
+const NOT_REPORTED: Record<Locale, string> = {
+  de: "nicht angegeben",
+  en: "not reported",
+  fr: "non indiqué",
+};
+
+const TITLE_NOT_REPORTED: Record<Locale, string> = {
+  de: "Titel nicht angegeben",
+  en: "Title not reported",
+  fr: "Titre non indiqué",
+};
+
 function buildCitation(record: NormalizedRecord, locale: Locale): string {
-  const notReported = locale === "de" ? "nicht angegeben" : "not reported";
+  const notReported = NOT_REPORTED[locale];
   const authors = record.authors.length > 0 ? record.authors.join(", ") : notReported;
   const year = record.year ? `(${record.year})` : `(${notReported})`;
-  const title = record.title ?? (locale === "de" ? "Titel nicht angegeben" : "Title not reported");
+  const title = record.title ?? TITLE_NOT_REPORTED[locale];
   const venue = record.venue ? ` ${record.venue}.` : "";
   return `${authors} ${year}. ${title}.${venue}`;
 }

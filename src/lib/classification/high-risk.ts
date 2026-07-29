@@ -32,10 +32,23 @@ const TERMS: Record<HighRiskCategory, Partial<Record<Locale, string[]>>> = {
   cancer: {
     de: ["krebs", "tumor", "tumore", "chemotherapie", "chemo", "onkologie", "karzinom", "metastasen"],
     en: ["cancer", "tumor", "tumour", "chemotherapy", "oncology", "carcinoma", "metastasis"],
+    fr: [
+      "cancer",
+      "tumeur",
+      "tumeurs",
+      "chimiotherapie",
+      "chimiothérapie",
+      "chimio",
+      "oncologie",
+      "carcinome",
+      "metastases",
+      "métastases",
+    ],
   },
   pregnancy: {
     de: ["schwanger", "schwangerschaft", "stillzeit", "stillen", "trimester", "geburt"],
     en: ["pregnant", "pregnancy", "breastfeeding", "trimester", "childbirth"],
+    fr: ["enceinte", "grossesse", "allaitement", "allaiter", "trimestre", "accouchement"],
   },
   prescription_drugs: {
     de: [
@@ -56,26 +69,61 @@ const TERMS: Record<HighRiskCategory, Partial<Record<Locale, string[]>>> = {
       "insulin",
       "drug interaction",
     ],
+    fr: [
+      "medicament",
+      "médicament",
+      "medicaments",
+      "médicaments",
+      "sur ordonnance",
+      "antibiotiques",
+      "insuline",
+      "interaction medicamenteuse",
+      "interaction médicamenteuse",
+    ],
   },
   vaccines: {
     de: ["impfung", "impfstoff", "impfnebenwirkung", "geimpft", "immunisierung"],
     en: ["vaccine", "vaccination", "immunization", "immunisation"],
+    fr: ["vaccin", "vaccination", "effet secondaire du vaccin", "vaccine", "immunisation"],
   },
   mental_health_crisis: {
     de: ["suizid", "selbstmord", "selbstverletzung", "suizidgedanken", "psychische krise"],
     en: ["suicide", "suicidal", "self-harm", "self harm", "mental health crisis"],
+    fr: ["suicide", "suicidaire", "automutilation", "idees suicidaires", "idées suicidaires", "crise psychique"],
   },
   acute_symptoms: {
     de: ["akute schmerzen", "brustschmerzen", "atemnot", "bewusstlos", "starke blutung", "notfall"],
     en: ["acute pain", "chest pain", "shortness of breath", "unconscious", "severe bleeding", "emergency"],
+    fr: [
+      "douleur aigue",
+      "douleur aiguë",
+      "douleur thoracique",
+      "essoufflement",
+      "inconscient",
+      "hemorragie grave",
+      "hémorragie grave",
+      "urgence",
+    ],
   },
   dosing: {
     de: ["dosierung", "dosis", "milligramm", "wie viel mg"],
     en: ["dosage", "dose", "milligram", "how many mg"],
+    fr: ["dosage", "dose", "milligramme", "combien de mg"],
   },
   legal_financial_high_stakes: {
     de: ["scheidung", "insolvenz", "konkurs", "strafanzeige", "erbschaftsstreit", "fristlose kündigung"],
     en: ["divorce", "bankruptcy", "lawsuit", "criminal charge", "inheritance dispute"],
+    fr: [
+      "divorce",
+      "faillite",
+      "insolvabilite",
+      "insolvabilité",
+      "plainte penale",
+      "plainte pénale",
+      "conflit successoral",
+      "licenciement immediat",
+      "licenciement immédiat",
+    ],
   },
   // pediatric_treatment is handled separately below: it's a *combination*
   // of a child-related term and a treatment/medical term, since child-
@@ -87,11 +135,24 @@ const TERMS: Record<HighRiskCategory, Partial<Record<Locale, string[]>>> = {
 const CHILD_TERMS: Partial<Record<Locale, string[]>> = {
   de: ["kind", "kinder", "kleinkind", "säugling", "baby", "neugeborenes"],
   en: ["child", "children", "toddler", "infant", "baby", "newborn"],
+  fr: ["enfant", "enfants", "tout-petit", "nourrisson", "bebe", "bébé", "nouveau-ne", "nouveau-né"],
 };
 
 const TREATMENT_TERMS: Partial<Record<Locale, string[]>> = {
   de: ["medikament", "dosierung", "behandlung", "diagnose", "symptom", "impfung", "therapie"],
   en: ["medication", "dosage", "treatment", "diagnosis", "symptom", "vaccine", "therapy"],
+  fr: [
+    "medicament",
+    "médicament",
+    "dosage",
+    "traitement",
+    "diagnostic",
+    "symptome",
+    "symptôme",
+    "vaccin",
+    "therapie",
+    "thérapie",
+  ],
 };
 
 // "entscheidung"/"entscheiden" (decision/to decide) contain "scheidung"

@@ -1,11 +1,12 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import { INTL_DATE_LOCALE } from "@/lib/i18n/date-locale";
 import type { TeaserData } from "@/lib/eligibility/teaser";
 import type { EligibilityStatus } from "@/lib/eligibility/eligibility";
 import { ConfidenceGauge } from "@/components/confidence-gauge";
 
 function formatSearchDate(iso: string, locale: Locale): string {
-  return new Intl.DateTimeFormat(locale === "de" ? "de-CH" : "en-CH", {
+  return new Intl.DateTimeFormat(INTL_DATE_LOCALE[locale], {
     dateStyle: "medium",
   }).format(new Date(iso));
 }

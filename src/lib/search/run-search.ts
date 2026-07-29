@@ -92,7 +92,7 @@ export async function runSearchWithAdapters(
   // fixes, just one step later. Only the *returned* `query` (below) and
   // anything downstream of this function (display, AI extraction) still
   // use the original, untranslated `question`.
-  const sourceQuery = buildSearchQuery(question, locale);
+  const sourceQuery = await buildSearchQuery(question, locale);
 
   // Each source's failure is isolated — one adapter being down must not
   // prevent results from the others (docs/10, "Resilience").

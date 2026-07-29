@@ -2,12 +2,12 @@ import type { NormalizedRecord } from "@/lib/source-adapters/types";
 
 /**
  * Closed-class function words (articles, prepositions, conjunctions,
- * pronouns, auxiliary/modal verb forms, question words) in German and
- * English — the two locales this app ships. Filtering these out matters
- * because real questions are heavily templated around a handful of generic
- * connector words ("hilft", "wirkt", "verbessert" show up across nearly
- * every topic's example questions); without this, those words alone could
- * make a totally unrelated record look relevant.
+ * pronouns, auxiliary/modal verb forms, question words) in German, English,
+ * and French — the three locales this app ships. Filtering these out
+ * matters because real questions are heavily templated around a handful of
+ * generic connector words ("hilft", "wirkt", "verbessert" show up across
+ * nearly every topic's example questions); without this, those words alone
+ * could make a totally unrelated record look relevant.
  */
 export const STOPWORDS = new Set([
   // German
@@ -65,7 +65,11 @@ export const STOPWORDS = new Set([
 function tokenize(text: string): string[] {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9äöüß]+/g, " ")
+    // äöüß: German. àâçéèêëîïôœùûüÿ: French accented characters — without
+    // these, an untranslated French fallback token (no dictionary entry)
+    // would get chopped into fragments at every accent instead of staying
+    // one word, breaking the term-overlap match entirely.
+    .replace(/[^a-z0-9äöüßàâçéèêëîïôœùûÿ]+/g, " ")
     .split(" ")
     .filter((word) => word.length > 2 && !STOPWORDS.has(word));
 }

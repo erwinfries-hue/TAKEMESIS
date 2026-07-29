@@ -1,0 +1,529 @@
+{
+  "brand": {
+    "name": "TEKMESIS",
+    "claim": "FROM STUDIES TO CLARITY.",
+    "parent": "Un produit d'AXIA4 by EF",
+    "parentPrefix": "Un produit d'"
+  },
+  "nav": {
+    "skipToContent": "Aller au contenu",
+    "mainNavigation": "Navigation principale",
+    "topics": "Thèmes",
+    "methodology": "Méthodologie",
+    "sources": "Sources",
+    "exampleReport": "Rapport d'exemple",
+    "about": "À propos de TEKMESIS",
+    "privacy": "Protection des données",
+    "legal": "Mentions légales & CGV"
+  },
+  "home": {
+    "description": "TEKMESIS transforme ta question en Evidence Report — des études réelles trouvées, comparées et expliquées clairement.",
+    "comingSoon": "La plateforme est en cours de développement.",
+    "priceNote": "CHF 9.90, paiement unique, prix hors TVA (Suisse : non assujetti à la TVA ; étranger : procédure d'autoliquidation selon l'art. 8 LTVA). Sans abonnement.",
+    "priceAnchor": "Une mauvaise décision d'achat ou une démarche inefficace coûte souvent plus cher que CHF 9.90 — ce rapport t'aide à le savoir à l'avance.",
+    "heroCta": "Découvrir les thèmes",
+    "liveDemoBadge": "Exemple illustratif",
+    "liveDemoHeading": "À quoi pourrait ressembler ton aperçu gratuit",
+    "liveDemoQuestion": "La créatine agit-elle vraiment — ou est-ce un gaspillage d'argent ?",
+    "liveDemoCandidateLabel": "Résultats trouvés",
+    "liveDemoIncludedLabel": "Études incluses",
+    "liveDemoCta": "Voir l'exemple complet",
+    "topicsTeaserHeading": "L'évidence adaptée à chaque question de vie",
+    "topicsTeaserIntro": "Douze domaines de vie, de la santé à la technologie — choisis un domaine ou pose directement ta propre question.",
+    "topicsTeaserCta": "Voir tous les thèmes",
+    "howItWorksHeading": "Comment ça fonctionne",
+    "howItWorksSteps": [
+      "Saisir une question",
+      "Préciser la question",
+      "Rechercher des études",
+      "Vérifier l'éligibilité",
+      "Afficher l'aperçu gratuit",
+      "Payer CHF 9.90",
+      "Recevoir l'Evidence Report complet"
+    ],
+    "howItWorksNote": "Pas de conseil individuel. Une orientation fondée sur des preuves pour des questions personnelles.",
+    "freeVsPaidHeading": "Gratuit vs. rapport complet",
+    "freeFeatures": [
+      "Question interprétée",
+      "Bases de données consultées & statut de recherche",
+      "Nombre d'études éligibles / incluses",
+      "Titres des études & liens vers les sources",
+      "Bref aperçu de l'évidence",
+      "Aperçu du tableau comparatif"
+    ],
+    "paidFeatures": [
+      "Comparaison complète des études",
+      "Certitude de l'évidence avec justification",
+      "Concordances & contradictions",
+      "Limitations & incertitudes",
+      "Vue du rapport adaptée à l'impression",
+      "Lien de rapport sécurisé & e-mail"
+    ],
+    "freeLabel": "Gratuit",
+    "paidLabel": "Rapport complet",
+    "sourceTransparencyHeading": "Sources transparentes",
+    "sourceTransparencyBody": "Chaque réponse renvoie à des sources réelles et vérifiables issues de bases de données scientifiques reconnues — jamais à des études inventées.",
+    "sourceTransparencyCta": "Voir le routage des sources",
+    "trustHeading": "Confiance & Bêta",
+    "trustBody": "TEKMESIS est actuellement en phase de bêta fermée. Nous collectons délibérément peu de données, ne vendons aucun rapport pour des questions non éligibles et communiquons ouvertement nos limitations.",
+    "trustPoints": [
+      "Aucun compte obligatoire",
+      "Aucun profil de santé",
+      "Avertissement avant toute saisie sensible",
+      "Rapport désactivable à tout moment"
+    ],
+    "betaPositioning": "TEKMESIS démarre avec une petite bêta fermée de 15 personnes. Qui rejoint maintenant façonne activement le produit.",
+    "refundNote": "Si ton rapport ne peut pas être généré pour des raisons techniques, cela est détecté et remboursé automatiquement. Pour toute autre question, contacte-nous simplement — nous nous en occupons personnellement, réponse sous 3 à 5 jours ouvrables.",
+    "whyNotChatGptHeading": "Pourquoi ne pas simplement demander à ChatGPT ?",
+    "whyNotChatGptIntro": "Un chatbot répond presque instantanément à tout — la question est de savoir sur quoi repose cette réponse. TEKMESIS est volontairement construit de façon plus étroite et plus lente :",
+    "whyNotChatGptSwipeHint": "Fais glisser le tableau vers la droite pour voir la comparaison avec le chatbot →",
+    "whyNotChatGptTableCriterionHeader": "Critère",
+    "whyNotChatGptTableTekmesisHeader": "TEKMESIS",
+    "whyNotChatGptTableChatbotHeader": "Chatbot IA générique",
+    "whyNotChatGptRows": [
+      {
+        "criterion": "Base de la réponse",
+        "tekmesis": "Sources scientifiques primaires sélectionnées",
+        "chatbot": "Données d'entraînement & recherche web générale"
+      },
+      {
+        "criterion": "Liens sources vérifiables",
+        "tekmesis": "Pour chaque affirmation",
+        "chatbot": "Inégal"
+      },
+      {
+        "criterion": "En cas d'évidence insuffisante",
+        "tekmesis": "Le dit honnêtement, ne vend rien",
+        "chatbot": "Répond généralement quand même"
+      },
+      {
+        "criterion": "Études exclues",
+        "tekmesis": "Visibles, avec justification",
+        "chatbot": "Non consultables"
+      },
+      {
+        "criterion": "Incertitude",
+        "tekmesis": "Indiquée explicitement",
+        "chatbot": "Rarement mentionnée"
+      }
+    ],
+    "whyNotChatGptCta": "Voir les sources & la méthodologie"
+  },
+  "ownQuestionForm": {
+    "heading": "Poser sa propre question",
+    "label": "Ta question",
+    "placeholder": "p. ex. Quelle méthode d'apprentissage améliore la réussite scolaire ?",
+    "submit": "Classer la question",
+    "warning": "Merci de ne saisir aucun nom, document ou donnée personnelle confidentielle.",
+    "warningHealth": "Merci de ne saisir aucun diagnostic individuel, liste de médicaments ou dossier médical.",
+    "suggestionPrefix": "Pourrait correspondre à :",
+    "voiceInputCta": "Dicter la question par saisie vocale",
+    "voiceInputListening": "Écoute en cours — appuie pour arrêter"
+  },
+  "studyLookupForm": {
+    "heading": "Tu as déjà une étude ?",
+    "intro": "Compare une étude précise avec le reste de l'évidence disponible sur le même sujet.",
+    "label": "DOI de l'étude",
+    "placeholder": "p. ex. 10.1000/182 ou https://doi.org/10.1000/182",
+    "submit": "Comparer l'étude",
+    "invalidDoiHeading": "DOI invalide",
+    "invalidDoi": "Cela ne ressemble pas à un DOI valide. Un DOI commence normalement par « 10. », p. ex. 10.1000/182.",
+    "notFoundHeading": "Étude introuvable",
+    "notFoundBody": "Nous n'avons trouvé aucune étude correspondant à ce DOI. Merci de vérifier le DOI et de réessayer.",
+    "lookupFailedHeading": "Impossible de récupérer l'étude",
+    "lookupFailedBody": "Une erreur est survenue lors de la récupération des données de l'étude. Cela n'est pas lié au DOI — merci de réessayer dans quelques minutes.",
+    "seedStudyLabel": "Ton étude",
+    "comparisonHeading": "En comparaison avec d'autres évidences sur le même sujet"
+  },
+  "topicsPage": {
+    "heading": "Découvrir les thèmes",
+    "detailsToggle": "Afficher les détails",
+    "intro": "Choisis un domaine comme source d'inspiration — la catégorie sert de repère, pas de limite stricte. Toutes les questions ne peuvent pas recevoir une réponse scientifiquement fondée ; nous le vérifions pour toi avant qu'un rapport ne soit vendu.",
+    "examplesHeading": "Exemples de questions",
+    "limitationsHeading": "Limites de ce domaine",
+    "sourceRouteHeading": "Routage des sources",
+    "elevatedRiskBadge": "Sous-thèmes à risque élevé restreints",
+    "yourQuestionPrefix": "Ta question saisie :",
+    "askedCountLabel": "{count} questions ont déjà été posées dans ce domaine",
+    "trendingHeading": "Thèmes les plus demandés cette semaine",
+    "trendingCountLabel": "{count} questions"
+  },
+  "exampleReportPage": {
+    "heading": "Rapport d'exemple",
+    "topicLabel": "Question d'exemple",
+    "topicQuestion": "Quelle méthode d'apprentissage améliore la réussite scolaire ?",
+    "body": "Ci-dessous, tu vois un aperçu structurel de l'Evidence Report complet — avec des données fictives clairement identifiées, pas des études réelles. Le véritable rapport d'exemple, entièrement vérifié pour cette question, ne sera rempli qu'avec de vraies sources recherchées en direct (voir docs/IMPLEMENTATION_PLAN.md, Phase 8). Aucune donnée inventée ou reprise de références de conception n'est jamais présentée comme évidence.",
+    "status": "Aperçu structurel — données fictives",
+    "previewNote": "Tous les titres d'études, auteur·es et revues ci-dessous sont des données fictives destinées à illustrer la mise en page du rapport. Ils ne représentent aucune évidence scientifique réelle."
+  },
+  "methodologyPage": {
+    "heading": "Méthodologie",
+    "intro": "Voici comment naît un Evidence Report TEKMESIS — étape par étape, de manière transparente et traçable.",
+    "steps": [
+      {
+        "title": "Saisir une question",
+        "body": "Tu choisis un thème ou formules ta propre question."
+      },
+      {
+        "title": "Préciser la question",
+        "body": "TEKMESIS propose une formulation recherchable, que tu confirmes ou adaptes."
+      },
+      {
+        "title": "Choisir les sources de données",
+        "body": "Selon le thème, les bases de données scientifiques appropriées sont interrogées (voir le routage des sources)."
+      },
+      {
+        "title": "Rechercher & vérifier les études",
+        "body": "Les résultats sont dédupliqués, classés selon leur pertinence et leur type d'étude, puis vérifiés quant à leur éligibilité."
+      },
+      {
+        "title": "Évaluer l'éligibilité",
+        "body": "Seules les questions suffisamment étayées et comparables sont proposées sous forme de rapport."
+      },
+      {
+        "title": "Afficher l'aperçu gratuit",
+        "body": "Tu vois de vraies statistiques de recherche, les sources et une première évaluation avant de payer."
+      },
+      {
+        "title": "Générer le rapport complet",
+        "body": "Après paiement, l'Evidence Report complet et structuré est généré et vérifié."
+      }
+    ],
+    "calculatorHeading": "Essaie toi-même : quand l'évidence suffit-elle pour un rapport ?",
+    "calculatorIntro": "Déplace les curseurs et observe en direct quelle classification donne la même règle qui décide aussi lors d'une recherche réelle — pas une logique de démonstration, mais le code réel.",
+    "calculatorIncludedLabel": "Total des études incluses",
+    "calculatorResultBearingLabel": "Dont avec données de résultats réelles",
+    "calculatorReviewLabel": "Dont revues systématiques / méta-analyses",
+    "calculatorResultEligible": "Serait proposé comme rapport (profondeur complète)",
+    "calculatorResultLimitations": "Serait proposé comme rapport, avec mention visible des limitations",
+    "calculatorResultNotEligible": "Ne serait pas proposé comme rapport — évidence insuffisante",
+    "calculatorNote": "Règle purement structurelle, sans évaluation de contenu : l'éligibilité réelle d'une question dépend en plus des résultats de recherche effectifs.",
+    "disclaimer": "TEKMESIS propose des informations scientifiques générales et une orientation fondée sur des preuves pour des questions de vie. Cela ne remplace pas un conseil professionnel individuel."
+  },
+  "sourcesPage": {
+    "heading": "Sources & bases de données",
+    "intro": "TEKMESIS n'utilise que des sources de données scientifiques officielles et vérifiables — pas de scraping, pas de contournement de barrières payantes, pas de copie de textes intégraux protégés.",
+    "layersHeading": "Niveaux de la recherche de sources",
+    "layers": [
+      {
+        "title": "Recherche large",
+        "body": "OpenAlex — graphe de recherche principal couvrant les 12 domaines thématiques."
+      },
+      {
+        "title": "Vérification des métadonnées",
+        "body": "Crossref — métadonnées DOI et d'éditeur pour enrichir chaque résultat."
+      },
+      {
+        "title": "Enrichissement biomédical",
+        "body": "Europe PMC & NCBI E-utilities — pour les thèmes et questions liés à la santé."
+      },
+      {
+        "title": "Niveau du contenu",
+        "body": "Résumés et texte intégral légalement accessible, lorsque disponible."
+      }
+    ],
+    "routingHeading": "Routage des sources par thème",
+    "honestyHeading": "Couverture honnête",
+    "honestyBody": "Chaque rapport indique les sources consultées et indisponibles, la date de recherche ainsi que les limitations connues. TEKMESIS ne revendique jamais une couverture exhaustive de la littérature.",
+    "liveStatusHeading": "Statut en direct des sources de données",
+    "liveStatusIntro": "Vérifié maintenant en direct — exactement la même connexion que celle utilisée lors d'une recherche réelle.",
+    "liveStatusOk": "Accessible",
+    "liveStatusError": "Inaccessible",
+    "liveStatusCorpusSizeLabel": "env. {{count}} entrées (taille de la base selon le fournisseur)",
+    "liveStatusCheckedAtLabel": "Vérifié à",
+    "liveStatusLoading": "Vérification des sources …"
+  },
+  "privacyPage": {
+    "heading": "Protection des données",
+    "intro": "TEKMESIS est conçu pour générer le moins de données personnelles possible.",
+    "sections": [
+      {
+        "title": "Aucun compte obligatoire",
+        "body": "Tu peux utiliser TEKMESIS sans inscription. L'accès à un rapport payé se fait via un lien sécurisé et impossible à deviner."
+      },
+      {
+        "title": "Avertissement",
+        "body": "Merci de ne saisir aucun nom, document ou donnée personnelle confidentielle. Pour les questions de santé : aucun diagnostic individuel, liste de médicaments ou dossier médical."
+      },
+      {
+        "title": "Conservation",
+        "body": "Brouillons non payés : 7 jours. Rapports payés : 12 mois, puis suppression automatique. Tu peux demander une suppression anticipée à tout moment."
+      },
+      {
+        "title": "Partage du lien",
+        "body": "Toute personne disposant de ton lien de rapport peut le consulter. Tu peux désactiver ce lien toi-même à tout moment."
+      },
+      {
+        "title": "Aucune question brute dans les analyses",
+        "body": "Nous enregistrons des événements d'utilisation anonymisés (p. ex. « rapport prêt »), mais jamais le texte brut de tes questions."
+      },
+      {
+        "title": "Sous-traitants",
+        "body": "Traitement des paiements via Stripe, e-mails transactionnels via Resend, hébergement des données via Supabase, analyses via PostHog (région UE)."
+      }
+    ]
+  },
+  "legalPage": {
+    "heading": "Mentions légales & CGV",
+    "sellerHeading": "Prestataire",
+    "seller": [
+      "Titulaire : Erwin Fries",
+      "6332 Cham, Suisse"
+    ],
+    "contactHeading": "Contact",
+    "supportEmail": "support@tekmesis.com",
+    "responseTime": "Réponse sous 3 à 5 jours ouvrables.",
+    "priceHeading": "Prix",
+    "priceNote": "CHF 9.90, paiement unique. Prix hors TVA. Sans abonnement.",
+    "taxNote": "Suisse : non assujetti à la TVA. Étranger : lieu de la prestation à l'étranger selon l'art. 8 LTVA — non soumis à la TVA suisse (autoliquidation / dette fiscale du destinataire de la prestation).",
+    "disclaimerHeading": "Clause de non-responsabilité",
+    "disclaimer": "TEKMESIS propose des informations scientifiques générales et une orientation fondée sur des preuves pour des questions de vie. Cela ne remplace ni un conseil professionnel individuel, ni un diagnostic, ni un traitement."
+  },
+  "aboutPage": {
+    "heading": "À propos de TEKMESIS",
+    "body": "TEKMESIS transforme une question en Evidence Report — des études réelles trouvées, comparées et expliquées clairement. Avec des sources visibles, des limitations assumées et sans fausse certitude.",
+    "nameOriginHeading": "Le nom TEKMESIS",
+    "nameOriginBody": "Le nom TEKMESIS trouve son origine dans le grec ancien et signifie preuve, évidence et conclusion fondée. C'est exactement ce que représente notre plateforme : nous recherchons, comparons et structurons des connaissances scientifiques afin que des études complexes deviennent une orientation claire et compréhensible."
+  },
+  "footer": {
+    "disclaimer": "TEKMESIS propose des informations scientifiques générales et une orientation fondée sur des preuves pour des questions de vie. Cela ne remplace pas un conseil professionnel individuel."
+  },
+  "searchPage": {
+    "heading": "Ta question",
+    "noQuestionHeading": "Aucune question indiquée",
+    "noQuestionBody": "Merci de saisir d'abord une question.",
+    "noQuestionCta": "Retour aux thèmes",
+    "rateLimitedHeading": "Limite quotidienne de recherches gratuites atteinte",
+    "rateLimitedBody": "Tu as atteint le nombre maximal de recherches gratuites pour aujourd'hui. Merci de réessayer demain.",
+    "questionTooLongHeading": "Question trop longue",
+    "questionTooLongBody": "Merci de réduire ta question à 500 caractères maximum.",
+    "loadingHeading": "Nous consultons des bases de données scientifiques pour toi",
+    "loadingBody": "Plusieurs sources de données reconnues sont interrogées en direct selon ton thème. Cela peut prendre un instant.",
+    "restrictedHeading": "Nous ne pouvons pas classer cette question automatiquement",
+    "restrictedBody": "Ta question touche à un thème à risque élevé (p. ex. diagnostic, médicaments, symptômes aigus, grossesse, crise psychique). TEKMESIS ne propose pas d'analyse individuelle pour ce type de question.",
+    "restrictedHelp": "En cas de troubles aigus ou de crise, merci de contacter un médecin ou un service spécialisé.",
+    "restrictedHelpContactsLabel": "Exemples de lignes d'aide en cas de crise (liste non exhaustive — si tu te trouves dans un autre pays, cherche le numéro d'urgence local) :",
+    "restrictedHelpContacts": [
+      { "country": "Suisse", "contact": "Tél. 143 — La Main Tendue, 24h/24" },
+      { "country": "Deutschland", "contact": "Tél. 0800 111 0 111 ou 0800 111 0 222 — Telefonseelsorge, 24h/24" },
+      { "country": "Österreich", "contact": "Tél. 142 — Telefonseelsorge, 24h/24" },
+      { "country": "USA", "contact": "Tél. 988 — Suicide & Crisis Lifeline, 24h/24" },
+      { "country": "Vereinigtes Königreich", "contact": "Tél. 116 123 — Samaritans, 24h/24" }
+    ],
+    "clarificationHeading": "Nous classons ta question dans le domaine suivant",
+    "clarificationIntro": "Ce classement repose sur une analyse basée sur des règles de ta saisie — pas encore sur une interprétation complète assistée par IA. Merci de confirmer le domaine ou d'en choisir un autre.",
+    "clarificationMultiSelectHint": "Ta question concerne deux domaines ? Tu peux en sélectionner jusqu'à 2 en même temps.",
+    "notClassifiedHeading": "Nous n'avons pas pu classer ta question de manière univoque",
+    "notClassifiedBody": "Merci de choisir toi-même le domaine le plus approprié.",
+    "confirmButton": "Confirmer et consulter les sources",
+    "changeSelection": "Modifier la sélection",
+    "viewTopicCta": "Voir les exemples de questions & limites de ce domaine"
+  },
+  "searchFilters": {
+    "heading": "Restreindre la recherche (optionnel)",
+    "ageLabel": "Uniquement les études des",
+    "ageNoLimit": "Aucune limite",
+    "age5": "5 dernières années",
+    "age10": "10 dernières années",
+    "age15": "15 dernières années",
+    "studyTypeHeading": "Types d'études",
+    "groupReviews": "Revues systématiques & méta-analyses",
+    "groupRct": "Essais contrôlés randomisés (ECR)",
+    "groupObservational": "Études observationnelles (cohortes, cas-témoins, transversales)",
+    "groupOther": "Autres types d'études",
+    "note": "Des filtres restrictifs peuvent réduire nettement le nombre d'études trouvées — jusqu'à \"évidence insuffisante\"."
+  },
+  "publicationTypeLabels": {
+    "meta_analysis": "Méta-analyse",
+    "systematic_review": "Revue systématique",
+    "rct": "Essai contrôlé randomisé (ECR)",
+    "quasi_experimental": "Étude quasi expérimentale",
+    "cohort": "Étude de cohorte",
+    "case_control": "Étude cas-témoins",
+    "cross_sectional": "Étude transversale",
+    "case_report": "Rapport de cas",
+    "review": "Revue",
+    "protocol": "Protocole d'étude",
+    "other": "Autre",
+    "unknown": "Non classifié"
+  },
+  "glossaryDefinitions": {
+    "meta_analysis": "Combine les résultats de plusieurs études à l'aide de méthodes statistiques pour aboutir à une conclusion globale — souvent considérée comme méthodologiquement particulièrement solide lorsque les études combinées le sont elles-mêmes.",
+    "systematic_review": "Recherche systématiquement, selon des règles définies à l'avance, toutes les études pertinentes sur une question et les évalue de manière structurée — généralement sans nouvelle synthèse statistique propre.",
+    "rct": "Les participant·es sont répartis au hasard entre un groupe d'intervention et un groupe témoin. Cela réduit le risque que des différences systématiques entre les groupes faussent le résultat.",
+    "quasi_experimental": "Compare des groupes de façon similaire à un ECR, mais sans véritable répartition aléatoire — donc plus sensible aux facteurs de biais entre les groupes.",
+    "cohort": "Observe un groupe sur une période donnée et compare l'effet de différentes expositions sur un résultat, sans intervention active.",
+    "case_control": "Compare rétrospectivement des personnes ayant un résultat donné à des personnes ne l'ayant pas, afin d'identifier d'éventuels facteurs d'influence.",
+    "cross_sectional": "Recueille des données à un seul moment donné. Montre des liens possibles, mais aucune séquence temporelle et donc aucune conclusion sur la cause et l'effet.",
+    "case_report": "Décrit l'observation faite chez une seule personne ou un cas très restreint — fournit une indication, mais pas une évidence généralisable.",
+    "review": "Résume la littérature existante, généralement sans la méthodologie de recherche systématique définie à l'avance d'une revue systématique.",
+    "protocol": "Décrit une étude planifiée mais pas encore terminée — ne fournit pas encore de résultats.",
+    "other": "Un type d'étude qui ne peut être clairement rattaché à aucune des autres catégories.",
+    "unknown": "Le type d'étude n'a pas pu être déterminé clairement à partir des métadonnées disponibles.",
+    "evidence_certainty": "Le degré de certitude, sur la base de l'ensemble des études disponibles, qu'un effet observé soit réel et stable — ce n'est pas la même chose que \"effet présent ou absent\".",
+    "bias": "Un biais systématique susceptible de déplacer le résultat d'une étude dans une certaine direction, indépendamment de l'effet réel."
+  },
+  "confidenceLabels": {
+    "higher": "Certitude de l'évidence plus élevée",
+    "moderate": "Certitude de l'évidence moyenne",
+    "limited": "Certitude de l'évidence limitée",
+    "very_uncertain": "Évidence très incertaine",
+    "not_assessed": "Non évaluée"
+  },
+  "teaserPage": {
+    "heading": "Aperçu gratuit de l'évidence",
+    "searchDateLabel": "Date de recherche",
+    "candidateLabel": "Résultats trouvés",
+    "duplicatesLabel": "Doublons supprimés",
+    "includedLabel": "Études incluses",
+    "studyTypesHeading": "Répartition des types d'études",
+    "topStudiesHeading": "Aperçu : études principales",
+    "confidenceHeading": "Certitude de l'évidence provisoire",
+    "confidencePreliminaryNote": "Évaluation structurelle provisoire basée sur le nombre et le type d'études — pas encore une analyse complète du contenu (suivra avec la synthèse assistée par IA dans une étape ultérieure).",
+    "shareCardCta": "Partager comme image",
+    "sourcesUnavailableNote": "Les sources suivantes n'étaient pas accessibles lors de cette recherche et manquent donc dans les résultats",
+    "screeningExplanation": "Les études ont été sélectionnées selon leur pertinence, leur type d'étude et l'exhaustivité des données ; les études retirées, les simples protocoles d'étude et les résultats hors sujet ont été exclus.",
+    "limitationsNoticeHeading": "Limitations importantes avant l'achat",
+    "limitationsNoticeBody": "L'évidence disponible sur cette question est actuellement limitée. Le rapport complet rend ces limitations transparentes, mais ne peut pas fournir davantage que ce que permettent les études disponibles.",
+    "noCoverageDisclosure": "Aucune prétention à une couverture exhaustive de la littérature scientifique.",
+    "unknownTitle": "(titre non disponible)",
+    "filtersAppliedLabel": "Exclu par tes filtres"
+  },
+  "paywallPanel": {
+    "heading": "Rapport complet",
+    "contentsHeading": "Inclus dans le rapport",
+    "priceVersionLabel": "Version tarifaire",
+    "withdrawalConsent": "Je renonce expressément à mon droit de rétractation de 14 jours, car la livraison (l'accès au rapport) a lieu immédiatement après le paiement.",
+    "buyCta": "Acheter maintenant",
+    "redirectNote": "Tu seras redirigé·e vers la page de paiement sécurisée de Stripe.",
+    "checkoutUnavailable": "L'achat n'est actuellement pas possible pour des raisons techniques. Merci de recharger la page ou de réessayer plus tard.",
+    "exampleReportCta": "Voici à quoi ressemble un rapport complet",
+    "refundNote": "Un échec technique est détecté et remboursé automatiquement. Sinon : support@tekmesis.com (réponse sous 3 à 5 jours ouvrables)."
+  },
+  "notEligiblePage": {
+    "heading": "Nous ne pouvons pas proposer de rapport pour cette question actuellement",
+    "bodyInsufficientEvidence": "Nous avons trouvé trop peu d'études comparables et probantes pour établir un Evidence Report solide.",
+    "refineHeading": "Comment continuer",
+    "refineBody": "Essaie de formuler ta question de façon plus précise ou différente, ou choisis un autre domaine thématique.",
+    "refineCta": "Poser une nouvelle question"
+  },
+  "searchFailedPage": {
+    "heading": "Les sources sont actuellement inaccessibles",
+    "body": "Nous n'avons pu accéder à aucune de nos sources de données scientifiques lors de cette recherche. Cela n'est pas lié à ta question — merci de réessayer dans quelques minutes.",
+    "retryCta": "Réessayer"
+  },
+  "notFoundPage": {
+    "eyebrow": "Erreur 404",
+    "heading": "Cette page est introuvable",
+    "body": "Le lien est peut-être obsolète ou mal orthographié. Ta question n'est pas concernée — recommence simplement depuis la page d'accueil.",
+    "homeCta": "Vers la page d'accueil",
+    "topicsCta": "Voir les thèmes"
+  },
+  "checkoutSuccessPage": {
+    "heading": "Merci pour ton paiement",
+    "body": "Ton paiement est en cours de traitement. Dès que ton Evidence Report complet sera prêt, tu le recevras par e-mail ainsi que via un lien de rapport sécurisé.",
+    "notProofNote": "Cette page seule ne confirme pas un paiement réussi — le déverrouillage n'a lieu qu'après confirmation vérifiée par Stripe.",
+    "reportLinkIntro": "Ton lien de rapport personnel (fonctionnel dès que la génération est terminée) :",
+    "viewReportCta": "Voir le rapport",
+    "homeCta": "Retour à la page d'accueil"
+  },
+  "checkoutCancelPage": {
+    "heading": "Paiement annulé",
+    "body": "Ton paiement n'a pas été finalisé. Ton brouillon de rapport reste conservé — tu peux réessayer à tout moment.",
+    "retryCta": "Réessayer",
+    "homeCta": "Retour à la page d'accueil"
+  },
+  "reportViewerPage": {
+    "notFoundHeading": "Rapport introuvable",
+    "notFoundBody": "Ce lien est invalide ou le rapport n'existe plus. Merci de vérifier que tu as utilisé le lien complet.",
+    "processingHeading": "Ton rapport est en cours de génération",
+    "processingBody": "Ton paiement a bien été reçu. Nous consultons actuellement les sources scientifiques et générons ton Evidence Report — cela ne prend normalement que quelques minutes. Recharge cette page dans un instant, ou attends notre e-mail.",
+    "reloadCta": "Recharger la page",
+    "failedHeading": "Retard dans la génération de ton rapport",
+    "failedBody": "Un retard est survenu lors de la génération. Ton paiement reste valable — nous y travaillons et te contacterons par e-mail dès que le rapport sera prêt.",
+    "expiredHeading": "Rapport expiré",
+    "expiredBody": "Ce rapport n'est plus disponible conformément à notre délai de conservation (12 mois). Contacte-nous si tu as des questions à ce sujet.",
+    "revokedHeading": "Accès révoqué",
+    "revokedBody": "L'accès à ce lien de rapport a été révoqué.",
+    "refundedHeading": "Rapport remboursé",
+    "refundedBody": "Un remboursement a été traité pour ce rapport, l'accès n'est donc plus actif.",
+    "unavailableHeading": "Rapport indisponible",
+    "unavailableBody": "Ce rapport n'est actuellement pas accessible.",
+    "supportNote": "Des questions ? Écris-nous à"
+  },
+  "premiumReportPage": {
+    "coverHeading": "Evidence Report",
+    "premiumBadge": "Evidence Report Premium",
+    "originalQuestionLabel": "Question d'origine",
+    "interpretedQuestionLabel": "Question de recherche interprétée",
+    "reportDateLabel": "Date du rapport",
+    "reportVersionLabel": "Version du rapport",
+    "keyFindingsHeading": "Principaux résultats",
+    "scopeMethodHeading": "Question, portée & méthode",
+    "sourcesSearchedLabel": "Bases de données consultées",
+    "sourcesUnavailableLabel": "Bases de données inaccessibles",
+    "searchDateLabel": "Date de recherche",
+    "candidateLabel": "Résultats trouvés",
+    "duplicatesLabel": "Doublons supprimés",
+    "includedLabel": "Études incluses",
+    "scopeOutOfScopeNote": "Ce rapport ne fournit ni diagnostic individuel, ni traitement, ni conseil juridique.",
+    "evidenceLandscapeHeading": "Paysage de l'évidence",
+    "studyTypesHeading": "Répartition des types d'études",
+    "yearRangeLabel": "Période de publication",
+    "timelineHeading": "Études par année de publication",
+    "timelineUndatedNote": "{count} étude(s) sans année de publication indiquée ne sont pas représentées ici.",
+    "comparisonHeading": "Comparaison des études",
+    "comparisonTableCaption": "Comparaison des principales études incluses",
+    "studyColumnLabel": "Étude",
+    "yearColumnLabel": "Année",
+    "designColumnLabel": "Type",
+    "outcomeColumnLabel": "Résultat",
+    "profilesHeading": "Profils détaillés des études",
+    "profileDesignLabel": "Type",
+    "profilePopulationLabel": "Population/échantillon",
+    "profileInterventionLabel": "Intervention/exposition",
+    "profileOutcomeLabel": "Résultat",
+    "profileResultLabel": "Résultat mesuré",
+    "profileUncertaintyLabel": "Incertitude",
+    "profileLimitationsLabel": "Limitations",
+    "profileFundingLabel": "Financement/conflits d'intérêts",
+    "profileProvenanceLabel": "Source",
+    "synthesisHeading": "Synthèse intégrée",
+    "confidenceHeading": "Certitude de l'évidence",
+    "interpretationHeading": "Interprétation pratique",
+    "openQuestionsHeading": "Questions ouvertes & sources",
+    "sourceAppendixHeading": "Liste complète des sources",
+    "notReported": "Non indiqué",
+    "pendingAiHeading": "Pas encore disponible",
+    "pendingAiNote": "Cette section nécessite une extraction et une synthèse assistées par IA qui ne sont pas encore connectées (aucune clé API Anthropic configurée). Elle sera complétée dès que cette fonctionnalité sera disponible — d'ici là, aucun contenu n'est inventé.",
+    "pendingAiShort": "Suivra avec la synthèse assistée par IA, dès qu'elle sera disponible.",
+    "printCta": "Enregistrer en PDF / imprimer",
+    "exportCitationsHeading": "Exporter la liste des études",
+    "exportBibtexCta": "En BibTeX",
+    "exportRisCta": "En RIS",
+    "readAloudCta": "Lire à voix haute",
+    "readAloudStopCta": "Arrêter",
+    "chatHeading": "Poser une question précise",
+    "chatIntro": "Répond exclusivement sur la base des études trouvées dans ce rapport — jamais sur la base de connaissances générales.",
+    "chatInputPlaceholder": "p. ex. Quelle tranche d'âge a été étudiée ?",
+    "chatSubmitCta": "Envoyer",
+    "chatLoading": "Recherche dans les études …",
+    "chatError": "La question n'a pas pu être traitée pour le moment. Merci de réessayer.",
+    "chatNotAnswerableNote": "Ne peut pas être répondu à partir des études de ce rapport.",
+    "navCover": "Aperçu",
+    "navScope": "Portée & méthode",
+    "navLandscape": "Paysage de l'évidence",
+    "navComparison": "Comparaison",
+    "navProfiles": "Profils d'études",
+    "navSynthesis": "Synthèse",
+    "navConfidence": "Certitude de l'évidence",
+    "navInterpretation": "Interprétation",
+    "navSources": "Sources"
+  },
+  "recentSearches": {
+    "heading": "Tes dernières questions",
+    "note": "Enregistré uniquement sur cet appareil, jamais transmis à TEKMESIS.",
+    "removeAriaLabel": "Retirer de l'historique",
+    "clearCta": "Effacer l'historique"
+  }
+}

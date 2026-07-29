@@ -1,5 +1,6 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumReportData } from "@/lib/reports/premium-report";
+import { INTL_DATE_LOCALE } from "@/lib/i18n/date-locale";
 import { ConfidenceGauge } from "@/components/confidence-gauge";
 import { TekmesisLogo } from "@/components/brand/tekmesis-logo";
 import { PendingAiNotice } from "./pending-ai-notice";
@@ -78,7 +79,7 @@ export function PremiumReportView({
             <dt className="text-xs text-brand-neutral-600">{p.reportDateLabel}</dt>
             <dd className="font-medium text-brand-navy-900">
               {new Date(report.reportDate).toLocaleDateString(
-                report.locale === "de" ? "de-CH" : "en-CH",
+                INTL_DATE_LOCALE[report.locale],
               )}
             </dd>
           </div>
@@ -131,7 +132,7 @@ export function PremiumReportView({
             <dt className="text-xs text-brand-neutral-600">{p.searchDateLabel}</dt>
             <dd className="font-medium text-brand-navy-900">
               {new Date(report.searchDate).toLocaleDateString(
-                report.locale === "de" ? "de-CH" : "en-CH",
+                INTL_DATE_LOCALE[report.locale],
               )}
             </dd>
           </div>
