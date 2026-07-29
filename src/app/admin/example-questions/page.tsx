@@ -3,7 +3,7 @@ import Link from "next/link";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
 import { checkExampleQuestionsForTopic } from "@/lib/admin/example-question-check";
 import { topics, topicCopy } from "@/content/topics";
-import { isLocale, defaultLocale } from "@/lib/i18n/config";
+import { isLocale, defaultLocale, type Locale } from "@/lib/i18n/config";
 
 export const metadata: Metadata = { title: "Beispielfragen prüfen — Admin — TEKMESIS" };
 
@@ -27,7 +27,7 @@ export default async function ExampleQuestionsCheckPage({
 }) {
   await requireAdminSession();
   const params = await searchParams;
-  const locale = isLocale(params.locale ?? "") ? (params.locale as "de" | "en") : defaultLocale;
+  const locale: Locale = isLocale(params.locale ?? "") ? (params.locale as Locale) : defaultLocale;
   const selectedTopic = params.topic && topics.some((t) => t.slug === params.topic) ? params.topic : null;
 
   const results = selectedTopic
@@ -75,6 +75,7 @@ export default async function ExampleQuestionsCheckPage({
           <select name="locale" defaultValue={locale} className="rounded-lg border border-brand-neutral-200 p-2">
             <option value="de">Deutsch</option>
             <option value="en">Englisch</option>
+            <option value="fr">Französisch</option>
           </select>
         </label>
         <button
