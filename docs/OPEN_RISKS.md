@@ -1094,6 +1094,20 @@ checkpoint (decision #15) and before each production-readiness gate.
     row — refunding them requires using the Stripe Dashboard directly
     rather than `/admin/payments` (documented for that reason).
 
+    **Follow-up fix, same session:** verifying #31 surfaced a second,
+    related bug — the `Payment` row's `amountMinor`/`currency` were set
+    once at checkout start from the price config's list price, and never
+    updated. A 100%-off promo-code test purchase (`TESTKAUF-2026`,
+    CHF 0.00 actually charged) showed up in `/admin/payments` as CHF 9.90
+    "paid" — misleading for revenue tracking, since promotion codes are
+    entered on Stripe's own Checkout page, after the session already
+    exists, so the real charged amount is only known once
+    `checkout.session.completed` fires. Fixed: the webhook's mark-paid
+    update now also writes `amountMinor`/`currency` from the completed
+    session's own `amount_total`/`currency` fields (normalizing Stripe's
+    lowercase currency code to match the uppercase convention used
+    elsewhere). Regression test added.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

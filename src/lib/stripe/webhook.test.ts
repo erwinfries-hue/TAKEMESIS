@@ -18,6 +18,8 @@ function checkoutCompletedEvent(overrides: {
   reportToken?: string;
   paymentIntentId?: string | null;
   email?: string;
+  amountTotal?: number | null;
+  currency?: string | null;
 }): Stripe.Event {
   return {
     id: overrides.eventId ?? "evt_1",
@@ -30,6 +32,8 @@ function checkoutCompletedEvent(overrides: {
           : {},
         payment_intent: overrides.paymentIntentId ?? "pi_test_123",
         customer_details: overrides.email ? { email: overrides.email } : null,
+        amount_total: overrides.amountTotal,
+        currency: overrides.currency,
       },
     },
   } as unknown as Stripe.Event;
@@ -133,6 +137,30 @@ describe("processStripeEvent", () => {
 
     const payment = await paymentRepository.findByCheckoutSessionId("cs_test_123");
     expect(payment?.status).toBe("paid");
+  });
+
+  it("records the actually-charged amount/currency from the completed session, not the list price recorded at checkout start (live bug, OPEN_RISKS.md #31)", async () => {
+    const { reportRepository, paymentRepository, webhookEventRepository, report } =
+      await setUpPaidCheckoutScenario();
+
+    await processStripeEvent(
+      checkoutCompletedEvent({
+        reportId: report.id,
+        sessionId: "cs_test_123",
+        amountTotal: 0,
+        currency: "chf",
+      }),
+      {
+        reportRepository,
+        paymentRepository,
+        webhookEventRepository,
+        generateReportContent: fakeGenerateReportContent(),
+      },
+    );
+
+    const payment = await paymentRepository.findByCheckoutSessionId("cs_test_123");
+    expect(payment?.amountMinor).toBe(0);
+    expect(payment?.currency).toBe("CHF");
   });
 
   it("captures the buyer's email from Stripe's customer_details and triggers report content generation with the raw token from metadata", async () => {

@@ -126,9 +126,20 @@ async function fulfillCheckoutSession(
 
   const payment = await deps.paymentRepository.findByCheckoutSessionId(session.id);
   if (payment && payment.status === "pending") {
+    // amount_total/currency come from the completed session, not the
+    // amountMinor recorded at checkout start — that earlier value is only
+    // ever the undiscounted list price, since a promotion code is entered
+    // on Stripe's own Checkout page, after the session already exists. This
+    // is the first point where the actually-charged amount is known (live
+    // bug found 2026-07-31, OPEN_RISKS.md #31: a 100%-off test purchase
+    // recorded CHF 9.90 in /admin/payments despite CHF 0.00 being charged).
     await deps.paymentRepository.update(payment.id, {
       status: "paid",
       stripePaymentIntentId: paymentIntentId,
+      amountMinor: session.amount_total ?? payment.amountMinor,
+      // Stripe returns lowercase ISO codes ("chf"); normalize to match the
+      // uppercase convention used everywhere else (REPORT_CURRENCY, "CHF").
+      currency: session.currency ? session.currency.toUpperCase() : payment.currency,
     });
   }
 

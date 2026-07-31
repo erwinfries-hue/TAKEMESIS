@@ -67,6 +67,8 @@ export class SupabasePaymentRepository implements PaymentRepository {
     if (patch.stripePaymentIntentId !== undefined)
       row.stripe_payment_intent_id = patch.stripePaymentIntentId;
     if (patch.status !== undefined) row.status = patch.status;
+    if (patch.amountMinor !== undefined) row.amount_minor = patch.amountMinor;
+    if (patch.currency !== undefined) row.currency = patch.currency;
 
     const { data, error } = await getSupabaseClient()
       .from("payments")
