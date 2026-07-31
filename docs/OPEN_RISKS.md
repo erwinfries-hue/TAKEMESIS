@@ -1061,6 +1061,12 @@ checkpoint (decision #15) and before each production-readiness gate.
     retryable action (or moving it earlier/independent of the AI/search
     chain) would be the fix.
 
+    **Update (2026-07-31):** a second live-mode purchase (via the new
+    100%-off `TESTKAUF-2026` promo code, see below) completed normally —
+    report generated and the confirmation email arrived without issue.
+    Supports the "one-off slow run" theory over a structural bug; no code
+    change made. Still worth a second data point before fully closing this.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
