@@ -2306,3 +2306,17 @@ Code geprüft, nicht ungeprüft übernommen:
 
 Alle vier umgesetzten Fixes: Lint, Typecheck, volle Test-Suite (659 Tests)
 und Production-Build erneut grün.
+
+### "Über TEKMESIS" persönlicher gestaltet (Punkt 6, 2026-07-31)
+
+Erwin lieferte einen eigenen Gründungstext (Beobachtung hinter TEKMESIS,
+Fake-News-Kontext, Zielgruppe, Kernaussage) direkt als Input. Umgesetzt als
+neuer Abschnitt "Warum ich TEKMESIS entwickelt habe" auf `/about`, zwischen
+dem bestehenden Eröffnungssatz und dem "Name TEKMESIS"-Abschnitt: die
+vorgeschlagene Kernaussage als hervorgehobene Zeile, danach die fünf
+Absätze unverändert übernommen. Ins Englische und Französische übersetzt
+(gleiches Muster wie bei der bestehenden Namensherkunfts-Sektion). Der
+bestehende erste Satz oben auf der Seite blieb unverändert — beschreibt
+weiterhin knapp den Mechanismus, während der neue Abschnitt die
+Beweggründe liefert. Lint, Typecheck, volle Test-Suite (659 Tests) und
+Production-Build erneut grün.

@@ -282,6 +282,15 @@
   "aboutPage": {
     "heading": "Über TEKMESIS",
     "body": "TEKMESIS macht aus einer Frage einen Evidence Report — echte Studien gefunden, verglichen und verständlich erklärt. Mit sichtbaren Quellen, offenen Limitationen und ganz ohne falsche Gewissheit.",
+    "whyHeading": "Warum ich TEKMESIS entwickelt habe",
+    "whyTagline": "TEKMESIS hilft, Behauptungen und Fragen aus dem Alltag schnell wissenschaftlich zu plausibilisieren – damit aus widersprüchlichen Informationen eine nachvollziehbare, evidenzbasierte Orientierung entsteht.",
+    "whyParagraphs": [
+      "TEKMESIS entstand aus einer einfachen Beobachtung: Zu vielen wichtigen Fragen im Leben gibt es wissenschaftliche Studien – doch für Privatpersonen sind diese oft schwer zu finden, kompliziert formuliert oder widersprüchlich.",
+      "Gleichzeitig begegnen uns immer häufiger Fake News, irreführende Zahlen, verkürzte Aussagen und vermeintlich wissenschaftliche Behauptungen. Für Laien ist es oft kaum möglich, schnell zu erkennen, was tatsächlich belegt, nur teilweise plausibel oder schlicht falsch dargestellt ist.",
+      "Genau hier setzt TEKMESIS an. Die Plattform hilft dabei, persönliche Fragen, Behauptungen und Informationen schnell und einfach wissenschaftlich zu plausibilisieren. Sie sucht passende Quellen, vergleicht Studien und zeigt transparent, was gut belegt ist, wo Ergebnisse widersprüchlich sind und welche Unsicherheiten bestehen.",
+      "Ich wollte eine Anwendung schaffen, die Menschen dabei unterstützt, Informationen fundierter einzuordnen und bessere Entscheidungen zu treffen – unabhängig davon, ob es um Lernen, Gesundheit, Arbeit, Ernährung, Technologie, Konsum oder andere Themen des Alltags geht.",
+      "TEKMESIS soll dabei keine scheinbar einfachen Wahrheiten liefern. Ziel ist vielmehr, Wissenschaft verständlich zu machen und klar zwischen Evidenz, Interpretation und unbelegten Behauptungen zu unterscheiden."
+    ],
     "nameOriginHeading": "Der Name TEKMESIS",
     "nameOriginBody": "Der Name TEKMESIS hat seinen Ursprung im Altgriechischen und steht für Beweis, Evidenz und begründete Schlussfolgerung. Genau dafür steht unsere Plattform: Wir suchen, vergleichen und strukturieren wissenschaftliche Erkenntnisse, damit aus komplexen Studien klare und nachvollziehbare Orientierung entsteht."
   },

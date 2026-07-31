@@ -282,6 +282,15 @@
   "aboutPage": {
     "heading": "À propos de TEKMESIS",
     "body": "TEKMESIS transforme une question en Evidence Report — des études réelles trouvées, comparées et expliquées clairement. Avec des sources visibles, des limitations assumées et sans fausse certitude.",
+    "whyHeading": "Pourquoi j'ai créé TEKMESIS",
+    "whyTagline": "TEKMESIS aide à évaluer rapidement la plausibilité scientifique d'affirmations et de questions du quotidien — pour transformer des informations contradictoires en une orientation claire et fondée sur des preuves.",
+    "whyParagraphs": [
+      "TEKMESIS est né d'un constat simple : pour de nombreuses questions importantes de la vie quotidienne, des études scientifiques existent déjà — mais pour la plupart des gens, elles restent difficiles à trouver, complexes ou apparemment contradictoires.",
+      "Parallèlement, nous sommes de plus en plus confrontés aux fake news, aux chiffres trompeurs, aux affirmations simplifiées à l'excès et aux propos qui semblent scientifiques sans l'être. Pour un non-spécialiste, il est souvent presque impossible de distinguer rapidement ce qui est réellement démontré, ce qui n'est que partiellement plausible, ou ce qui est simplement présenté de façon erronée.",
+      "C'est exactement là qu'intervient TEKMESIS. La plateforme aide à évaluer rapidement et simplement la plausibilité scientifique de questions personnelles, d'affirmations et d'informations. Elle recherche des sources pertinentes, compare les études et montre de façon transparente ce qui est bien étayé, où les résultats se contredisent et quelles incertitudes subsistent.",
+      "Je voulais créer une application qui aide les gens à mieux évaluer l'information et à prendre de meilleures décisions — que ce soit à propos de l'apprentissage, de la santé, du travail, de l'alimentation, de la technologie, de la consommation ou d'autres sujets du quotidien.",
+      "TEKMESIS n'a pas vocation à livrer des vérités simplifiées. L'objectif est plutôt de rendre la science compréhensible et de distinguer clairement l'évidence, l'interprétation et les affirmations non prouvées."
+    ],
     "nameOriginHeading": "Le nom TEKMESIS",
     "nameOriginBody": "Le nom TEKMESIS trouve son origine dans le grec ancien et signifie preuve, évidence et conclusion fondée. C'est exactement ce que représente notre plateforme : nous recherchons, comparons et structurons des connaissances scientifiques afin que des études complexes deviennent une orientation claire et compréhensible."
   },

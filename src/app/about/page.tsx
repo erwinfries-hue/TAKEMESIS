@@ -20,6 +20,16 @@ export default async function AboutPage() {
       <h1 className="text-3xl font-semibold text-brand-navy-900">{dict.aboutPage.heading}</h1>
       <p className="max-w-2xl text-brand-neutral-600">{dict.aboutPage.body}</p>
 
+      <section className="flex max-w-2xl flex-col items-center gap-4">
+        <h2 className="font-semibold text-brand-navy-900">{dict.aboutPage.whyHeading}</h2>
+        <p className="text-lg font-medium text-brand-navy-900">{dict.aboutPage.whyTagline}</p>
+        {dict.aboutPage.whyParagraphs.map((paragraph) => (
+          <p key={paragraph} className="text-brand-neutral-600">
+            {paragraph}
+          </p>
+        ))}
+      </section>
+
       <section className="flex max-w-2xl flex-col items-center gap-2">
         <h2 className="font-semibold text-brand-navy-900">{dict.aboutPage.nameOriginHeading}</h2>
         <p className="text-brand-neutral-600">{dict.aboutPage.nameOriginBody}</p>

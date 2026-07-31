@@ -279,6 +279,15 @@
   "aboutPage": {
     "heading": "About TEKMESIS",
     "body": "TEKMESIS turns a question into an Evidence Report — real studies found, compared, and explained in plain language. With visible sources, honest limitations, and no false certainty.",
+    "whyHeading": "Why I built TEKMESIS",
+    "whyTagline": "TEKMESIS helps you quickly put everyday claims and questions to a scientific test — turning conflicting information into clear, evidence-based orientation.",
+    "whyParagraphs": [
+      "TEKMESIS grew out of a simple observation: for many of life's important questions, scientific studies already exist — but for most people, they're hard to find, densely written, or seemingly contradictory.",
+      "At the same time, we increasingly run into fake news, misleading numbers, oversimplified claims, and statements that sound scientific but aren't. For non-experts, it's often nearly impossible to quickly tell what's actually backed by evidence, only partially plausible, or simply misrepresented.",
+      "That's exactly where TEKMESIS comes in. The platform helps you quickly and easily put personal questions, claims, and information to a scientific plausibility check. It finds relevant sources, compares studies, and transparently shows what's well supported, where results conflict, and what uncertainties remain.",
+      "I wanted to build something that helps people weigh information more soundly and make better decisions — whether the topic is learning, health, work, nutrition, technology, consumption, or anything else in everyday life.",
+      "TEKMESIS isn't meant to hand you neat, oversimplified truths. The goal is to make science understandable, and to draw a clear line between evidence, interpretation, and unsupported claims."
+    ],
     "nameOriginHeading": "The name TEKMESIS",
     "nameOriginBody": "The name TEKMESIS originates from Ancient Greek and means proof, evidence, and reasoned conclusion. That's exactly what our platform stands for: we search, compare, and structure scientific findings so that complex studies become clear, traceable orientation."
   },
