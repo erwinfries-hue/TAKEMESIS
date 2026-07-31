@@ -6,6 +6,41 @@ repository at commit `4d749e4` (end of Phase 10) — not against prior status
 claims. Every command below was actually run in this session; outputs are
 summarized, not invented.
 
+## Status update (2026-07-31) — read this before re-running the review
+
+Everything below this note still reflects the **end-of-Phase-10** snapshot —
+before Stripe went live, before the report viewer existed, before real
+payments were ever processed. It has **not** been rewritten to match
+current reality, since that would mean asserting things this session didn't
+itself verify. What actually changed since, all live-confirmed the same day
+(see `docs/OPEN_RISKS.md` #13, #14, #27, #29–#32 for full detail):
+
+- Stripe is live (own restricted API key, own live Product/Price, live
+  webhook), a real CHF 9.90 purchase completed end-to-end (checkout →
+  webhook → generated report → confirmation email), and both a direct-
+  Stripe and an admin-one-click refund were exercised against real money.
+- The secure-link report viewer (item 17 below, "genuine gap") now exists
+  and works — `/report/[token]` was live-verified multiple times today.
+- Two real bugs found and fixed live: `/admin/payments` never recorded a
+  `Payment` row (broke admin visibility + the refund action from item 19),
+  and paid amount/currency weren't corrected for discounted (promo-code)
+  checkouts.
+- A real safety-gate false negative was found and fixed: the high-risk
+  detector missed declined German adjective+noun phrasings (e.g. "bei
+  einer psychisch**en** Krise") — see `OPEN_RISKS.md` #32.
+- Full 12-topic × 3-locale (DE/EN/FR) live search sweep completed
+  (`OPEN_RISKS.md` #27), including two more live translation-gap fixes.
+
+**Still not done, and the reason a full re-run/GO call shouldn't happen
+yet:** mobile-viewport check on a real device, a deliberate DE/EN core-flow
+repeat specifically against the current build (today's testing was mostly
+German), and — the one this session structurally cannot do — live
+automated smoke-testing against `tekmesis.com` from an agent session (the
+sandbox's outbound network policy 403s on arbitrary hosts; confirmed
+2026-07-31 trying to run `scripts/smoke-test.sh`). A future session with
+real browser/network access should re-run this review's 25 items against
+the live production site rather than trusting this snapshot.
+
 ## Commands run and results
 
 | Command | Result |

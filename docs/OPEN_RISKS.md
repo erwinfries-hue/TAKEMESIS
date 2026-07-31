@@ -1145,6 +1145,21 @@ checkpoint (decision #15) and before each production-readiness gate.
     in this file, just the opposite failure mode). Regression tests added
     for the declined form of all three affected terms.
 
+    **Residual, not fixed (checked, deliberately not extended):** the same
+    class of gap likely exists for French two-word phrase terms under
+    gender/number agreement — e.g. `"crise psychique"` (singular) wouldn't
+    match a real question phrased as `"crises psychiques"` (plural), and
+    similarly for `"hemorragie grave"`, `"plainte penale"`, `"licenciement
+    immediat"`. Deliberately **not** speculatively generalized the way the
+    German fix was: every fix in this file so far started from a real,
+    live-found failing question, not a hypothesis. Several of these FR
+    terms already have defense-in-depth via a standalone single-word term
+    in the same category (e.g. `"suicidaire"` alone covers `"idée
+    suicidaire"` even if `"idees suicidaires"` doesn't match the singular),
+    which reduces the practical risk. Revisit with a targeted fix, the same
+    way #32 was, if a real French high-risk question is found live to slip
+    through.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

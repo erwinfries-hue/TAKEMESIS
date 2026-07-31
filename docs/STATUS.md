@@ -2,6 +2,24 @@
 
 ## Current phase
 
+**Superseded by reality — read this instead of the paragraph below.** As of
+2026-07-31, TEKMESIS is live in Stripe **live mode** on `tekmesis.com`
+(`www.tekmesis.com` is the actual non-redirecting domain), with real money
+successfully charged and refunded end-to-end (both directly in Stripe and
+via the admin one-click action), a working secure-link report viewer, and
+Anthropic AI synthesis provisioned and appearing in real reports. Three real
+bugs found live and fixed the same day: missing `Payment` rows breaking
+`/admin/payments` + refunds, wrong charged-amount recording on discounted
+checkouts, and a safety-gate false negative in the German high-risk
+detector. Full detail in the dated entries below and in `OPEN_RISKS.md`
+#29–#32. What's genuinely still open: a real-device mobile check, a
+deliberate DE/EN repeat, and re-running `docs/INDEPENDENT_REVIEW.md`
+against the live site before tagging `v0.1.0` — see "Next step" at the
+bottom of this file.
+
+<details>
+<summary>Original Phase 10 status note (2026-07-26/29, kept for history — no longer current)</summary>
+
 Phase 10 (Hardening) is complete. Phases 11–13 (preview beta, production
 prep, production launch) are **blocked on real infrastructure this session
 doesn't have** (Vercel project, Stripe/Supabase/Resend accounts, Hostpoint
@@ -14,6 +32,8 @@ step-by-step production runbook (`docs/PRODUCTION_RUNBOOK.md`), and a
 smoke-test script + checklist (`docs/SMOKE_TESTS.md`,
 `scripts/smoke-test.sh`, live-verified against a real build). What's left in
 11–13 needs Erwin (see "Blocking items" below).
+
+</details>
 
 ## Completed
 
@@ -2109,38 +2129,113 @@ durchgehend gesund, die einzigen zwei echten Bugs dieses Sweeps
 (Dankbarkeits-/Achtsamkeitsübungen, "hängen zusammen") sind gefunden,
 behoben und live bestätigt.
 
+### Stripe Live-Aktivierung + drei echte Bugs live gefunden und behoben (2026-07-31)
+
+Kompletter Go-Live-Tag für Stripe, geführt Schritt für Schritt mit Erwin
+(Konto/Zahlungs-Ebene, `CLAUDE.md`-Human-Stop-Condition):
+
+- **Live-Setup:** eigenes Live-Produkt "TEKMESIS Evidence Report"
+  (CHF 9.90), eigener **eingeschränkter** API-Schlüssel ("TEKMESIS Live",
+  nur Checkout Sessions + Refunds — bewusst nicht der gemeinsame
+  Standard-Schlüssel, um das im selben Stripe-Konto laufende
+  Fremdprojekt "MyGoogleDNA" nicht zu gefährden), Live-Webhook.
+  308-Redirect-Bug gefunden (`tekmesis.com` → `www.tekmesis.com`) und
+  behoben, indem der Webhook auf die nicht-umleitende Domain zeigt.
+- **Bug 1 (behoben):** `startCheckoutForReport` legte nie eine
+  `Payment`-Zeile an — `/admin/payments` war trotz echter, erfolgreicher
+  Zahlungen leer, der 1-Klick-Rückerstattungs-Button hatte nichts zum
+  Anwenden. Gefunden beim Versuch, Erwins ersten echten Testkauf
+  zurückzuerstatten (der mangels Payment-Zeile stattdessen direkt in
+  Stripe zurückerstattet wurde). Fix + Regressionstests, siehe
+  `OPEN_RISKS.md` #31.
+- **Bug 2 (behoben):** derselbe Fix zeigte einen zweiten Bug — der
+  gespeicherte Betrag war immer der Listenpreis, nicht der nach
+  Gutschein-Rabatt tatsächlich belastete Betrag (ein 100%-Rabatt-Kauf
+  zeigte CHF 9.90 "paid" statt CHF 0.00). Fix: Webhook übernimmt jetzt
+  `amount_total`/`currency` aus dem abgeschlossenen Checkout-Ereignis.
+  Beide Fixes danach **live end-to-end bestätigt**: echter Kauf →
+  Payment-Zeile korrekt → Admin-Rückerstattungs-Button → erfolgreich
+  zurückerstattet.
+- **Bug 3, sicherheitsrelevant (behoben):** im Rahmen der manuellen
+  Smoke-Test-Checkliste liess Erwin die Frage "Was tun bei einer
+  psychischen Krise?" live laufen — sie wurde **nicht** blockiert
+  (normaler, verkäuflicher Teaser statt Sicherheitshinweis). Ursache:
+  der Hochrisiko-Erkenner speichert Begriffe wie "psychische krise" im
+  Nominativ, aber deutsche Adjektivendungen ändern sich mit dem Fall
+  ("...bei einer psychisch**en** Krise", Dativ) — ein reiner
+  Text-Vergleich erkennt das nicht. Fix: toleranter Abgleich für
+  zweiwortige Adjektiv+Substantiv-Begriffe (deckt auch "akute
+  Schmerzen", "starke Blutung", "fristlose Kündigung" ab). Live nach
+  Deploy erneut getestet — Frage wird jetzt korrekt blockiert. Details
+  und bewusst nicht behobenes Restrisiko (französische Genus-/Numerus-
+  Formen, ohne konkreten Fehlerfall nicht spekulativ erweitert) in
+  `OPEN_RISKS.md` #32.
+- **Gratis-Gutschein eingerichtet:** 100%-Rabatt-Code `TESTKAUF-2026` in
+  Stripe (auf TEKMESIS beschränkt, MyGoogleDNA ausgenommen) — Erwin kann
+  sich damit jederzeit einen kostenlosen Report zu Testzwecken holen,
+  über Stripes eigenes Promo-Code-Feld am Checkout.
+- **Hostpoint-Mail-Problem gefunden und von Erwin behoben:**
+  `support@tekmesis.com` bounced zunächst ("550 no such address here") —
+  DNS/MX-Routing zu Hostpoint funktionierte, aber das Postfach existierte
+  nicht. Kein Code-Thema (Hostpoint-Konto-Ebene); von Erwin selbst gelöst
+  und erneut getestet.
+- **Session endete mit unbeaufsichtigter Nacharbeit** (auf Erwins
+  ausdrücklichen Wunsch): volle lokale Verify-Kette erneut grün (Lint,
+  Typecheck, 652 Unit-Tests, Production-Build), `docs/INDEPENDENT_REVIEW.md`
+  um einen ehrlichen Status-Hinweis ergänzt (nicht neu geschrieben — das
+  Dokument spiegelt weiterhin den Phase-10-Stand, mit einem klaren Verweis
+  auf das heute live Bestätigte), Restrisiko zu Begriffs-Deklination
+  dokumentiert statt spekulativ gefixt. Ein automatisierter Live-Smoke-Test
+  gegen `tekmesis.com` war aus dieser Sandbox heraus **nicht möglich**
+  (Netzwerk-Policy blockiert beliebige Hosts, 403 vom Proxy bestätigt) —
+  wird explizit nicht als "durchgeführt" behauptet.
+
 ## Blocking items tracked for later (do not block continued implementation)
 
 - ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved
-  2026-07-28**, see the entry above and `OPEN_RISKS.md` #1. Remaining before
-  live Stripe: activating Stripe Tax (Stripe dashboard action) and the EU
-  withdrawal-right checkbox at checkout (`OPEN_RISKS.md` #14).
-- Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — the
-  resilience path (all sources down) is confirmed working live in this
-  sandbox; the success path (sources actually returning data) still needs a
-  real run from an environment with network access.
-- Live validation of the Supabase migration and Stripe checkout/webhook code
-  (`OPEN_RISKS.md` #13) — nothing has touched a real database or a real
-  Stripe account yet.
-- Wiring the live UI to real report creation + a working checkout button +
-  real premium-report generation on payment (`OPEN_RISKS.md` #14) — needs the
-  credentials above first.
-- AI-based extraction/synthesis for Phase 3 (query interpretation) and Phase 8
-  (key findings, study-level extraction, integrated synthesis, practical
-  interpretation) — needs `ANTHROPIC_API_KEY`, not yet provisioned.
-- Live validation of email sending (Resend) and analytics forwarding
-  (PostHog), plus the deferred Phase 9 admin sections (`OPEN_RISKS.md` #15).
-- `CRON_SECRET` not provisioned and the daily expiry cron never triggered by
-  a real scheduler; no secure-link report-viewer page exists yet to read
-  report status back to a user (`OPEN_RISKS.md` #16) — needs a deployed
-  Vercel project.
-- Everything in `docs/PRODUCTION_RUNBOOK.md` §1–3 (Vercel project, live
-  Supabase/Stripe/Resend accounts, Hostpoint DNS change, Treuhänder sign-off,
-  a real payment, tagging `v0.1.0`) — all require Erwin's direct action per
-  `CLAUDE.md`'s human-stop-conditions; this session will not and cannot
-  perform them.
+  2026-07-28**, see the entry above and `OPEN_RISKS.md` #1.
+- ~~Stripe live activation~~ — **resolved 2026-07-31**, see the entry above.
+  Real live purchases + refunds (direct Stripe and admin one-click) both
+  confirmed working.
+- ~~No working buy button / no report row created on teaser render / no
+  secure-link report viewer~~ — **resolved**, `/report/[token]` exists and
+  has been live-verified multiple times (2026-07-29 through 2026-07-31).
+- Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) —
+  **largely resolved**: a full 12-topic × 3-locale live sweep ran cleanly
+  (`OPEN_RISKS.md` #27), and real searches have run against all 4 sources
+  repeatedly since. Still open: this sandbox itself still cannot reach any
+  of the 4 hosts directly (confirmed again 2026-07-31 via the smoke-test
+  attempt) — live verification always has to happen through Erwin's
+  browser/admin tools, never directly from an agent session here.
+- AI-based extraction/synthesis for Phase 3/8 — needs `ANTHROPIC_API_KEY`,
+  **provisioned** (real AI-synthesized key findings appear in live reports
+  as of the 2026-07-29 purchase) — this item can be considered closed.
+- Live validation of email sending (Resend) — **resolved**, confirmation
+  emails have arrived reliably (with one still-not-fully-explained one-off
+  miss, see `OPEN_RISKS.md` #30).
+- `CRON_SECRET` provisioning and a live-fired expiry cron — **not yet
+  independently confirmed** this session; worth a quick admin check next
+  time (`GET /api/cron/expire-reports` with the real secret).
+- Everything in `docs/PRODUCTION_RUNBOOK.md` §3 still open: mobile-viewport
+  check on a real device, a deliberate DE/EN core-flow repeat against the
+  current build, and tagging `v0.1.0` (only after a full independent-review
+  re-run reaches GO — see `docs/INDEPENDENT_REVIEW.md`'s 2026-07-31 status
+  note). AXIA4 handover-page publication and beta-cohort invitation remain
+  Erwin's own, non-technical actions.
 
 ## Next step
+
+The natural next session should: (1) do the still-missing manual checks —
+mobile viewport on a real device, a deliberate DE/EN repeat — since neither
+needs new code, just a human with a phone and a browser; (2) re-run
+`docs/INDEPENDENT_REVIEW.md`'s 25 items properly against the live
+`tekmesis.com`/`www.tekmesis.com` (an agent session cannot reach it
+directly — this has to be Erwin driving with an agent guiding, the same
+pattern used all through 2026-07-31); (3) only once that reaches GO,
+consider tagging `v0.1.0` per `PRODUCTION_RUNBOOK.md` §3.5; (4) the two
+genuinely non-technical items — AXIA4 handover-page publication and the
+15-person beta-cohort invitation — are entirely Erwin's own to schedule
+whenever he's ready, not gated on anything in this repo.
 
 Everything that was buildable without live credentials for the remainder of
 `IMPLEMENTATION_PLAN.md` (Phases 11–13) is done as of this update:
