@@ -18,7 +18,7 @@
   },
   "home": {
     "description": "TEKMESIS macht aus deiner Frage einen Evidence Report — echte Studien gefunden, verglichen und verständlich erklärt.",
-    "comingSoon": "Die Plattform befindet sich im Aufbau.",
+    "comingSoon": "TEKMESIS befindet sich in der geschlossenen Beta-Phase. Alle Kernfunktionen sind verfügbar — dein Feedback hilft uns, Bedienung und Reportqualität weiter zu verbessern.",
     "priceNote": "CHF 9.90, Einmalzahlung, Preis ohne Mehrwertsteuer (Schweiz: nicht MWST-pflichtig; Ausland: Reverse-Charge-Verfahren gemäss Art. 8 MWSTG). Kein Abo.",
     "priceAnchor": "Eine falsche Kaufentscheidung oder ein wirkungsloses Vorgehen kostet meist mehr als CHF 9.90 — dieser Report hilft dir, das vorher zu wissen.",
     "heroCta": "Themen entdecken",
@@ -83,7 +83,7 @@
     "whyNotChatGptRows": [
       {
         "criterion": "Antwortbasis",
-        "tekmesis": "Kuratierte wissenschaftliche Primärquellen",
+        "tekmesis": "Überprüfbare wissenschaftliche Quellen",
         "chatbot": "Trainingsdaten & allgemeine Websuche"
       },
       {
@@ -450,6 +450,18 @@
     "unavailableHeading": "Report nicht verfügbar",
     "unavailableBody": "Dieser Report ist aktuell nicht zugänglich.",
     "supportNote": "Fragen? Schreib uns an"
+  },
+  "reportFeedback": {
+    "heading": "Wie war dieser Report für dich?",
+    "ratingLabel": "Wie hilfreich war dieser Report?",
+    "ratingScaleLowLabel": "Wenig hilfreich",
+    "ratingScaleHighLabel": "Sehr hilfreich",
+    "commentLabel": "Was hat gefehlt oder war unklar? (optional)",
+    "commentPlaceholder": "Fehler, unpassende Studien oder sonstiges Feedback...",
+    "submitLabel": "Feedback senden",
+    "thankYouHeading": "Danke für dein Feedback!",
+    "thankYouBody": "Das hilft uns, TEKMESIS für dich zu verbessern.",
+    "errorBody": "Feedback konnte nicht gesendet werden. Bitte versuch es später nochmal oder schreib uns direkt."
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",

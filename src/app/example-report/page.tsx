@@ -9,6 +9,13 @@ import { buildPremiumReportData, type PremiumReportData } from "@/lib/reports/pr
 import { enrichPremiumReportWithAi } from "@/lib/ai/report-enrichment";
 import { PremiumReportView } from "@/components/premium-report/premium-report-view";
 
+// AI enrichment on a cache miss (first visitor after a deploy or cache
+// eviction) is a real, potentially slow Anthropic call — same reasoning as
+// the Stripe webhook route's maxDuration = 60 (well past the default 10s
+// serverless budget). Live-reported symptom (ChatGPT review, 2026-07-31):
+// the example report timed out twice.
+export const maxDuration = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);

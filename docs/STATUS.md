@@ -2251,3 +2251,58 @@ still-open OpenAlex-reachability question from the live test). The natural
 next session should begin at `PRODUCTION_RUNBOOK.md` §1 once at least a
 Supabase + Stripe-test-mode set of credentials exists alongside the now-live
 Vercel project.
+
+### ChatGPT-Zweitmeinung geprüft und vier Punkte umgesetzt (2026-07-31)
+
+Erwin liess eine externe ChatGPT-Beurteilung der Live-Seite gegenprüfen,
+bevor er weitere Betatester einlädt. Jeder Punkt wurde gegen den echten
+Code geprüft, nicht ungeprüft übernommen:
+
+- **Bestätigt und behoben:** `/example-report` hatte kein `maxDuration`,
+  obwohl es bei Cache-Miss einen echten (potenziell langsamen) KI-Aufruf
+  auslöst — derselbe Grund, weshalb der Stripe-Webhook `maxDuration = 60`
+  braucht. Erklärt den von ChatGPT gemeldeten Timeout. Ergänzt.
+- **Bestätigt und behoben:** der Hero-Satz "Die Plattform befindet sich im
+  Aufbau" stand noch live auf der Startseite — ein Phase-2-Überbleibsel,
+  das sich sogar mit dem bereits freigegebenen "geschlossene Beta"-Satz
+  weiter unten auf derselben Seite widersprach. Durch dieselbe,
+  konsistente Beta-Formulierung ersetzt (DE/EN/FR).
+- **Teilweise bestätigt und behoben:** "Kuratierte wissenschaftliche
+  Primärquellen" in der Chatbot-Vergleichstabelle war zu eng, da das
+  System bewusst auch Reviews/Meta-Analysen einschliesst, keine reinen
+  Primärstudien. Auf "Überprüfbare wissenschaftliche Quellen" (DE) präzisiert
+  (DE/EN/FR). Der zweite von ChatGPT bemängelte Satz ("nie erfundene
+  Studien") wurde **nicht** geändert — der ist korrekt und durch einen
+  dedizierten Test abgesichert.
+- **Bestätigt und gebaut:** es gab noch kein Kunden-seitiges
+  Feedback-Widget — nur Admin-Infrastruktur, um Feedback *anzuzeigen*,
+  nichts, um es *abzugeben*. Neu: `ReportFeedbackWidget` (1–5-Bewertung +
+  optionaler Kommentar) am Ende des echten, bezahlten Reports
+  (`/report/[token]`), schreibt über eine neue `submitFeedback`-Funktion
+  in die bereits bestehende `feedback`-Tabelle (erscheint automatisch in
+  `/admin/feedback`). Bewusst **nicht** am kostenlosen Teaser ergänzt und
+  **nicht** um eine separate Fehler-Melde-Kategorie erweitert (bestehendes
+  `IssueReport`-Modell hätte eine Schema-Änderung gebraucht) — Kommentarfeld
+  deckt "was hat gefehlt"/Fehlermeldungen informell ab. Regressionstests
+  ergänzt (6 neue Fälle).
+- **Geprüft, aber ChatGPTs Sorge trifft nicht zu:** "Meistgefragte Themen
+  diese Woche" ist bereits sauber mit echten Analytics-Events und einem
+  Mindest-Schwellenwert hinterlegt (`TRENDING_MIN_COUNT = 3`), dieselbe
+  Logik wie beim Social-Proof-Zähler. Kein Handlungsbedarf.
+- **Nicht mein Entscheid, an Erwin/Treuhänder verwiesen:** der MWST-Text
+  ("Reverse Charge gemäss Art. 8 MWSTG") stammt direkt aus der
+  Treuhänder-Antwort vom 28.7. (nicht aus einer alten Übergangslösung, wie
+  zunächst vermutet). ChatGPTs Punkt — Reverse Charge ist im EU-Recht
+  eigentlich ein B2B-Mechanismus, private Endkunden bräuchten eher das
+  Non-Union-OSS-Verfahren — ist trotzdem nicht unbegründet und deckt sich
+  mit Frage 5 aus `TREUHAENDER_FRAGEN.md`. Empfehlung an Erwin: kurz beim
+  Treuhänder nachfragen, ob die aktuelle Formulierung explizit auch B2C
+  abdeckt, bevor der EU-Rollout breiter wird.
+- **Grössere, bewusst zurückgestellte Vorschläge** (eigene Entscheidung
+  nötig, nicht "mal eben" gefixt): Hero-CTA-Struktur/Frageeingabe weiter
+  oben platzieren, "Über TEKMESIS" persönlicher gestalten, vollständige
+  DE/EN/FR-Abdeckung prüfen (deckt sich mit dem bereits offenen
+  DE/EN-Durchlauf-Punkt).
+
+Alle vier umgesetzten Fixes: Lint, Typecheck, volle Test-Suite (659 Tests)
+und Production-Build erneut grün.

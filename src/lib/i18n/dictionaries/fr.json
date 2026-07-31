@@ -18,7 +18,7 @@
   },
   "home": {
     "description": "TEKMESIS transforme ta question en Evidence Report — des études réelles trouvées, comparées et expliquées clairement.",
-    "comingSoon": "La plateforme est en cours de développement.",
+    "comingSoon": "TEKMESIS est actuellement en phase de bêta fermée. Toutes les fonctionnalités principales sont disponibles — vos retours nous aident à améliorer l'expérience et la qualité des rapports.",
     "priceNote": "CHF 9.90, paiement unique, prix hors TVA (Suisse : non assujetti à la TVA ; étranger : procédure d'autoliquidation selon l'art. 8 LTVA). Sans abonnement.",
     "priceAnchor": "Une mauvaise décision d'achat ou une démarche inefficace coûte souvent plus cher que CHF 9.90 — ce rapport t'aide à le savoir à l'avance.",
     "heroCta": "Découvrir les thèmes",
@@ -83,7 +83,7 @@
     "whyNotChatGptRows": [
       {
         "criterion": "Base de la réponse",
-        "tekmesis": "Sources scientifiques primaires sélectionnées",
+        "tekmesis": "Sources scientifiques vérifiables",
         "chatbot": "Données d'entraînement & recherche web générale"
       },
       {
@@ -450,6 +450,18 @@
     "unavailableHeading": "Rapport indisponible",
     "unavailableBody": "Ce rapport n'est actuellement pas accessible.",
     "supportNote": "Des questions ? Écris-nous à"
+  },
+  "reportFeedback": {
+    "heading": "Comment as-tu trouvé ce rapport ?",
+    "ratingLabel": "À quel point ce rapport t'a-t-il été utile ?",
+    "ratingScaleLowLabel": "Peu utile",
+    "ratingScaleHighLabel": "Très utile",
+    "commentLabel": "Qu'est-ce qui manquait ou n'était pas clair ? (optionnel)",
+    "commentPlaceholder": "Erreurs, étude hors sujet ou tout autre retour...",
+    "submitLabel": "Envoyer mon avis",
+    "thankYouHeading": "Merci pour ton avis !",
+    "thankYouBody": "Cela nous aide à améliorer TEKMESIS pour toi.",
+    "errorBody": "L'envoi n'a pas fonctionné. Réessaie plus tard ou écris-nous directement."
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",

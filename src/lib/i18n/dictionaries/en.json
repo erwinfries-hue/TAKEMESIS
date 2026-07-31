@@ -18,7 +18,7 @@
   },
   "home": {
     "description": "TEKMESIS turns your question into an Evidence Report — real studies found, compared, and explained in plain language.",
-    "comingSoon": "The platform is under construction.",
+    "comingSoon": "TEKMESIS is in closed beta. All core features are available — your feedback helps us keep improving usability and report quality.",
     "priceNote": "CHF 9.90, one-time payment, price excludes VAT (Switzerland: not subject to VAT; abroad: reverse-charge mechanism under Art. 8 Swiss VAT Act). No subscription.",
     "priceAnchor": "A wrong purchase or an ineffective approach usually costs more than CHF 9.90 — this report helps you know that in advance.",
     "heroCta": "Explore topics",
@@ -83,7 +83,7 @@
     "whyNotChatGptRows": [
       {
         "criterion": "Answer basis",
-        "tekmesis": "Curated scholarly primary sources",
+        "tekmesis": "Verifiable scholarly sources",
         "chatbot": "Training data & general web search"
       },
       {
@@ -447,6 +447,18 @@
     "unavailableHeading": "Report unavailable",
     "unavailableBody": "This report is not currently accessible.",
     "supportNote": "Questions? Write to us at"
+  },
+  "reportFeedback": {
+    "heading": "How was this report for you?",
+    "ratingLabel": "How helpful was this report?",
+    "ratingScaleLowLabel": "Not very helpful",
+    "ratingScaleHighLabel": "Very helpful",
+    "commentLabel": "What was missing or unclear? (optional)",
+    "commentPlaceholder": "Errors, an off-topic study, or any other feedback...",
+    "submitLabel": "Send feedback",
+    "thankYouHeading": "Thanks for your feedback!",
+    "thankYouBody": "This helps us keep improving TEKMESIS for you.",
+    "errorBody": "Feedback could not be sent. Please try again later or write to us directly."
   },
   "premiumReportPage": {
     "coverHeading": "Evidence Report",
