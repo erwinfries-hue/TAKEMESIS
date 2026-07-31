@@ -1031,6 +1031,36 @@ checkpoint (decision #15) and before each production-readiness gate.
     `delete from learned_search_terms where locale = 'de';` (German never
     uses this table going forward, so deleting all `de` rows is safe).
 
+30. **Confirmation email possibly dropped by the webhook's own timeout, first
+    live-mode purchase (2026-07-30).** During Stripe live-mode activation,
+    Erwin's own real CHF 9.90 test purchase produced a fully generated,
+    viewable report (`/report/[token]` loaded correctly with all 39 studies),
+    but the TEKMESIS "report ready" confirmation email never arrived (Stripe's
+    own "you received a payment" notification did, confirming the charge
+    itself was fine). The webhook delivery was independently retried twice
+    by Stripe and recorded as failed/timed out on Stripe's side (unrelated
+    308-redirect issue, fixed separately the same session) before finally
+    reaching the app.
+
+    **Working theory, not confirmed:** `generate-report-content.ts` sends the
+    "ready" email as the last step, after the full live search + AI
+    synthesis chain — under real network latency (first-ever live-mode run,
+    no cached studies yet) this run likely approached or exceeded the
+    route's `maxDuration = 60`, and Vercel may have terminated the function
+    after the report was persisted as `ready` but during/before the
+    `sendEmail` call. Could not be confirmed via Vercel Runtime Logs — the
+    Hobby plan only retains 12h of log history, and by the time this was
+    investigated the window had passed.
+
+    **Decision (Erwin, 2026-07-30):** treat as non-blocking for now — no
+    real customers yet, this was Erwin's own test purchase, and the report
+    itself was unaffected. Explicitly declined decoupling email-send from
+    report-generation as a preemptive fix. Revisit if this recurs during the
+    beta (i.e. a real report generates successfully but its "ready" email
+    doesn't arrive) — at that point, decoupling the email step into its own
+    retryable action (or moving it earlier/independent of the AI/search
+    chain) would be the fix.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
