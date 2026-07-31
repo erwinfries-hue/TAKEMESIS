@@ -2320,3 +2320,26 @@ bestehende erste Satz oben auf der Seite blieb unverändert — beschreibt
 weiterhin knapp den Mechanismus, während der neue Abschnitt die
 Beweggründe liefert. Lint, Typecheck, volle Test-Suite (659 Tests) und
 Production-Build erneut grün.
+
+### Homepage-Hero: Frageeingabe früher platziert (Punkt 2, 2026-07-31)
+
+Erwin gab grünes Licht, das selbst umzusetzen, "wenn logisch und
+sinnvoll". Bewusst die risikoärmere Variante gewählt statt eines grösseren
+Hero-Rebuilds: Die bereits bestehende Sektion mit der echten Frage-Eingabe
+(`OwnQuestionForm` + `StudyLookupForm` + `RecentSearchesPanel`, unverändert
+intern) wurde von Position 3 auf Position 2 verschoben — direkt nach dem
+Hero, noch vor dem Themen-Raster. Der primäre Hero-Button ("Eigene Frage
+stellen", vorher "Themen entdecken") verlinkt jetzt per Anker
+(`#eigene-frage`) direkt dorthin, statt zu `/topics`. Themen bleiben über
+die nächste Sektion und die permanente Kopfzeilen-Navigation weiterhin
+genauso leicht erreichbar. Die Mini-Live-Demo (`LiveDemoPreview`) im Hero
+blieb unverändert — sie verlinkt bereits zu `/example-report`, deckt also
+den von ChatGPT vorgeschlagenen sekundären "Beispielreport ansehen"-Button
+inhaltlich schon ab.
+
+Lint, Typecheck, volle Test-Suite (659 Tests) und Production-Build grün.
+**Nicht möglich aus dieser Session:** ein echter visueller Check im
+Browser (keine Netzwerkverbindung zu `tekmesis.com` aus dieser Sandbox,
+siehe die Smoke-Test-Einschränkung weiter oben) — bitte einmal kurz auf
+`tekmesis.com` selbst gegenprüfen, ob das Layout (insbesondere mobil) so
+wirkt wie beabsichtigt.

@@ -38,14 +38,30 @@ export default async function Home() {
         <LiveDemoPreview dict={dict} teaser={demoTeaser} />
         <p className="text-brand-neutral-600">{dict.home.comingSoon}</p>
         <Link
-          href="/topics"
+          href="#eigene-frage"
           className="rounded-full bg-brand-navy-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
         >
           {dict.home.heroCta}
         </Link>
       </section>
 
-      {/* 2. Topic-category inspiration grid */}
+      {/* 2. Own-question input, plus the alternative "compare a study you already have" entry —
+          moved directly after the hero (was section 3) so the actual question input is reachable
+          without scrolling past the topic grid first (2026-07-31, live-review feedback). */}
+      <section
+        id="eigene-frage"
+        className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10"
+      >
+        <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-stretch lg:justify-center">
+          <Suspense>
+            <OwnQuestionForm dict={dict} locale={locale} />
+          </Suspense>
+          <StudyLookupForm dict={dict} />
+        </div>
+        <RecentSearchesPanel dict={dict} />
+      </section>
+
+      {/* 3. Topic-category inspiration grid */}
       <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-16 sm:px-10">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.topicsTeaserHeading}
@@ -66,20 +82,6 @@ export default async function Home() {
         <Link href="/topics" className="font-medium text-brand-teal-700 hover:underline">
           {dict.home.topicsTeaserCta} →
         </Link>
-      </section>
-
-      {/* 3. Own-question input, plus the alternative "compare a study you already have" entry */}
-      <section
-        id="eigene-frage"
-        className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10"
-      >
-        <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-stretch lg:justify-center">
-          <Suspense>
-            <OwnQuestionForm dict={dict} locale={locale} />
-          </Suspense>
-          <StudyLookupForm dict={dict} />
-        </div>
-        <RecentSearchesPanel dict={dict} />
       </section>
 
       {/* 4. Curated example-report preview */}
