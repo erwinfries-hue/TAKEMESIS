@@ -1067,6 +1067,33 @@ checkpoint (decision #15) and before each production-readiness gate.
     Supports the "one-off slow run" theory over a structural bug; no code
     change made. Still worth a second data point before fully closing this.
 
+31. **RESOLVED 2026-07-31 — `/admin/payments` was empty despite real, successful
+    Stripe charges; the one-click refund action had nothing to act on.**
+    Found while trying to refund Erwin's live test purchase. Root cause:
+    `startCheckoutForReport` (`src/lib/checkout/start-checkout.ts`) created
+    the Stripe Checkout Session and updated the `Report`'s own status/
+    `stripeCheckoutSessionId`, but never called `paymentRepository.create()`
+    — no code path in the actual app (only tests) ever inserted a `Payment`
+    row. The webhook's `fulfillCheckoutSession` already had the matching
+    `findByCheckoutSessionId` → mark-"paid" logic, but silently no-opped
+    every time since it never found a row (`if (payment && ...)` guard).
+    Report generation and the buyer-facing flow were unaffected — this only
+    broke the admin-side payment record and refund tooling (`CLAUDE.md`:
+    "manual refunds supported", "failures visible in admin").
+
+    **Fix:** `startCheckoutForReport` now takes a `paymentRepository`
+    dependency and creates a `Payment` row (status defaults to `"pending"`
+    per the DB schema) right after the Checkout Session is created, keyed
+    by that session's ID — one row per checkout attempt, so an abandoned
+    retry's row just stays "pending" rather than being overwritten. Wired
+    the real `SupabasePaymentRepository` into the calling server action
+    (`src/app/search/checkout-actions.ts`). Regression tests added
+    asserting the Payment row's fields and that a retry creates a second,
+    independent row. Both of Erwin's real live-mode purchases (2026-07-30
+    and 2026-07-31) predate this fix and have no corresponding `Payment`
+    row — refunding them requires using the Stripe Dashboard directly
+    rather than `/admin/payments` (documented for that reason).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

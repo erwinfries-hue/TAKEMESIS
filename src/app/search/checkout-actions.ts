@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { SupabaseReportRepository } from "@/lib/reports/supabase-report-repository";
+import { SupabasePaymentRepository } from "@/lib/payments/supabase-payment-repository";
 import { startCheckoutForReport } from "@/lib/checkout/start-checkout";
 
 export async function startCheckoutAction(formData: FormData): Promise<void> {
@@ -15,7 +16,10 @@ export async function startCheckoutAction(formData: FormData): Promise<void> {
   }
 
   const { url } = await startCheckoutForReport(
-    { reportRepository: new SupabaseReportRepository() },
+    {
+      reportRepository: new SupabaseReportRepository(),
+      paymentRepository: new SupabasePaymentRepository(),
+    },
     reportId,
     reportToken,
   );
