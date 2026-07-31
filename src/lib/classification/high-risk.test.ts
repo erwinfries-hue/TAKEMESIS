@@ -42,6 +42,12 @@ describe("detectHighRisk", () => {
     expect(isHighRisk("Welche Hilfe gibt es bei akuten Suizidgedanken?", "de")).toBe(true);
   });
 
+  it("flags a declined adjective+noun phrase, not just its dictionary form (live bug 2026-07-31: 'psychische krise' missed 'psychischen Krise')", () => {
+    expect(isHighRisk("Was tun bei einer psychischen Krise?", "de")).toBe(true);
+    expect(isHighRisk("Wie hilft man bei akuten Schmerzen am besten?", "de")).toBe(true);
+    expect(isHighRisk("Was tun bei einer fristlosen Kündigung?", "de")).toBe(true);
+  });
+
   it("flags legal/financial high-stakes questions", () => {
     expect(isHighRisk("Wie läuft eine Scheidung rechtlich ab?", "de")).toBe(true);
     expect(isHighRisk("Was sind die Vor- und Nachteile einer Ehescheidung?", "de")).toBe(true);

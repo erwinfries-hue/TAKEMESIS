@@ -162,9 +162,45 @@ const TREATMENT_TERMS: Partial<Record<Locale, string[]>> = {
 // while excluding only the "entscheid*" family.
 const SCHEIDUNG_TERM = /(?<!ent)scheidung/;
 
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+// Live-found false negative (2026-07-31): two-word "adjective + noun" terms
+// like "psychische krise" are stored in their nominative form, but German
+// adjective endings change with case ("...bei einer psychischEN Krise" —
+// dative). A plain substring match silently missed this real, natural
+// phrasing of a mental-health-crisis question, letting it through as a
+// sellable report. Caches a regex per phrase term (built lazily) that
+// tolerates the adjective's common endings (e/en/em/er/es) while still
+// requiring the noun exactly — a strict superset of the literal phrase, so
+// this can only ever catch more, never fewer, matches (the stated safety
+// philosophy: false positives acceptable, false negatives are not).
+const PHRASE_TERM_REGEX_CACHE = new Map<string, RegExp | null>();
+
+function buildAdjectiveNounRegex(term: string): RegExp | null {
+  const words = term.split(" ");
+  if (words.length !== 2) return null;
+  const [adjective, noun] = words;
+  if (!adjective.endsWith("e")) return null;
+  const stem = adjective.slice(0, -1);
+  return new RegExp(`${escapeRegex(stem)}(e|en|em|er|es)\\s+${escapeRegex(noun)}`);
+}
+
+function getPhraseTermRegex(term: string): RegExp | null {
+  if (!PHRASE_TERM_REGEX_CACHE.has(term)) {
+    PHRASE_TERM_REGEX_CACHE.set(term, buildAdjectiveNounRegex(term));
+  }
+  return PHRASE_TERM_REGEX_CACHE.get(term) ?? null;
+}
+
 function includesTerm(haystack: string, term: string): boolean {
   if (term === "scheidung") {
     return SCHEIDUNG_TERM.test(haystack);
+  }
+  const phraseRegex = getPhraseTermRegex(term);
+  if (phraseRegex) {
+    return phraseRegex.test(haystack);
   }
   return haystack.includes(term);
 }

@@ -1117,6 +1117,34 @@ checkpoint (decision #15) and before each production-readiness gate.
     full admin one-click refund path (#118), not just its unit tests, now
     verified against a real live-mode transaction.
 
+32. **RESOLVED 2026-07-31 — high-risk detector missed a declined-adjective
+    phrase, a real safety-gate false negative.** Live-tested with the German
+    question "Was tun bei einer psychischen Krise?" (a natural phrasing of
+    the mental-health-crisis category) as part of the go-live smoke-test
+    checklist. It was **not** blocked: it went through normal domain
+    classification and produced a real, sellable teaser (9 included
+    studies) — no high-risk notice, no emergency-contact information shown.
+
+    **Root cause:** `src/lib/classification/high-risk.ts` stores the
+    two-word term `"psychische krise"` (nominative case) and matches via a
+    plain `haystack.includes(term)`. German adjective endings change with
+    grammatical case — "bei ein**er** psychisch**en** Krise" (dative) — so
+    the literal phrase never appears verbatim in a perfectly natural
+    question. The file's own doc comment states the intended safety
+    philosophy explicitly: "a false positive ... is the acceptable failure
+    mode — a false negative is not." This term (and structurally identical
+    ones: "akute schmerzen", "starke blutung", "fristlose kündigung")
+    violated that.
+
+    **Fix:** `includesTerm` now recognizes two-word "adjective + noun"
+    phrase terms (adjective ending in "e") and matches via a regex
+    tolerating the common German adjective endings (e/en/em/er/es) before
+    the noun, instead of the literal string — a strict superset of the
+    original match, so this can only catch more cases, never fewer (same
+    direction as the existing `SCHEIDUNG_TERM` false-positive fix already
+    in this file, just the opposite failure mode). Regression tests added
+    for the declined form of all three affected terms.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
