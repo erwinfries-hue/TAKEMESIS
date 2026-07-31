@@ -1108,6 +1108,15 @@ checkpoint (decision #15) and before each production-readiness gate.
     lowercase currency code to match the uppercase convention used
     elsewhere). Regression test added.
 
+    **Live-confirmed end-to-end (2026-07-31):** a fresh real CHF 9.90
+    purchase (no promo code) correctly appeared in `/admin/payments` with
+    the "Rückerstatten" button (only shown once `stripePaymentIntentId` is
+    set — correctly absent on the CHF 0.00 promo-code rows, since Stripe
+    doesn't create a PaymentIntent when nothing is charged). Clicking it
+    called Stripe's refund API and updated the row to `refunded` — the
+    full admin one-click refund path (#118), not just its unit tests, now
+    verified against a real live-mode transaction.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
