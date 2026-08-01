@@ -17,7 +17,8 @@
     "legal": "Impressum & AGB"
   },
   "home": {
-    "description": "TEKMESIS macht aus deiner Frage einen Evidence Report — echte Studien gefunden, verglichen und verständlich erklärt.",
+    "descriptionLine1": "TEKMESIS macht aus deiner Frage einen Evidence Report —",
+    "descriptionLine2": "echte Studien gefunden, verglichen und verständlich erklärt.",
     "comingSoon": "Die Plattform befindet sich im Aufbau.",
     "priceNote": "CHF 9.90, Einmalzahlung, Preis ohne Mehrwertsteuer (Schweiz: nicht MWST-pflichtig; Ausland: Reverse-Charge-Verfahren gemäss Art. 8 MWSTG). Kein Abo.",
     "priceAnchor": "Eine falsche Kaufentscheidung oder ein wirkungsloses Vorgehen kostet meist mehr als CHF 9.90 — dieser Report hilft dir, das vorher zu wissen.",

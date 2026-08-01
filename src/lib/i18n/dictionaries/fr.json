@@ -17,7 +17,8 @@
     "legal": "Mentions légales & CGV"
   },
   "home": {
-    "description": "TEKMESIS transforme ta question en Evidence Report — des études réelles trouvées, comparées et expliquées clairement.",
+    "descriptionLine1": "TEKMESIS transforme ta question en Evidence Report —",
+    "descriptionLine2": "des études réelles trouvées, comparées et expliquées clairement.",
     "comingSoon": "La plateforme est en cours de développement.",
     "priceNote": "CHF 9.90, paiement unique, prix hors TVA (Suisse : non assujetti à la TVA ; étranger : procédure d'autoliquidation selon l'art. 8 LTVA). Sans abonnement.",
     "priceAnchor": "Une mauvaise décision d'achat ou une démarche inefficace coûte souvent plus cher que CHF 9.90 — ce rapport t'aide à le savoir à l'avance.",
