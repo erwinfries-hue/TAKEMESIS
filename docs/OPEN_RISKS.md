@@ -786,6 +786,17 @@ checkpoint (decision #15) and before each production-readiness gate.
     longer needs proactive attention; only revisit if it's actually seen
     failing again.
 
+    **Update (2026-08-01): 5th clean full-suite run, plus one real (unrelated)
+    e2e failure found and fixed.** `npm run test:e2e` (62 specs) failed once
+    this session — not the rate-limit flake this item tracks, but "the
+    homepage offers a DOI lookup as an alternative to the own-question form"
+    (`search.spec.ts`), which asserted the DOI field directly visible on page
+    load. That assumption predates the same day's `QuestionModeSelector`
+    change (DOI lookup moved behind a secondary tab) — the test was stale,
+    not a real regression. Fixed by clicking the tab first; re-ran full
+    suite, 62/62 green. The rate-limit test itself passed clean in both runs
+    — 5th consecutive clean result for this item specifically.
+
 25. **Two items from the "WOW-Zusatzleistungen" marketing brainstorm
     (Erwin's request) were deliberately not built, on top of the 13 that
     were.** Both need a real product/data decision first, not just code:
