@@ -1,13 +1,21 @@
+"use client";
+
+import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
-/** Plain GET form (no client JS needed) — alternative entry point to OwnQuestionForm for "I already have a study, compare it against the rest of the evidence." */
+/** Alternative entry point to OwnQuestionForm for "I already have a study, compare it against the rest of the evidence." Client-side purely for the has-content highlight below (2026-08-01) — the form itself still works as a plain GET submit. */
 export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string }) {
+  const [value, setValue] = useState("");
+  const hasContent = value.trim().length > 0;
+
   return (
     <form
       id={id}
       action="/search"
       method="get"
-      className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm transition-colors focus-within:border-brand-teal-500 focus-within:bg-brand-teal-50/40"
+      className={`flex w-full max-w-xl flex-col gap-3 rounded-xl border p-5 text-left shadow-sm transition-colors focus-within:border-brand-teal-500 focus-within:bg-brand-teal-50/40 ${
+        hasContent ? "border-brand-teal-500 bg-brand-teal-50/40" : "border-brand-neutral-200"
+      }`}
     >
       <h2 className="font-semibold text-brand-navy-900">{dict.studyLookupForm.heading}</h2>
       {/* Grows to absorb whatever extra height the paired OwnQuestionForm card
@@ -24,8 +32,12 @@ export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string })
           id="study-doi"
           name="doi"
           type="text"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
           placeholder={dict.studyLookupForm.placeholder}
-          className="w-full rounded-lg border border-brand-neutral-200 p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400"
+          className={`w-full rounded-lg border p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400 ${
+            hasContent ? "border-brand-teal-600 ring-2 ring-brand-teal-400" : "border-brand-neutral-200"
+          }`}
         />
       </div>
       <button
