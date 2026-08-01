@@ -28,7 +28,7 @@ export default async function Home() {
   return (
     <main className="flex flex-1 flex-col">
       {/* 1. Brand and promise */}
-      <section className="flex flex-col items-center gap-6 px-6 py-16 text-center sm:px-10">
+      <section className="flex flex-col items-center gap-6 px-6 py-10 text-center sm:px-10 sm:py-16">
         <p className="text-sm font-medium uppercase tracking-widest text-brand-teal-700">
           {dict.brand.claim}
         </p>
@@ -37,7 +37,6 @@ export default async function Home() {
         </h1>
         <HeroIllustration className="h-24 w-auto sm:h-28" />
         <LiveDemoPreview dict={dict} teaser={demoTeaser} />
-        <p className="text-brand-neutral-600">{dict.home.comingSoon}</p>
         <Link
           href="#eigene-frage"
           className="rounded-full bg-brand-navy-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
@@ -51,7 +50,7 @@ export default async function Home() {
           without scrolling past the topic grid first (2026-07-31, live-review feedback). */}
       <section
         id="eigene-frage"
-        className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10"
+        className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16"
       >
         <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-stretch lg:justify-center">
           <Suspense>
@@ -63,7 +62,7 @@ export default async function Home() {
       </section>
 
       {/* 3. Topic-category inspiration grid */}
-      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-16 sm:px-10">
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-10 sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.topicsTeaserHeading}
         </h2>
@@ -86,7 +85,7 @@ export default async function Home() {
       </section>
 
       {/* 4. Curated example-report preview */}
-      <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 bg-white px-6 py-16 text-center sm:px-10">
+      <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 bg-white px-6 py-10 text-center sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.exampleReportPage.heading}
         </h2>
@@ -99,7 +98,7 @@ export default async function Home() {
       </section>
 
       {/* 5. How it works */}
-      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10">
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.howItWorksHeading}
         </h2>
@@ -119,7 +118,7 @@ export default async function Home() {
       </section>
 
       {/* 6. Free versus Premium */}
-      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-16 sm:px-10">
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-10 sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.freeVsPaidHeading}
         </h2>
@@ -151,7 +150,7 @@ export default async function Home() {
       </section>
 
       {/* 6b. Differentiation: why not a general-purpose AI chatbot */}
-      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-16 sm:px-10">
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.whyNotChatGptHeading}
         </h2>
@@ -198,7 +197,7 @@ export default async function Home() {
       </section>
 
       {/* 7. Source/method transparency */}
-      <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 px-6 py-16 text-center sm:px-10">
+      <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 px-6 py-10 text-center sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.sourceTransparencyHeading}
         </h2>
@@ -209,7 +208,7 @@ export default async function Home() {
       </section>
 
       {/* 8. Trust / privacy / beta */}
-      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-16 text-center sm:px-10">
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-10 text-center sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">{dict.home.trustHeading}</h2>
         <p className="max-w-xl text-brand-neutral-600">{dict.home.trustBody}</p>
         <p className="max-w-xl font-medium text-brand-teal-700">{dict.home.betaPositioning}</p>

@@ -2374,12 +2374,12 @@ blind übernommen:
   behoben. Das konfigurierte Beispiel-Thema ("Welche Lernmethode
   verbessert den Lernerfolg?") entspricht bereits ChatGPTs eigenem
   Vorschlag.
-- **Als Erwins Entscheidung offengelassen, nicht umgesetzt:** Kompression
-  von `howItWorksSteps` (verifiziert: aktuell 7 Schritte) auf 3–4;
-  Preis-Anker-Abschwächung (bewusste frühere Entscheidung, #73); die
-  weitergehende CTA-Seiten-Umstrukturierung aus der Teilrückmeldung über
-  das in Phase 7 bereits Umgesetzte hinaus. Punkt 4 (MWSt-Formulierung)
-  bleibt weiterhin explizit zurückgestellt.
+- **Als Erwins Entscheidung offengelassen (im Dialog danach entschieden,
+  siehe unten):** Kompression von `howItWorksSteps` (verifiziert: aktuell
+  7 Schritte) auf 3–4; Preis-Anker-Abschwächung (bewusste frühere
+  Entscheidung, #73); die weitergehende CTA-Seiten-Umstrukturierung aus
+  der Teilrückmeldung über das in Phase 7 bereits Umgesetzte hinaus.
+  Punkt 4 (MWSt-Formulierung) bleibt weiterhin explizit zurückgestellt.
 - Der beigefügte echte Omega-3-PDF-Report bestätigt, dass der komplette
   Kauf-bis-Report-Flow inkl. neuem Feedback-Widget live funktioniert,
   passt aber nicht zum konfigurierten Beispiel-Thema und eignet sich wegen
@@ -2388,3 +2388,41 @@ blind übernommen:
 
 Lint, Typecheck, volle Test-Suite (658 Tests) und Production-Build erneut
 grün.
+
+### Homepage: 4 offene Punkte im Dialog entschieden (2026-08-01)
+
+Im Dialog (eine Frage nach der anderen) die vier zurückgestellten Punkte
+der zweiten ChatGPT-Rückmeldung durchgegangen:
+
+- **"Wie funktioniert's" auf 4 Schritte verdichtet** (war 7). Homepage
+  zeigt jetzt gruppierte Schritte (Frage stellen & präzisieren /
+  wissenschaftliche Quellen durchsuchen / kostenlosen Teaser ansehen / für
+  CHF 9.90 vollständigen Report erhalten); `/methodology` behält die volle
+  7-Schritt-Detailansicht unverändert. `ProcessTimeline` nimmt jetzt ein
+  explizites Icon pro Schritt entgegen statt eines global geteilten Index,
+  da beide Seiten jetzt unterschiedliche Schrittanzahlen haben. Commit
+  `8737904`.
+- **Preis-Anker: unverändert gelassen.** Erwin bestätigte die bewusste
+  frühere Positionierung (#73) — keine Änderung.
+- **Beta-Phasen-Satz im Hero ersatzlos gestrichen** (`home.comingSoon`,
+  DE/EN/FR-Schlüssel komplett entfernt). Erwin wies zurecht darauf hin,
+  dass die Beta-Botschaft im Trust-Abschnitt am Seitenende (`trustBody` +
+  `betaPositioning`) bereits vorkommt und dort inhaltlich besser
+  aufgehoben ist als direkt vor dem Haupt-CTA im Hero.
+- **Mobile Sektions-Abstände verschlankt.** Erwin berichtete (mit
+  Live-Screenshot von `tekmesis.com` bestätigt), die Seite wirke auf dem
+  Handy nicht "schlank". Codeprüfung ergab: alle 9 Homepage-Sektionen
+  nutzten identisches `py-16` (64px oben/unten) auf Mobil wie auf Desktop
+  — in Summe ca. 1150px reiner Leerraum. Auf `py-10 sm:py-16` geändert
+  (nur Mobil enger, Desktop unverändert) — reine CSS-Änderung, kein
+  Text/Inhalt betroffen.
+- **CTA-Seiten-Umstrukturierung darüber hinaus:** nicht weiter vertieft in
+  dieser Runde — Erwin selbst wusste nicht genau, was zusätzlich zu
+  optimieren wäre; die konkreten Punkte oben (Beta-Satz, Abstände) deckten
+  sein eigentliches Anliegen bereits ab.
+
+Lint, Typecheck, volle Test-Suite (658 Tests) und Production-Build grün.
+**Nicht möglich aus dieser Session:** ein echter visueller Vorher/Nachher-
+Vergleich auf dem Handy (keine Netzwerkverbindung zu `tekmesis.com` aus
+dieser Sandbox) — bitte nach dem Deploy kurz gegenprüfen, ob sich die
+Seite jetzt kompakter anfühlt.
