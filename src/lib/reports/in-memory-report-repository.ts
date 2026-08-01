@@ -31,6 +31,7 @@ export class InMemoryReportRepository implements ReportRepository {
       expiresAt: null,
       revokedAt: null,
       failureCode: null,
+      confirmationEmailSentAt: null,
     };
     this.reports.set(report.id, report);
     return report;

@@ -130,6 +130,47 @@ describe("generateReportContent", () => {
     );
   });
 
+  it("records confirmationEmailSentAt once the email is sent, so the resend sweep never double-sends", async () => {
+    const { reportRepository, report } = await setUpPaidReport();
+
+    await generateReportContent(
+      {
+        reportRepository,
+        runSearch: vi.fn().mockResolvedValue(FAKE_SEARCH_RESULT),
+        assessEligibility: vi.fn().mockReturnValue(FAKE_ELIGIBILITY),
+        enrichPremiumReportWithAi: vi.fn().mockImplementation(async ({ report: baseReport }) => baseReport),
+        sendEmail: vi.fn().mockResolvedValue(undefined),
+        reportUrlFor: (token) => `https://tekmesis.com/report/${token}`,
+      },
+      report.id,
+      "raw-token-123",
+    );
+
+    const updated = await reportRepository.findById(report.id);
+    expect(updated?.confirmationEmailSentAt).not.toBeNull();
+  });
+
+  it("leaves confirmationEmailSentAt unset when the email send itself fails", async () => {
+    const { reportRepository, report } = await setUpPaidReport();
+
+    await generateReportContent(
+      {
+        reportRepository,
+        runSearch: vi.fn().mockResolvedValue(FAKE_SEARCH_RESULT),
+        assessEligibility: vi.fn().mockReturnValue(FAKE_ELIGIBILITY),
+        enrichPremiumReportWithAi: vi.fn().mockImplementation(async ({ report: baseReport }) => baseReport),
+        sendEmail: vi.fn().mockRejectedValue(new Error("resend API down")),
+        reportUrlFor: (token) => `https://tekmesis.com/report/${token}`,
+      },
+      report.id,
+      "raw-token-123",
+    );
+
+    const updated = await reportRepository.findById(report.id);
+    expect(updated?.status).toBe("ready");
+    expect(updated?.confirmationEmailSentAt).toBeNull();
+  });
+
   it("transitions to failed (not stuck in processing) when the search throws, and never fabricates a report", async () => {
     const { reportRepository, report } = await setUpPaidReport();
 

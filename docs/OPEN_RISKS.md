@@ -1084,6 +1084,46 @@ checkpoint (decision #15) and before each production-readiness gate.
     confirmed-recurring, not one-off, and taking it to Erwin as a fix-
     direction decision rather than deferring further.
 
+    **Fix implemented (2026-08-01), Erwin's choice: automatic daily
+    resend.** Rather than decoupling email-send from the generation chain
+    (a bigger architecture change, not attempted), added a safety-net sweep
+    that finds and resends exactly the emails this failure mode drops:
+    - New nullable column `reports.confirmation_email_sent_at`
+      (`supabase/migrations/20260801120000_add_confirmation_email_sent_at.sql`,
+      **not yet applied to the live project** — needs the same manual
+      `supabase db push`/SQL-editor step as every other migration here).
+      `generate-report-content.ts` now sets it immediately after a
+      successful "ready" email send.
+    - New `src/lib/reports/resend-confirmation-emails.ts`: scans for
+      `status = "ready"` reports with an email on file but no confirmed
+      send, and resends. The raw report token is still never stored in our
+      own database (docs/10) — it only ever lived in the Stripe Checkout
+      Session's metadata, and Stripe retains completed sessions
+      indefinitely, so the sweep reads it back via
+      `stripe.checkout.sessions.retrieve(report.stripeCheckoutSessionId)`
+      rather than generating (and thereby invalidating) a new token.
+    - New cron route `/api/cron/resend-confirmation-emails`
+      (`maxDuration = 60`, same `CRON_SECRET` bearer-auth as the existing
+      expiry cron — no new secret to provision), wired into `vercel.json`
+      at `03:15` daily, 15 minutes after the existing expiry cron.
+      **Vercel Hobby plan only allows daily-or-coarser cron schedules** —
+      confirmed this constrains the fix to "resend within ~24h", not
+      near-real-time; a more frequent sweep would need a paid Vercel plan
+      (Erwin's call, not attempted here). Also unconfirmed: Hobby's limit on
+      the *number* of distinct cron jobs per project — this is the second,
+      worth a quick check in the Vercel dashboard after deploy.
+    - No admin UI change in this pass (Erwin chose the automatic-only
+      option, not the manual-resend-button alternative also offered).
+    - Tests: `resend-confirmation-emails.test.ts` (7 cases: sends and
+      records the timestamp, doesn't double-send, ignores non-ready
+      reports, skips missing email/session-id/token gracefully without
+      throwing, keeps processing the rest of the batch after one send
+      fails) and `resend-confirmation-emails-route-handler.test.ts` (auth
+      gating + summary shape), plus two new `generate-report-content.test.ts`
+      cases confirming the timestamp is set on success and left null on
+      email failure. `npm run lint && npm run typecheck && npm run test &&
+      npm run build` all green (695 unit tests, up from 682).
+
 31. **RESOLVED 2026-07-31 — `/admin/payments` was empty despite real, successful
     Stripe charges; the one-click refund action had nothing to act on.**
     Found while trying to refund Erwin's live test purchase. Root cause:

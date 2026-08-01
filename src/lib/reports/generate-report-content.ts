@@ -78,6 +78,15 @@ export async function generateReportContent(
             supportEmail: serverEnv.SUPPORT_EMAIL,
           }),
         });
+        // Marks the send as confirmed so the daily resend sweep
+        // (resend-confirmation-emails.ts, docs/OPEN_RISKS.md #30) never
+        // double-sends to a report whose email actually went out — only
+        // reports where this never got recorded (e.g. the function was
+        // killed by the route's maxDuration right after this point) are
+        // picked up by that sweep.
+        await deps.reportRepository.update(reportId, {
+          confirmationEmailSentAt: new Date().toISOString(),
+        });
       } catch (emailError) {
         console.error(`Report ${reportId}: ready but failed to send the notification email`, emailError);
       }
