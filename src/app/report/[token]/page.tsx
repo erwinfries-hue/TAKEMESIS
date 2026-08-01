@@ -16,7 +16,13 @@ import { serverEnv } from "@/lib/env/server";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.premiumReportPage.coverHeading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.premiumReportPage.coverHeading} — ${dict.brand.name}`,
+    // A purchased report's secret-token link must never be indexed —
+    // "noindex" holds even if the URL leaks via a referrer or gets shared
+    // somewhere Google can see it (robots.txt alone wouldn't cover that).
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function ReportViewerPage({

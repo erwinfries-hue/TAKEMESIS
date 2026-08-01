@@ -5,7 +5,10 @@ import { checkExampleQuestionsForTopic } from "@/lib/admin/example-question-chec
 import { topics, topicCopy } from "@/content/topics";
 import { isLocale, defaultLocale, type Locale } from "@/lib/i18n/config";
 
-export const metadata: Metadata = { title: "Beispielfragen prüfen — Admin — TEKMESIS" };
+export const metadata: Metadata = {
+  title: "Beispielfragen prüfen — Admin — TEKMESIS",
+  robots: { index: false, follow: false },
+};
 
 // Live network calls to the real source APIs for one topic's worth of
 // examples (5-8 sequential requests) — well past a default 10s serverless

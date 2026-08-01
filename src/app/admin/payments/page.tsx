@@ -6,7 +6,10 @@ import { SupabasePaymentRepository } from "@/lib/payments/supabase-payment-repos
 import type { Payment } from "@/lib/payments/types";
 import { refundPaymentAction } from "@/app/admin/actions";
 
-export const metadata: Metadata = { title: "Admin — Zahlungen — TEKMESIS" };
+export const metadata: Metadata = {
+  title: "Admin — Zahlungen — TEKMESIS",
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminPaymentsPage() {
   await requireAdminSession();

@@ -19,7 +19,10 @@ import { FeedbackRatingChart, FeedbackVolumeChart } from "@/components/admin/fee
 import { FeedbackTable, type FeedbackRow } from "@/components/admin/feedback-table";
 import { dismissIssueAction, resolveIssueAction } from "./actions";
 
-export const metadata: Metadata = { title: "Admin — Feedback & Probleme — TEKMESIS" };
+export const metadata: Metadata = {
+  title: "Admin — Feedback & Probleme — TEKMESIS",
+  robots: { index: false, follow: false },
+};
 
 const ISSUE_STATUS_LABEL: Record<IssueReport["status"], string> = {
   open: "Offen",

@@ -36,7 +36,13 @@ import { RecordSearchHistory } from "@/components/record-search-history";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.searchPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.searchPage.heading} — ${dict.brand.name}`,
+    // Every URL here reflects one visitor's typed question (query string) —
+    // dynamic, potentially containing sensitive personal wording, never a
+    // page worth indexing on its own.
+    robots: { index: false, follow: false },
+  };
 }
 
 /** A question can span at most this many domains at once — more would dilute focus and unnecessarily broaden the source query. */

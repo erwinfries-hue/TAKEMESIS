@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { adminLoginAction } from "./actions";
 
-export const metadata: Metadata = { title: "Admin Login — TEKMESIS" };
+export const metadata: Metadata = {
+  title: "Admin Login — TEKMESIS",
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLoginPage({
   searchParams,

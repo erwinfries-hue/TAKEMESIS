@@ -15,7 +15,10 @@ import {
   revokeReportAction,
 } from "./actions";
 
-export const metadata: Metadata = { title: "Admin — TEKMESIS" };
+export const metadata: Metadata = {
+  title: "Admin — TEKMESIS",
+  robots: { index: false, follow: false },
+};
 
 const STATUS_ORDER: ReportStatus[] = [
   "draft",

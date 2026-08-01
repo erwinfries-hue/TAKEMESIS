@@ -12,7 +12,10 @@ import { enrichPremiumReportWithAi } from "@/lib/ai/report-enrichment";
 import { PremiumReportView } from "@/components/premium-report/premium-report-view";
 import { serverEnv } from "@/lib/env/server";
 
-export const metadata: Metadata = { title: "Report-Vorschau (mit KI) — Admin — TEKMESIS" };
+export const metadata: Metadata = {
+  title: "Report-Vorschau (mit KI) — Admin — TEKMESIS",
+  robots: { index: false, follow: false },
+};
 
 interface ClinicalTrialCheckInput {
   title: string | null;

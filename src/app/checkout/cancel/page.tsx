@@ -6,7 +6,10 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.checkoutCancelPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.checkoutCancelPage.heading} — ${dict.brand.name}`,
+    robots: { index: false, follow: false },
+  };
 }
 
 export default async function CheckoutCancelPage() {
