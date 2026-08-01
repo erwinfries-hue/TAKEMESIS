@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
-import { OwnQuestionForm } from "@/components/own-question-form";
-import { StudyLookupForm } from "@/components/study-lookup-form";
+import { QuestionModeSelector } from "@/components/question-mode-selector";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
 import { TopicIcon } from "@/components/icons/topic-icons";
 import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
@@ -76,11 +74,8 @@ export default async function TopicsPage() {
         </div>
       )}
 
-      <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-stretch lg:justify-center">
-        <Suspense>
-          <OwnQuestionForm dict={dict} locale={locale} id="eigene-frage" />
-        </Suspense>
-        <StudyLookupForm dict={dict} />
+      <div id="eigene-frage">
+        <QuestionModeSelector dict={dict} locale={locale} />
       </div>
       <RecentSearchesPanel dict={dict} />
 

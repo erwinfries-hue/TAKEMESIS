@@ -10,7 +10,6 @@ import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { ProcessTimeline } from "@/components/process-timeline";
 import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
-import { HeroIllustration } from "@/components/hero-illustration";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
 import { StickyMobileCta } from "@/components/sticky-mobile-cta";
 
@@ -26,33 +25,17 @@ export default async function Home() {
 
   return (
     <main className="flex flex-1 flex-col">
-      {/* 1. Brand and promise */}
+      {/* 1. Brand and promise — kept short (no illustration, no CTA button
+          here) so the real input in section 2 sits higher on the page
+          without scrolling (2026-08-01, layout follow-up). */}
       <section className="flex flex-col items-center gap-6 px-6 py-10 text-center sm:px-10 sm:py-16">
         <p className="text-sm font-medium uppercase tracking-widest text-brand-teal-700">
           {dict.brand.claim}
         </p>
-        <h1 className="max-w-2xl text-3xl font-semibold leading-tight text-brand-navy-900 sm:text-4xl">
+        <h1 className="max-w-4xl text-2xl font-semibold leading-tight text-brand-navy-900">
           {dict.home.description}
         </h1>
-        <HeroIllustration className="h-24 w-auto sm:h-28" />
         <LiveDemoPreview dict={dict} teaser={demoTeaser} />
-        <Link
-          href="#eigene-frage"
-          className="rounded-full bg-brand-navy-900 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
-        >
-          {dict.home.heroCta}
-        </Link>
-        {/* Compact trust strip directly under the primary CTA (2026-08-01,
-            homepage audit) — short, already-true facts stated in full
-            elsewhere on the page (source transparency, uncertainty
-            disclosure, price/no-subscription), not new claims. */}
-        <ul className="flex flex-wrap justify-center gap-2 text-xs text-brand-neutral-600">
-          {dict.home.heroTrustPoints.map((point) => (
-            <li key={point} className="rounded-full border border-brand-neutral-200 px-3 py-1">
-              ✓ {point}
-            </li>
-          ))}
-        </ul>
       </section>
 
       {/* 2. Own-question input, with the DOI/"already have a study" lookup as a
@@ -65,6 +48,16 @@ export default async function Home() {
         className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16"
       >
         <QuestionModeSelector dict={dict} locale={locale} />
+        {/* Trust strip moved here from the hero (2026-08-01, layout
+            follow-up) — sits between the input and recent searches instead
+            of under a now-removed CTA button. */}
+        <ul className="flex flex-wrap justify-center gap-2 text-xs text-brand-neutral-600">
+          {dict.home.heroTrustPoints.map((point) => (
+            <li key={point} className="rounded-full border border-brand-neutral-200 px-3 py-1">
+              ✓ {point}
+            </li>
+          ))}
+        </ul>
         <RecentSearchesPanel dict={dict} />
       </section>
       <StickyMobileCta label={dict.home.heroCta} targetId="eigene-frage" />
