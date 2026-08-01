@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { QuestionFormCard } from "@/components/question-form-card";
 
 /** Alternative entry point to OwnQuestionForm for "I already have a study, compare it against the rest of the evidence." Client-side purely for the has-content highlight below (2026-08-01) — the form itself still works as a plain GET submit. */
 export function StudyLookupForm({
@@ -18,17 +19,12 @@ export function StudyLookupForm({
   const hasContent = value.trim().length > 0;
 
   return (
-    <form
+    <QuestionFormCard
       id={id}
-      action="/search"
-      method="get"
-      className={`flex w-full max-w-xl flex-col gap-3 rounded-xl border p-5 text-left shadow-sm transition-colors focus-within:border-brand-teal-500 focus-within:bg-brand-teal-50/40 ${
-        hasContent ? "border-brand-teal-500 bg-brand-teal-50/40" : "border-brand-neutral-200"
-      }`}
+      hasContent={hasContent}
+      heading={dict.studyLookupForm.heading}
+      hideHeading={hideHeading}
     >
-      {!hideHeading && (
-        <h2 className="font-semibold text-brand-navy-900">{dict.studyLookupForm.heading}</h2>
-      )}
       {/* Grows to absorb whatever extra height the paired OwnQuestionForm card
           imposes (its multi-line textarea makes it the taller of the two),
           and centers its own content within that space — so any leftover
@@ -57,6 +53,6 @@ export function StudyLookupForm({
       >
         {dict.studyLookupForm.submit}
       </button>
-    </form>
+    </QuestionFormCard>
   );
 }

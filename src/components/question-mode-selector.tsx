@@ -21,6 +21,11 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
   const [mode, setMode] = useState<Mode>("question");
   const tabListId = useId();
 
+  const tabs: { mode: Mode; label: string }[] = [
+    { mode: "question", label: dict.ownQuestionForm.heading },
+    { mode: "doi", label: dict.studyLookupForm.heading },
+  ];
+
   return (
     <div className="flex w-full max-w-xl flex-col items-center gap-3">
       <div
@@ -29,32 +34,22 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
         id={tabListId}
         className="inline-flex gap-1 rounded-full border border-brand-neutral-200 bg-white p-1 text-sm"
       >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "question"}
-          onClick={() => setMode("question")}
-          className={`rounded-full px-4 py-1.5 font-medium transition-colors ${
-            mode === "question"
-              ? "bg-brand-navy-900 text-white"
-              : "text-brand-neutral-600 hover:text-brand-navy-900"
-          }`}
-        >
-          {dict.ownQuestionForm.heading}
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "doi"}
-          onClick={() => setMode("doi")}
-          className={`rounded-full px-4 py-1.5 font-medium transition-colors ${
-            mode === "doi"
-              ? "bg-brand-navy-900 text-white"
-              : "text-brand-neutral-600 hover:text-brand-navy-900"
-          }`}
-        >
-          {dict.studyLookupForm.heading}
-        </button>
+        {tabs.map((tab) => (
+          <button
+            key={tab.mode}
+            type="button"
+            role="tab"
+            aria-selected={mode === tab.mode}
+            onClick={() => setMode(tab.mode)}
+            className={`rounded-full px-4 py-1.5 font-medium transition-colors ${
+              mode === tab.mode
+                ? "bg-brand-navy-900 text-white"
+                : "text-brand-neutral-600 hover:text-brand-navy-900"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
       </div>
 
       <div role="tabpanel" className="w-full">

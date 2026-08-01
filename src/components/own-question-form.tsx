@@ -9,6 +9,7 @@ import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { topDomainCandidates } from "@/lib/classification/domain";
 import { topics, topicCopy } from "@/content/topics";
 import { VoiceInputButton } from "@/components/voice-input-button";
+import { QuestionFormCard } from "@/components/question-form-card";
 
 const SUGGESTION_DEBOUNCE_MS = 400;
 
@@ -89,17 +90,12 @@ function OwnQuestionFormFields({
   const showCharacterCount = value.length > MAX_QUESTION_LENGTH * 0.8;
 
   return (
-    <form
+    <QuestionFormCard
       id={id}
-      action="/search"
-      method="get"
-      className={`flex w-full max-w-xl flex-col gap-3 rounded-xl border p-5 text-left shadow-sm transition-colors focus-within:border-brand-teal-500 focus-within:bg-brand-teal-50/40 ${
-        hasContent ? "border-brand-teal-500 bg-brand-teal-50/40" : "border-brand-neutral-200"
-      }`}
+      hasContent={hasContent}
+      heading={dict.ownQuestionForm.heading}
+      hideHeading={hideHeading}
     >
-      {!hideHeading && (
-        <h2 className="font-semibold text-brand-navy-900">{dict.ownQuestionForm.heading}</h2>
-      )}
       {/* Same flex-1/justify-center wrapper as the paired StudyLookupForm
           card, so both stay structurally symmetric regardless of which
           one ends up taller as content changes. */}
@@ -135,9 +131,7 @@ function OwnQuestionFormFields({
           maxLength={MAX_QUESTION_LENGTH}
           aria-describedby={suggestedTopicName ? "own-question-suggestion" : undefined}
           className={`w-full resize-none rounded-lg border p-3 text-sm text-brand-neutral-950 focus:border-brand-teal-600 focus:outline-none focus:ring-2 focus:ring-brand-teal-400 ${
-            value.trim().length > 0
-              ? "border-brand-teal-600 ring-2 ring-brand-teal-400"
-              : "border-brand-neutral-200"
+            hasContent ? "border-brand-teal-600 ring-2 ring-brand-teal-400" : "border-brand-neutral-200"
           }`}
         />
         {showCharacterCount && (
@@ -161,6 +155,6 @@ function OwnQuestionFormFields({
       >
         {dict.ownQuestionForm.submit}
       </button>
-    </form>
+    </QuestionFormCard>
   );
 }
