@@ -28,11 +28,14 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
 
   return (
     <div className="flex w-full max-w-xl flex-col items-center gap-3">
+      {/* Sized up ~50% from its original text-sm/px-4/py-1.5 (2026-08-01,
+          layout follow-up) so the tab switcher reads as the page's primary
+          control, not a small secondary widget. */}
       <div
         role="tablist"
         aria-label={dict.questionModeSelector.tabListLabel}
         id={tabListId}
-        className="inline-flex gap-1 rounded-full border border-brand-neutral-200 bg-white p-1 text-sm"
+        className="inline-flex gap-2 rounded-full border border-brand-neutral-200 bg-white p-1.5 text-lg"
       >
         {tabs.map((tab) => (
           <button
@@ -41,7 +44,7 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
             role="tab"
             aria-selected={mode === tab.mode}
             onClick={() => setMode(tab.mode)}
-            className={`rounded-full px-4 py-1.5 font-medium transition-colors ${
+            className={`rounded-full px-6 py-2.5 font-medium transition-colors ${
               mode === tab.mode
                 ? "bg-brand-navy-900 text-white"
                 : "text-brand-neutral-600 hover:text-brand-navy-900"
