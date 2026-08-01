@@ -2343,3 +2343,48 @@ Browser (keine Netzwerkverbindung zu `tekmesis.com` aus dieser Sandbox,
 siehe die Smoke-Test-Einschränkung weiter oben) — bitte einmal kurz auf
 `tekmesis.com` selbst gegenprüfen, ob das Layout (insbesondere mobil) so
 wirkt wie beabsichtigt.
+
+### Zweite ChatGPT-Rückmeldung geprüft, zwei Punkte umgesetzt (2026-08-01)
+
+Erwin lieferte eine zweite, ausführlichere ChatGPT-Zweitmeinung (mit
+Punktzahlen je Kategorie) plus einen echten, live erzeugten Premium-Report
+als PDF (Omega-3-Frage) sowie eine separate CTA-Teilrückmeldung. Vor jeder
+Umsetzung wurden die konkreten Behauptungen gegen den Code geprüft statt
+blind übernommen:
+
+- **Bestätigt und behoben:** Die Vergleichstabelle "Warum nicht ChatGPT"
+  enthielt in der Zeile "Quellenlinks nachprüfbar" die Absolutformulierung
+  "Bei jeder Aussage" (DE) / "For every claim" (EN) / "Pour chaque
+  affirmation" (FR) — gleiches Muster wie die bereits in Runde 1 korrigierte
+  "nie erfundene Studien"-Zeile. Abgeschwächt auf "Direkt bei den
+  Kernaussagen" / "Directly on key claims" / "Directement sur les
+  affirmations clés".
+- **Bestätigt und behoben:** Der Badge auf der Mini-Live-Demo
+  (`liveDemoBadge`, Homepage-Hero) war mit "Beispielhafte Darstellung"
+  weicher formuliert als der explizite Hinweis auf `/example-report`
+  selbst. Ergänzt zu "Beispielhafte Darstellung – keine echte
+  Live-Auswertung" (DE) und Äquivalenten in EN/FR.
+- **Geprüft, aber bereits erledigt — keine Änderung nötig:** Die
+  Hauptkritik der Rückmeldung (Platzhalterdaten auf `/example-report`
+  wirken wie echte Studien) ist bereits durch einen expliziten
+  Warning-Badge ("Strukturvorschau — Platzhalterdaten"), einen erklärenden
+  Absatz und eine `previewNote` ("erfundene Platzhalter... keine echte
+  wissenschaftliche Evidenz") abgedeckt — deutlich expliziter als
+  vorgeschlagen. `maxDuration`-Timeout-Risiko war bereits aus Runde 1
+  behoben. Das konfigurierte Beispiel-Thema ("Welche Lernmethode
+  verbessert den Lernerfolg?") entspricht bereits ChatGPTs eigenem
+  Vorschlag.
+- **Als Erwins Entscheidung offengelassen, nicht umgesetzt:** Kompression
+  von `howItWorksSteps` (verifiziert: aktuell 7 Schritte) auf 3–4;
+  Preis-Anker-Abschwächung (bewusste frühere Entscheidung, #73); die
+  weitergehende CTA-Seiten-Umstrukturierung aus der Teilrückmeldung über
+  das in Phase 7 bereits Umgesetzte hinaus. Punkt 4 (MWSt-Formulierung)
+  bleibt weiterhin explizit zurückgestellt.
+- Der beigefügte echte Omega-3-PDF-Report bestätigt, dass der komplette
+  Kauf-bis-Report-Flow inkl. neuem Feedback-Widget live funktioniert,
+  passt aber nicht zum konfigurierten Beispiel-Thema und eignet sich wegen
+  vieler "Nicht angegeben"-Felder nicht als Showcase-Ersatz — reine
+  Beobachtung, keine Aktion nötig.
+
+Lint, Typecheck, volle Test-Suite (658 Tests) und Production-Build erneut
+grün.

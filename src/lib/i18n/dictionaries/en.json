@@ -22,7 +22,7 @@
     "priceNote": "CHF 9.90, one-time payment, price excludes VAT (Switzerland: not subject to VAT; abroad: reverse-charge mechanism under Art. 8 Swiss VAT Act). No subscription.",
     "priceAnchor": "A wrong purchase or an ineffective approach usually costs more than CHF 9.90 — this report helps you know that in advance.",
     "heroCta": "Ask your own question",
-    "liveDemoBadge": "Illustrative example",
+    "liveDemoBadge": "Illustrative example – not a real live analysis",
     "liveDemoHeading": "This is what your free teaser could look like",
     "liveDemoQuestion": "Does creatine actually work — or is it a waste of money?",
     "liveDemoCandidateLabel": "Records found",
@@ -88,7 +88,7 @@
       },
       {
         "criterion": "Source links verifiable",
-        "tekmesis": "For every claim",
+        "tekmesis": "Directly on key claims",
         "chatbot": "Inconsistent"
       },
       {

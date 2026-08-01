@@ -22,7 +22,7 @@
     "priceNote": "CHF 9.90, Einmalzahlung, Preis ohne Mehrwertsteuer (Schweiz: nicht MWST-pflichtig; Ausland: Reverse-Charge-Verfahren gemäss Art. 8 MWSTG). Kein Abo.",
     "priceAnchor": "Eine falsche Kaufentscheidung oder ein wirkungsloses Vorgehen kostet meist mehr als CHF 9.90 — dieser Report hilft dir, das vorher zu wissen.",
     "heroCta": "Eigene Frage stellen",
-    "liveDemoBadge": "Beispielhafte Darstellung",
+    "liveDemoBadge": "Beispielhafte Darstellung – keine echte Live-Auswertung",
     "liveDemoHeading": "So könnte dein kostenloser Teaser aussehen",
     "liveDemoQuestion": "Wirkt Kreatin wirklich – oder ist es Geldverschwendung?",
     "liveDemoCandidateLabel": "Gefundene Treffer",
@@ -88,7 +88,7 @@
       },
       {
         "criterion": "Quellenlinks nachprüfbar",
-        "tekmesis": "Bei jeder Aussage",
+        "tekmesis": "Direkt bei den Kernaussagen",
         "chatbot": "Uneinheitlich"
       },
       {
