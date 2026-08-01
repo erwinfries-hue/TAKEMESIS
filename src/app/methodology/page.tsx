@@ -4,6 +4,7 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { MethodologyFunnelIllustration } from "@/components/methodology-funnel-illustration";
 import { MethodologyCalculator } from "@/components/methodology-calculator";
 import { ProcessTimeline } from "@/components/process-timeline";
+import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -37,7 +38,12 @@ export default async function MethodologyPage() {
         <MethodologyFunnelIllustration className="h-24 w-auto sm:h-28" />
       </div>
 
-      <ProcessTimeline steps={dict.methodologyPage.steps} />
+      <ProcessTimeline
+        steps={dict.methodologyPage.steps.map((step, index) => ({
+          ...step,
+          icon: PROCESS_STEP_ICONS[index],
+        }))}
+      />
 
       <MethodologyCalculator dict={dict} />
 

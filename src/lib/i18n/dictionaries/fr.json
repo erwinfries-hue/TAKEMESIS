@@ -33,13 +33,10 @@
     "topicsTeaserCta": "Voir tous les thèmes",
     "howItWorksHeading": "Comment ça fonctionne",
     "howItWorksSteps": [
-      "Saisir une question",
-      "Préciser la question",
-      "Rechercher des études",
-      "Vérifier l'éligibilité",
-      "Afficher l'aperçu gratuit",
-      "Payer CHF 9.90",
-      "Recevoir l'Evidence Report complet"
+      "Poser et préciser ta question",
+      "Rechercher des sources scientifiques",
+      "Voir l'aperçu gratuit",
+      "Recevoir le rapport complet pour CHF 9.90"
     ],
     "howItWorksNote": "Pas de conseil individuel. Une orientation fondée sur des preuves pour des questions personnelles.",
     "freeVsPaidHeading": "Gratuit vs. rapport complet",

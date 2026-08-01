@@ -33,13 +33,10 @@
     "topicsTeaserCta": "See all topics",
     "howItWorksHeading": "How it works",
     "howItWorksSteps": [
-      "Enter a question",
-      "Refine the question",
-      "Search studies",
-      "Check eligibility",
+      "Ask & refine your question",
+      "Search scientific sources",
       "See the free teaser",
-      "Pay CHF 9.90",
-      "Get the full evidence report"
+      "Get the full report for CHF 9.90"
     ],
     "howItWorksNote": "No individual advice. Evidence-based orientation for personal questions.",
     "freeVsPaidHeading": "Free vs. Full Report",

@@ -1,21 +1,21 @@
-import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
+import type { IconProps } from "@/components/icons/icon-base";
 
 /**
  * Shared vertical process timeline: icon-in-circle nodes connected by a
- * single line, used on the homepage ("How it works") and /methodology.
- * Step count must match PROCESS_STEP_ICONS (7) — both call sites map the
- * same seven-stage flow (enter question → refine → search → check
- * eligibility → free teaser → pay → full report), just with different copy.
+ * single line, used on the homepage ("How it works", 4 grouped steps) and
+ * /methodology (7 detailed steps). Each caller passes its own icon per
+ * step (see PROCESS_STEP_ICONS in icons/process-step-icons.tsx) since the
+ * two pages no longer share the same step count/order.
  */
 export function ProcessTimeline({
   steps,
 }: {
-  steps: Array<{ title: string; body?: string }>;
+  steps: Array<{ title: string; body?: string; icon?: (props: IconProps) => React.ReactElement }>;
 }) {
   return (
     <ol className="flex w-full max-w-2xl flex-col">
       {steps.map((step, index) => {
-        const StepIcon = PROCESS_STEP_ICONS[index];
+        const StepIcon = step.icon;
         const isLast = index === steps.length - 1;
         return (
           <li key={step.title} className="flex gap-4">

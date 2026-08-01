@@ -10,6 +10,7 @@ import { buildExampleReportPreviewSearchResult } from "@/content/example-report-
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { ProcessTimeline } from "@/components/process-timeline";
+import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 import { HeroIllustration } from "@/components/hero-illustration";
 import { StudyLookupForm } from "@/components/study-lookup-form";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
@@ -102,8 +103,15 @@ export default async function Home() {
         <h2 className="text-2xl font-semibold text-brand-navy-900">
           {dict.home.howItWorksHeading}
         </h2>
+        {/* Compressed to 4 grouped steps (was 7) — 2026-08-01, live-review
+            feedback. The full 7-stage breakdown stays on /methodology for
+            anyone who wants it; icon indices below map to the matching
+            stage in PROCESS_STEP_ICONS (question, search, teaser, report). */}
         <ProcessTimeline
-          steps={dict.home.howItWorksSteps.map((step) => ({ title: step }))}
+          steps={dict.home.howItWorksSteps.map((step, index) => ({
+            title: step,
+            icon: PROCESS_STEP_ICONS[[0, 2, 4, 6][index]],
+          }))}
         />
         <p className="max-w-xl text-center text-sm text-brand-neutral-600">
           {dict.home.howItWorksNote}

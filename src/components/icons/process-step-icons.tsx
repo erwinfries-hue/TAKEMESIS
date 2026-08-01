@@ -1,9 +1,10 @@
 import { IconBase, type IconProps } from "./icon-base";
 
 /**
- * One icon per "how it works" step, in order — home.howItWorksSteps (both
- * locales) has exactly 7 entries matching this sequence: enter question,
- * refine, search studies, check eligibility, free teaser, pay, full report.
+ * Icon set for the process-timeline steps: enter question, refine, search
+ * studies, check eligibility, free teaser, pay, full report. Used in full
+ * (all 7, in order) by /methodology; the homepage's compressed 4-step
+ * summary picks a subset of these by index (see src/app/page.tsx).
  */
 export const PROCESS_STEP_ICONS: Array<(props: IconProps) => React.ReactElement> = [
   (props) => (
