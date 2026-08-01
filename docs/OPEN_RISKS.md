@@ -1067,6 +1067,23 @@ checkpoint (decision #15) and before each production-readiness gate.
     Supports the "one-off slow run" theory over a structural bug; no code
     change made. Still worth a second data point before fully closing this.
 
+    **Update (2026-08-01): recurred — the "one-off" theory is no longer
+    supportable.** Erwin reported three more paid (CHF 9.90) purchases with
+    no confirmation email — two via desktop, one via mobile — while a
+    mobile *free* purchase in the same session did get its email. This
+    matches the free/paid split seen so far (the one other confirmed-working
+    live purchase was also the 100%-off promo code, i.e. effectively free).
+    Free and paid purchases run the exact same `generateReportContent` code
+    path (`src/lib/reports/generate-report-content.ts`) — nothing in the
+    code branches on price — so this isn't a price-conditional bug; more
+    likely, free/promo test purchases so far have consistently hit faster
+    (possibly cached-studies) questions while these three paid runs hit the
+    same `maxDuration = 60` risk window already identified on 2026-07-30.
+    Per the decision recorded above ("revisit if this recurs"), this has now
+    recurred three times against one prior success — treating this as
+    confirmed-recurring, not one-off, and taking it to Erwin as a fix-
+    direction decision rather than deferring further.
+
 31. **RESOLVED 2026-07-31 — `/admin/payments` was empty despite real, successful
     Stripe charges; the one-click refund action had nothing to act on.**
     Found while trying to refund Erwin's live test purchase. Root cause:
