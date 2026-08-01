@@ -17,7 +17,7 @@ export function LiveDemoPreview({ dict, teaser }: { dict: Dictionary; teaser: Te
         {dict.home.liveDemoBadge}
       </span>
       <p className="mt-3 text-sm text-brand-neutral-600">{dict.home.liveDemoHeading}</p>
-      <p className="font-semibold text-brand-navy-900">{dict.home.liveDemoQuestion}</p>
+      <p className="font-semibold text-brand-navy-900">{teaser.query}</p>
       <dl className="mt-4 grid grid-cols-2 gap-4 text-sm">
         <div>
           <dt className="text-xs text-brand-neutral-600">{dict.home.liveDemoCandidateLabel}</dt>

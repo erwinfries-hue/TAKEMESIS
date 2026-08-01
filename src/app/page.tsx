@@ -20,7 +20,11 @@ export default async function Home() {
   const dict = getDictionary(locale);
   const teaserTopics = topics.slice(0, TEASER_COUNT);
 
-  const demoSearchResult = buildExampleReportPreviewSearchResult(dict.home.liveDemoQuestion);
+  // Same question as /example-report (dict.exampleReportPage.topicQuestion)
+  // so the homepage teaser and the full example report it links to are the
+  // same example throughout, not two different questions over the same
+  // placeholder studies (2026-08-01, consistency follow-up).
+  const demoSearchResult = buildExampleReportPreviewSearchResult(dict.exampleReportPage.topicQuestion);
   const demoTeaser = buildTeaserData(demoSearchResult, assessEligibility(demoSearchResult));
 
   return (
