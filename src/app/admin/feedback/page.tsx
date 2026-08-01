@@ -16,6 +16,7 @@ import {
   type FeedbackWithReport,
 } from "@/lib/feedback/feedback-analytics";
 import { FeedbackRatingChart, FeedbackVolumeChart } from "@/components/admin/feedback-charts";
+import { FeedbackTable, type FeedbackRow } from "@/components/admin/feedback-table";
 import { dismissIssueAction, resolveIssueAction } from "./actions";
 
 export const metadata: Metadata = { title: "Admin — Feedback & Probleme — TEKMESIS" };
@@ -25,9 +26,6 @@ const ISSUE_STATUS_LABEL: Record<IssueReport["status"], string> = {
   resolved: "Gelöst",
   dismissed: "Verworfen",
 };
-
-/** Low ratings get flagged for quick triage — a fixed cutoff, not a computed statistic. */
-const LOW_RATING_CUTOFF = 2;
 
 function topicLabel(domainSlug: string | null): string {
   if (!domainSlug) {
@@ -67,6 +65,15 @@ export default async function AdminFeedbackPage() {
     feedback,
     purchasedReportCount,
   );
+  const feedbackRows: FeedbackRow[] = feedbackWithReport.map(({ feedback: entry, report }) => ({
+    id: entry.id,
+    createdAt: entry.createdAt,
+    email: report?.email ?? null,
+    topicLabel: topicLabel(report?.domainSlug ?? null),
+    question: report?.originalQuestion ?? null,
+    rating: entry.rating,
+    comment: entry.comment,
+  }));
 
   return (
     <main className="flex flex-1 flex-col gap-8 px-6 py-12 sm:px-10">
@@ -198,59 +205,7 @@ export default async function AdminFeedbackPage() {
           </div>
         )}
 
-        <div className="overflow-x-auto rounded-xl border border-brand-neutral-200 bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="border-b border-brand-neutral-200 text-brand-neutral-600">
-              <tr>
-                <th className="px-3 py-2 font-semibold">Erstellt</th>
-                <th className="px-3 py-2 font-semibold">E-Mail</th>
-                <th className="px-3 py-2 font-semibold">Thema</th>
-                <th className="px-3 py-2 font-semibold">Frage</th>
-                <th className="px-3 py-2 font-semibold">Bewertung</th>
-                <th className="px-3 py-2 font-semibold">Kommentar</th>
-              </tr>
-            </thead>
-            <tbody>
-              {feedbackWithReport.map(({ feedback: entry, report }) => (
-                <tr key={entry.id} className="border-b border-brand-neutral-100 align-top last:border-0">
-                  <td className="px-3 py-2 whitespace-nowrap text-brand-neutral-600">
-                    {new Date(entry.createdAt).toLocaleString("de-CH")}
-                  </td>
-                  <td className="px-3 py-2 text-brand-neutral-600">{report?.email ?? "–"}</td>
-                  <td className="px-3 py-2 text-brand-neutral-600">
-                    {topicLabel(report?.domainSlug ?? null)}
-                  </td>
-                  <td className="px-3 py-2 text-brand-neutral-950">
-                    {report?.originalQuestion ?? "–"}
-                  </td>
-                  <td className="px-3 py-2 font-medium">
-                    {entry.rating != null ? (
-                      <span
-                        className={
-                          entry.rating <= LOW_RATING_CUTOFF
-                            ? "rounded-full bg-brand-warning-100 px-2 py-0.5 text-brand-warning-600"
-                            : "text-brand-navy-900"
-                        }
-                      >
-                        {entry.rating} / 5
-                      </span>
-                    ) : (
-                      <span className="text-brand-navy-900">–</span>
-                    )}
-                  </td>
-                  <td className="px-3 py-2 text-brand-neutral-950">{entry.comment ?? "–"}</td>
-                </tr>
-              ))}
-              {feedback.length === 0 && !dbError && (
-                <tr>
-                  <td colSpan={6} className="px-3 py-6 text-center text-brand-neutral-600">
-                    Noch kein Feedback.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+        {!dbError && <FeedbackTable rows={feedbackRows} />}
       </section>
     </main>
   );

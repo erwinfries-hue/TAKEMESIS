@@ -1,6 +1,9 @@
 import type { FeedbackEntry } from "./types";
 import type { Report } from "@/lib/reports/types";
 
+/** Low ratings get flagged for quick triage — a fixed cutoff, not a computed statistic. */
+export const LOW_RATING_CUTOFF = 2;
+
 export interface FeedbackWithReport {
   feedback: FeedbackEntry;
   report: Report | null;
