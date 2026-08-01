@@ -212,7 +212,9 @@ test("the homepage offers a DOI lookup as an alternative to the own-question for
   page,
 }) => {
   await page.goto("/#eigene-frage");
-  await expect(page.getByText("Hast du schon eine Studie?")).toBeVisible();
+  const doiTab = page.getByRole("tab", { name: "Hast du schon eine Studie?" });
+  await expect(doiTab).toBeVisible();
+  await doiTab.click();
   await expect(page.getByLabel("DOI der Studie")).toBeVisible();
 });
 
