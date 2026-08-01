@@ -7,7 +7,7 @@ export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string })
       id={id}
       action="/search"
       method="get"
-      className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm"
+      className="flex w-full max-w-xl flex-col gap-3 rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm transition-colors focus-within:border-brand-teal-500 focus-within:bg-brand-teal-50/40"
     >
       <h2 className="font-semibold text-brand-navy-900">{dict.studyLookupForm.heading}</h2>
       {/* Grows to absorb whatever extra height the paired OwnQuestionForm card
