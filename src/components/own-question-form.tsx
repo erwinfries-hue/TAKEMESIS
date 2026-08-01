@@ -16,10 +16,13 @@ export function OwnQuestionForm({
   dict,
   locale,
   id,
+  hideHeading,
 }: {
   dict: Dictionary;
   locale: Locale;
   id?: string;
+  /** Skips the internal <h2> — for placements (e.g. QuestionModeSelector) where a tab/section label already names this form. */
+  hideHeading?: boolean;
 }) {
   const searchParams = useSearchParams();
   const prefilled = searchParams.get("q") ?? "";
@@ -36,6 +39,7 @@ export function OwnQuestionForm({
       locale={locale}
       id={id}
       initialValue={prefilled}
+      hideHeading={hideHeading}
     />
   );
 }
@@ -45,11 +49,13 @@ function OwnQuestionFormFields({
   locale,
   id,
   initialValue,
+  hideHeading,
 }: {
   dict: Dictionary;
   locale: Locale;
   id?: string;
   initialValue: string;
+  hideHeading?: boolean;
 }) {
   const [value, setValue] = useState(initialValue);
   const [suggestedTopicName, setSuggestedTopicName] = useState<string | null>(null);
@@ -78,6 +84,9 @@ function OwnQuestionFormFields({
   }, [value, locale]);
 
   const hasContent = value.trim().length > 0;
+  // Only shown once the field is meaningfully full — "dezent", not a
+  // counter running from the first keystroke.
+  const showCharacterCount = value.length > MAX_QUESTION_LENGTH * 0.8;
 
   return (
     <form
@@ -88,7 +97,9 @@ function OwnQuestionFormFields({
         hasContent ? "border-brand-teal-500 bg-brand-teal-50/40" : "border-brand-neutral-200"
       }`}
     >
-      <h2 className="font-semibold text-brand-navy-900">{dict.ownQuestionForm.heading}</h2>
+      {!hideHeading && (
+        <h2 className="font-semibold text-brand-navy-900">{dict.ownQuestionForm.heading}</h2>
+      )}
       {/* Same flex-1/justify-center wrapper as the paired StudyLookupForm
           card, so both stay structurally symmetric regardless of which
           one ends up taller as content changes. */}
@@ -112,6 +123,14 @@ function OwnQuestionFormFields({
           rows={3}
           value={value}
           onChange={(event) => setValue(event.target.value)}
+          onKeyDown={(event) => {
+            // Plain Enter stays a newline (multi-sentence questions are
+            // common); Cmd/Ctrl+Enter submits, same convention as most
+            // chat/comment inputs.
+            if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+              event.currentTarget.form?.requestSubmit();
+            }
+          }}
           placeholder={dict.ownQuestionForm.placeholder}
           maxLength={MAX_QUESTION_LENGTH}
           aria-describedby={suggestedTopicName ? "own-question-suggestion" : undefined}
@@ -121,6 +140,13 @@ function OwnQuestionFormFields({
               : "border-brand-neutral-200"
           }`}
         />
+        {showCharacterCount && (
+          <p className="-mt-2 self-end text-xs text-brand-neutral-600">
+            {dict.ownQuestionForm.characterCountLabel
+              .replace("{count}", String(value.length))
+              .replace("{max}", String(MAX_QUESTION_LENGTH))}
+          </p>
+        )}
         {suggestedTopicName && (
           <p id="own-question-suggestion" role="status" className="text-xs text-brand-teal-700">
             {dict.ownQuestionForm.suggestionPrefix} <strong>{suggestedTopicName}</strong>

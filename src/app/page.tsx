@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { Suspense } from "react";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { topics, topicCopy } from "@/content/topics";
 import { TopicCard } from "@/components/topic-card";
-import { OwnQuestionForm } from "@/components/own-question-form";
+import { QuestionModeSelector } from "@/components/question-mode-selector";
 import { LiveDemoPreview } from "@/components/live-demo-preview";
 import { buildExampleReportPreviewSearchResult } from "@/content/example-report-preview";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
@@ -12,8 +11,8 @@ import { buildTeaserData } from "@/lib/eligibility/teaser";
 import { ProcessTimeline } from "@/components/process-timeline";
 import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 import { HeroIllustration } from "@/components/hero-illustration";
-import { StudyLookupForm } from "@/components/study-lookup-form";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
+import { StickyMobileCta } from "@/components/sticky-mobile-cta";
 
 const TEASER_COUNT = 6;
 
@@ -43,23 +42,32 @@ export default async function Home() {
         >
           {dict.home.heroCta}
         </Link>
+        {/* Compact trust strip directly under the primary CTA (2026-08-01,
+            homepage audit) — short, already-true facts stated in full
+            elsewhere on the page (source transparency, uncertainty
+            disclosure, price/no-subscription), not new claims. */}
+        <ul className="flex flex-wrap justify-center gap-2 text-xs text-brand-neutral-600">
+          {dict.home.heroTrustPoints.map((point) => (
+            <li key={point} className="rounded-full border border-brand-neutral-200 px-3 py-1">
+              ✓ {point}
+            </li>
+          ))}
+        </ul>
       </section>
 
-      {/* 2. Own-question input, plus the alternative "compare a study you already have" entry —
-          moved directly after the hero (was section 3) so the actual question input is reachable
-          without scrolling past the topic grid first (2026-07-31, live-review feedback). */}
+      {/* 2. Own-question input, with the DOI/"already have a study" lookup as a
+          secondary tab rather than an equal-weight card (2026-08-01, homepage
+          audit — two side-by-side cards competed as two primary CTAs). Moved
+          directly after the hero (was section 3) so the input is reachable
+          without scrolling past the topic grid first (2026-07-31). */}
       <section
         id="eigene-frage"
         className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16"
       >
-        <div className="flex w-full max-w-4xl flex-col items-stretch gap-6 lg:flex-row lg:items-stretch lg:justify-center">
-          <Suspense>
-            <OwnQuestionForm dict={dict} locale={locale} />
-          </Suspense>
-          <StudyLookupForm dict={dict} />
-        </div>
+        <QuestionModeSelector dict={dict} locale={locale} />
         <RecentSearchesPanel dict={dict} />
       </section>
+      <StickyMobileCta label={dict.home.heroCta} targetId="eigene-frage" />
 
       {/* 3. Topic-category inspiration grid */}
       <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-10 sm:px-10 sm:py-16">

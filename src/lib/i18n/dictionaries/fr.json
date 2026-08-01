@@ -21,6 +21,11 @@
     "priceNote": "CHF 9.90, paiement unique, prix hors TVA (Suisse : non assujetti à la TVA ; étranger : procédure d'autoliquidation selon l'art. 8 LTVA). Sans abonnement.",
     "priceAnchor": "Une mauvaise décision d'achat ou une démarche inefficace coûte souvent plus cher que CHF 9.90 — ce rapport t'aide à le savoir à l'avance.",
     "heroCta": "Poser ma question",
+    "heroTrustPoints": [
+      "Sources vérifiables",
+      "Incertitudes indiquées clairement",
+      "CHF 9.90 une fois – sans abonnement"
+    ],
     "liveDemoBadge": "Exemple illustratif – pas une analyse en direct réelle",
     "liveDemoHeading": "À quoi pourrait ressembler ton aperçu gratuit",
     "liveDemoQuestion": "La créatine agit-elle vraiment — ou est-ce un gaspillage d'argent ?",
@@ -114,7 +119,11 @@
     "warningHealth": "Merci de ne saisir aucun diagnostic individuel, liste de médicaments ou dossier médical.",
     "suggestionPrefix": "Pourrait correspondre à :",
     "voiceInputCta": "Dicter la question par saisie vocale",
-    "voiceInputListening": "Écoute en cours — appuie pour arrêter"
+    "voiceInputListening": "Écoute en cours — appuie pour arrêter",
+    "characterCountLabel": "{count} / {max} caractères"
+  },
+  "questionModeSelector": {
+    "tabListLabel": "Choisir le mode de saisie"
   },
   "studyLookupForm": {
     "heading": "Tu as déjà une étude ?",

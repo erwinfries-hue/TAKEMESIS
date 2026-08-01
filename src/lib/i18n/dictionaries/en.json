@@ -21,6 +21,11 @@
     "priceNote": "CHF 9.90, one-time payment, price excludes VAT (Switzerland: not subject to VAT; abroad: reverse-charge mechanism under Art. 8 Swiss VAT Act). No subscription.",
     "priceAnchor": "A wrong purchase or an ineffective approach usually costs more than CHF 9.90 — this report helps you know that in advance.",
     "heroCta": "Ask your own question",
+    "heroTrustPoints": [
+      "Verifiable sources",
+      "Transparent about uncertainty",
+      "CHF 9.90 once – no subscription"
+    ],
     "liveDemoBadge": "Illustrative example – not a real live analysis",
     "liveDemoHeading": "This is what your free teaser could look like",
     "liveDemoQuestion": "Does creatine actually work — or is it a waste of money?",
@@ -114,7 +119,11 @@
     "warningHealth": "Please do not enter individual diagnoses, medication lists, or health records.",
     "suggestionPrefix": "Might fit:",
     "voiceInputCta": "Dictate your question by voice",
-    "voiceInputListening": "Listening — tap to stop"
+    "voiceInputListening": "Listening — tap to stop",
+    "characterCountLabel": "{count} / {max} characters"
+  },
+  "questionModeSelector": {
+    "tabListLabel": "Choose input mode"
   },
   "studyLookupForm": {
     "heading": "Already have a study?",

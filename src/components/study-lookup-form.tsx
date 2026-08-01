@@ -4,7 +4,16 @@ import { useState } from "react";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 /** Alternative entry point to OwnQuestionForm for "I already have a study, compare it against the rest of the evidence." Client-side purely for the has-content highlight below (2026-08-01) — the form itself still works as a plain GET submit. */
-export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string }) {
+export function StudyLookupForm({
+  dict,
+  id,
+  hideHeading,
+}: {
+  dict: Dictionary;
+  id?: string;
+  /** Skips the internal <h2> — for placements (e.g. QuestionModeSelector) where a tab/section label already names this form. */
+  hideHeading?: boolean;
+}) {
   const [value, setValue] = useState("");
   const hasContent = value.trim().length > 0;
 
@@ -17,7 +26,9 @@ export function StudyLookupForm({ dict, id }: { dict: Dictionary; id?: string })
         hasContent ? "border-brand-teal-500 bg-brand-teal-50/40" : "border-brand-neutral-200"
       }`}
     >
-      <h2 className="font-semibold text-brand-navy-900">{dict.studyLookupForm.heading}</h2>
+      {!hideHeading && (
+        <h2 className="font-semibold text-brand-navy-900">{dict.studyLookupForm.heading}</h2>
+      )}
       {/* Grows to absorb whatever extra height the paired OwnQuestionForm card
           imposes (its multi-line textarea makes it the taller of the two),
           and centers its own content within that space — so any leftover
