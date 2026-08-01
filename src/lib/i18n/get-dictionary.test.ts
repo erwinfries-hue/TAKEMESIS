@@ -13,7 +13,7 @@ describe("getDictionary", () => {
   it("returns localized copy, not a shared reference", () => {
     const de = getDictionary("de");
     const en = getDictionary("en");
-    expect(de.home.descriptionLine1).not.toBe(en.home.descriptionLine1);
+    expect(de.home.description).not.toBe(en.home.description);
     expect(de.footer.disclaimer).not.toBe(en.footer.disclaimer);
   });
 });

@@ -32,9 +32,7 @@ export default async function Home() {
           {dict.brand.claim}
         </p>
         <h1 className="max-w-2xl text-3xl font-semibold leading-tight text-brand-navy-900 sm:text-4xl">
-          {dict.home.descriptionLine1}
-          <br />
-          {dict.home.descriptionLine2}
+          {dict.home.description}
         </h1>
         <HeroIllustration className="h-24 w-auto sm:h-28" />
         <LiveDemoPreview dict={dict} teaser={demoTeaser} />

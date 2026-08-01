@@ -24,17 +24,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const title = `${dict.brand.name} — ${dict.brand.claim}`;
-  const description = `${dict.home.descriptionLine1} ${dict.home.descriptionLine2}`;
 
   return {
     metadataBase: new URL(clientEnv.NEXT_PUBLIC_APP_BASE_URL),
     title,
-    description,
+    description: dict.home.description,
     // og:image is auto-injected by Next.js from app/opengraph-image.tsx
     // (file-convention metadata) — no need to reference it here.
     openGraph: {
       title,
-      description,
+      description: dict.home.description,
       url: "/",
       siteName: dict.brand.name,
       locale: OG_LOCALE[locale],
@@ -43,7 +42,7 @@ export async function generateMetadata(): Promise<Metadata> {
     twitter: {
       card: "summary_large_image",
       title,
-      description,
+      description: dict.home.description,
     },
   };
 }
