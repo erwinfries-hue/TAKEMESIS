@@ -6,6 +6,7 @@ import { SupabaseReportRepository } from "@/lib/reports/supabase-report-reposito
 import { PremiumReportView } from "@/components/premium-report/premium-report-view";
 import { ReportStatusNotice } from "@/components/report-status-notice";
 import { ReportFeedbackWidget } from "@/components/report-feedback-widget";
+import { ReportProcessingPoller } from "@/components/report-processing-poller";
 import { serverEnv } from "@/lib/env/server";
 
 // Search + AI enrichment already run once at fulfillment time (the webhook),
@@ -94,7 +95,8 @@ export default async function ReportViewerPage({
     case "processing":
       return (
         <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 text-center sm:px-10">
-          <ReportStatusNotice heading={rv.processingHeading} body={rv.processingBody} />
+          <ReportProcessingPoller />
+          <ReportStatusNotice heading={rv.processingHeading} body={rv.processingBody} pending />
         </main>
       );
     case "failed":

@@ -202,9 +202,6 @@ export function PremiumReportView({
           </GlossaryTerm>
         </h2>
         <ConfidenceGauge label={report.confidenceLabel} dict={dict} />
-        <div className="mt-3">
-          <PendingAiNotice dict={dict} variant="short" />
-        </div>
       </section>
 
       {/* 8. Practical Interpretation */}

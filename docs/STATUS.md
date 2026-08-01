@@ -2426,3 +2426,40 @@ Lint, Typecheck, volle Test-Suite (658 Tests) und Production-Build grün.
 Vergleich auf dem Handy (keine Netzwerkverbindung zu `tekmesis.com` aus
 dieser Sandbox) — bitte nach dem Deploy kurz gegenprüfen, ob sich die
 Seite jetzt kompakter anfühlt.
+
+### Live-Kauftest: drei echte Befunde behoben (2026-08-01)
+
+Erwin begann seinen geplanten 4-Käufe-Test (2× mobil, 2× Desktop, je 1
+Gratis- + 1 Bezahlkauf) und meldete zwei konkrete Beobachtungen von der
+"Dein Report wird erstellt"-Wartesseite, plus einen mitgeschickten echten
+PDF-Report (Frage: "Welche Effekte hat Intervallfasten?", 50 Studien) —
+bei dessen Durchsicht ein dritter, unabhängiger Bug auffiel:
+
+1. **Kein Lade-Indikator auf der Warteseite.** `ReportStatusNotice` bekam
+   eine neue `pending`-Prop: zeigt bei `paid`/`processing` einen
+   drehenden Spinner statt des normalen Info-Icons (gleiches
+   `animate-spin`-Muster wie bereits in `/search/loading.tsx`).
+2. **Kein Auto-Refresh — Nutzer musste die Seite manuell neu laden, um
+   den fertigen Report zu sehen.** Neue Client-Komponente
+   `ReportProcessingPoller` (`src/components/report-processing-poller.tsx`):
+   ruft `router.refresh()` alle 5 Sekunden auf, solange die Warteseite
+   angezeigt wird — damit erscheint der fertige Report von selbst, sobald
+   der Server-Status auf "ready" wechselt.
+3. **Live gefundener Bug (unabhängig gemeldet, beim Prüfen des
+   angehängten PDFs entdeckt):** Der Abschnitt "Evidenzsicherheit" zeigte
+   *immer* zusätzlich den Hinweis "Folgt mit KI-gestützter Synthese,
+   sobald verfügbar" — direkt unter der bereits fertig berechneten
+   Evidenzsicherheits-Anzeige (z.B. "Höhere Evidenzsicherheit"), was
+   widersprüchlich wirkte. Ursache: anders als bei den echten
+   KI-Feldern (Synthese, praktische Einordnung), die über
+   `synthesisAvailable`/`practicalInterpretationAvailable` korrekt
+   gegatet sind, ist `confidenceLabel` eine rein regelbasierte
+   Berechnung (`deriveConfidenceLabel`, nie von KI abhängig, nie leer) —
+   der Pending-Hinweis darunter war unbedingt und fälschlicherweise
+   immer sichtbar. In `premium-report-view.tsx` entfernt.
+
+Lint, Typecheck, volle Test-Suite (658 Tests) und Production-Build grün.
+**Nicht aus dieser Session testbar:** das tatsächliche Auto-Refresh-
+Verhalten live im Browser (kein Netzwerkzugriff auf `tekmesis.com`) —
+bitte beim nächsten Testkauf bestätigen, dass die Seite nach der
+Report-Fertigstellung von selbst umschaltet, ohne manuellen Reload.
