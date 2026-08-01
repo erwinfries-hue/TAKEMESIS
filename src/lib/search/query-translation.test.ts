@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildSearchQuery } from "./query-translation";
+import { buildSearchQuery, buildSearchQueryConcepts } from "./query-translation";
 
 describe("buildSearchQuery", () => {
   it("translates known German domain terms to English and drops stopwords", async () => {
@@ -173,4 +173,34 @@ describe("buildSearchQuery", () => {
     expect(query).toContain("satisfaction");
   });
 
+});
+
+describe("buildSearchQueryConcepts", () => {
+  it("keeps a dictionary entry's multi-word translation grouped as one concept (2026-08-01 relevance-screening fix)", async () => {
+    // "trainingsfrequenz" → "training frequency" and "kraftzuwachs" →
+    // "strength gain" must stay 2-word groups, not get flattened — see
+    // relevance.ts's meetsRelevanceThreshold, which needs the grouping to
+    // require both words of a concept, not just any word from anywhere.
+    const concepts = await buildSearchQueryConcepts(
+      "Wie wirkt sich Trainingsfrequenz auf den Kraftzuwachs aus?",
+      "de",
+    );
+    expect(concepts).toContainEqual(["training", "frequency"]);
+    expect(concepts).toContainEqual(["strength", "gain"]);
+  });
+
+  it("keeps single-word (untranslated or 1-word-translated) tokens as 1-word concepts", async () => {
+    const concepts = await buildSearchQueryConcepts("Wirkt Zauberpulver auf Konzentration?", "de");
+    expect(concepts).toContainEqual(["zauberpulver"]);
+    expect(concepts).toContainEqual(["concentration"]);
+  });
+
+  it("flattens to the exact same string buildSearchQuery returns", async () => {
+    const question = "Welchen Effekt hat Koffeinkonsum am Nachmittag auf den Schlaf?";
+    const [flat, concepts] = await Promise.all([
+      buildSearchQuery(question, "de"),
+      buildSearchQueryConcepts(question, "de"),
+    ]);
+    expect(concepts.flat().join(" ")).toBe(flat);
+  });
 });

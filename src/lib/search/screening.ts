@@ -34,7 +34,7 @@ export interface ScreeningResult {
 /** Bump when the screening rules change, so a stored search run can record which version produced it. */
 export const SCREENING_VERSION = "screening-v2";
 
-export function screenRecords(records: DedupedRecord[], query: string): ScreeningResult {
+export function screenRecords(records: DedupedRecord[], queryConcepts: string[][]): ScreeningResult {
   const included: DedupedRecord[] = [];
   const excluded: ScreeningDecision[] = [];
 
@@ -53,7 +53,7 @@ export function screenRecords(records: DedupedRecord[], query: string): Screenin
       excluded.push({ record: deduped, reason: "insufficient_detail" });
       continue;
     }
-    if (!meetsRelevanceThreshold(query, record)) {
+    if (!meetsRelevanceThreshold(queryConcepts, record)) {
       excluded.push({ record: deduped, reason: "not_relevant" });
       continue;
     }

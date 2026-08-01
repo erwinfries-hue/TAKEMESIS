@@ -109,36 +109,69 @@ export function computeRelevanceScore(query: string, record: NormalizedRecord): 
 export const MIN_RELEVANCE_SCORE = 0.4;
 
 /**
- * Whether a record clears the relevance bar for screening (screening.ts).
- * Not a plain `computeRelevanceScore(...) >= MIN_RELEVANCE_SCORE` check: a
- * question with only 1-2 meaningful terms (e.g. "Hilft Kreatin beim
- * Muskelaufbau?" → "kreatin", "muskelaufbau" once stopwords/connector verbs
- * are stripped) needs *both* terms to match, not just the fraction threshold
- * — a real production case (2026-07-26) showed records matching only the
- * generic noun ("Muskelaufbau") while never mentioning the actual named
- * subject ("Kreatin") still cleared 0.4 (1 of 2 terms = 0.5), because
- * removing a stopword shrinks the denominator as much as the numerator.
- * With that few terms, a partial match isn't a meaningful signal — for
- * longer questions (3+ terms) the plain fraction threshold is a strong
- * enough signal on its own.
+ * Whether two already-tokenized words should count as the same term.
+ * Exact match, plus tolerance for the handful of regular English plural
+ * suffixes (-s, -es, -y/-ies) — without this, meetsRelevanceThreshold's
+ * per-concept AND (below) would wrongly exclude a genuinely relevant record
+ * just because it says "gains" where the query says "gain".
  */
-export function meetsRelevanceThreshold(query: string, record: NormalizedRecord): boolean {
-  const queryTerms = new Set(tokenize(query));
-  if (queryTerms.size === 0) {
+function wordsMatch(a: string, b: string): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a.endsWith("s") && a.slice(0, -1) === b) return true;
+  if (b.endsWith("s") && b.slice(0, -1) === a) return true;
+  if (a.endsWith("es") && a.slice(0, -2) === b) return true;
+  if (b.endsWith("es") && b.slice(0, -2) === a) return true;
+  if (a.endsWith("y") && b === `${a.slice(0, -1)}ies`) return true;
+  if (b.endsWith("y") && a === `${b.slice(0, -1)}ies`) return true;
+  return false;
+}
+
+/**
+ * Whether a record clears the relevance bar for screening (screening.ts).
+ * Takes the query as *concept groups* (see buildSearchQueryConcepts) rather
+ * than one flat term list: a source term the dictionary translates to a
+ * multi-word English phrase (e.g. "trainingsfrequenz" → "training
+ * frequency") stays one 2-word concept. A concept only counts as matched if
+ * *every* word in it appears in the record (with light plural tolerance via
+ * wordsMatch) — not just any one of them.
+ *
+ * This concept-level AND is what a flat word-overlap fraction can't
+ * express, and is the fix for a real production case (2026-08-01): a
+ * 4-word/2-concept query ("training frequency" + "strength gain") let
+ * records through that matched only one word from each concept — e.g. an
+ * MRI-imaging paper mentioning "frequency" (signal frequency) and "gain"
+ * (signal gain), never "training" or "strength" — because the old flat
+ * check only required 2 of 4 words (50%) to clear the 0.4 threshold,
+ * regardless of which two.
+ *
+ * With that concept-level match computed, the same "few terms need full
+ * coverage, more terms tolerate a fraction" split from before still
+ * applies, just counting concepts instead of words: a question with only
+ * 1-2 meaningful concepts (e.g. "Hilft Kreatin beim Muskelaufbau?" →
+ * concepts "kreatin", "muskelaufbau") needs *all* of them matched — a real
+ * production case (2026-07-26) showed records matching only the generic
+ * noun while never mentioning the actual named subject still cleared 0.4.
+ * For 3+ concepts, the plain fraction threshold is a strong enough signal.
+ */
+export function meetsRelevanceThreshold(concepts: string[][], record: NormalizedRecord): boolean {
+  const meaningfulConcepts = concepts.map((concept) => tokenize(concept.join(" "))).filter(
+    (terms) => terms.length > 0,
+  );
+  if (meaningfulConcepts.length === 0) {
     return false;
   }
+
   const recordText = [record.title, record.abstract].filter(Boolean).join(" ");
-  const recordTerms = new Set(tokenize(recordText));
+  const recordTerms = tokenize(recordText);
 
-  let matches = 0;
-  for (const term of queryTerms) {
-    if (recordTerms.has(term)) {
-      matches += 1;
-    }
-  }
+  const matchedConceptCount = meaningfulConcepts.filter((conceptTerms) =>
+    conceptTerms.every((term) => recordTerms.some((recordTerm) => wordsMatch(term, recordTerm))),
+  ).length;
 
-  if (queryTerms.size <= 2) {
-    return matches === queryTerms.size;
+  if (meaningfulConcepts.length <= 2) {
+    return matchedConceptCount === meaningfulConcepts.length;
   }
-  return matches / queryTerms.size >= MIN_RELEVANCE_SCORE;
+  return matchedConceptCount / meaningfulConcepts.length >= MIN_RELEVANCE_SCORE;
 }

@@ -226,3 +226,43 @@ export async function buildSearchQuery(
 
   return tokens.map((token) => dictionary[token] ?? learned.get(token) ?? token).join(" ");
 }
+
+/**
+ * Same translation as buildSearchQuery, but keeps each original token's
+ * translation as its own group instead of flattening into one string — a
+ * single-word source term stays a 1-word group, but a term the dictionary
+ * maps to a multi-word English phrase (e.g. "trainingsfrequenz" → "training
+ * frequency") stays grouped as one 2-word concept. relevance.ts's
+ * meetsRelevanceThreshold uses these groups to require every *concept* be
+ * represented, not just any 40% of the flattened word list — see the fix
+ * for the 2026-08-01 live-found bug where a query translating to 4 words
+ * across 2 concepts ("training frequency" + "strength gain") let records
+ * matching only one word from each concept (e.g. an MRI-imaging paper
+ * mentioning "frequency" and "gain" in unrelated senses) through screening.
+ * `buildSearchQuery` above is left untouched (own tokenize pass) rather
+ * than reimplemented on top of this, so its already-tested behavior can't
+ * drift from a shared-code refactor.
+ */
+export async function buildSearchQueryConcepts(
+  question: string,
+  locale: Locale,
+  deps: BuildSearchQueryDeps = {},
+): Promise<string[][]> {
+  const tokens = tokenize(question, STOPWORDS[locale]);
+
+  if (tokens.length === 0) {
+    return [tokenize(question, new Set())];
+  }
+
+  const dictionary = DICTIONARIES[locale];
+  if (!dictionary) {
+    return tokens.map((token) => [token]);
+  }
+
+  const learned = await translateUnknownTokens(tokens, locale, question, dictionary, deps);
+
+  return tokens.map((token) => {
+    const translated = dictionary[token] ?? learned.get(token) ?? token;
+    return translated.split(" ").filter((word) => word.length > 0);
+  });
+}

@@ -6,7 +6,7 @@ import { dedupeRecords, normalizeDoi } from "./dedupe";
 import { screenRecords, SCREENING_VERSION, type ExclusionReason } from "./screening";
 import { rankRecords, type ScoredRecord } from "./ranking";
 import { applyFilters, NO_FILTERS, type SearchFilters } from "./filters";
-import { buildSearchQuery } from "./query-translation";
+import { buildSearchQueryConcepts } from "./query-translation";
 
 /** Decision #8: max 15 studies in the detailed comparison/profile sections. */
 export const DETAILED_RESULTS_CAP = 15;
@@ -92,7 +92,14 @@ export async function runSearchWithAdapters(
   // fixes, just one step later. Only the *returned* `query` (below) and
   // anything downstream of this function (display, AI extraction) still
   // use the original, untranslated `question`.
-  const sourceQuery = await buildSearchQuery(question, locale);
+  //
+  // Built once as concept groups (one source term's translation per group)
+  // rather than calling buildSearchQuery separately — screening needs the
+  // groups to check per-concept relevance (see relevance.ts), while the
+  // adapters/ranking only need the flattened flat string, which is exactly
+  // equivalent to buildSearchQuery's own output.
+  const sourceQueryConcepts = await buildSearchQueryConcepts(question, locale);
+  const sourceQuery = sourceQueryConcepts.flat().join(" ");
 
   // Each source's failure is isolated — one adapter being down must not
   // prevent results from the others (docs/10, "Resilience").
@@ -119,7 +126,7 @@ export async function runSearchWithAdapters(
 
   const candidateCount = allRecords.length;
   const { records: deduped, duplicatesRemoved } = dedupeRecords(allRecords);
-  const { included, excluded } = screenRecords(deduped, sourceQuery);
+  const { included, excluded } = screenRecords(deduped, sourceQueryConcepts);
 
   const excludedByReason: Record<ExclusionReason, number> = { ...EMPTY_EXCLUSION_COUNTS };
   for (const decision of excluded) {
