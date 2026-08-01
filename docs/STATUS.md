@@ -2,18 +2,25 @@
 
 ## Current phase
 
-Phase 10 (Hardening) is complete. Phases 11–13 (preview beta, production
-prep, production launch) are **blocked on real infrastructure this session
-doesn't have** (Vercel project, Stripe/Supabase/Resend accounts, Hostpoint
-DNS access, Treuhänder sign-off) — most of their concrete steps are explicit
-`CLAUDE.md` human-stop-conditions. Per Erwin's 2026-07-26 instruction
-("finish everything as far as possible, ask only where truly necessary"),
-everything from those phases that *is* buildable without live access has
-been done: an independent code review (`docs/INDEPENDENT_REVIEW.md`), a
-step-by-step production runbook (`docs/PRODUCTION_RUNBOOK.md`), and a
-smoke-test script + checklist (`docs/SMOKE_TESTS.md`,
-`scripts/smoke-test.sh`, live-verified against a real build). What's left in
-11–13 needs Erwin (see "Blocking items" below).
+**Corrected 2026-08-01 — the paragraph below was stale and actively
+misleading a new session.** Phase 11 (preview beta on real infrastructure)
+is substantially complete, not blocked: Erwin has provisioned and this
+project has live-verified, end to end, a real Vercel project, Supabase
+project, Stripe test-mode account (including a genuine test-mode purchase
+via `tekmesis.com`, cancellation, duplicate-webhook idempotency), Resend,
+an `ANTHROPIC_API_KEY`, and the daily expiry cron (`CRON_SECRET` set,
+manually fired twice against the real Supabase project). `tekmesis.com`
+itself is already live and DNS-resolved. See the dated log entries below
+(2026-07-27 through 2026-07-29) for the individual verifications and
+`OPEN_RISKS.md` #1/#2/#13/#14/#16 for the risk-register side of each.
+
+What genuinely remains before Phase 12/13 (production launch) is a short,
+specific list: Stripe **live**-mode activation (`STRIPE_MODE=live`, live
+keys, Stripe Tax — `CLAUDE.md` human-stop-condition, not started) plus a
+handful of still-open product decisions that need Erwin's answer, not more
+engineering. See "Open decisions awaiting Erwin" below for the current,
+accurate list — read that section instead of assuming this project is
+still waiting on basic infrastructure.
 
 ## Completed
 
@@ -2111,48 +2118,63 @@ behoben und live bestätigt.
 
 ## Blocking items tracked for later (do not block continued implementation)
 
-- ~~Treuhänder confirmation on Swiss MWST / EU cross-border VAT~~ — **resolved
-  2026-07-28**, see the entry above and `OPEN_RISKS.md` #1. Remaining before
-  live Stripe: activating Stripe Tax (Stripe dashboard action) and the EU
-  withdrawal-right checkbox at checkout (`OPEN_RISKS.md` #14).
-- Live-network validation of the 4 source adapters (`OPEN_RISKS.md` #2) — the
-  resilience path (all sources down) is confirmed working live in this
-  sandbox; the success path (sources actually returning data) still needs a
-  real run from an environment with network access.
-- Live validation of the Supabase migration and Stripe checkout/webhook code
-  (`OPEN_RISKS.md` #13) — nothing has touched a real database or a real
-  Stripe account yet.
-- Wiring the live UI to real report creation + a working checkout button +
-  real premium-report generation on payment (`OPEN_RISKS.md` #14) — needs the
-  credentials above first.
-- AI-based extraction/synthesis for Phase 3 (query interpretation) and Phase 8
-  (key findings, study-level extraction, integrated synthesis, practical
-  interpretation) — needs `ANTHROPIC_API_KEY`, not yet provisioned.
-- Live validation of email sending (Resend) and analytics forwarding
-  (PostHog), plus the deferred Phase 9 admin sections (`OPEN_RISKS.md` #15).
-- `CRON_SECRET` not provisioned and the daily expiry cron never triggered by
-  a real scheduler; no secure-link report-viewer page exists yet to read
-  report status back to a user (`OPEN_RISKS.md` #16) — needs a deployed
-  Vercel project.
-- Everything in `docs/PRODUCTION_RUNBOOK.md` §1–3 (Vercel project, live
-  Supabase/Stripe/Resend accounts, Hostpoint DNS change, Treuhänder sign-off,
-  a real payment, tagging `v0.1.0`) — all require Erwin's direct action per
-  `CLAUDE.md`'s human-stop-conditions; this session will not and cannot
-  perform them.
+**Rewritten 2026-08-01 — everything below this line used to say "not yet
+provisioned"/"needs a deployed Vercel project" for infrastructure that, per
+the dated log entries above, has actually been live since 2026-07-27/28.
+Corrected so the next session doesn't repeat that mistake.**
+
+Genuinely still open, human-stop-condition items (`CLAUDE.md`):
+- **Stripe live-mode activation** — switch out of test mode, activate
+  Stripe Tax (Treuhänder-confirmed mitigation, `OPEN_RISKS.md` #1), set live
+  keys in Vercel Production, add the production webhook endpoint
+  (`PRODUCTION_RUNBOOK.md` §2.1/§2.3). Not started; this is the actual next
+  infrastructure milestone, not Supabase/Stripe test-mode setup (already
+  done).
+- Tagging `v0.1.0` and the rest of `PRODUCTION_RUNBOOK.md` §2–3 once
+  live-mode Stripe is active.
+
+Genuinely still open **product decisions** (not infrastructure — see "Open
+decisions awaiting Erwin" immediately below for the current list).
+
+## Open decisions awaiting Erwin
+
+Per `CLAUDE.md`: "Ask one concept question at a time." These are the
+concept-level questions currently sitting open across the docs, most recent
+research first — pick whichever you want to tackle, one at a time, or say
+to defer any of them indefinitely:
+
+1. **Country-of-study search filter** (`OPEN_RISKS.md` #22, researched
+   2026-07-29) — three options at increasing effort/coverage: (1)
+   institution-country badge only, no filter; (2) a real but caveated MeSH
+   geographic filter (Europe PMC + NCBI only); (3) ClinicalTrials.gov
+   cross-reference for linked RCTs (most honest data, most work, unknown
+   coverage %). Recommendation if pursued: option 2. Or keep deferred.
+2. **Studien-Wissensspeicher (AI-extraction cache) — two of the four
+   `CONCEPT_STUDY_KNOWLEDGE_BASE.md` §5 questions were never actually
+   answered**, even though Erwin approved building it anyway: (a) a real
+   Crossref/Europe PMC terms-of-service check (this session's read was
+   informal, not a legal one); (b) cache-lifetime policy — cache
+   AI-extracted fields indefinitely, or add a re-extraction trigger for
+   when the AI model/prompt changes materially?
+3. **Themen-Digest E-Mail** (`OPEN_RISKS.md` #25) — the signup/storage/
+   unsubscribe infrastructure is easy to build, but needs Erwin's decision
+   on who curates the actual "latest findings" content and how often,
+   before the signup form is worth building at all.
+4. **Evidenz-Update-Check** (`OPEN_RISKS.md` #25) — a one-time
+   user-triggered "check again now" re-check (to stay clear of
+   `CLAUDE.md`'s "no subscription" rule) still needs Erwin's sign-off on
+   using email as the result channel (no mandatory account exists).
+5. **New example question for "Arbeit, Produktivität & Organisation"?**
+   (this file, "Erwin bestätigt den Klassifizierer-Fix" entry) — real
+   compensation/Zusatzleistungen vocabulary is still missing from all 12
+   topics; a new example question would need the same researchability/
+   evidence check as the existing 60 before being added.
 
 ## Next step
 
-Everything that was buildable without live credentials for the remainder of
-`IMPLEMENTATION_PLAN.md` (Phases 11–13) is done as of this update:
-`docs/INDEPENDENT_REVIEW.md`, `docs/PRODUCTION_RUNBOOK.md`,
-`docs/SMOKE_TESTS.md` + `scripts/smoke-test.sh`. Erwin has since deployed a
-real Vercel project on `claude/takemesis-mvp-app-f622xx` (auto-redeploy
-confirmed on every push) and used it to run the first genuine live-network
-test of the search pipeline, which is documented above. What remains is
-entirely gated on Erwin provisioning real accounts/DNS/legal sign-off — see
-`docs/PRODUCTION_RUNBOOK.md` for the exact ordered steps once that starts,
-and `docs/OPEN_RISKS.md` for the full current risk register (including the
-still-open OpenAlex-reachability question from the live test). The natural
-next session should begin at `PRODUCTION_RUNBOOK.md` §1 once at least a
-Supabase + Stripe-test-mode set of credentials exists alongside the now-live
-Vercel project.
+The infrastructure milestone is Stripe live-mode activation
+(`PRODUCTION_RUNBOOK.md` §2) — a human stop-condition, Erwin's action, not
+this session's. Otherwise, the next session should work through "Open
+decisions awaiting Erwin" above one at a time, per `CLAUDE.md`'s workflow
+rule, rather than re-asking for infrastructure credentials that already
+exist.
