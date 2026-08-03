@@ -61,6 +61,56 @@ describe("buildSearchQuery", () => {
     expect(query).toContain("muscle preservation");
   });
 
+  it("mechanically splits an unlisted German compound into two known dictionary words (2026-08-01, decision #8)", async () => {
+    // "gedächtnistraining" itself has no dictionary entry, but "gedächtnis"
+    // ("memory") and "training" ("training") both do, concatenated with no
+    // linking element — a real, common German word.
+    const query = await buildSearchQuery(
+      "Wie wirkt sich Gedächtnistraining auf die Konzentration aus?",
+      "de",
+    );
+    expect(query).toContain("memory training");
+    expect(query).toContain("concentration");
+  });
+
+  it("splits a compound joined by a linking element ('Fugenelement')", async () => {
+    // "arbeitszeit" = "arbeit" ("work") + "s" (linking element) + "zeit"
+    // ("time") — a real word, no direct dictionary entry of its own
+    // (only "arbeitszeitmodelle" is listed).
+    const query = await buildSearchQuery("Wie wirkt sich die Arbeitszeit auf die Erholung aus?", "de");
+    expect(query).toContain("work time");
+  });
+
+  it("prefers an existing whole-word dictionary entry over splitting it", async () => {
+    // "bildschirmzeit" ("screen time") is already its own dictionary entry —
+    // must not be re-split into "bildschirm" + "zeit" (which aren't
+    // separately listed, so a wrong split isn't even possible here, but this
+    // guards against dictionary[token] ever being skipped in favor of
+    // splitCompound).
+    const query = await buildSearchQuery("Wie wirkt sich Bildschirmzeit aus?", "de");
+    expect(query).toContain("screen time");
+  });
+
+  it("leaves a compound untranslated when no valid two-part split exists", async () => {
+    const query = await buildSearchQuery("Wirkt Zauberpulver auf Konzentration?", "de");
+    expect(query).toContain("zauberpulver");
+  });
+
+  it("does not attempt compound splitting for English or French (German-only, decision #8)", async () => {
+    const enQuery = await buildSearchQuery("Does memorytraining affect concentration?", "en");
+    expect(enQuery).toContain("memorytraining");
+    const frQuery = await buildSearchQuery("La mémoireentrainement affecte-t-elle la concentration ?", "fr");
+    expect(frQuery).toContain("mémoireentrainement");
+  });
+
+  it("groups a mechanically split compound as one multi-word concept, not two separate ones", async () => {
+    const concepts = await buildSearchQueryConcepts(
+      "Wie wirkt sich Gedächtnistraining auf die Konzentration aus?",
+      "de",
+    );
+    expect(concepts).toContainEqual(["memory", "training"]);
+  });
+
   it("splits hyphenated German compounds into separately translatable tokens", async () => {
     const query = await buildSearchQuery(
       "Wie wirken sich Smartphone-Benachrichtigungen auf das digitale Wohlbefinden aus?",

@@ -169,6 +169,49 @@ checkpoint (decision #15) and before each production-readiness gate.
    an AI call now that `ANTHROPIC_API_KEY` exists — the tradeoff (cost,
    latency, an extra failure mode to handle safely) needs a real decision,
    not a default.
+   **Decision #8 made and implemented (2026-08-03):** during the pre-launch
+   review, Erwin was given three options for this dictionary-coverage
+   ceiling — (A) keep manually filling `DE_EN_DICTIONARY` gap-by-gap, (B) add
+   a mechanical compound-word splitter, or (C) route German translation
+   through the AI fallback like French already does (`AUTO_LEARN_LOCALES`).
+   Option C was explicitly not chosen: German was deliberately excluded from
+   `AUTO_LEARN_LOCALES` after the 2026-07-29 live incident where an isolated,
+   context-free AI translation of "stabiler" returned "stable," flooding a
+   real (test-mode) paid search with unrelated horse-stable/spider-anatomy/
+   soil-science results (see this file's #29 entry). Even with the later
+   `term-translation-ai.ts` hardening (passing full sentence context to
+   disambiguate), that residual polysemy risk is documented as reduced, not
+   eliminated, and was never re-verified as safe enough to extend to German.
+   **Erwin chose Option B.** Implemented in `query-translation.ts`:
+   `splitCompound()` tries splitting an unlisted German token in two at every
+   position (minimum 3 characters per side), optionally absorbing a German
+   linking element ("Fugenelement" — "", "s", "es", "n", "en", "e", "er",
+   "ns", "ens") between the two parts, and only accepts the split if **both**
+   resulting parts already have their own confirmed `DE_EN_DICTIONARY`
+   entry — it never guesses at an unverified fragment, so it carries none of
+   Option C's polysemy risk. Wired into both `buildSearchQuery` (flat query
+   string) and `buildSearchQueryConcepts` (keeps a split compound grouped as
+   one multi-word concept, e.g. `["memory", "training"]`, not two unrelated
+   single-word concepts — matters for `relevance.ts`'s
+   `meetsRelevanceThreshold`). Gated to German only via
+   `COMPOUND_SPLIT_LOCALES`; a whole-word dictionary entry (e.g.
+   "bildschirmzeit") is always preferred over splitting it. 6 new regression
+   tests added to `query-translation.test.ts` covering: a no-linking-element
+   split ("Gedächtnistraining" → "memory training"), a linking-element split
+   ("Arbeitszeit" = arbeit+s+zeit → "work time"), preference for an existing
+   whole-word entry over splitting, an unsplittable compound left untranslated
+   ("Zauberpulver"), English/French explicitly not compound-split, and
+   concept-grouping of a split compound. Full verification run clean:
+   `npm run lint`, `npm run typecheck`, unit tests (25/25 in this file,
+   700/701 overall — the one unrelated failure in
+   `resend-confirmation-emails.test.ts` is a pre-existing flaky random-UUID
+   assertion, confirmed unrelated by re-running that file alone in isolation,
+   where it passed), and `npm run build`. This does not retroactively explain
+   or fix the four still-undiagnosed 2026-08-01 "0/0 despite correct
+   translation" cases documented under #19 (those were dictionary-translation
+   successes with an unknown deeper cause, not compounding failures) — it
+   closes the structural dictionary-coverage ceiling this entry and #6/#19
+   flagged, going forward.
    **Still open:** one of the two live
    runs showed an "OpenAlex nicht erreichbar" notice; Erwin was asked to check
    Vercel's Runtime Logs for the OpenAlex-specific error line to determine

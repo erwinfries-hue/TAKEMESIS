@@ -103,6 +103,85 @@ const DICTIONARIES: Partial<Record<Locale, Record<string, string>>> = {
  */
 const AUTO_LEARN_LOCALES = new Set<Locale>(["fr"]);
 
+/**
+ * German compounding lets speakers freely concatenate words — optionally
+ * joined by a linking element ("Fugenelement", e.g. the "s" in
+ * "Liebesbrief", the "n" in "Wochenende") — into a single new word that
+ * itself appears in no dictionary. DE_EN_DICTIONARY's flat lookup
+ * structurally can't cover every such combination (docs/OPEN_RISKS.md
+ * #2/#6/#19) — live-testing 2026-08-01 across all 12 topics found several
+ * everyday compounds ("Bildschirmzeit", "Preisanker", "Energieverbrauch")
+ * that happened to already have their own dictionary entry, but the next
+ * unseen compound built from the same two known parts would not.
+ *
+ * Deliberately mechanical, not a semantic guess: only ever accepts a split
+ * where BOTH resulting parts are themselves already independent dictionary
+ * entries — never invents a translation for a fragment that isn't itself
+ * known. Chosen instead of extending the AI-fallback tier (AUTO_LEARN_LOCALES
+ * below) to German: that tier's live-found "stabiler" -> "stable" incident
+ * (a bare-word translation catastrophically wrong for its actual sense in
+ * the sentence) is a semantic-guessing risk this mechanical split doesn't
+ * carry, since it never translates a fragment on its own — only ever
+ * combines two already-correct, independently-verified translations.
+ */
+const COMPOUND_SPLIT_LOCALES = new Set<Locale>(["de"]);
+const MIN_COMPOUND_PART_LENGTH = 3;
+// Most-to-least common Fugenelemente. "" (no link) must be tried too — e.g.
+// "Schlafzimmer" = "schlaf" + "zimmer", no linking element at all.
+const GERMAN_LINKING_ELEMENTS = ["", "s", "es", "n", "en", "e", "er", "ns", "ens"];
+
+/**
+ * Tries every split point left-to-right and returns the first (shortest
+ * left part) where both sides are known dictionary words — deterministic
+ * and simple rather than linguistically optimal, which is an acceptable
+ * trade-off for a best-effort fallback: any accepted split is still made
+ * of two independently-verified real translations, never worse than the
+ * pre-existing "leave the whole compound untranslated" behavior it replaces.
+ */
+function splitCompound(word: string, dictionary: Record<string, string>): string | null {
+  for (let i = MIN_COMPOUND_PART_LENGTH; i <= word.length - MIN_COMPOUND_PART_LENGTH; i++) {
+    const left = word.slice(0, i);
+    const leftTranslation = dictionary[left];
+    if (!leftTranslation) {
+      continue;
+    }
+    const rest = word.slice(i);
+    for (const link of GERMAN_LINKING_ELEMENTS) {
+      if (!rest.startsWith(link)) {
+        continue;
+      }
+      const right = rest.slice(link.length);
+      if (right.length < MIN_COMPOUND_PART_LENGTH) {
+        continue;
+      }
+      const rightTranslation = dictionary[right];
+      if (rightTranslation) {
+        return `${leftTranslation} ${rightTranslation}`;
+      }
+    }
+  }
+  return null;
+}
+
+function translateToken(
+  token: string,
+  locale: Locale,
+  dictionary: Record<string, string>,
+  learned: Map<string, string>,
+): string {
+  const known = dictionary[token] ?? learned.get(token);
+  if (known) {
+    return known;
+  }
+  if (COMPOUND_SPLIT_LOCALES.has(locale)) {
+    const split = splitCompound(token, dictionary);
+    if (split) {
+      return split;
+    }
+  }
+  return token;
+}
+
 function tokenize(text: string, stopwords: Set<string>): string[] {
   return text
     .toLowerCase()
@@ -224,7 +303,7 @@ export async function buildSearchQuery(
 
   const learned = await translateUnknownTokens(tokens, locale, question, dictionary, deps);
 
-  return tokens.map((token) => dictionary[token] ?? learned.get(token) ?? token).join(" ");
+  return tokens.map((token) => translateToken(token, locale, dictionary, learned)).join(" ");
 }
 
 /**
@@ -262,7 +341,7 @@ export async function buildSearchQueryConcepts(
   const learned = await translateUnknownTokens(tokens, locale, question, dictionary, deps);
 
   return tokens.map((token) => {
-    const translated = dictionary[token] ?? learned.get(token) ?? token;
+    const translated = translateToken(token, locale, dictionary, learned);
     return translated.split(" ").filter((word) => word.length > 0);
   });
 }
