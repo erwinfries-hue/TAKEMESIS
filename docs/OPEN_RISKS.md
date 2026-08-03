@@ -1043,6 +1043,20 @@ checkpoint (decision #15) and before each production-readiness gate.
       no-report/not-found e2e fixtures, so no existing test needed
       updating), `npm run test:a11y` (21/21).
 
+    **RESOLVED — live-verified end to end (2026-08-03), same day.** Erwin
+    completed a real live-mode purchase (report generated, viewable), ran
+    the `last_update_check_at` migration in the Supabase SQL editor, clicked
+    "Jetzt prüfen" on the live report, got the "Prüfung abgeschlossen — keine
+    neuen Studien gefunden" inline result, and confirmed the matching
+    `buildUpdateCheckResultEmail` result email arrived correctly (subject,
+    body, "Deinen Report ansehen" button, support link all as implemented).
+    Decision #7's Evidenz-Update-Check half is now genuinely live-confirmed,
+    not just code-complete. (The Themen-Digest half remains deferred — see
+    the "Decision #7 made and implemented" entry above.) This same purchase
+    also surfaced a real, separate finding about the confirmation-email
+    resend safety net (item #30's 2026-08-03 update): its migration had
+    never actually been applied in production.
+
 26. **RESOLVED 2026-07-28.** The high-risk detector's `"scheidung"` term (for
     `legal_financial_high_stakes`) false-positived on "Entscheidung(en)"
     (decision) — a genuinely common German word, not an edge case, and
@@ -1335,6 +1349,30 @@ checkpoint (decision #15) and before each production-readiness gate.
       cases confirming the timestamp is set on success and left null on
       email failure. `npm run lint && npm run typecheck && npm run test &&
       npm run build` all green (695 unit tests, up from 682).
+
+    **Update (2026-08-03) — the fix above had never actually been active in
+    production: the `confirmation_email_sent_at` migration was still unapplied,
+    two days after being written.** Discovered while live-testing decision #7
+    (Evidenz-Update-Check, see item #25): Erwin made a real live-mode
+    purchase and its "Dein Report ist bereit" email never arrived — same
+    failure mode as this item, recurring again. Since the Evidenz-Update-
+    Check's own result email (built the same day, sent via the same
+    `sendEmail`/Resend path) arrived correctly, this ruled out a general
+    email-sending regression and pointed back at something specific to this
+    migration. Erwin confirmed via the Supabase SQL editor that
+    `select confirmation_email_sent_at from reports limit 1;` failed with
+    "column does not exist" — the migration from 2026-08-01 had simply never
+    been run, meaning `generate-report-content.ts`'s
+    `confirmationEmailSentAt` write was silently failing on every "ready"
+    report for two days, **and** the resend sweep's own read of that column
+    would have been broken too, so this safety net had never actually been
+    capable of catching anything since it was built. Fixed live: Erwin ran
+    `alter table reports add column confirmation_email_sent_at timestamptz;`
+    in the SQL editor. Not yet independently re-verified that the resend
+    sweep now successfully backfills this specific report's missed email
+    (next scheduled run: 03:15 server time, or a manual trigger via Vercel's
+    Cron Jobs dashboard) — worth a follow-up check rather than assuming
+    success from the migration alone.
 
 31. **RESOLVED 2026-07-31 — `/admin/payments` was empty despite real, successful
     Stripe charges; the one-click refund action had nothing to act on.**
