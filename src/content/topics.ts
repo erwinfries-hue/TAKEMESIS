@@ -270,7 +270,7 @@ export const topics: Topic[] = [
         "Fragen zu Arbeitsformen, Produktivität, Vergütung/Zusatzleistungen und Organisation im Berufsalltag.",
       examples: [
         "Wie beeinflusst Homeoffice die Produktivität?",
-        "Welche Meetingformate sind effizienter?",
+        "Welchen Einfluss hat Multitasking auf die Arbeitsleistung?",
         "Unterstützen Fokuszeiten die Arbeitsleistung?",
         "Welche Arbeitszeitmodelle verbessern Leistung und Wohlbefinden?",
         "Wie wirken sich Unterbrechungen auf konzentrierte Arbeit aus?",
@@ -285,7 +285,7 @@ export const topics: Topic[] = [
         "Questions about work formats, productivity, compensation/benefits, and organization at work.",
       examples: [
         "How does remote work affect productivity?",
-        "Which meeting formats are more efficient?",
+        "What influence does multitasking have on productivity?",
         "Do focus blocks support work performance?",
         "Which work-time models improve performance and well-being?",
         "How do interruptions affect focused work?",
@@ -300,7 +300,7 @@ export const topics: Topic[] = [
         "Questions sur les formes de travail, la productivité, la rémunération/les avantages et l'organisation au travail.",
       examples: [
         "Comment le télétravail influence-t-il la productivité ?",
-        "Quels formats de réunion sont plus efficaces ?",
+        "Quelle influence le multitâche a-t-il sur la performance au travail ?",
         "Les plages de concentration soutiennent-elles la performance au travail ?",
         "Quels modèles de temps de travail améliorent la performance et le bien-être ?",
         "Comment les interruptions influencent-elles le travail concentré ?",
@@ -320,7 +320,7 @@ export const topics: Topic[] = [
       examples: [
         "Welche Methoden helfen beim Aufbau stabiler Gewohnheiten?",
         "Welche Interventionen reduzieren Alltagsstress?",
-        "Wie wirksam sind Dankbarkeits- oder Achtsamkeitsübungen?",
+        "Wie wirksam sind Achtsamkeitsübungen?",
         "Welche Faktoren begünstigen das Durchhalten neuer Gewohnheiten?",
         "Wie hängen soziale Kontakte und allgemeines Wohlbefinden zusammen?",
       ],
@@ -333,7 +333,7 @@ export const topics: Topic[] = [
       examples: [
         "Which methods help build stable habits?",
         "Which interventions reduce everyday stress?",
-        "How effective are gratitude or mindfulness practices?",
+        "How effective are mindfulness exercises?",
         "What factors favor sticking with new habits?",
         "How are social contact and general well-being related?",
       ],
@@ -346,7 +346,7 @@ export const topics: Topic[] = [
       examples: [
         "Quelles méthodes aident à instaurer des habitudes durables ?",
         "Quelles interventions réduisent le stress quotidien ?",
-        "Quelle est l'efficacité des exercices de gratitude ou de pleine conscience ?",
+        "Dans quelle mesure les exercices de pleine conscience sont-ils efficaces ?",
         "Quels facteurs favorisent le maintien de nouvelles habitudes ?",
         "Quel est le lien entre les contacts sociaux et le bien-être général ?",
       ],
@@ -408,10 +408,10 @@ export const topics: Topic[] = [
         "Allgemeine Fragen zu Erziehungsansätzen und kindlicher Entwicklung — keine Einschätzung einzelner Kinder.",
       examples: [
         "Welche Erziehungsansätze fördern Selbstregulation?",
-        "Wie beeinflusst Bildschirmzeit bestimmte Entwicklungsbereiche?",
+        "Welchen Effekt hat regelmässige Bewegung auf die kindliche Entwicklung?",
         "Welche Lernumgebung unterstützt Kinder am besten?",
         "Welche Rolle spielt Routine für die kindliche Entwicklung?",
-        "Wie wirkt sich gemeinsames Vorlesen auf die Sprachentwicklung aus?",
+        "Wie wirkt sich Vorlesen auf die Sprachentwicklung aus?",
       ],
       limitations:
         "Keine individuelle Einschätzung oder Behandlung einzelner Kinder; erhöhte Sorgfalt bei sensiblen Themen (Safeguarding).",
@@ -422,10 +422,10 @@ export const topics: Topic[] = [
         "General questions about parenting approaches and child development — no assessment of individual children.",
       examples: [
         "Which parenting approaches foster self-regulation?",
-        "How does screen time affect specific areas of development?",
+        "What effect does regular physical activity have on child development?",
         "Which learning environment best supports children?",
         "What role does routine play in child development?",
-        "How does shared reading affect language development?",
+        "How does reading aloud affect language development?",
       ],
       limitations:
         "No individual assessment or treatment of specific children; heightened safeguarding care for sensitive topics.",
@@ -436,10 +436,10 @@ export const topics: Topic[] = [
         "Questions générales sur les approches éducatives et le développement de l'enfant — aucune évaluation d'enfants individuels.",
       examples: [
         "Quelles approches éducatives favorisent l'autorégulation ?",
-        "Comment le temps d'écran influence-t-il certains domaines du développement ?",
+        "Quel effet l'activité physique régulière a-t-elle sur le développement de l'enfant ?",
         "Quel environnement d'apprentissage soutient le mieux les enfants ?",
         "Quel rôle joue la routine dans le développement de l'enfant ?",
-        "Comment la lecture partagée influence-t-elle le développement du langage ?",
+        "Comment la lecture à voix haute influence-t-elle le développement du langage ?",
       ],
       limitations:
         "Aucune évaluation ou traitement individuel d'enfants spécifiques ; vigilance accrue pour les sujets sensibles (protection de l'enfance).",
@@ -453,8 +453,8 @@ export const topics: Topic[] = [
       name: "Konsum & Kaufentscheidungen",
       description: "Fragen zu Kaufverhalten, Produktentscheidungen und Konsumpsychologie.",
       examples: [
-        "Welche Produktmerkmale beeinflussen nachweislich Haltbarkeit?",
-        "Wie beeinflussen Preisanker das Kaufverhalten?",
+        "Welchen Einfluss hat Nachhaltigkeit auf das Kaufverhalten?",
+        "Wie beeinflusst Verpackung das Kaufverhalten?",
         "Welche Labels beeinflussen das Kaufverhalten nachweislich?",
         "Welche Haushaltsmassnahmen sparen tatsächlich Energie?",
         "Wie beeinflussen Bewertungen anderer Nutzer das Kaufverhalten?",
@@ -466,8 +466,8 @@ export const topics: Topic[] = [
       name: "Consumer & Purchasing Decisions",
       description: "Questions about buying behavior, product decisions, and consumer psychology.",
       examples: [
-        "Which product features demonstrably influence durability?",
-        "How do price anchors affect buying behavior?",
+        "What influence does sustainability have on buying behavior?",
+        "How does packaging influence buying behavior?",
         "Which labels demonstrably influence buying behavior?",
         "Which household measures actually save energy?",
         "How do other users' reviews influence buying behavior?",
@@ -479,8 +479,8 @@ export const topics: Topic[] = [
       name: "Consommation & Décisions d'achat",
       description: "Questions sur le comportement d'achat, les décisions relatives aux produits et la psychologie de la consommation.",
       examples: [
-        "Quelles caractéristiques de produit influencent démontrablement la durabilité ?",
-        "Comment les ancrages de prix influencent-ils le comportement d'achat ?",
+        "Quelle influence la durabilité a-t-elle sur le comportement d'achat ?",
+        "Comment l'emballage influence-t-il le comportement d'achat ?",
         "Quels labels influencent démontrablement le comportement d'achat ?",
         "Quelles mesures ménagères permettent réellement d'économiser de l'énergie ?",
         "Comment les avis d'autres utilisateur·rices influencent-ils le comportement d'achat ?",
@@ -497,7 +497,7 @@ export const topics: Topic[] = [
       name: "Umwelt, Nachhaltigkeit & Alltag",
       description: "Fragen zu nachhaltigem Verhalten und dessen messbarer Wirkung im Alltag.",
       examples: [
-        "Welche Alltagsmassnahmen reduzieren den persönlichen Energieverbrauch?",
+        "Welchen Einfluss hat Mobilität auf die Nachhaltigkeit?",
         "Welche Verpackungsalternativen schneiden in Studien besser ab?",
         "Welche Mobilitätsformen haben den grössten messbaren ökologischen Effekt?",
         "Wie wirksam ist Recycling im Vergleich zu Konsumreduktion?",
@@ -510,7 +510,7 @@ export const topics: Topic[] = [
       name: "Environment, Sustainability & Everyday Life",
       description: "Questions about sustainable behavior and its measurable everyday impact.",
       examples: [
-        "Which everyday measures reduce personal energy consumption?",
+        "What influence does mobility have on sustainability?",
         "Which packaging alternatives perform better in studies?",
         "Which mobility choices have the largest measurable ecological effect?",
         "How effective is recycling compared to reducing consumption?",
@@ -523,7 +523,7 @@ export const topics: Topic[] = [
       name: "Environnement, Durabilité & Quotidien",
       description: "Questions sur les comportements durables et leur effet mesurable au quotidien.",
       examples: [
-        "Quelles mesures quotidiennes réduisent la consommation d'énergie personnelle ?",
+        "Quelle influence la mobilité a-t-elle sur la durabilité ?",
         "Quelles alternatives d'emballage obtiennent de meilleurs résultats dans les études ?",
         "Quels modes de mobilité ont l'effet écologique mesurable le plus important ?",
         "Quelle est l'efficacité du recyclage par rapport à la réduction de la consommation ?",

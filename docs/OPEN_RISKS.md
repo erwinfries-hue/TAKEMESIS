@@ -578,6 +578,47 @@ checkpoint (decision #15) and before each production-readiness gate.
     before being added, not invented. Owner: Erwin (run the tool on
     `takemesis.vercel.app`, report back which examples fail per topic).
 
+    **Update (2026-08-01): done — all 12 topics run live, 7 of 60 example
+    questions replaced.** Erwin ran `/admin/example-questions` against every
+    topic on the live deployment. 7 failures found across 5 topics:
+    - 3 genuinely too narrow (1 included study, below the 2-study
+      `LIMITATIONS_MIN_INCLUDED_STUDIES` threshold): "Welche Meetingformate
+      sind effizienter?", "Wie wirkt sich gemeinsames Vorlesen auf die
+      Sprachentwicklung aus?", "Welche Produktmerkmale beeinflussen
+      nachweislich Haltbarkeit?".
+    - 4 came back with literally 0 candidates despite covering
+      well-researched topics ("Wie wirksam sind Dankbarkeits- oder
+      Achtsamkeitsübungen?", "Wie beeinflusst Bildschirmzeit bestimmte
+      Entwicklungsbereiche?", "Wie beeinflussen Preisanker das
+      Kaufverhalten?", "Welche Alltagsmassnahmen reduzieren den persönlichen
+      Energieverbrauch?") — initially suspected as dictionary-translation
+      gaps (two rounds of mistaken diagnosis, both corrected after actually
+      checking `de-en-dictionary.ts`: the exact "Dankbarkeits-" elision case
+      was already fixed 2026-07-29, and "Bildschirmzeit"/"Preisanker"/
+      "Energieverbrauch" were already dictionary entries — an earlier grep
+      just used the wrong quoting convention and found nothing). Confirmed
+      via `buildSearchQuery`/`buildSearchQueryConcepts` traces that all four
+      translate correctly. **The real cause of these 4 zero-candidate
+      results is still unknown** — not re-diagnosable from this sandbox (no
+      live network access to OpenAlex/Crossref/Europe PMC/NCBI). Not
+      chased further tonight; all 7 questions replaced instead.
+    - All 7 replacements were sanity-checked offline before being added:
+      translation-traced (no untranslated fragments) via
+      `buildSearchQuery`, and run through
+      `topics-example-questions.test.ts` (high-risk gate +
+      "top domain match is its own topic"). That test run caught a real
+      self-introduced regression: `domain.ts`'s `buildIndex()` derives each
+      topic's classification keywords *from its own example questions*, so
+      the first English replacement ("...on work performance?") injected
+      "work" into the Arbeit topic's keyword index and made an unrelated
+      Lernen & Bildung example ("Does active recall work better than
+      rereading?") misclassify into Arbeit. Caught immediately by the
+      existing test suite, not live; reworded to "...on productivity?" and
+      confirmed 244/244 passing. **Still not live-verified against the
+      real search pipeline** — that's the one check this sandbox can't do;
+      revisit this item if any of the 7 replacements themselves turn out to
+      fail eligibility once checked live.
+
 20. **AXIA4 is represented as a text link, not the official logo image.**
     Erwin explicitly decided (2026-07-26) against embedding
     `docs/assets/brand/AXIA4_OFFICIAL_LOGO_REFERENCE.png` (a non-transparent
