@@ -3,6 +3,7 @@ import {
   buildReportFailedEmail,
   buildReportReadyEmail,
   buildRefundConfirmationEmail,
+  buildUpdateCheckResultEmail,
 } from "./templates";
 
 const baseParams = {
@@ -60,5 +61,61 @@ describe("email templates", () => {
     expect(deEmail.subject).toBe("Rückerstattung bestätigt");
     const enEmail = buildRefundConfirmationEmail({ locale: "en", ...baseParams });
     expect(enEmail.subject).toBe("Refund confirmed");
+  });
+
+  describe("buildUpdateCheckResultEmail (decision #7)", () => {
+    const oneNewStudy = [
+      { title: "New Fixture Study", venue: "Fixture Journal", year: 2026, sourceUrl: "https://example.com/s1", doi: null },
+    ];
+
+    it("lists each new study with a link, when studies were found", () => {
+      const email = buildUpdateCheckResultEmail({ locale: "de", ...baseParams, newStudies: oneNewStudy });
+      expect(email.html).toContain("New Fixture Study");
+      expect(email.html).toContain("https://example.com/s1");
+      expect(email.subject).toBe("Neue Studien zu deiner TEKMESIS-Frage gefunden");
+    });
+
+    it("falls back to a doi.org link when sourceUrl is missing", () => {
+      const email = buildUpdateCheckResultEmail({
+        locale: "en",
+        ...baseParams,
+        newStudies: [{ title: "DOI-only Study", venue: null, year: null, sourceUrl: null, doi: "10.1/xyz" }],
+      });
+      expect(email.html).toContain("https://doi.org/10.1/xyz");
+    });
+
+    it("uses a distinct subject and body when no new studies were found, without a study list", () => {
+      const email = buildUpdateCheckResultEmail({ locale: "de", ...baseParams, newStudies: [] });
+      expect(email.subject).toBe("Update-Check: keine neuen Studien gefunden");
+      expect(email.html).not.toContain("<ul");
+      expect(email.text).toMatch(/keine neuen Studien/);
+    });
+
+    it("explicitly states the list is unscreened/unsynthesized, not a full new analysis", () => {
+      const email = buildUpdateCheckResultEmail({ locale: "de", ...baseParams, newStudies: oneNewStudy });
+      expect(email.text).toMatch(/noch nicht.*ausgewertet|nicht.*zusammengefasst/);
+    });
+
+    it("is localized across all three locales", () => {
+      const de = buildUpdateCheckResultEmail({ locale: "de", ...baseParams, newStudies: oneNewStudy });
+      const en = buildUpdateCheckResultEmail({ locale: "en", ...baseParams, newStudies: oneNewStudy });
+      const fr = buildUpdateCheckResultEmail({ locale: "fr", ...baseParams, newStudies: oneNewStudy });
+      expect(de.subject).not.toBe(en.subject);
+      expect(en.subject).not.toBe(fr.subject);
+    });
+
+    it("never includes any hint of the original question", () => {
+      const email = buildUpdateCheckResultEmail({ locale: "de", ...baseParams, newStudies: oneNewStudy });
+      expect(email.html.toLowerCase()).not.toContain("frage:");
+    });
+
+    it("shows 'not reported' rather than fabricating a missing title", () => {
+      const email = buildUpdateCheckResultEmail({
+        locale: "de",
+        ...baseParams,
+        newStudies: [{ title: null, venue: null, year: null, sourceUrl: null, doi: null }],
+      });
+      expect(email.html).toContain("nicht angegeben");
+    });
   });
 });

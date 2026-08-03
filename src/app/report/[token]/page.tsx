@@ -7,6 +7,8 @@ import { PremiumReportView } from "@/components/premium-report/premium-report-vi
 import { ReportStatusNotice } from "@/components/report-status-notice";
 import { ReportFeedbackWidget } from "@/components/report-feedback-widget";
 import { ReportProcessingPoller } from "@/components/report-processing-poller";
+import { UpdateCheckWidget } from "@/components/update-check-widget";
+import { canRunUpdateCheck } from "@/lib/reports/update-check";
 import { serverEnv } from "@/lib/env/server";
 
 // Search + AI enrichment already run once at fulfillment time (the webhook),
@@ -93,6 +95,14 @@ export default async function ReportViewerPage({
       return (
         <main className="flex flex-1 flex-col items-center gap-8 px-6 py-16 sm:px-10">
           <PremiumReportView dict={dict} report={report.finalPayload} />
+          {report.email && (
+            <UpdateCheckWidget
+              dict={dict.updateCheck}
+              token={token}
+              email={report.email}
+              initiallyRateLimited={!canRunUpdateCheck(report)}
+            />
+          )}
           <ReportFeedbackWidget dict={dict.reportFeedback} reportId={report.id} />
         </main>
       );

@@ -474,6 +474,19 @@
     "unavailableBody": "Dieser Report ist aktuell nicht zugänglich.",
     "supportNote": "Fragen? Schreib uns an"
   },
+  "updateCheck": {
+    "heading": "Auf neue Studien prüfen",
+    "description": "Wir prüfen einmalig, ob es seit deinem Report neue passende Studien gibt. Das Ergebnis schicken wir dir per E-Mail an {email}.",
+    "buttonLabel": "Jetzt prüfen",
+    "loadingLabel": "Prüfung läuft …",
+    "successHeadingFound": "Prüfung abgeschlossen — möglicherweise Neues gefunden",
+    "successBodyFound": "Wir haben {count} möglicherweise neue Studie(n) gefunden. Details haben wir dir per E-Mail geschickt.",
+    "successHeadingNone": "Prüfung abgeschlossen",
+    "successBodyNone": "Keine neuen Studien gefunden. Wir haben dir das per E-Mail bestätigt.",
+    "rateLimitedBody": "Du hast diesen Report bereits kürzlich geprüft. Eine erneute Prüfung ist erst nach 24 Stunden wieder möglich.",
+    "errorBody": "Die Prüfung konnte nicht durchgeführt werden. Bitte versuche es später erneut.",
+    "note": "Diese Liste stammt direkt aus einer automatischen Quellensuche und wird nicht wie dein ursprünglicher Report inhaltlich ausgewertet."
+  },
   "reportFeedback": {
     "heading": "Wie war dieser Report für dich?",
     "ratingLabel": "Wie hilfreich war dieser Report?",

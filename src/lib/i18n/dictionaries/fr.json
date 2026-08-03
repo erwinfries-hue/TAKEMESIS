@@ -474,6 +474,19 @@
     "unavailableBody": "Ce rapport n'est actuellement pas accessible.",
     "supportNote": "Des questions ? Écris-nous à"
   },
+  "updateCheck": {
+    "heading": "Vérifier s'il existe de nouvelles études",
+    "description": "Nous effectuons une vérification unique pour de nouvelles études correspondantes depuis ton rapport. Le résultat te sera envoyé par e-mail à {email}.",
+    "buttonLabel": "Vérifier maintenant",
+    "loadingLabel": "Vérification en cours …",
+    "successHeadingFound": "Vérification terminée — nouveautés possibles trouvées",
+    "successBodyFound": "Nous avons trouvé {count} étude(s) potentiellement nouvelle(s) — les détails t'ont été envoyés par e-mail.",
+    "successHeadingNone": "Vérification terminée",
+    "successBodyNone": "Aucune nouvelle étude trouvée. Nous te l'avons confirmé par e-mail.",
+    "rateLimitedBody": "Tu as déjà vérifié ce rapport récemment. Une nouvelle vérification sera possible dans 24 heures.",
+    "errorBody": "La vérification n'a pas pu être effectuée. Merci de réessayer plus tard.",
+    "note": "Cette liste provient directement d'une recherche automatique de sources et n'est pas analysée comme l'a été ton rapport initial."
+  },
   "reportFeedback": {
     "heading": "Comment as-tu trouvé ce rapport ?",
     "ratingLabel": "À quel point ce rapport t'a-t-il été utile ?",

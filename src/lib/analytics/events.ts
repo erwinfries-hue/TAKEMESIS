@@ -35,6 +35,7 @@ export const ANALYTICS_EVENTS = [
   "issue_reported",
   "refund_pending",
   "refunded",
+  "update_check_triggered",
 ] as const;
 
 export type AnalyticsEventName = (typeof ANALYTICS_EVENTS)[number];
@@ -60,6 +61,7 @@ const ALLOWED_METADATA_KEYS = new Set([
   "currency",
   "rating",
   "issueCategory",
+  "newStudyCount",
 ]);
 
 export function sanitizeMetadata(metadata: AnalyticsMetadata | undefined): AnalyticsMetadata {

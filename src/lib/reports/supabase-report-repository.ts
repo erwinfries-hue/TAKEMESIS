@@ -34,6 +34,7 @@ interface ReportRow {
   revoked_at: string | null;
   failure_code: string | null;
   confirmation_email_sent_at: string | null;
+  last_update_check_at: string | null;
 }
 
 function toDomain(row: ReportRow): Report {
@@ -61,6 +62,7 @@ function toDomain(row: ReportRow): Report {
     revokedAt: row.revoked_at,
     failureCode: row.failure_code,
     confirmationEmailSentAt: row.confirmation_email_sent_at,
+    lastUpdateCheckAt: row.last_update_check_at,
   };
 }
 
@@ -89,6 +91,7 @@ function toRowPatch(patch: Partial<Omit<Report, "id" | "createdAt">>): Record<st
   if (patch.failureCode !== undefined) row.failure_code = patch.failureCode;
   if (patch.confirmationEmailSentAt !== undefined)
     row.confirmation_email_sent_at = patch.confirmationEmailSentAt;
+  if (patch.lastUpdateCheckAt !== undefined) row.last_update_check_at = patch.lastUpdateCheckAt;
   // No DB trigger bumps this on UPDATE (only `default now()` on INSERT), and
   // the in-memory repository always sets it — without this, updatedAt would
   // stay frozen at creation time forever, silently breaking anything that

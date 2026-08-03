@@ -471,6 +471,19 @@
     "unavailableBody": "This report is not currently accessible.",
     "supportNote": "Questions? Write to us at"
   },
+  "updateCheck": {
+    "heading": "Check for new studies",
+    "description": "We run a one-time check for new matching studies since your report. We'll email the result to {email}.",
+    "buttonLabel": "Check now",
+    "loadingLabel": "Checking …",
+    "successHeadingFound": "Check complete — possibly new studies found",
+    "successBodyFound": "We found {count} possibly new source(s) — we've emailed you the details.",
+    "successHeadingNone": "Check complete",
+    "successBodyNone": "No new studies found. We've confirmed this by email.",
+    "rateLimitedBody": "You already checked this report recently. Another check is available after 24 hours.",
+    "errorBody": "The check couldn't be completed. Please try again later.",
+    "note": "This list comes directly from an automatic source search and isn't analyzed the way your original report was."
+  },
   "reportFeedback": {
     "heading": "How was this report for you?",
     "ratingLabel": "How helpful was this report?",

@@ -982,6 +982,67 @@ checkpoint (decision #15) and before each production-readiness gate.
       showing a fake trend or silently doing nothing, neither of which
       is better than not having it).
 
+    **Decision #7 made and implemented (2026-08-03) — Evidenz-Update-Check
+    only; Themen-Digest E-Mail deliberately deferred.** Erwin chose to
+    generate the digest automatically from real search hits (no manual
+    curation) rather than defer it entirely, but that path needs a
+    recurring cron job — and since two cron jobs already exist
+    (`expire-reports`, `resend-confirmation-emails`) with Vercel Hobby's
+    per-project cron-job-count limit still unconfirmed (this file's #4),
+    Erwin chose to resolve that limit question first before building a
+    third. The digest itself therefore stays unbuilt this pass — revisit
+    once #4 is resolved. The Evidenz-Update-Check has no such dependency
+    (it runs synchronously inside the request that triggers it, no cron)
+    and was built in full:
+    - `reports/types.ts` gained `lastUpdateCheckAt: string | null`
+      (migration `20260803090000_add_last_update_check_at.sql`, same
+      not-yet-run-against-a-live-project caveat as every migration in this
+      directory) — rate-limits re-triggering per report.
+    - `reports/update-check.ts`: `canRunUpdateCheck()` requires a "ready"
+      report with an email on file (email is the only channel without a
+      mandatory account, same conclusion this item already reached) and at
+      least `MIN_UPDATE_CHECK_INTERVAL_HOURS` (24) since the last check —
+      enforced server-side, not just hidden in the UI. `runUpdateCheck()`
+      re-runs the exact same search the report was built from (question,
+      domain, locale, and the original `filtersApplied` from
+      `previewPayload`) and diffs its included studies against
+      `finalPayload.sources` (the full originally-included list, not the
+      top-15 detailed cap) by DOI, falling back to source URL — a study
+      with neither is skipped, never guessed as new. Returns only
+      directly-sourced fields (title, venue, year, source, link), since
+      these newly found studies are only screened/included by the search
+      pipeline, never run through AI extraction/synthesis like the
+      original report's profiles — presenting anything beyond that would
+      risk "present a protocol as completed evidence"-style overclaiming.
+    - `email/templates.ts`'s new `buildUpdateCheckResultEmail()` lists the
+      new studies (or says none were found) with the same "not yet
+      analyzed, generate a new report for a full analysis" disclaimer in
+      all three locales.
+    - New route `POST /api/report/[token]/check-updates`
+      (`check-updates-route-handler.ts`): looks up the report the same way
+      the viewer page does (hashed token), re-checks eligibility
+      server-side regardless of what the UI showed, runs the check, always
+      records `lastUpdateCheckAt` before attempting the email send (so a
+      down email provider can't be retried unbounded), sends the result
+      email, and records a new `update_check_triggered` analytics event
+      (`analytics/events.ts`).
+    - New client component `UpdateCheckWidget`
+      (`components/update-check-widget.tsx`), rendered on `/report/[token]`
+      only when the report has an email on file, mirroring
+      `report-chat-widget.tsx`'s fetch-based pattern. Shows the rate-limit
+      message up front (server-computed) rather than a button that would
+      just 409, and distinguishes "new studies found" from "none found" as
+      separate, clearly-labeled outcomes — never silently one generic
+      "done" state.
+    - Tests: `update-check.test.ts` (11), `check-updates-route-handler.test.ts`
+      (9), `update-check-widget.test.tsx` (6, React Testing Library), plus
+      new cases in `templates.test.ts` (7) and `dedupe`/`filters` were
+      unaffected. Full verification clean: `npm run lint`, `npm run
+      typecheck`, unit tests (750/750, up from 717), `npm run build`,
+      `npm run test:e2e` (63/63 — the widget never renders on the
+      no-report/not-found e2e fixtures, so no existing test needed
+      updating), `npm run test:a11y` (21/21).
+
 26. **RESOLVED 2026-07-28.** The high-risk detector's `"scheidung"` term (for
     `legal_financial_high_stakes`) false-positived on "Entscheidung(en)"
     (decision) — a genuinely common German word, not an edge case, and

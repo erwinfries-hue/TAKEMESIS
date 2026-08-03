@@ -38,6 +38,8 @@ export interface Report {
   failureCode: string | null;
   /** Set once the "report ready" confirmation email is confirmed sent — lets the resend sweep (docs/OPEN_RISKS.md #30) find reports whose email was dropped without ever double-sending to one that already succeeded. */
   confirmationEmailSentAt: string | null;
+  /** Set each time the one-time Evidenz-Update-Check (decision #7) runs — rate-limits re-triggering (update-check.ts's MIN_UPDATE_CHECK_INTERVAL_HOURS), independent of confirmationEmailSentAt. */
+  lastUpdateCheckAt: string | null;
 }
 
 export interface CreateReportInput {

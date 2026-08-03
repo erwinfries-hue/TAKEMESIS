@@ -45,6 +45,7 @@ function makeReport(overrides: Partial<Report> = {}): Report {
     revokedAt: null,
     failureCode: null,
     confirmationEmailSentAt: null,
+    lastUpdateCheckAt: null,
     ...overrides,
   };
 }

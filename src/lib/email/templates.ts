@@ -127,6 +127,110 @@ export function buildReportFailedEmail(params: ReportEmailParams): EmailContent 
   return { subject: "Delay with your TEKMESIS report", ...wrapEmail(locale, bodyHtml, bodyText) };
 }
 
+export interface UpdateCheckStudySummary {
+  title: string | null;
+  venue: string | null;
+  year: number | null;
+  sourceUrl: string | null;
+  doi: string | null;
+}
+
+export interface UpdateCheckResultEmailParams {
+  locale: Locale;
+  reportUrl: string;
+  supportEmail: string;
+  newStudies: UpdateCheckStudySummary[];
+}
+
+const UPDATE_CHECK_NOT_REPORTED: Record<Locale, string> = {
+  de: "nicht angegeben",
+  en: "not reported",
+  fr: "non indiqué",
+};
+
+function studyLinkUrl(study: UpdateCheckStudySummary): string | null {
+  return study.sourceUrl ?? (study.doi ? `https://doi.org/${study.doi}` : null);
+}
+
+/** One list item per newly found study — title, venue/year, and a link when available. Never anything beyond what the source record itself provided (no AI synthesis was run on these — see update-check.ts). */
+function studyListItem(study: UpdateCheckStudySummary, locale: Locale): string {
+  const notReported = UPDATE_CHECK_NOT_REPORTED[locale];
+  const title = study.title ?? notReported;
+  const detail = [study.venue, study.year ? String(study.year) : null].filter(Boolean).join(", ");
+  const url = studyLinkUrl(study);
+  const titlePart = url ? emailLink(url, title) : title;
+  return `<li style="margin:0 0 10px;">${titlePart}${detail ? ` — ${detail}` : ""}</li>`;
+}
+
+/**
+ * Result of a one-time, user-triggered Evidenz-Update-Check (decision #7) —
+ * never a recurring/automatic send (CLAUDE.md: "No subscription in MVP").
+ * Deliberately lists only the same directly-sourced fields update-check.ts
+ * returns (title, venue, year, link) — these studies were only screened/
+ * included by the search pipeline, never run through AI extraction or
+ * synthesis like the original report's profiles were, so the email says so
+ * explicitly rather than implying a new full analysis.
+ */
+export function buildUpdateCheckResultEmail(params: UpdateCheckResultEmailParams): EmailContent {
+  const { locale, reportUrl, supportEmail, newStudies } = params;
+  const list = newStudies.map((study) => studyListItem(study, locale)).join("");
+
+  if (locale === "de") {
+    const intro =
+      newStudies.length > 0
+        ? `<p style="margin:0 0 16px;">bei einer erneuten automatischen Prüfung haben wir ${newStudies.length} möglicherweise neue Studie${newStudies.length === 1 ? "" : "n"} zu deiner Frage gefunden:</p><ul style="margin:0 0 20px;padding-left:20px;">${list}</ul><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">Diese Liste stammt direkt aus unserer automatischen Quellensuche und wurde noch nicht wie dein ursprünglicher Report inhaltlich ausgewertet oder zusammengefasst. Für eine vollständige Auswertung müsstest du einen neuen Report erstellen.</p>`
+        : `<p style="margin:0 0 20px;">bei einer erneuten automatischen Prüfung haben wir keine neuen Studien zu deiner Frage gefunden.</p>`;
+    const bodyHtml = `<p style="margin:0 0 16px;">Hallo,</p>${intro}<p style="margin:0 0 20px;">${emailButton(reportUrl, "Deinen Report ansehen")}</p><p style="margin:0;">Fragen oder Hinweise? Schreib uns an ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const textList = newStudies
+      .map((s) => `- ${s.title ?? "nicht angegeben"}${s.venue ? `, ${s.venue}` : ""}${s.year ? ` (${s.year})` : ""}`)
+      .join("\n");
+    const bodyText =
+      newStudies.length > 0
+        ? `Hallo,\n\nbei einer erneuten automatischen Prüfung haben wir ${newStudies.length} möglicherweise neue Studie(n) zu deiner Frage gefunden:\n${textList}\n\nDiese Liste wurde noch nicht inhaltlich ausgewertet. Für eine vollständige Auswertung müsstest du einen neuen Report erstellen.\n\nDein Report: ${reportUrl}\n\nFragen oder Hinweise? Schreib uns an ${supportEmail}.`
+        : `Hallo,\n\nbei einer erneuten automatischen Prüfung haben wir keine neuen Studien zu deiner Frage gefunden.\n\nDein Report: ${reportUrl}\n\nFragen oder Hinweise? Schreib uns an ${supportEmail}.`;
+    return {
+      subject: newStudies.length > 0 ? "Neue Studien zu deiner TEKMESIS-Frage gefunden" : "Update-Check: keine neuen Studien gefunden",
+      ...wrapEmail(locale, bodyHtml, bodyText),
+    };
+  }
+
+  if (locale === "fr") {
+    const intro =
+      newStudies.length > 0
+        ? `<p style="margin:0 0 16px;">lors d'une nouvelle vérification automatique, nous avons trouvé ${newStudies.length} étude${newStudies.length === 1 ? "" : "s"} potentiellement nouvelle${newStudies.length === 1 ? "" : "s"} pour ta question :</p><ul style="margin:0 0 20px;padding-left:20px;">${list}</ul><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">Cette liste provient directement de notre recherche automatique et n'a pas encore été analysée ou synthétisée comme ton rapport initial. Pour une analyse complète, il faudrait générer un nouveau rapport.</p>`
+        : `<p style="margin:0 0 20px;">lors d'une nouvelle vérification automatique, nous n'avons trouvé aucune nouvelle étude pour ta question.</p>`;
+    const bodyHtml = `<p style="margin:0 0 16px;">Bonjour,</p>${intro}<p style="margin:0 0 20px;">${emailButton(reportUrl, "Voir ton rapport")}</p><p style="margin:0;">Des questions ou remarques ? Écris-nous à ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const textList = newStudies
+      .map((s) => `- ${s.title ?? "non indiqué"}${s.venue ? `, ${s.venue}` : ""}${s.year ? ` (${s.year})` : ""}`)
+      .join("\n");
+    const bodyText =
+      newStudies.length > 0
+        ? `Bonjour,\n\nlors d'une nouvelle vérification automatique, nous avons trouvé ${newStudies.length} étude(s) potentiellement nouvelle(s) pour ta question :\n${textList}\n\nCette liste n'a pas encore été analysée. Pour une analyse complète, il faudrait générer un nouveau rapport.\n\nTon rapport : ${reportUrl}\n\nDes questions ou remarques ? Écris-nous à ${supportEmail}.`
+        : `Bonjour,\n\nlors d'une nouvelle vérification automatique, nous n'avons trouvé aucune nouvelle étude pour ta question.\n\nTon rapport : ${reportUrl}\n\nDes questions ou remarques ? Écris-nous à ${supportEmail}.`;
+    return {
+      subject: newStudies.length > 0 ? "Nouvelles études trouvées pour ta question TEKMESIS" : "Vérification : aucune nouvelle étude trouvée",
+      ...wrapEmail(locale, bodyHtml, bodyText),
+    };
+  }
+
+  const intro =
+    newStudies.length > 0
+      ? `<p style="margin:0 0 16px;">a fresh automatic check found ${newStudies.length} possibly new stud${newStudies.length === 1 ? "y" : "ies"} for your question:</p><ul style="margin:0 0 20px;padding-left:20px;">${list}</ul><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">This list comes directly from our automatic source search and hasn't been analyzed or synthesized like your original report. A full analysis would require generating a new report.</p>`
+      : `<p style="margin:0 0 20px;">a fresh automatic check found no new studies for your question.</p>`;
+  const bodyHtml = `<p style="margin:0 0 16px;">Hi,</p>${intro}<p style="margin:0 0 20px;">${emailButton(reportUrl, "View your report")}</p><p style="margin:0;">Questions or feedback? Write to us at ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+  const textList = newStudies
+    .map((s) => `- ${s.title ?? "not reported"}${s.venue ? `, ${s.venue}` : ""}${s.year ? ` (${s.year})` : ""}`)
+    .join("\n");
+  const bodyText =
+    newStudies.length > 0
+      ? `Hi,\n\na fresh automatic check found ${newStudies.length} possibly new stud${newStudies.length === 1 ? "y" : "ies"} for your question:\n${textList}\n\nThis list hasn't been analyzed yet. A full analysis would require generating a new report.\n\nYour report: ${reportUrl}\n\nQuestions or feedback? Write to us at ${supportEmail}.`
+      : `Hi,\n\na fresh automatic check found no new studies for your question.\n\nYour report: ${reportUrl}\n\nQuestions or feedback? Write to us at ${supportEmail}.`;
+  return {
+    subject: newStudies.length > 0 ? "New studies found for your TEKMESIS question" : "Update check: no new studies found",
+    ...wrapEmail(locale, bodyHtml, bodyText),
+  };
+}
+
 export function buildRefundConfirmationEmail(params: ReportEmailParams): EmailContent {
   const { locale, supportEmail } = params;
 
