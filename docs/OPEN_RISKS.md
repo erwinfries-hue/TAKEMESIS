@@ -614,10 +614,17 @@ checkpoint (decision #15) and before each production-readiness gate.
       Lernen & Bildung example ("Does active recall work better than
       rereading?") misclassify into Arbeit. Caught immediately by the
       existing test suite, not live; reworded to "...on productivity?" and
-      confirmed 244/244 passing. **Still not live-verified against the
-      real search pipeline** — that's the one check this sandbox can't do;
-      revisit this item if any of the 7 replacements themselves turn out to
-      fail eligibility once checked live.
+      confirmed 244/244 passing.
+
+    **RESOLVED (2026-08-01), live-confirmed same day.** Erwin re-ran all 5
+    affected topics through `/admin/example-questions` on the live
+    deployment. All 7 replacements come back "Eignet sich" (not just "mit
+    Einschränkungen") — several with strong counts (e.g. "Wie beeinflusst
+    Verpackung das Kaufverhalten?" 20 included/15 result-bearing;
+    "Welchen Einfluss hat Mobilität auf die Nachhaltigkeit?" 20/18;
+    "Welchen Effekt hat regelmässige Bewegung auf die kindliche
+    Entwicklung?" 28/10). All 60 example questions across all 12 topics are
+    now confirmed live-eligible.
 
 20. **AXIA4 is represented as a text link, not the official logo image.**
     Erwin explicitly decided (2026-07-26) against embedding
