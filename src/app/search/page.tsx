@@ -56,14 +56,15 @@ export default async function SearchPage({
     domain?: string | string[];
     maxAgeYears?: string;
     studyTypeGroup?: string | string[];
+    studyRegion?: string | string[];
     doi?: string;
   }>;
 }) {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const { q, domain, maxAgeYears, studyTypeGroup, doi: rawDoi } = await searchParams;
+  const { q, domain, maxAgeYears, studyTypeGroup, studyRegion, doi: rawDoi } = await searchParams;
   let question = q?.trim() ?? "";
-  const filters = parseFiltersFromParams({ maxAgeYears, studyTypeGroup });
+  const filters = parseFiltersFromParams({ maxAgeYears, studyTypeGroup, studyRegion });
 
   // "Compare a study you already have" mode: doi is present on every
   // request through this flow (clarification step and the final search
@@ -257,6 +258,9 @@ export default async function SearchPage({
     if (rawDoi) retryParams.set("doi", rawDoi);
     for (const group of Array.isArray(studyTypeGroup) ? studyTypeGroup : studyTypeGroup ? [studyTypeGroup] : []) {
       retryParams.append("studyTypeGroup", group);
+    }
+    for (const region of Array.isArray(studyRegion) ? studyRegion : studyRegion ? [studyRegion] : []) {
+      retryParams.append("studyRegion", region);
     }
     return (
       <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">

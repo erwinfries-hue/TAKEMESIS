@@ -70,6 +70,22 @@ describe("ncbiAdapter.search", () => {
       "This narrative review summarizes fixture evidence on cold exposure and recovery.",
     );
     expect(second.dataCompleteness).toBe("abstract");
+    // Fixture's second article has no MeshHeadingList at all.
+    expect(second.meshHeadings).toBeUndefined();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("extracts MeSH descriptor names from efetch's MeshHeadingList, for the study-region filter", async () => {
+    const fetchImpl = vi
+      .fn()
+      .mockResolvedValueOnce(jsonResponse(esearchFixture))
+      .mockResolvedValueOnce(jsonResponse(esummaryFixture))
+      .mockResolvedValueOnce(textResponse(efetchFixture));
+    vi.stubGlobal("fetch", fetchImpl);
+
+    const records = await ncbiAdapter.search({ query: "interval training VO2max" });
+    expect(records[0].meshHeadings).toEqual(["Humans", "Germany"]);
 
     vi.unstubAllGlobals();
   });

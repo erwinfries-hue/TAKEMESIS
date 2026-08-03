@@ -54,6 +54,14 @@ describe("dedupeRecords", () => {
     expect(merged.dataCompleteness).toBe("abstract");
   });
 
+  it("fills in meshHeadings from the duplicate when the primary record has none (decision #6 study-region filter)", () => {
+    const withoutMesh = makeRecord({ doi: "10.1/z", source: "openalex" });
+    const withMesh = makeRecord({ doi: "10.1/z", source: "europe_pmc", meshHeadings: ["Germany"] });
+
+    const result = dedupeRecords([withoutMesh, withMesh]);
+    expect(result.records[0].record.meshHeadings).toEqual(["Germany"]);
+  });
+
   it("never lets a 'retracted' flag from one source be hidden by another source's 'unknown'", () => {
     const flagged = makeRecord({ doi: "10.1/y", retractionStatus: "retracted" });
     const unflagged = makeRecord({ doi: "10.1/y", retractionStatus: "unknown" });

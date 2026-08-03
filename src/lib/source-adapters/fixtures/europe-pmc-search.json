@@ -13,7 +13,14 @@
         "pubYear": "2019",
         "pubTypeList": { "pubType": ["Journal Article", "Randomized Controlled Trial"] },
         "abstractText": "This randomized controlled trial evaluated melatonin's effect on sleep onset latency.",
-        "isOpenAccess": "Y"
+        "isOpenAccess": "Y",
+        "meshHeadingList": {
+          "meshHeading": [
+            { "descriptorName": "Humans" },
+            { "descriptorName": "Germany" },
+            { "descriptorName": "Sleep" }
+          ]
+        }
       },
       {
         "id": "28765432",

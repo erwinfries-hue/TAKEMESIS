@@ -23,6 +23,6 @@ export const FAKE_TEASER_FIXTURE: TeaserData = {
   topStudies: [],
   confidenceLabel: "moderate",
   sourcesUnavailable: [],
-  filtersApplied: { maxAgeYears: null, studyTypes: null },
+  filtersApplied: { maxAgeYears: null, studyTypes: null, studyRegions: null },
   excludedByFilterCount: 0,
 };

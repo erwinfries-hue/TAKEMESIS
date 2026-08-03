@@ -34,6 +34,28 @@ describe("europePmcAdapter.search", () => {
     vi.unstubAllGlobals();
   });
 
+  it("extracts MeSH descriptor names when present (resultType=core), for the study-region filter", async () => {
+    vi.stubGlobal("fetch", mockFetchReturning(fixture));
+
+    const records = await europePmcAdapter.search({ query: "melatonin sleep" });
+    expect(records[0].meshHeadings).toEqual(["Humans", "Germany", "Sleep"]);
+    // Fixture's second record has no meshHeadingList at all.
+    expect(records[1].meshHeadings).toBeUndefined();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("requests resultType=core so Europe PMC includes meshHeadingList", async () => {
+    const fetchImpl = mockFetchReturning(fixture);
+    vi.stubGlobal("fetch", fetchImpl);
+
+    await europePmcAdapter.search({ query: "melatonin sleep" });
+    const url = new URL(fetchImpl.mock.calls[0][0] as string);
+    expect(url.searchParams.get("resultType")).toBe("core");
+
+    vi.unstubAllGlobals();
+  });
+
   it("degrades safely when the source is unavailable", async () => {
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("down")));
     await expect(europePmcAdapter.search({ query: "x" })).rejects.toMatchObject({

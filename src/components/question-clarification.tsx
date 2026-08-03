@@ -1,6 +1,12 @@
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { TopicRiskProfile } from "@/content/topics";
-import { AGE_FILTER_OPTIONS, STUDY_TYPE_GROUP_IDS, type StudyTypeGroupId } from "@/lib/search/filters";
+import {
+  AGE_FILTER_OPTIONS,
+  STUDY_REGION_FILTER_IDS,
+  STUDY_TYPE_GROUP_IDS,
+  type StudyRegionFilterId,
+  type StudyTypeGroupId,
+} from "@/lib/search/filters";
 
 export interface CandidateOption {
   slug: string;
@@ -19,6 +25,17 @@ const AGE_OPTION_LABEL_KEY: Record<(typeof AGE_FILTER_OPTIONS)[number], keyof Di
   5: "age5",
   10: "age10",
   15: "age15",
+};
+
+const STUDY_REGION_LABEL_KEY: Record<StudyRegionFilterId, keyof Dictionary["searchFilters"]> = {
+  europe: "regionEurope",
+  north_america: "regionNorthAmerica",
+  latin_america: "regionLatinAmerica",
+  middle_east: "regionMiddleEast",
+  africa: "regionAfrica",
+  asia: "regionAsia",
+  oceania: "regionOceania",
+  not_reported: "regionNotReported",
 };
 
 /**
@@ -117,6 +134,25 @@ export function QuestionClarification({
               {dict.searchFilters[STUDY_TYPE_GROUP_LABEL_KEY[groupId]]}
             </label>
           ))}
+        </fieldset>
+
+        <fieldset className="flex flex-col gap-2">
+          <legend className="text-sm text-brand-neutral-950">
+            {dict.searchFilters.regionHeading}
+          </legend>
+          {STUDY_REGION_FILTER_IDS.map((regionId) => (
+            <label key={regionId} className="flex items-center gap-2 text-sm text-brand-neutral-600">
+              <input
+                type="checkbox"
+                name="studyRegion"
+                value={regionId}
+                defaultChecked
+                className="h-4 w-4 rounded border-brand-neutral-200 text-brand-teal-600 focus:ring-brand-teal-400"
+              />
+              {dict.searchFilters[STUDY_REGION_LABEL_KEY[regionId]]}
+            </label>
+          ))}
+          <p className="text-xs text-brand-neutral-600">{dict.searchFilters.regionNote}</p>
         </fieldset>
 
         <p className="text-xs text-brand-neutral-600">{dict.searchFilters.note}</p>

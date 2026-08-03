@@ -804,6 +804,55 @@ checkpoint (decision #15) and before each production-readiness gate.
     environment with real network access should happen before writing any
     adapter code, regardless of which option is chosen.
 
+    **Decision made and implemented (2026-08-03): Erwin chose Option 2
+    (MeSH geographic-location filter), explicitly caveated.** New module
+    `src/lib/search/mesh-geography.ts` maps MeSH geographic headings
+    (country + continent/sub-region-level descriptor names) to 7 broad
+    regions (Europe, North America, Latin America, Middle East, Africa,
+    Asia, Oceania) via `deriveStudyRegion()` — deliberately coarse
+    (continent-level, not per-country) and first-match, never guessed: a
+    record with no matching heading returns `null`, which the filter layer
+    treats as an explicit `"not_reported"` bucket, never a silent exclusion.
+    `NormalizedRecord` gained an optional `meshHeadings?: string[]` field
+    (types.ts) — populated only by Europe PMC (now requesting
+    `resultType=core`, required for `meshHeadingList` to be present at all)
+    and NCBI/PubMed (extracted from efetch's existing `MeshHeadingList` XML,
+    same response already parsed for abstracts — no extra round trip).
+    `dedupe.ts`'s `mergeRecords()` carries `meshHeadings` through when
+    duplicate records are merged across sources, same non-empty-wins pattern
+    as `authors`/`subjectConcepts`. `filters.ts` gained `studyRegions:
+    StudyRegionFilterId[] | null` (the 7 regions + `"not_reported"`), parsed
+    from a new `studyRegion` checkbox group in `QuestionClarification`
+    (all 8 checked by default, mirroring the existing study-type-group
+    pattern) — every bucket selected or none submitted both mean "no
+    restriction," same fail-open behavior as the study-type filter, so an
+    evidence platform never silently shows zero results from an
+    all-unchecked form. `/search`'s page component parses/carries the new
+    `studyRegion` param through, including the all-sources-failed retry
+    link. Dictionary strings added to all three locales (de/en/fr) with a
+    permanent, visible disclaimer ("Only some sources provide geographic
+    data on the population studied... Studies without this data aren't
+    excluded, they're shown separately") — never presented as full source
+    coverage, per CLAUDE.md's evidence-integrity rule.
+    **Known, accepted limitation, explicitly not fixed here:** the MeSH
+    country/region term list in `mesh-geography.ts` was built from general
+    knowledge of MeSH's Geographic ("Z") tree and common English country
+    names, not a live fetch of NLM's current descriptor list or a live
+    Europe PMC/PubMed response — this sandbox still has no outbound network
+    access to verify either. A miss degrades safely to `"not_reported"`
+    (never a wrong region), so this doesn't violate the "never invent
+    source coverage" rule, but the term list should get a live spot-check
+    once deployed (confirm a few known geographically-tagged PubMed/Europe
+    PMC records actually populate `meshHeadings` and land in the right
+    bucket) — same live-verification gap this entry already flagged for
+    every option before a decision was made. Full verification run clean
+    before commit: `npm run lint`, `npm run typecheck`, unit tests (all
+    passing, including new coverage in `mesh-geography.test.ts`,
+    `filters.test.ts`, `dedupe.test.ts`, `europe-pmc.test.ts`,
+    `ncbi.test.ts`), `npm run build`, `npm run test:e2e` (63/63, including 2
+    new assertions/tests for the region-filter UI), and `npm run test:a11y`
+    (21/21 — the new fieldset/checkboxes introduced no violations).
+
 23. **RESOLVED 2026-07-28 — live-verified end to end.** Same
     live-network-validation gap as the four search adapters
     (`OPEN_RISKS.md` #2) meant this sandbox could never test it (no

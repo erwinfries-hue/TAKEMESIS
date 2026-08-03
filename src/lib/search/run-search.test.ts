@@ -130,6 +130,7 @@ describe("runSearchWithAdapters", () => {
     const result = await runSearchWithAdapters("spaced repetition", "lernen-bildung", [a], "en", {
       maxAgeYears: 5,
       studyTypes: ["rct"],
+      studyRegions: null,
     });
 
     expect(result.includedCount).toBe(1);

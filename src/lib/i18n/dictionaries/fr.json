@@ -344,6 +344,16 @@
     "groupRct": "Essais contrôlés randomisés (ECR)",
     "groupObservational": "Études observationnelles (cohortes, cas-témoins, transversales)",
     "groupOther": "Autres types d'études",
+    "regionHeading": "Région de l'étude (si renseignée)",
+    "regionEurope": "Europe",
+    "regionNorthAmerica": "Amérique du Nord",
+    "regionLatinAmerica": "Amérique latine",
+    "regionMiddleEast": "Moyen-Orient",
+    "regionAfrica": "Afrique",
+    "regionAsia": "Asie",
+    "regionOceania": "Océanie",
+    "regionNotReported": "Non renseigné",
+    "regionNote": "Seule une partie des sources fournit des données géographiques sur la population étudiée — surtout pour les études épidémiologiques. Les études sans cette donnée ne sont pas exclues, elles apparaissent séparément sous \"Non renseigné\".",
     "note": "Des filtres restrictifs peuvent réduire nettement le nombre d'études trouvées — jusqu'à \"évidence insuffisante\"."
   },
   "publicationTypeLabels": {

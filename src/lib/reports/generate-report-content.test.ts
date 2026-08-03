@@ -34,7 +34,7 @@ const FAKE_TEASER = {
   topStudies: [],
   confidenceLabel: "moderate" as const,
   sourcesUnavailable: [],
-  filtersApplied: { maxAgeYears: null, studyTypes: null },
+  filtersApplied: { maxAgeYears: null, studyTypes: null, studyRegions: null },
   excludedByFilterCount: 0,
 };
 
@@ -66,7 +66,7 @@ const FAKE_SEARCH_RESULT: SearchRunResult = {
   duplicatesRemoved: 0,
   includedCount: 1,
   excludedByReason: { retracted: 0, protocol_only: 0, insufficient_detail: 0, not_relevant: 0 },
-  filtersApplied: { maxAgeYears: null, studyTypes: null },
+  filtersApplied: { maxAgeYears: null, studyTypes: null, studyRegions: null },
   excludedByFilterCount: 0,
   perSource: [{ source: "openalex", ok: true, recordCount: 1 }],
   rankedIncluded: [],

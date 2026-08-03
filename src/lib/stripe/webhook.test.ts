@@ -49,7 +49,7 @@ const FAKE_TEASER = {
   topStudies: [],
   confidenceLabel: "moderate" as const,
   sourcesUnavailable: [],
-  filtersApplied: { maxAgeYears: null, studyTypes: null },
+  filtersApplied: { maxAgeYears: null, studyTypes: null, studyRegions: null },
   excludedByFilterCount: 0,
 };
 

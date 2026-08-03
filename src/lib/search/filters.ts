@@ -1,5 +1,6 @@
 import type { DedupedRecord } from "./dedupe";
 import type { PublicationType } from "@/lib/source-adapters/types";
+import { deriveStudyRegion, STUDY_REGION_IDS, type StudyRegionId } from "./mesh-geography";
 
 /**
  * User-chosen scope restrictions, applied after evidence-quality screening
@@ -7,25 +8,31 @@ import type { PublicationType } from "@/lib/source-adapters/types";
  * exclusions reflect what the user asked to narrow down, not an
  * evidence-quality judgment.
  *
- * Only maxAgeYears and studyTypes are offered — a "country of study"
- * filter was considered and deliberately not built: none of the four
- * source adapters currently extract a country field, and the one field
- * that could approximate it (OpenAlex author-institution country) reflects
- * where the *researchers* are affiliated, not where the study *population*
- * was drawn from, and is only available from one of four sources. Offering
- * a country filter under those conditions would silently misrepresent
- * source coverage — CLAUDE.md's evidence-integrity rule ("never invent
- * source coverage") rules that out until real per-source data exists. See
- * docs/OPEN_RISKS.md.
+ * maxAgeYears and studyTypes are always-reliable filters, backed by fields
+ * every adapter populates. studyRegions (decision #6/OPEN_RISKS.md #22,
+ * Option 2) is different and deliberately coarser/best-effort: it's derived
+ * from MeSH geographic headings (mesh-geography.ts), which only Europe PMC
+ * and NCBI/PubMed provide, and only for a subset of their records (mostly
+ * epidemiology/public-health articles). A plain "country of study" filter
+ * was considered and rejected outright — see git history / OPEN_RISKS.md
+ * #22's original entry — because the only near-universal field (OpenAlex
+ * author-institution country) reflects where *researchers* are affiliated,
+ * not where the study *population* was drawn from. studyRegions never
+ * silently drops a record it has no data for: STUDY_REGION_FILTER_IDS
+ * always includes an explicit "not_reported" bucket (checked by default,
+ * like every other region) so records without MeSH geographic data stay
+ * visible unless the user actively excludes that bucket too.
  */
 export interface SearchFilters {
   /** Only include studies published within the last N years (inclusive of the current year). Null = no restriction. */
   maxAgeYears: number | null;
   /** Only include studies whose publicationType is in this set. Null = no restriction. */
   studyTypes: PublicationType[] | null;
+  /** Only include studies whose derived study region (or "not_reported") is in this set. Null = no restriction. */
+  studyRegions: StudyRegionFilterId[] | null;
 }
 
-export const NO_FILTERS: SearchFilters = { maxAgeYears: null, studyTypes: null };
+export const NO_FILTERS: SearchFilters = { maxAgeYears: null, studyTypes: null, studyRegions: null };
 
 /** Selectable age-limit presets for the filter UI (years). */
 export const AGE_FILTER_OPTIONS = [5, 10, 15] as const;
@@ -49,8 +56,13 @@ export const STUDY_TYPE_GROUPS: Record<StudyTypeGroupId, PublicationType[]> = {
 
 export const STUDY_TYPE_GROUP_IDS = Object.keys(STUDY_TYPE_GROUPS) as StudyTypeGroupId[];
 
+/** A region-filter bucket also includes "not_reported" — records with no MeSH-derived region, never silently dropped. */
+export type StudyRegionFilterId = StudyRegionId | "not_reported";
+
+export const STUDY_REGION_FILTER_IDS: StudyRegionFilterId[] = [...STUDY_REGION_IDS, "not_reported"];
+
 export function hasActiveFilters(filters: SearchFilters): boolean {
-  return filters.maxAgeYears !== null || filters.studyTypes !== null;
+  return filters.maxAgeYears !== null || filters.studyTypes !== null || filters.studyRegions !== null;
 }
 
 /**
@@ -64,6 +76,7 @@ export function hasActiveFilters(filters: SearchFilters): boolean {
 export function parseFiltersFromParams(params: {
   maxAgeYears?: string;
   studyTypeGroup?: string | string[];
+  studyRegion?: string | string[];
 }): SearchFilters {
   const maxAgeYears = params.maxAgeYears
     ? (AGE_FILTER_OPTIONS.find((option) => option === Number(params.maxAgeYears)) ?? null)
@@ -90,7 +103,21 @@ export function parseFiltersFromParams(params: {
       ? null
       : selectedGroups.flatMap((id) => STUDY_TYPE_GROUPS[id]);
 
-  return { maxAgeYears, studyTypes };
+  const rawRegions = params.studyRegion
+    ? Array.isArray(params.studyRegion)
+      ? params.studyRegion
+      : [params.studyRegion]
+    : [];
+  const selectedRegions = rawRegions.filter((id): id is StudyRegionFilterId =>
+    STUDY_REGION_FILTER_IDS.includes(id as StudyRegionFilterId),
+  );
+  // Same "all selected or none submitted" -> "no filter" logic as studyTypes above.
+  const studyRegions =
+    selectedRegions.length === 0 || selectedRegions.length === STUDY_REGION_FILTER_IDS.length
+      ? null
+      : selectedRegions;
+
+  return { maxAgeYears, studyTypes, studyRegions };
 }
 
 export interface FilterResult {
@@ -118,6 +145,12 @@ export function applyFilters(records: DedupedRecord[], filters: SearchFilters): 
     }
     if (filters.studyTypes !== null && !filters.studyTypes.includes(record.publicationType)) {
       return false;
+    }
+    if (filters.studyRegions !== null) {
+      const region: StudyRegionFilterId = deriveStudyRegion(record.meshHeadings) ?? "not_reported";
+      if (!filters.studyRegions.includes(region)) {
+        return false;
+      }
     }
     return true;
   });

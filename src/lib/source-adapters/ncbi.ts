@@ -79,7 +79,7 @@ function toNormalizedRecord(doc: EsummaryDocSummary, fetchedAt: string): Normali
 const efetchXmlParser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
-  isArray: (tagName) => ["PubmedArticle", "AbstractText"].includes(tagName),
+  isArray: (tagName) => ["PubmedArticle", "AbstractText", "MeshHeading"].includes(tagName),
 });
 
 interface PubmedTextNode {
@@ -93,6 +93,10 @@ interface PubmedTextNode {
 
 type PubmedAbstractText = string | PubmedTextNode;
 
+interface MeshHeadingNode {
+  DescriptorName?: string | PubmedTextNode;
+}
+
 interface PubmedArticle {
   MedlineCitation?: {
     PMID?: string | PubmedTextNode;
@@ -100,6 +104,9 @@ interface PubmedArticle {
       Abstract?: {
         AbstractText?: PubmedAbstractText[];
       };
+    };
+    MeshHeadingList?: {
+      MeshHeading?: MeshHeadingNode[];
     };
   };
 }
@@ -132,30 +139,53 @@ function extractAbstractText(parts: PubmedAbstractText[] | undefined): string | 
   return texts.length > 0 ? texts.join(" ") : null;
 }
 
+/** DescriptorName's text content is the MeSH term itself — see mesh-geography.ts, which reads these for the study-region filter (decision #6). */
+function extractMeshHeadings(headings: MeshHeadingNode[] | undefined): string[] | undefined {
+  if (!headings || headings.length === 0) {
+    return undefined;
+  }
+  const terms = headings
+    .map((heading) => {
+      const name = heading.DescriptorName;
+      if (typeof name === "string") return name;
+      const text = name?.["#text"];
+      return text !== undefined ? String(text) : null;
+    })
+    .filter((term): term is string => Boolean(term));
+  return terms.length > 0 ? terms : undefined;
+}
+
+interface EfetchEnrichment {
+  abstract: string | null;
+  meshHeadings: string[] | undefined;
+}
+
 /**
  * Best-effort enrichment, not a hard requirement (docs/10: "Resilience") —
  * esearch+esummary already produced valid metadata-only records by the time
  * this runs. Any failure here (efetch down, malformed XML) degrades silently
  * to an empty map rather than failing the whole search: callers just keep
  * the metadata_only records they already had instead of losing NCBI
- * entirely over a missing abstract.
+ * entirely over a missing abstract (or MeSH headings).
  */
-async function fetchAbstracts(ids: string[]): Promise<Map<string, string>> {
-  const abstracts = new Map<string, string>();
+async function fetchEfetchEnrichment(ids: string[]): Promise<Map<string, EfetchEnrichment>> {
+  const enrichment = new Map<string, EfetchEnrichment>();
   try {
     const xml = await fetchText(buildEfetchUrl(ids), { source: "ncbi_pubmed" });
     const parsed = efetchXmlParser.parse(xml) as PubmedArticleSetResponse;
     for (const article of parsed.PubmedArticleSet?.PubmedArticle ?? []) {
       const pmid = extractPmid(article.MedlineCitation?.PMID);
+      if (!pmid) continue;
       const abstract = extractAbstractText(article.MedlineCitation?.Article?.Abstract?.AbstractText);
-      if (pmid && abstract) {
-        abstracts.set(pmid, abstract);
+      const meshHeadings = extractMeshHeadings(article.MedlineCitation?.MeshHeadingList?.MeshHeading);
+      if (abstract || meshHeadings) {
+        enrichment.set(pmid, { abstract, meshHeadings });
       }
     }
   } catch {
     return new Map();
   }
-  return abstracts;
+  return enrichment;
 }
 
 const BASE_URL = () => serverEnv.NCBI_EUTILS_BASE_URL;
@@ -240,10 +270,15 @@ export const ncbiAdapter: SourceAdapter = {
       .filter((doc): doc is EsummaryDocSummary => Boolean(doc) && !Array.isArray(doc))
       .map((doc) => toNormalizedRecord(doc, fetchedAt));
 
-    const abstracts = await fetchAbstracts(ids);
+    const enrichment = await fetchEfetchEnrichment(ids);
     return records.map((record) => {
-      const abstract = abstracts.get(record.sourceId);
-      return abstract ? { ...record, abstract, dataCompleteness: "abstract" as const } : record;
+      const found = enrichment.get(record.sourceId);
+      if (!found) return record;
+      return {
+        ...record,
+        ...(found.abstract ? { abstract: found.abstract, dataCompleteness: "abstract" as const } : {}),
+        ...(found.meshHeadings ? { meshHeadings: found.meshHeadings } : {}),
+      };
     });
   },
 

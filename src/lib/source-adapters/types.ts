@@ -54,6 +54,17 @@ export interface NormalizedRecord {
   dataCompleteness: DataCompleteness;
   /** Provenance: when this record was fetched, for search-date disclosure. */
   fetchedAt: string;
+  /**
+   * Raw MeSH heading terms (e.g. "Germany", "Randomized Controlled Trials as
+   * Topic"), when the source provides MEDLINE MeSH indexing — currently only
+   * Europe PMC (resultType=core) and NCBI/PubMed (efetch). Optional and
+   * absent/undefined for every other source and for MeSH-indexed records
+   * with no headings, never guessed — `mesh-geography.ts`'s
+   * `deriveStudyRegion()` reads this to approximate a study's population
+   * region for the search-scope filter (decision #6/OPEN_RISKS.md #22);
+   * absent is treated identically to an empty array (region "not_reported").
+   */
+  meshHeadings?: string[];
 }
 
 export interface SourceSearchParams {

@@ -344,6 +344,16 @@
     "groupRct": "Randomisierte kontrollierte Studien (RCT)",
     "groupObservational": "Beobachtungsstudien (Kohorten-, Fall-Kontroll-, Querschnittsstudien)",
     "groupOther": "Sonstige Studientypen",
+    "regionHeading": "Studienregion (soweit erfasst)",
+    "regionEurope": "Europa",
+    "regionNorthAmerica": "Nordamerika",
+    "regionLatinAmerica": "Lateinamerika",
+    "regionMiddleEast": "Naher Osten",
+    "regionAfrica": "Afrika",
+    "regionAsia": "Asien",
+    "regionOceania": "Ozeanien",
+    "regionNotReported": "Nicht erfasst",
+    "regionNote": "Nur ein Teil der Quellen liefert geografische Angaben zur untersuchten Bevölkerung — meist bei epidemiologischen Studien. Nicht erfasste Studien werden nicht ausgeschlossen, sondern unter \"Nicht erfasst\" separat angezeigt.",
     "note": "Einschränkende Filter können die Anzahl gefundener Studien deutlich reduzieren — bis hin zu \"nicht genug Evidenz\"."
   },
   "publicationTypeLabels": {

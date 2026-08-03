@@ -11,6 +11,14 @@
           <AbstractText Label="RESULTS" NlmCategory="RESULTS">VO2max increased significantly in the intervention group.</AbstractText>
         </Abstract>
       </Article>
+      <MeshHeadingList>
+        <MeshHeading>
+          <DescriptorName UI="D006801" MajorTopicYN="N">Humans</DescriptorName>
+        </MeshHeading>
+        <MeshHeading>
+          <DescriptorName UI="D005842" MajorTopicYN="Y">Germany</DescriptorName>
+        </MeshHeading>
+      </MeshHeadingList>
     </MedlineCitation>
   </PubmedArticle>
   <PubmedArticle>

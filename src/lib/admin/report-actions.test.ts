@@ -42,7 +42,7 @@ async function setUp(): Promise<AdminActionDeps & { reportId: string }> {
       topStudies: [],
       confidenceLabel: "moderate",
       sourcesUnavailable: [],
-      filtersApplied: { maxAgeYears: null, studyTypes: null },
+      filtersApplied: { maxAgeYears: null, studyTypes: null, studyRegions: null },
       excludedByFilterCount: 0,
     },
   });

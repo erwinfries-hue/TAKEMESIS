@@ -22,6 +22,8 @@ interface EuropePmcResult {
   pubTypeList?: { pubType?: string[] };
   abstractText?: string;
   isOpenAccess?: string;
+  /** Only present with resultType=core (see buildSearchUrl) — geographic terms among these feed mesh-geography.ts's study-region filter. */
+  meshHeadingList?: { meshHeading?: Array<{ descriptorName?: string }> };
 }
 
 interface EuropePmcResponse {
@@ -49,6 +51,13 @@ function extractRetractionStatus(pubTypes: string[]): RetractionStatus {
   return "unknown";
 }
 
+function extractMeshHeadings(result: EuropePmcResult): string[] | undefined {
+  const headings = (result.meshHeadingList?.meshHeading ?? [])
+    .map((heading) => heading.descriptorName?.trim())
+    .filter((term): term is string => Boolean(term));
+  return headings.length > 0 ? headings : undefined;
+}
+
 function toNormalizedRecord(result: EuropePmcResult, fetchedAt: string): NormalizedRecord {
   const pubTypes = result.pubTypeList?.pubType ?? [];
   const abstract = result.abstractText?.trim() || null;
@@ -74,6 +83,7 @@ function toNormalizedRecord(result: EuropePmcResult, fetchedAt: string): Normali
         : null,
     dataCompleteness: abstract ? "abstract" : "metadata_only",
     fetchedAt,
+    meshHeadings: extractMeshHeadings(result),
   };
 }
 
@@ -84,6 +94,11 @@ function buildSearchUrl(params: SourceSearchParams): string {
   url.searchParams.set("query", params.query);
   url.searchParams.set("format", "json");
   url.searchParams.set("pageSize", String(params.limit ?? 15));
+  // "core" (vs. the default "lite") is required for Europe PMC to include
+  // meshHeadingList — needed for the study-region filter (mesh-geography.ts,
+  // decision #6). Not live-verified from this sandbox (no outbound network
+  // access) — see mesh-geography.ts's header comment.
+  url.searchParams.set("resultType", "core");
   return url.toString();
 }
 

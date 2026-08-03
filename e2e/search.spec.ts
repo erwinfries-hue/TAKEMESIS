@@ -68,6 +68,9 @@ test("the domain-confirmation step offers optional search filters, all study typ
     page.getByLabel("Beobachtungsstudien (Kohorten-, Fall-Kontroll-, Querschnittsstudien)"),
   ).toBeChecked();
   await expect(page.getByLabel("Sonstige Studientypen")).toBeChecked();
+  await expect(page.getByText("Studienregion (soweit erfasst)")).toBeVisible();
+  await expect(page.getByLabel("Europa")).toBeChecked();
+  await expect(page.getByLabel("Nicht erfasst")).toBeChecked();
 });
 
 test("choosing filters carries them through to the search request as query params", async ({
@@ -86,6 +89,20 @@ test("choosing filters carries them through to the search request as query param
   await expect(page).toHaveURL(/studyTypeGroup=reviews/);
   await expect(page).toHaveURL(/studyTypeGroup=rct/);
   await expect(page).not.toHaveURL(/studyTypeGroup=observational/);
+});
+
+test("unchecking a study region carries the remaining regions through as query params (decision #6)", async ({
+  page,
+}) => {
+  await page.goto(
+    "/search?q=" + encodeURIComponent("Welche Lernmethode verbessert den Lernerfolg?"),
+  );
+  await page.getByLabel("Afrika").uncheck();
+  await page.getByRole("button", { name: "Bestätigen und Quellen durchsuchen" }).click();
+
+  await expect(page).toHaveURL(/studyRegion=europe/);
+  await expect(page).toHaveURL(/studyRegion=not_reported/);
+  await expect(page).not.toHaveURL(/studyRegion=africa/);
 });
 
 test("a high-risk question is restricted, not classified", async ({ page }) => {

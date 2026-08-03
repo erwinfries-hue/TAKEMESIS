@@ -341,6 +341,16 @@
     "groupRct": "Randomized controlled trials (RCTs)",
     "groupObservational": "Observational studies (cohort, case-control, cross-sectional)",
     "groupOther": "Other study types",
+    "regionHeading": "Study region (where reported)",
+    "regionEurope": "Europe",
+    "regionNorthAmerica": "North America",
+    "regionLatinAmerica": "Latin America",
+    "regionMiddleEast": "Middle East",
+    "regionAfrica": "Africa",
+    "regionAsia": "Asia",
+    "regionOceania": "Oceania",
+    "regionNotReported": "Not reported",
+    "regionNote": "Only some sources provide geographic data on the population studied — mostly for epidemiological studies. Studies without this data aren't excluded, they're shown separately under \"Not reported\".",
     "note": "Restrictive filters can significantly reduce the number of studies found — up to \"not enough evidence\"."
   },
   "publicationTypeLabels": {

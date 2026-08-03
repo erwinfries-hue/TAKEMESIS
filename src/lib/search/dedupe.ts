@@ -74,6 +74,7 @@ function mergeRecords(a: NormalizedRecord, b: NormalizedRecord): NormalizedRecor
       DATA_COMPLETENESS_RANK[a.dataCompleteness] >= DATA_COMPLETENESS_RANK[b.dataCompleteness]
         ? a.dataCompleteness
         : b.dataCompleteness,
+    meshHeadings: a.meshHeadings && a.meshHeadings.length > 0 ? a.meshHeadings : b.meshHeadings,
   };
 }
 
