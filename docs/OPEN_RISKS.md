@@ -1145,6 +1145,44 @@ checkpoint (decision #15) and before each production-readiness gate.
       test:e2e` (63/63), `npm run test:a11y` (21/21, including a fresh
       `/topics` pass with the new signup form present).
 
+    **RESOLVED — live-verified end to end (2026-08-04), same day, three real
+    bugs found and fixed along the way.** Erwin deployed and worked through
+    the setup live:
+    1. `/api/cron/topic-digest` first 500'd with Supabase error `PGRST205`
+       ("table not found in schema cache") — the `topic_subscriptions`
+       migration had not actually been run against the live project yet
+       (same class of gap as item #30's confirmation-email migration
+       miss). Fixed: Erwin ran the migration via the Supabase SQL editor,
+       then `NOTIFY pgrst, 'reload schema';` to force an immediate
+       PostgREST cache refresh rather than waiting out its normal
+       auto-refresh window. Confirmed via `select * from
+       topic_subscriptions;` and a subsequent clean cron run.
+    2. Once the table existed, subscribing on `/topics` reported success
+       but no confirmation email arrived. Root cause was not a bug: Vercel's
+       function logs for `POST /api/topics/subscribe` showed a clean `200`
+       with a real outbound call to `api.resend.com/emails` and no error —
+       and Resend's own dashboard (`resend.com/emails`) confirmed
+       **"Delivered"** for both attempts, to `erwin.fries@lyreco.com`. Same
+       explanation already on file for report-ready emails (item #30's
+       2026-08-04 update): `tekmesis.com` is still a recently-verified
+       sending domain, and corporate mail filters (Lyreco appears to run
+       Microsoft 365) commonly route first mail from a new sender into
+       Junk or the "Other" Focused-Inbox tab rather than the primary inbox.
+       No action needed; expected to fade as the domain sends more mail.
+    3. Confirmed the merge behavior live too: Erwin's second subscribe
+       attempt (different topic, same email) correctly `PATCH`ed the
+       existing `topic_subscriptions` row instead of creating a second
+       one, visible in the Vercel function's External APIs panel (`GET`
+       then `PATCH` to `topic_subscriptions`, not two separate inserts).
+
+    Themen-Digest signup → storage → confirmation-email delivery is now
+    genuinely confirmed working against the real production stack, not
+    just code-complete and unit-tested. The weekly digest send itself
+    (`run-digest.ts`, triggered by the Monday cron) has not yet had a real
+    subscriber with a genuinely new cached study to send to — that path
+    stays "not yet live-verified" until a real weekly run has something to
+    report.
+
 26. **RESOLVED 2026-07-28.** The high-risk detector's `"scheidung"` term (for
     `legal_financial_high_stakes`) false-positived on "Entscheidung(en)"
     (decision) — a genuinely common German word, not an edge case, and
