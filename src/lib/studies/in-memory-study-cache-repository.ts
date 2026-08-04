@@ -44,4 +44,11 @@ export class InMemoryStudyCacheRepository implements StudyCacheRepository {
     this.studies.set(k, study);
     return study;
   }
+
+  async findRecentByTopic(topicSlug: string, sinceIso: string, limit: number): Promise<CachedStudy[]> {
+    return Array.from(this.studies.values())
+      .filter((study) => study.topicSlugs.includes(topicSlug) && study.firstSeenAt > sinceIso)
+      .sort((a, b) => b.firstSeenAt.localeCompare(a.firstSeenAt))
+      .slice(0, limit);
+  }
 }

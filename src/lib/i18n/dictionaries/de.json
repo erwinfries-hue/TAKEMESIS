@@ -150,7 +150,19 @@
     "yourQuestionPrefix": "Deine eingegebene Frage:",
     "askedCountLabel": "{count} Fragen wurden in diesem Bereich bereits gestellt",
     "trendingHeading": "Meistgefragte Themen diese Woche",
-    "trendingCountLabel": "{count} Fragen"
+    "trendingCountLabel": "{count} Fragen",
+    "unsubscribedBanner": "Du wurdest erfolgreich vom Themen-Digest abgemeldet."
+  },
+  "topicDigestSignup": {
+    "heading": "Themen-Digest",
+    "description": "Erhalte eine E-Mail, wenn wir neue Studien zu diesem Thema finden — höchstens einmal pro Woche, nur bei echten Neuigkeiten.",
+    "emailPlaceholder": "deine@email.ch",
+    "submitLabel": "Abonnieren",
+    "loadingLabel": "Wird angemeldet …",
+    "successBody": "Angemeldet! Wir haben dir eine Bestätigung geschickt.",
+    "rateLimitedBody": "Zu viele Anmeldeversuche. Bitte versuch es später erneut.",
+    "errorBody": "Anmeldung fehlgeschlagen. Bitte versuch es später erneut.",
+    "privacyNote": "Nur für diesen Digest verwendet, jederzeit über den Link in der E-Mail abbestellbar."
   },
   "exampleReportPage": {
     "heading": "Beispiel-Report",

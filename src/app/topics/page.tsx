@@ -6,6 +6,7 @@ import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { QuestionModeSelector } from "@/components/question-mode-selector";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
 import { TopicIcon } from "@/components/icons/topic-icons";
+import { TopicDigestSignup } from "@/components/topic-digest-signup";
 import { getAskedCountForDomain } from "@/lib/analytics/social-proof";
 import { getTrendingTopics } from "@/lib/analytics/trending-topics";
 
@@ -15,9 +16,15 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: `${dict.topicsPage.heading} — ${dict.brand.name}` };
 }
 
-export default async function TopicsPage() {
+export default async function TopicsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ digest?: string }>;
+}) {
   const locale = await getLocale();
   const dict = getDictionary(locale);
+  const { digest } = await searchParams;
+  const showUnsubscribedBanner = digest === "unsubscribed";
   const askedCounts = await Promise.all(
     topics.map(async (topic) => [topic.slug, await getAskedCountForDomain(topic.slug)] as const),
   );
@@ -32,6 +39,14 @@ export default async function TopicsPage() {
 
   return (
     <main className="flex flex-1 flex-col items-center gap-12 px-6 py-16 sm:px-10">
+      {showUnsubscribedBanner && (
+        <p
+          role="status"
+          className="w-full max-w-2xl rounded-lg border border-brand-teal-200 bg-brand-teal-50 px-4 py-3 text-center text-sm text-brand-teal-700"
+        >
+          {dict.topicsPage.unsubscribedBanner}
+        </p>
+      )}
       <div className="flex max-w-2xl flex-col items-center gap-4 text-center">
         <h1 className="text-3xl font-semibold text-brand-navy-900">
           {dict.topicsPage.heading}
@@ -112,6 +127,10 @@ export default async function TopicsPage() {
                 {copy.examples.map((example) => (
                   <ExampleQuestionChip key={example} question={example} />
                 ))}
+              </div>
+
+              <div className="mt-4 border-t border-brand-neutral-100 pt-4">
+                <TopicDigestSignup dict={dict.topicDigestSignup} locale={locale} topicSlug={topic.slug} />
               </div>
 
               <details className="mt-3 border-t border-brand-neutral-100 pt-3">

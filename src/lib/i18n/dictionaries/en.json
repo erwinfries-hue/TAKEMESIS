@@ -150,7 +150,19 @@
     "yourQuestionPrefix": "Your entered question:",
     "askedCountLabel": "{count} questions have already been asked in this domain",
     "trendingHeading": "Most-asked topics this week",
-    "trendingCountLabel": "{count} questions"
+    "trendingCountLabel": "{count} questions",
+    "unsubscribedBanner": "You've been unsubscribed from the topic digest."
+  },
+  "topicDigestSignup": {
+    "heading": "Topic digest",
+    "description": "Get an email when we find new studies for this topic — at most once a week, only when there's genuine news.",
+    "emailPlaceholder": "you@example.com",
+    "submitLabel": "Subscribe",
+    "loadingLabel": "Subscribing …",
+    "successBody": "Subscribed! We've sent you a confirmation.",
+    "rateLimitedBody": "Too many signup attempts. Please try again later.",
+    "errorBody": "Subscription failed. Please try again later.",
+    "privacyNote": "Used only for this digest — unsubscribe anytime via the link in the email."
   },
   "exampleReportPage": {
     "heading": "Example Report",

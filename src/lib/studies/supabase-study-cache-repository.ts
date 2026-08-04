@@ -136,4 +136,16 @@ export class SupabaseStudyCacheRepository implements StudyCacheRepository {
     if (error) throw error;
     return toDomain(data as StudyRow);
   }
+
+  async findRecentByTopic(topicSlug: string, sinceIso: string, limit: number): Promise<CachedStudy[]> {
+    const { data, error } = await getSupabaseClient()
+      .from("studies")
+      .select()
+      .contains("topic_slugs", [topicSlug])
+      .gt("first_seen_at", sinceIso)
+      .order("first_seen_at", { ascending: false })
+      .limit(limit);
+    if (error) throw error;
+    return (data as StudyRow[]).map(toDomain);
+  }
 }

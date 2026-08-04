@@ -3,6 +3,8 @@ import {
   buildReportFailedEmail,
   buildReportReadyEmail,
   buildRefundConfirmationEmail,
+  buildTopicDigestConfirmationEmail,
+  buildTopicDigestEmail,
   buildUpdateCheckResultEmail,
 } from "./templates";
 
@@ -116,6 +118,77 @@ describe("email templates", () => {
         newStudies: [{ title: null, venue: null, year: null, sourceUrl: null, doi: null }],
       });
       expect(email.html).toContain("nicht angegeben");
+    });
+  });
+
+  describe("buildTopicDigestConfirmationEmail (Themen-Digest)", () => {
+    const digestBaseParams = {
+      browseUrl: "https://tekmesis.com/topics",
+      unsubscribeUrl: "https://tekmesis.com/api/topics/unsubscribe?id=sub-1&sig=abc",
+      supportEmail: "support@tekmesis.com",
+    };
+
+    it("lists every subscribed topic and includes the unsubscribe link", () => {
+      const email = buildTopicDigestConfirmationEmail({
+        locale: "de",
+        ...digestBaseParams,
+        topicNames: ["Schlaf & Regeneration", "Ernährung & Supplements"],
+      });
+      expect(email.html).toContain("Schlaf & Regeneration");
+      expect(email.html).toContain("Ernährung & Supplements");
+      expect(email.html).toContain(digestBaseParams.unsubscribeUrl);
+      expect(email.text).toContain(digestBaseParams.unsubscribeUrl);
+    });
+
+    it("is localized across all three locales", () => {
+      const params = { ...digestBaseParams, topicNames: ["Schlaf & Regeneration"] };
+      const de = buildTopicDigestConfirmationEmail({ locale: "de", ...params });
+      const en = buildTopicDigestConfirmationEmail({ locale: "en", ...params });
+      const fr = buildTopicDigestConfirmationEmail({ locale: "fr", ...params });
+      expect(de.subject).not.toBe(en.subject);
+      expect(en.subject).not.toBe(fr.subject);
+    });
+  });
+
+  describe("buildTopicDigestEmail (weekly Themen-Digest)", () => {
+    const digestBaseParams = {
+      browseUrl: "https://tekmesis.com/topics",
+      unsubscribeUrl: "https://tekmesis.com/api/topics/unsubscribe?id=sub-1&sig=abc",
+      supportEmail: "support@tekmesis.com",
+    };
+    const sections = [
+      {
+        topicName: "Schlaf & Regeneration",
+        studies: [
+          { title: "New Sleep Study", venue: "Sleep Journal", year: 2026, sourceUrl: "https://example.com/s1", doi: null },
+        ],
+      },
+    ];
+
+    it("renders one heading per topic section with its studies", () => {
+      const email = buildTopicDigestEmail({ locale: "de", ...digestBaseParams, sections });
+      expect(email.html).toContain("Schlaf & Regeneration");
+      expect(email.html).toContain("New Sleep Study");
+      expect(email.html).toContain("https://example.com/s1");
+    });
+
+    it("includes the unsubscribe link", () => {
+      const email = buildTopicDigestEmail({ locale: "en", ...digestBaseParams, sections });
+      expect(email.html).toContain(digestBaseParams.unsubscribeUrl);
+      expect(email.text).toContain(digestBaseParams.unsubscribeUrl);
+    });
+
+    it("never claims the studies were analyzed for this topic — points to generating a report instead", () => {
+      const email = buildTopicDigestEmail({ locale: "de", ...digestBaseParams, sections });
+      expect(email.html).toMatch(/nicht.*inhaltlich ausgewertet|nicht speziell/);
+    });
+
+    it("is localized across all three locales", () => {
+      const de = buildTopicDigestEmail({ locale: "de", ...digestBaseParams, sections });
+      const en = buildTopicDigestEmail({ locale: "en", ...digestBaseParams, sections });
+      const fr = buildTopicDigestEmail({ locale: "fr", ...digestBaseParams, sections });
+      expect(de.subject).not.toBe(en.subject);
+      expect(en.subject).not.toBe(fr.subject);
     });
   });
 });

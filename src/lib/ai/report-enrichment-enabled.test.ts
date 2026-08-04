@@ -171,6 +171,7 @@ describe("enrichPremiumReportWithAi — study cache (read-through)", () => {
     const studyCache: StudyCacheRepository = {
       findByKey: vi.fn().mockRejectedValue(new Error("cache unavailable")),
       upsert: vi.fn().mockRejectedValue(new Error("cache unavailable")),
+      findRecentByTopic: vi.fn().mockResolvedValue([]),
     };
     const extractStudyFields = vi.fn().mockResolvedValue(FIELDS);
     const synthesizeReport = vi.fn().mockResolvedValue(SYNTHESIS);

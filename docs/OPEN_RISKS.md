@@ -1057,6 +1057,94 @@ checkpoint (decision #15) and before each production-readiness gate.
     resend safety net (item #30's 2026-08-03 update): its migration had
     never actually been applied in production.
 
+    **RESOLVED 2026-08-04 — this file's #4 (Vercel cron-job-count limit) is
+    resolved, unblocking the Themen-Digest half.** Checked via Vercel's own
+    changelog (public documentation, not account-specific — no dashboard
+    login needed to answer this one): as of 2026-01-20, Vercel lifted
+    per-project cron limits to 100 on every plan, including Hobby (up from a
+    much lower prior cap) — see
+    https://vercel.com/changelog/cron-jobs-now-support-100-per-project-on-every-plan.
+    The only remaining Hobby constraint is cadence, not count: a schedule
+    firing more than once a day is rejected at deploy time, which a weekly
+    digest comfortably satisfies. A third cron job (on top of
+    `expire-reports` and `resend-confirmation-emails`) is therefore safe to
+    add. Erwin approved building the Themen-Digest now, on the same
+    "generate automatically from real search hits, no manual curation"
+    design this file's decision #7 entry already settled.
+
+    **Built the same day:**
+    - New Supabase table `topic_subscriptions` (migration
+      `20260804090000_add_topic_subscriptions.sql`, same not-yet-run-
+      against-a-live-project caveat as every migration here): one row per
+      email, `topic_slugs text[]` grows as the same address subscribes to
+      further topics (merged by `topics/subscribe.ts`, never duplicated —
+      one weekly email covering everything a subscriber opted into, not one
+      email per topic). Repository pattern (in-memory + Supabase) mirrors
+      every other repository in this app.
+    - **No raw-token storage at all**, unlike report tokens.
+      `topics/unsubscribe-token.ts` HMAC-signs the subscription's own `id`
+      with a new `TOPIC_DIGEST_SECRET` env var and re-derives the signature
+      on demand every time a link is needed (confirmation email, every
+      weekly digest) — solves the problem report tokens don't have to:
+      those are only ever shown once at creation, but an unsubscribe link
+      needs to keep working on every future email, and there's no side
+      channel (like the Stripe-session trick `resend-confirmation-emails.ts`
+      uses) to recover a once-issued secret later. `TOPIC_DIGEST_SECRET`
+      unset means both the digest cron and the subscribe confirmation email
+      refuse to send rather than ship a mail with a broken/no unsubscribe
+      link — new required-secret human stop condition before this is live,
+      same class as `CRON_SECRET`/`EMAIL_API_KEY`.
+    - **Content is sourced entirely from the studies cache** (task
+      #125-129's `studies` table, `topicSlugs`/`firstSeenAt` fields added
+      specifically for this) via a new `findRecentByTopic(topicSlug,
+      sinceIso, limit)` repository method — every entry there already came
+      from a real, live TEKMESIS search, so this can never surface
+      fabricated or synthetic content. `topics/digest-content.ts` builds one
+      section per subscribed topic that actually has something new since
+      the subscriber's last send (or signup date, if never sent);
+      topics with nothing new are silently omitted, never padded with a
+      "nothing found" filler — a quiet week for every subscribed topic means
+      no email sent at all, not an empty one. `run-digest.ts`'s per-
+      subscription "since" window only advances on a successful send, so a
+      dropped send or a slow week never loses studies, they just accumulate
+      into the next send that has something to report.
+    - The digest lists only directly-sourced fields (title, venue, year,
+      link) — same discipline as `buildUpdateCheckResultEmail`, and for the
+      same reason: a cached study's AI extraction was written for whichever
+      original report first surfaced it, not for this digest's topic in
+      general, so presenting it here as "this topic's finding" would risk
+      the same "present a protocol as completed evidence"-style
+      overclaiming. Recipients wanting the full analysis are pointed to
+      generating their own report.
+    - New weekly cron `/api/cron/topic-digest` (`0 4 * * 1`, Mondays 04:00
+      UTC — an hour after the existing daily crons, wired into
+      `vercel.json`), same `CRON_SECRET` bearer-auth pattern as the other
+      two.
+    - New public `POST /api/topics/subscribe` (rate-limited 10/IP/day via
+      the existing `RATE_LIMIT_SECRET`/rate-limiter infra, Zod-validated,
+      rejects unknown topic slugs) and `GET /api/topics/unsubscribe`
+      (HMAC-verified, one-click per RFC 8058 — deletes the row outright, no
+      "unsubscribed" tombstone, since nothing here is an opt-back-in list;
+      CLAUDE.md: "no unnecessary personal data"). Unsubscribe redirects to
+      `/topics?digest=unsubscribed`, which renders a small confirmation
+      banner.
+    - New `TopicDigestSignup` client component, one per topic card on
+      `/topics` (Erwin's choice: anchored to the topic being browsed, not
+      one generic site-wide form) — email input + submit, states for
+      loading/success/rate-limited/error, privacy note. Subscribing to a
+      second topic elsewhere merges into the same subscription
+      server-side; the component itself only ever knows its own topic.
+    - Full DE/EN/FR dictionary coverage for both the signup widget and all
+      email copy.
+    - Tests: 8 new/updated test files across the repository, token,
+      subscribe-merge, digest-content, run-digest, both route handlers, and
+      the signup component (unit tests only — no live send attempted, same
+      "not yet run against a live project" caveat as the DB layer). Full
+      verification clean: `npm run lint`, `npm run typecheck`, unit tests
+      (799/799, up from 750), integration (1/1), `npm run build`, `npm run
+      test:e2e` (63/63), `npm run test:a11y` (21/21, including a fresh
+      `/topics` pass with the new signup form present).
+
 26. **RESOLVED 2026-07-28.** The high-risk detector's `"scheidung"` term (for
     `legal_financial_high_stakes`) false-positived on "Entscheidung(en)"
     (decision) — a genuinely common German word, not an edge case, and

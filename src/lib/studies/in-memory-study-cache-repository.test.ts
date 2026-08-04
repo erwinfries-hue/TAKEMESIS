@@ -66,4 +66,47 @@ describe("InMemoryStudyCacheRepository", () => {
     expect(second.topicSlugs.sort()).toEqual(["ernaehrung", "sport-fitness"]);
     expect(second.firstSeenAt).toBe(first.firstSeenAt);
   });
+
+  it("findRecentByTopic returns only studies first seen after the cutoff, tagged with the topic", async () => {
+    const repo = new InMemoryStudyCacheRepository();
+    await repo.upsert({
+      record: makeRecord({ doi: "10.1/old" }),
+      aiFields: FIELDS,
+      topicSlug: "schlaf-regeneration",
+    });
+
+    const cutoff = new Date().toISOString();
+    await new Promise((resolve) => setTimeout(resolve, 2));
+
+    await repo.upsert({
+      record: makeRecord({ doi: "10.1/new-same-topic" }),
+      aiFields: FIELDS,
+      topicSlug: "schlaf-regeneration",
+    });
+    await repo.upsert({
+      record: makeRecord({ doi: "10.1/new-other-topic" }),
+      aiFields: FIELDS,
+      topicSlug: "ernaehrung-supplements",
+    });
+
+    const recent = await repo.findRecentByTopic("schlaf-regeneration", cutoff, 10);
+
+    expect(recent).toHaveLength(1);
+    expect(recent[0].doi).toBe("10.1/new-same-topic");
+  });
+
+  it("findRecentByTopic caps results at limit, newest first", async () => {
+    const repo = new InMemoryStudyCacheRepository();
+    const cutoff = new Date(0).toISOString();
+    for (const doi of ["10.1/a", "10.1/b", "10.1/c"]) {
+      await repo.upsert({ record: makeRecord({ doi }), aiFields: FIELDS, topicSlug: "lernen-bildung" });
+      await new Promise((resolve) => setTimeout(resolve, 2));
+    }
+
+    const recent = await repo.findRecentByTopic("lernen-bildung", cutoff, 2);
+
+    expect(recent).toHaveLength(2);
+    expect(recent[0].doi).toBe("10.1/c");
+    expect(recent[1].doi).toBe("10.1/b");
+  });
 });

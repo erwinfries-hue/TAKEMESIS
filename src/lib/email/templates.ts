@@ -250,3 +250,112 @@ export function buildRefundConfirmationEmail(params: ReportEmailParams): EmailCo
   const bodyText = `Hi,\n\nwe confirm the refund of your payment. It will be credited back via your original payment method.\n\nQuestions? Write to us at ${supportEmail}.`;
   return { subject: "Refund confirmed", ...wrapEmail(locale, bodyHtml, bodyText) };
 }
+
+export interface TopicDigestSubscriptionEmailParams {
+  locale: Locale;
+  topicNames: string[];
+  browseUrl: string;
+  unsubscribeUrl: string;
+  supportEmail: string;
+}
+
+function topicListItems(topicNames: string[]): string {
+  return topicNames.map((name) => `<li style="margin:0 0 6px;">${name}</li>`).join("");
+}
+
+/**
+ * Sent right after a successful POST /api/topics/subscribe — both for a
+ * brand-new signup and for adding a further topic to an existing
+ * subscription, since the unsubscribe link can only ever be produced fresh
+ * (topics/unsubscribe-token.ts: it's re-derived from the subscription id,
+ * never stored), so every subscribe action gets one.
+ */
+export function buildTopicDigestConfirmationEmail(
+  params: TopicDigestSubscriptionEmailParams,
+): EmailContent {
+  const { locale, topicNames, browseUrl, unsubscribeUrl, supportEmail } = params;
+  const list = topicListItems(topicNames);
+
+  if (locale === "de") {
+    const bodyHtml = `<p style="margin:0 0 16px;">Hallo,</p><p style="margin:0 0 12px;">du bist jetzt für den TEKMESIS Themen-Digest angemeldet, zu diesen Themen:</p><ul style="margin:0 0 20px;padding-left:20px;">${list}</ul><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">Sobald unsere automatische Quellensuche neue Studien zu einem deiner Themen findet, schicken wir dir eine Zusammenfassung — höchstens einmal pro Woche, nie öfter, und nur wenn es wirklich etwas Neues gibt.</p><p style="margin:0 0 20px;">${emailLink(browseUrl, "Weitere Themen entdecken")}</p><p style="margin:0;">Nicht mehr interessiert? ${emailLink(unsubscribeUrl, "Abmelden")}. Fragen? Schreib uns an ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Hallo,\n\ndu bist jetzt für den TEKMESIS Themen-Digest angemeldet, zu diesen Themen:\n${topicNames.map((n) => `- ${n}`).join("\n")}\n\nSobald unsere automatische Quellensuche neue Studien zu einem deiner Themen findet, schicken wir dir eine Zusammenfassung — höchstens einmal pro Woche, nie öfter, und nur wenn es wirklich etwas Neues gibt.\n\nWeitere Themen: ${browseUrl}\n\nAbmelden: ${unsubscribeUrl}\n\nFragen? Schreib uns an ${supportEmail}.`;
+    return { subject: "Angemeldet: TEKMESIS Themen-Digest", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
+  if (locale === "fr") {
+    const bodyHtml = `<p style="margin:0 0 16px;">Bonjour,</p><p style="margin:0 0 12px;">tu es maintenant inscrit·e au digest thématique TEKMESIS pour ces thèmes :</p><ul style="margin:0 0 20px;padding-left:20px;">${list}</ul><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">Dès que notre recherche automatique trouve de nouvelles études pour l'un de tes thèmes, nous t'envoyons un résumé — au maximum une fois par semaine, jamais plus, et seulement s'il y a vraiment du nouveau.</p><p style="margin:0 0 20px;">${emailLink(browseUrl, "Découvrir d'autres thèmes")}</p><p style="margin:0;">Plus intéressé·e ? ${emailLink(unsubscribeUrl, "Se désabonner")}. Des questions ? Écris-nous à ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Bonjour,\n\ntu es maintenant inscrit·e au digest thématique TEKMESIS pour ces thèmes :\n${topicNames.map((n) => `- ${n}`).join("\n")}\n\nDès que notre recherche automatique trouve de nouvelles études pour l'un de tes thèmes, nous t'envoyons un résumé — au maximum une fois par semaine, jamais plus, et seulement s'il y a vraiment du nouveau.\n\nDécouvrir d'autres thèmes : ${browseUrl}\n\nSe désabonner : ${unsubscribeUrl}\n\nDes questions ? Écris-nous à ${supportEmail}.`;
+    return { subject: "Inscription confirmée : digest thématique TEKMESIS", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
+  const bodyHtml = `<p style="margin:0 0 16px;">Hi,</p><p style="margin:0 0 12px;">you're now signed up for the TEKMESIS topic digest, for these topics:</p><ul style="margin:0 0 20px;padding-left:20px;">${list}</ul><p style="margin:0 0 20px;font-size:13px;color:${COLOR.neutral600};">Once our automatic source search finds new studies for one of your topics, we'll send you a summary — at most once a week, never more often, and only when there's genuinely something new.</p><p style="margin:0 0 20px;">${emailLink(browseUrl, "Discover more topics")}</p><p style="margin:0;">No longer interested? ${emailLink(unsubscribeUrl, "Unsubscribe")}. Questions? Write to us at ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+  const bodyText = `Hi,\n\nyou're now signed up for the TEKMESIS topic digest, for these topics:\n${topicNames.map((n) => `- ${n}`).join("\n")}\n\nOnce our automatic source search finds new studies for one of your topics, we'll send you a summary — at most once a week, never more often, and only when there's genuinely something new.\n\nMore topics: ${browseUrl}\n\nUnsubscribe: ${unsubscribeUrl}\n\nQuestions? Write to us at ${supportEmail}.`;
+  return { subject: "Subscribed: TEKMESIS topic digest", ...wrapEmail(locale, bodyHtml, bodyText) };
+}
+
+export interface TopicDigestSection {
+  topicName: string;
+  studies: UpdateCheckStudySummary[];
+}
+
+export interface TopicDigestEmailParams {
+  locale: Locale;
+  sections: TopicDigestSection[];
+  browseUrl: string;
+  unsubscribeUrl: string;
+  supportEmail: string;
+}
+
+function digestSectionHtml(section: TopicDigestSection, locale: Locale): string {
+  const items = section.studies.map((study) => studyListItem(study, locale)).join("");
+  return `<h3 style="margin:20px 0 8px;font-size:15px;color:${COLOR.navy900};">${section.topicName}</h3><ul style="margin:0 0 12px;padding-left:20px;">${items}</ul>`;
+}
+
+function digestSectionText(section: TopicDigestSection, notReported: string): string {
+  const lines = section.studies
+    .map((s) => `  - ${s.title ?? notReported}${s.venue ? `, ${s.venue}` : ""}${s.year ? ` (${s.year})` : ""}`)
+    .join("\n");
+  return `${section.topicName}:\n${lines}`;
+}
+
+/**
+ * Weekly Themen-Digest (docs/OPEN_RISKS.md item #25's 2026-08-04 decision).
+ * Only ever called by run-digest.ts when at least one subscribed topic has
+ * new studies — an empty-everywhere week sends nothing, so this template
+ * never needs a "nothing found" branch. Like buildUpdateCheckResultEmail,
+ * lists only directly-sourced fields (title, venue, year, link): every
+ * studies-cache entry does carry an AI extraction (studies/types.ts
+ * requires it on upsert), but that extraction was written for whichever
+ * original report first surfaced the study, not for this digest's topic in
+ * general — presenting it as this topic's finding here would risk exactly
+ * the "present a protocol as completed evidence"-style overclaiming
+ * CLAUDE.md rules out. Recipients who want the full analysis are pointed to
+ * generating their own report instead.
+ */
+export function buildTopicDigestEmail(params: TopicDigestEmailParams): EmailContent {
+  const { locale, sections, browseUrl, unsubscribeUrl, supportEmail } = params;
+  const totalCount = sections.reduce((sum, section) => sum + section.studies.length, 0);
+  const html = sections.map((section) => digestSectionHtml(section, locale)).join("");
+
+  if (locale === "de") {
+    const notReported = "nicht angegeben";
+    const text = sections.map((s) => digestSectionText(s, notReported)).join("\n\n");
+    const bodyHtml = `<p style="margin:0 0 16px;">Hallo,</p><p style="margin:0 0 16px;">unsere automatische Quellensuche hat ${totalCount} möglicherweise neue Studie${totalCount === 1 ? "" : "n"} zu deinen abonnierten Themen gefunden:</p>${html}<p style="margin:20px 0 20px;font-size:13px;color:${COLOR.neutral600};">Diese Liste stammt direkt aus unserer automatischen Quellensuche und wurde nicht speziell für dieses Thema inhaltlich ausgewertet. Für eine vollständige Auswertung zu einer konkreten Frage erstellst du am besten einen eigenen Report.</p><p style="margin:0 0 20px;">${emailButton(browseUrl, "Themen entdecken")}</p><p style="margin:0;">Nicht mehr interessiert? ${emailLink(unsubscribeUrl, "Abmelden")}. Fragen? Schreib uns an ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Hallo,\n\nunsere automatische Quellensuche hat ${totalCount} möglicherweise neue Studie(n) zu deinen abonnierten Themen gefunden:\n\n${text}\n\nDiese Liste wurde nicht inhaltlich ausgewertet. Für eine vollständige Auswertung erstellst du am besten einen eigenen Report.\n\nThemen entdecken: ${browseUrl}\n\nAbmelden: ${unsubscribeUrl}\n\nFragen? Schreib uns an ${supportEmail}.`;
+    return { subject: "Neue Studien zu deinen TEKMESIS-Themen", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
+  if (locale === "fr") {
+    const notReported = "non indiqué";
+    const text = sections.map((s) => digestSectionText(s, notReported)).join("\n\n");
+    const bodyHtml = `<p style="margin:0 0 16px;">Bonjour,</p><p style="margin:0 0 16px;">notre recherche automatique a trouvé ${totalCount} étude${totalCount === 1 ? "" : "s"} potentiellement nouvelle${totalCount === 1 ? "" : "s"} pour tes thèmes abonnés :</p>${html}<p style="margin:20px 0 20px;font-size:13px;color:${COLOR.neutral600};">Cette liste provient directement de notre recherche automatique et n'a pas été analysée spécifiquement pour ce thème. Pour une analyse complète d'une question précise, génère plutôt ton propre rapport.</p><p style="margin:0 0 20px;">${emailButton(browseUrl, "Découvrir les thèmes")}</p><p style="margin:0;">Plus intéressé·e ? ${emailLink(unsubscribeUrl, "Se désabonner")}. Des questions ? Écris-nous à ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+    const bodyText = `Bonjour,\n\nnotre recherche automatique a trouvé ${totalCount} étude(s) potentiellement nouvelle(s) pour tes thèmes abonnés :\n\n${text}\n\nCette liste n'a pas été analysée. Pour une analyse complète, génère plutôt ton propre rapport.\n\nDécouvrir les thèmes : ${browseUrl}\n\nSe désabonner : ${unsubscribeUrl}\n\nDes questions ? Écris-nous à ${supportEmail}.`;
+    return { subject: "Nouvelles études pour tes thèmes TEKMESIS", ...wrapEmail(locale, bodyHtml, bodyText) };
+  }
+
+  const notReported = "not reported";
+  const text = sections.map((s) => digestSectionText(s, notReported)).join("\n\n");
+  const bodyHtml = `<p style="margin:0 0 16px;">Hi,</p><p style="margin:0 0 16px;">our automatic source search found ${totalCount} possibly new stud${totalCount === 1 ? "y" : "ies"} for your subscribed topics:</p>${html}<p style="margin:20px 0 20px;font-size:13px;color:${COLOR.neutral600};">This list comes directly from our automatic source search and hasn't been analyzed specifically for this topic. For a full analysis of a specific question, generate your own report instead.</p><p style="margin:0 0 20px;">${emailButton(browseUrl, "Discover topics")}</p><p style="margin:0;">No longer interested? ${emailLink(unsubscribeUrl, "Unsubscribe")}. Questions? Write to us at ${emailLink(`mailto:${supportEmail}`, supportEmail)}.</p>`;
+  const bodyText = `Hi,\n\nour automatic source search found ${totalCount} possibly new stud${totalCount === 1 ? "y" : "ies"} for your subscribed topics:\n\n${text}\n\nThis list hasn't been analyzed. For a full analysis, generate your own report instead.\n\nDiscover topics: ${browseUrl}\n\nUnsubscribe: ${unsubscribeUrl}\n\nQuestions? Write to us at ${supportEmail}.`;
+  return { subject: "New studies for your TEKMESIS topics", ...wrapEmail(locale, bodyHtml, bodyText) };
+}

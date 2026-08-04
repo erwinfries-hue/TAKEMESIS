@@ -82,6 +82,12 @@ export const serverEnvSchema = z.object({
   // (e.g. Vercel Cron) can trigger it — unset means the route always 401s.
   CRON_SECRET: z.string().optional(),
 
+  // HMAC key for signing Themen-Digest unsubscribe links (topics/unsubscribe-token.ts).
+  // Unset means no valid unsubscribe link can be produced, so the digest
+  // cron and the confirmation-email sender both refuse to send rather than
+  // ship a mail with a broken/no unsubscribe link.
+  TOPIC_DIGEST_SECRET: z.string().optional(),
+
   SENTRY_DSN: z.string().optional(),
 });
 

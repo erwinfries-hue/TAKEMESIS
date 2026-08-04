@@ -150,7 +150,19 @@
     "yourQuestionPrefix": "Ta question saisie :",
     "askedCountLabel": "{count} questions ont déjà été posées dans ce domaine",
     "trendingHeading": "Thèmes les plus demandés cette semaine",
-    "trendingCountLabel": "{count} questions"
+    "trendingCountLabel": "{count} questions",
+    "unsubscribedBanner": "Tu as été désabonné·e du digest thématique."
+  },
+  "topicDigestSignup": {
+    "heading": "Digest thématique",
+    "description": "Reçois un e-mail quand nous trouvons de nouvelles études sur ce thème — au maximum une fois par semaine, seulement s'il y a vraiment du nouveau.",
+    "emailPlaceholder": "toi@exemple.com",
+    "submitLabel": "S'abonner",
+    "loadingLabel": "Inscription en cours …",
+    "successBody": "Inscrit·e ! Nous t'avons envoyé une confirmation.",
+    "rateLimitedBody": "Trop de tentatives d'inscription. Réessaie plus tard.",
+    "errorBody": "L'inscription a échoué. Réessaie plus tard.",
+    "privacyNote": "Utilisé uniquement pour ce digest — désabonnement possible à tout moment via le lien dans l'e-mail."
   },
   "exampleReportPage": {
     "heading": "Rapport d'exemple",
