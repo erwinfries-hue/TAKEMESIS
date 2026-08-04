@@ -1368,11 +1368,17 @@ checkpoint (decision #15) and before each production-readiness gate.
     would have been broken too, so this safety net had never actually been
     capable of catching anything since it was built. Fixed live: Erwin ran
     `alter table reports add column confirmation_email_sent_at timestamptz;`
-    in the SQL editor. Not yet independently re-verified that the resend
-    sweep now successfully backfills this specific report's missed email
-    (next scheduled run: 03:15 server time, or a manual trigger via Vercel's
-    Cron Jobs dashboard) — worth a follow-up check rather than assuming
-    success from the migration alone.
+    in the SQL editor.
+
+    **RESOLVED 2026-08-04 — resend sweep confirmed live-working.** The
+    03:15 cron run backfilled this exact report's missed email; Erwin
+    received it at 06:04 (mailbox-local time), with the correct subject,
+    link, and content. The safety net is now genuinely confirmed capable of
+    catching a dropped "ready" email, not just code-complete. (Erwin's
+    inbox flagged the message with an Outlook "sender domain recently
+    active" heuristic warning — expected given `tekmesis.com` was only
+    verified as a sending domain on 2026-07-28; not a bug, should fade as
+    the domain sends more legitimate mail over time, no action needed.)
 
 31. **RESOLVED 2026-07-31 — `/admin/payments` was empty despite real, successful
     Stripe charges; the one-click refund action had nothing to act on.**
