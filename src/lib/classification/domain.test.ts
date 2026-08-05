@@ -79,4 +79,18 @@ describe("classifyDomain", () => {
     const scores = classifyDomain("Warum ist der Eiffelturm so hoch?", "de");
     expect(scores).toEqual([]);
   });
+
+  it("classifies climate-change questions as Umwelt, Nachhaltigkeit & Alltag (content gap closed 2026-08-05: 'Klimawandel' was absent from the topic's name/description/examples, so the term-index classifier had nothing to match it against)", () => {
+    const de = classifyDomain(
+      "Welche Kriterien haben einen Einfluss auf den Klimawandel?",
+      "de",
+    );
+    expect(de[0]?.slug).toBe("umwelt-nachhaltigkeit");
+
+    const en = classifyDomain("What factors have an influence on climate change?", "en");
+    expect(en[0]?.slug).toBe("umwelt-nachhaltigkeit");
+
+    const fr = classifyDomain("Quels facteurs influencent le changement climatique ?", "fr");
+    expect(fr[0]?.slug).toBe("umwelt-nachhaltigkeit");
+  });
 });

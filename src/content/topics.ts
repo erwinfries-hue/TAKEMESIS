@@ -495,39 +495,51 @@ export const topics: Topic[] = [
     sourceRoute: "OpenAlex (primär) · Crossref (ergänzend) — erwartungsgemäss schwächere Abdeckung",
     de: {
       name: "Umwelt, Nachhaltigkeit & Alltag",
-      description: "Fragen zu nachhaltigem Verhalten und dessen messbarer Wirkung im Alltag.",
+      description:
+        "Fragen zu nachhaltigem Verhalten, Klimawandel und dessen messbarer Wirkung im Alltag.",
       examples: [
         "Welchen Einfluss hat Mobilität auf die Nachhaltigkeit?",
         "Welche Verpackungsalternativen schneiden in Studien besser ab?",
         "Welche Mobilitätsformen haben den grössten messbaren ökologischen Effekt?",
         "Wie wirksam ist Recycling im Vergleich zu Konsumreduktion?",
         "Welche Ernährungsumstellungen haben den grössten ökologischen Effekt?",
+        "Welche Massnahmen reduzieren den CO2-Fussabdruck im Alltag nachweislich?",
+        "Welche Faktoren treiben den Klimawandel nachweislich am stärksten an?",
+        "Wie wirksam sind Massnahmen gegen den Klimawandel im Alltag wirklich?",
       ],
       limitations:
         "Studienlage ist oft kontext- und länderspezifisch; Ergebnisse lassen sich nicht immer verallgemeinern.",
     },
     en: {
       name: "Environment, Sustainability & Everyday Life",
-      description: "Questions about sustainable behavior and its measurable everyday impact.",
+      description:
+        "Questions about sustainable behavior, climate change, and its measurable everyday impact.",
       examples: [
         "What influence does mobility have on sustainability?",
         "Which packaging alternatives perform better in studies?",
         "Which mobility choices have the largest measurable ecological effect?",
         "How effective is recycling compared to reducing consumption?",
         "Which dietary changes have the largest ecological effect?",
+        "Which everyday measures demonstrably reduce your carbon footprint?",
+        "Which factors are the largest proven drivers of climate change?",
+        "How effective are everyday measures against climate change really?",
       ],
       limitations:
         "Evidence is often context- and country-specific; results don't always generalize.",
     },
     fr: {
       name: "Environnement, Durabilité & Quotidien",
-      description: "Questions sur les comportements durables et leur effet mesurable au quotidien.",
+      description:
+        "Questions sur les comportements durables, le changement climatique et leur effet mesurable au quotidien.",
       examples: [
         "Quelle influence la mobilité a-t-elle sur la durabilité ?",
         "Quelles alternatives d'emballage obtiennent de meilleurs résultats dans les études ?",
         "Quels modes de mobilité ont l'effet écologique mesurable le plus important ?",
         "Quelle est l'efficacité du recyclage par rapport à la réduction de la consommation ?",
         "Quels changements alimentaires ont l'effet écologique le plus important ?",
+        "Quelles mesures quotidiennes réduisent réellement l'empreinte carbone ?",
+        "Quels facteurs sont les principaux moteurs prouvés du changement climatique ?",
+        "Quelle est l'efficacité réelle des mesures quotidiennes contre le changement climatique ?",
       ],
       limitations:
         "Les données sont souvent spécifiques au contexte et au pays ; les résultats ne se généralisent pas toujours.",
