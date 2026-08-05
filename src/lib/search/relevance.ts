@@ -13,7 +13,16 @@ export const STOPWORDS = new Set([
   // German
   "der", "die", "das", "den", "dem", "des", "ein", "eine", "einen", "einem",
   "einer", "eines", "und", "oder", "aber", "wie", "was", "wer", "wen", "wem",
-  "wessen", "welche", "welcher", "welches", "welchen", "welchem", "ist",
+  "wessen", "welche", "welcher", "welches", "welchen", "welchem",
+  // Live bug found 2026-08-05: "warum" ("why") was missing from this list
+  // — a trivia question ("Warum ist der Eiffelturm so hoch?", not a
+  // researchable evidence question at all) matched real but wholly
+  // unrelated German-language papers that happened to share only "warum"
+  // + "hoch" ("so hoch" = "so tall") in their titles, clearing the
+  // relevance bar and the eligible_with_limitations threshold. "wieso" and
+  // "weshalb" are the same word class (German has three ways to ask
+  // "why"), added preventively for the same reason.
+  "warum", "wieso", "weshalb", "ist",
   "sind", "war", "waren", "sein", "bin", "bist", "seid", "hat", "haben",
   "hatte", "hatten", "wird", "werden", "wurde", "wurden", "kann", "können",
   "konnte", "sollte", "sollten", "muss", "müssen", "darf", "dürfen", "nicht",
@@ -66,6 +75,19 @@ export const STOPWORDS = new Set([
   "reducing", "increases", "increase", "increased", "increasing", "boosts",
   "boost", "boosted", "boosting", "harms", "harm", "harmed", "harming",
   "protects", "protect", "protected", "protecting",
+  // French — this list's own doc comment already claimed German/English/
+  // French coverage, but no French section actually existed until this
+  // fix (found alongside the "warum" gap above, same root cause: relevance
+  // scoring and query-translation tokenization both call this same
+  // STOPWORDS set — see query-translation.ts's RELEVANCE_STOPWORDS merge —
+  // so a missing entry here weakens screening for that locale specifically).
+  // Mirrors classification/domain.ts's STOPWORDS_FR, the one place this
+  // list already existed.
+  "quelle", "quel", "quels", "quelles", "comment", "pourquoi", "est", "sont",
+  "pour", "et", "ou", "le", "la", "les", "un", "une", "des", "du", "de",
+  "dans", "sur", "à", "au", "aux", "avec", "ne", "pas", "se", "être", "sera",
+  "peut", "peuvent", "par", "qui", "que", "quoi", "cette", "ce", "ces",
+  "son", "sa", "ses", "avoir", "a", "ont", "avait", "avaient",
 ]);
 
 function tokenize(text: string): string[] {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeRelevanceScore } from "./relevance";
+import { computeRelevanceScore, meetsRelevanceThreshold } from "./relevance";
 import { makeRecord } from "./test-fixtures";
 
 describe("computeRelevanceScore", () => {
@@ -52,5 +52,43 @@ describe("computeRelevanceScore", () => {
     const record = makeRecord({ title: "Retention", abstract: null });
     // "does" and "the" are stopwords - "retention" is the only meaningful term.
     expect(computeRelevanceScore("does the retention", record)).toBe(1);
+  });
+
+  it("treats 'warum' ('why') as a stopword, not a meaningful term", () => {
+    const record = makeRecord({ title: "Etwas ganz anderes", abstract: null });
+    expect(computeRelevanceScore("warum ist das so", record)).toBe(0);
+  });
+});
+
+describe("meetsRelevanceThreshold", () => {
+  it("real production case (2026-08-05): a nonsense trivia question no longer matches unrelated German papers sharing only 'warum'/'hoch'", () => {
+    // "Warum ist der Eiffelturm so hoch?" — "eiffelturm" is untranslated
+    // (not in the DE-EN dictionary), so each meaningful word becomes its
+    // own 1-word concept, same as buildSearchQueryConcepts would produce.
+    const concepts = [["warum"], ["eiffelturm"], ["hoch"]];
+    const unrelatedRecords = [
+      makeRecord({
+        title:
+          'Ökonomische (Fehl-)Anreize der Siedlungsflächenentwicklung – Warum ist der Druck auf die „Grüne Wiese" so hoch?',
+        abstract: null,
+      }),
+      makeRecord({
+        title: "55 Kirchensteuer Warum ist die Kirchensteuer in Deutschland unterschiedlich hoch?",
+        abstract: null,
+      }),
+      makeRecord({ title: "Warum sind die Abbruchzahlen in Mathe so hoch?", abstract: null }),
+    ];
+    for (const record of unrelatedRecords) {
+      expect(meetsRelevanceThreshold(concepts, record)).toBe(false);
+    }
+  });
+
+  it("still matches a record that genuinely contains all concept words", () => {
+    const concepts = [["warum"], ["eiffelturm"], ["hoch"]];
+    const record = makeRecord({
+      title: "Warum ist der Eiffelturm so hoch gebaut worden?",
+      abstract: null,
+    });
+    expect(meetsRelevanceThreshold(concepts, record)).toBe(true);
   });
 });

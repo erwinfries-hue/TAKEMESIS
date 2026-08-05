@@ -1661,6 +1661,61 @@ checkpoint (decision #15) and before each production-readiness gate.
       build`, `npm run test:e2e` (65/65, up from 63), `npm run test:a11y`
       (21/21).
 
+34. **Real bug found by Erwin (2026-08-05): the trivia question "Warum ist
+    der Eiffelturm so hoch?" ("Why is the Eiffel Tower so tall?") produced
+    a sellable "Kostenloser Evidenz-Teaser" — classified into two real
+    topics, 4 "included studies," a "Begrenzte Evidenzsicherheit" badge —
+    built from genuine but completely unrelated German-language papers
+    (church tax rates, settlement-area development, math dropout rates).
+    Root cause, found and fixed the same day: `"warum"` ("why") was
+    missing from **three separate, independently-maintained stopword
+    lists** (`relevance.ts`'s `STOPWORDS` — used by both screening and,
+    via `query-translation.ts`'s `RELEVANCE_STOPWORDS` merge, query
+    tokenization; and `classification/domain.ts`'s own separate
+    `STOPWORDS_DE`, which doesn't share a list with `relevance.ts` at
+    all). With "warum" surviving tokenization everywhere, it single-
+    handedly (a) registered nonzero domain-classification overlap against
+    two unrelated topics, since domain classification only requires
+    `score > 0`, and (b) once in `meetsRelevanceThreshold`'s concept-AND
+    check, `["warum"], ["hoch"]` matched real German papers that happened
+    to share only those two generic words with the query, never the
+    actual subject ("eiffelturm"). Fixed: added `warum`/`wieso`/`weshalb`
+    (all three German ways to ask "why") to both lists, plus — found
+    alongside, same investigation — `relevance.ts`'s own doc comment
+    already claimed "German, English, and French" stopword coverage but
+    **no French section had ever existed**, silently weakening screening
+    for every French question since the French rollout (task #135-147).
+    Added, mirroring `domain.ts`'s existing `STOPWORDS_FR`. Regression
+    tests added at both layers reproducing the exact real papers/titles
+    from Erwin's screenshot (`relevance.test.ts`, `domain.test.ts`). Full
+    verification clean: unit tests (820/820, up from 816), `npm run
+    build`, `npm run test:e2e` (65/65), `npm run test:a11y` (21/21).
+
+    **Deeper, still-open gap this surfaced — not fixed, needs Erwin's
+    call:** `CLAUDE.md`'s Broad-domain rule lists five required checks —
+    "classified by domain," "classified by risk," "mapped to suitable
+    data sources," **"tested for researchability,"** "tested for evidence
+    sufficiency." Only four of the five actually exist in code today. A
+    trivia/factual question like this one isn't a *researchable* evidence
+    question at all — no rephrasing would fix it, since scientific
+    literature synthesis is the wrong methodology for "why is a building
+    tall," not just a coverage gap the way the three weaker topics in
+    `SOURCE_COVERAGE_MATRIX.md` are. The current pipeline has no step that
+    asks "is this the kind of question our methodology can even answer,"
+    only "did enough matching records turn up" — so any future word-
+    overlap accident on a nonsense question could reproduce this same
+    failure shape even with #34's specific fix in place. Options if Erwin
+    wants this closed properly rather than patched incident-by-incident:
+    a rule-based heuristic (hard to make reliable — "why"/"how" questions
+    are also the normal shape of many genuinely good evidence questions,
+    e.g. "Wie wirkt sich Bewegung auf X aus?"), or a cheap AI
+    classification call (the Anthropic API is already wired for
+    extraction/synthesis, `AI_EXTRACTION_ENABLED`/`ANTHROPIC_API_KEY`) run
+    right after domain classification, before the costly multi-source
+    search — "is this question answerable via a systematic search of
+    peer-reviewed literature, yes/no." Not built without Erwin's decision
+    on approach and where in the funnel it should sit.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

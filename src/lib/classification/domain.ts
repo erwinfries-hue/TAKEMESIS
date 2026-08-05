@@ -16,6 +16,14 @@ const STOPWORDS_DE = new Set([
   "einem", "im", "in", "auf", "zu", "bei", "von", "mit", "nicht", "sich",
   "werden", "wird", "kann", "können", "am", "an", "als", "um", "durch",
   "haben", "hat", "hatte", "hatten",
+  // Live bug found 2026-08-05 (same root cause as relevance.ts's fix from
+  // the same day): "warum" ("why") was missing here too — this classifier
+  // has its own independent stopword set, not shared with relevance.ts's —
+  // so a trivia question ("Warum ist der Eiffelturm so hoch?") registered
+  // nonzero term overlap against real topics purely on "warum" surviving
+  // tokenization, before search/relevance were even involved. "wieso" and
+  // "weshalb" are the same word class, added preventively.
+  "warum", "wieso", "weshalb",
   // Generic effect-nouns, not the connector verbs themselves (those still
   // carry legitimate self-referential signal in this term-frequency
   // classifier — e.g. "verbessert" is part of what correctly identifies a

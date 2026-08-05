@@ -74,4 +74,9 @@ describe("classifyDomain", () => {
     const scores = classifyDomain("xyz qwerty zzz", "fr");
     expect(scores).toEqual([]);
   });
+
+  it("does not classify a nonsense trivia question just because 'warum' happens to overlap with real topic content (real production case, 2026-08-05)", () => {
+    const scores = classifyDomain("Warum ist der Eiffelturm so hoch?", "de");
+    expect(scores).toEqual([]);
+  });
 });
