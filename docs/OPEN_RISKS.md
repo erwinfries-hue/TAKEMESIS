@@ -1859,6 +1859,30 @@ checkpoint (decision #15) and before each production-readiness gate.
       caused by this change), `npm run test:integration` (1/1), `npm run
       build`, `npm run test:e2e` (68/68), `npm run test:a11y` (21/21).
 
+    **Same-day follow-up (2 rounds), also 2026-08-05:** the tab switcher's
+    font size and layout needed adjusting for the new third tab.
+    1. Tab labels were `text-lg` (sized up when there were only 2 tabs);
+       brought down to `text-sm` to match the "Frage einordnen" submit
+       button's own font size, per Erwin's request.
+    2. Follow-up: widened the shared wrapper from `max-w-xl` to
+       `max-w-2xl` so all three DE/EN tabs fit on one line instead of
+       each wrapping mid-label, and gave each tab its own visible
+       `rounded-full border` (previously only the active tab had a
+       filled pill background — the two inactive tabs read as plain text
+       links, not as tabs). Switched the tablist container from a
+       width-constrained `inline-flex` to `flex flex-wrap`, so on narrow
+       viewports (or French, whose three labels are long enough to still
+       exceed one line) the whole tab set drops to a second row as a
+       unit, rather than wrapping words inside a single button.
+       Visually verified in Chromium at desktop (1000px), mobile (400px),
+       and the French locale via a cookie-set `tekmesis_locale=fr`.
+       Full verification re-run clean after both rounds: lint,
+       typecheck, unit tests (849/849), build, e2e (68/68 — six
+       admin/rate-limit failures seen mid-session traced to a leftover
+       manually-started `next start` process squatting on port 3000
+       without the e2e env vars, not a regression; confirmed clean once
+       killed), a11y (21/21).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
