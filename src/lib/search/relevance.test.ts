@@ -91,4 +91,35 @@ describe("meetsRelevanceThreshold", () => {
     });
     expect(meetsRelevanceThreshold(concepts, record)).toBe(true);
   });
+
+  it("real production case (2026-08-05): 'measures' + 'everyday life' alone no longer clear the bar for an unrelated climate-change query", () => {
+    // buildSearchQueryConcepts("Welche Massnahmen reduzieren den
+    // CO2-Fussabdruck im Alltag nachweislich?", "de") produces this concept
+    // shape: [["measures"],["co2"],["footprint"],["everyday","life"],["demonstrably"]].
+    // Both records below only ever share "measures" and "everyday"/"life"
+    // with the query — nothing climate-related — but used to clear the
+    // 40%-of-5-concepts bar (2/5) purely on those two generic concepts.
+    const concepts = [["measures"], ["co2"], ["footprint"], ["everyday", "life"], ["demonstrably"]];
+    const unrelatedRecords = [
+      makeRecord({
+        title:
+          "Subjective and physiological measures reveal emotionally salient moments in virtual everyday life",
+        abstract: null,
+      }),
+      makeRecord({
+        title: "Repressive Measures and Everyday Life of Different Segments of Belarusian Society",
+        abstract: null,
+      }),
+    ];
+    for (const record of unrelatedRecords) {
+      expect(meetsRelevanceThreshold(concepts, record)).toBe(false);
+    }
+
+    // The genuinely relevant record (real climate/CO2 content) still passes.
+    const relevant = makeRecord({
+      title: "Energy Storage Assessment Towards Lowest Life Cycle CO2 Footprint",
+      abstract: null,
+    });
+    expect(meetsRelevanceThreshold(concepts, relevant)).toBe(true);
+  });
 });

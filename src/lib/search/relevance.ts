@@ -75,6 +75,21 @@ export const STOPWORDS = new Set([
   "reducing", "increases", "increase", "increased", "increasing", "boosts",
   "boost", "boosted", "boosting", "harms", "harm", "harmed", "harming",
   "protects", "protect", "protected", "protecting",
+  // Live production case (2026-08-05): "Massnahmen" and "im Alltag" both
+  // translate to "measures" and "everyday life" — near-universal phrasing
+  // in scientific writing, not distinctive to any topic. With a query that
+  // reduces to few concepts, matching only these two was enough to clear
+  // the threshold: "Subjective and physiological measures reveal
+  // emotionally salient moments in virtual everyday life" and "Repressive
+  // Measures and Everyday Life of ... Belarusian Society" both passed
+  // screening for a climate-change question that never mentions climate,
+  // CO2, or anything related — they only ever matched "measures" +
+  // "everyday life". Same rationale as the connector-verb stopwords above:
+  // a word this generic can't be allowed to stand in for the question's
+  // actual subject. (German/French mirror: "massnahme(n)"/"mesure(s)" and
+  // "alltag"/"alltäglich"/"quotidien(ne/s)" all translate to these same
+  // English words, so stopwording them here covers all three locales.)
+  "measures", "measure", "everyday", "life",
   // French — this list's own doc comment already claimed German/English/
   // French coverage, but no French section actually existed until this
   // fix (found alongside the "warum" gap above, same root cause: relevance
