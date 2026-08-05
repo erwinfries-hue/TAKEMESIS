@@ -114,6 +114,7 @@ function OwnQuestionFormFields({
             listeningLabel={dict.ownQuestionForm.voiceInputListening}
           />
         </div>
+        <QuestionPhrasingTips dict={dict.questionPhrasingTips} />
         <textarea
           id="own-question"
           name="q"
@@ -148,7 +149,6 @@ function OwnQuestionFormFields({
           </p>
         )}
         <p className="text-xs text-brand-neutral-600">{dict.ownQuestionForm.warning}</p>
-        <QuestionPhrasingTips dict={dict.questionPhrasingTips} />
       </div>
       <button
         type="submit"
