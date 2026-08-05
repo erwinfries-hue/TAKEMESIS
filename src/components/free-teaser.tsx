@@ -3,7 +3,9 @@ import type { Locale } from "@/lib/i18n/config";
 import { INTL_DATE_LOCALE } from "@/lib/i18n/date-locale";
 import type { TeaserData } from "@/lib/eligibility/teaser";
 import type { EligibilityStatus } from "@/lib/eligibility/eligibility";
+import type { EvidencePassportData } from "@/lib/eligibility/evidence-passport";
 import { ConfidenceGauge } from "@/components/confidence-gauge";
+import { EvidencePassport } from "@/components/evidence-passport";
 
 function formatSearchDate(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(INTL_DATE_LOCALE[locale], {
@@ -16,12 +18,14 @@ export function FreeTeaser({
   locale,
   topicName,
   teaser,
+  passport,
   eligibilityStatus,
 }: {
   dict: Dictionary;
   locale: Locale;
   topicName: string;
   teaser: TeaserData;
+  passport: EvidencePassportData;
   eligibilityStatus: EligibilityStatus;
 }) {
   return (
@@ -66,6 +70,8 @@ export function FreeTeaser({
           <dd className="font-semibold text-brand-navy-900">{teaser.includedCount}</dd>
         </div>
       </dl>
+
+      <EvidencePassport dict={dict} passport={passport} variant="compact" />
 
       <section>
         <h2 className="mb-2 font-semibold text-brand-navy-900">

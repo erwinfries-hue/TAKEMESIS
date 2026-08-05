@@ -154,6 +154,28 @@ export default async function Home() {
         </p>
       </section>
 
+      {/* 6c. No-evidence-no-sale guarantee — the eligibility engine already
+          gates every purchase (src/lib/eligibility/eligibility.ts); this
+          section makes that mechanism a visible, standalone promise instead
+          of the one sentence it used to be buried in inside the trust
+          section below (2026-08-05, differentiation review). */}
+      <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 bg-white px-6 py-10 text-center sm:px-10 sm:py-16">
+        <h2 className="text-2xl font-semibold text-brand-navy-900">
+          {dict.home.guaranteeHeading}
+        </h2>
+        <p className="max-w-xl text-brand-neutral-600">{dict.home.guaranteeBody}</p>
+        <ul className="flex flex-wrap justify-center gap-3 text-sm text-brand-neutral-600">
+          {dict.home.guaranteePoints.map((point) => (
+            <li key={point} className="rounded-full border border-brand-neutral-200 px-3 py-1">
+              ✓ {point}
+            </li>
+          ))}
+        </ul>
+        <Link href="/methodology" className="font-medium text-brand-teal-700 hover:underline">
+          {dict.home.guaranteeCta} →
+        </Link>
+      </section>
+
       {/* 6b. Differentiation: why not a general-purpose AI chatbot */}
       <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">

@@ -89,6 +89,21 @@ describe("buildPremiumReportData", () => {
     }
   });
 
+  it("includes an evidencePassport built from the same search result, so it survives persistence to finalPayload", () => {
+    const records = baselineRecords();
+    const result = fakeSearchResult(records);
+    const report = buildPremiumReportData({
+      searchResult: result,
+      eligibility: assessEligibility(result),
+      locale: "de",
+    });
+
+    expect(report.evidencePassport.includedCount).toBe(records.length);
+    expect(report.evidencePassport.confidenceLabel).toBe(report.confidenceLabel);
+    expect(report.evidencePassport.sourcesSearchedCount).toBe(1);
+    expect(report.evidencePassport.sourcesTotalCount).toBe(2);
+  });
+
   it("builds a real citation string from authors/year/title/venue", () => {
     const records = baselineRecords();
     const report = buildPremiumReportData({

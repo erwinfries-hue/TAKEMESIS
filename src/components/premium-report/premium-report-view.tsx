@@ -2,6 +2,7 @@ import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { PremiumReportData } from "@/lib/reports/premium-report";
 import { INTL_DATE_LOCALE } from "@/lib/i18n/date-locale";
 import { ConfidenceGauge } from "@/components/confidence-gauge";
+import { EvidencePassport } from "@/components/evidence-passport";
 import { TekmesisLogo } from "@/components/brand/tekmesis-logo";
 import { PendingAiNotice } from "./pending-ai-notice";
 import { PrintCoverPage } from "./print-cover-page";
@@ -202,6 +203,13 @@ export function PremiumReportView({
           </GlossaryTerm>
         </h2>
         <ConfidenceGauge label={report.confidenceLabel} dict={dict} />
+        {/* Guarded: reports stored before this field existed (finalPayload
+            predates the evidencePassport addition) won't have it. */}
+        {report.evidencePassport && (
+          <div className="mt-4">
+            <EvidencePassport dict={dict} passport={report.evidencePassport} variant="full" />
+          </div>
+        )}
       </section>
 
       {/* 8. Practical Interpretation */}

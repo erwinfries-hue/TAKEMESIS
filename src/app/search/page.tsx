@@ -15,6 +15,7 @@ import { parseDoiInput } from "@/lib/search/study-lookup";
 import { lookupByDoi } from "@/lib/source-adapters/crossref";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
 import { buildTeaserData } from "@/lib/eligibility/teaser";
+import { buildEvidencePassport } from "@/lib/eligibility/evidence-passport";
 import { getPriceConfig, formatPrice } from "@/lib/pricing/price-config";
 import { generateReportToken } from "@/lib/reports/token";
 import { SupabaseReportRepository } from "@/lib/reports/supabase-report-repository";
@@ -314,6 +315,7 @@ export default async function SearchPage({
   }
 
   const teaser = buildTeaserData(searchResult, eligibility);
+  const passport = buildEvidencePassport(searchResult, eligibility);
   const priceConfig = getPriceConfig();
   const topicName = confirmedTopics.map((topic) => topicCopy(topic, locale).name).join(" / ");
   const historyHref = `/search?${domainParams(new URLSearchParams({ q: question })).toString()}`;
@@ -366,6 +368,7 @@ export default async function SearchPage({
         locale={locale}
         topicName={topicName}
         teaser={teaser}
+        passport={passport}
         eligibilityStatus={eligibility.status}
       />
       <PaywallPanel

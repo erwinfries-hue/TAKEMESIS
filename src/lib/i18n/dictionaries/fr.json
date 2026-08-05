@@ -74,6 +74,14 @@
     ],
     "betaPositioning": "TEKMESIS démarre avec une petite bêta fermée de 15 personnes. Qui rejoint maintenant façonne activement le produit.",
     "refundNote": "Si ton rapport ne peut pas être généré pour des raisons techniques, cela est détecté et remboursé automatiquement. Pour toute autre question, contacte-nous simplement — nous nous en occupons personnellement, réponse sous 3 à 5 jours ouvrables.",
+    "guaranteeHeading": "Pas assez de preuves ? Pas de vente.",
+    "guaranteeBody": "Avant que tu payes, nous vérifions automatiquement s'il existe suffisamment d'études comparables et probantes. Si l'évidence est insuffisante, nous ne te proposons aucun rapport — quel que soit le sujet.",
+    "guaranteePoints": [
+      "Vérification automatique de l'éligibilité avant chaque achat",
+      "Aucun paiement si la base de preuves est insuffisante",
+      "Motifs de refus consultables en toute transparence"
+    ],
+    "guaranteeCta": "Comment nous vérifions cela",
     "whyNotChatGptHeading": "Pourquoi ne pas simplement demander à ChatGPT ?",
     "whyNotChatGptIntro": "Un chatbot répond presque instantanément à tout — la question est de savoir sur quoi repose cette réponse. TEKMESIS est volontairement construit de façon plus étroite et plus lente :",
     "whyNotChatGptSwipeHint": "Fais glisser le tableau vers la droite pour voir la comparaison avec le chatbot →",
@@ -398,6 +406,29 @@
     "protocol": "Protocole d'étude",
     "other": "Autre",
     "unknown": "Non classifié"
+  },
+  "dataCompletenessLabels": {
+    "full_text": "Texte intégral",
+    "abstract": "Résumé",
+    "metadata_only": "Métadonnées uniquement"
+  },
+  "evidencePassport": {
+    "heading": "Profil d'évidence",
+    "intro": "Un aperçu structuré de l'état des preuves — en un coup d'œil.",
+    "confidenceLabel": "Certitude",
+    "studyDesignLabel": "Type d'étude",
+    "sourceCoverageLabel": "Couverture des sources",
+    "sourceCoverageValue": "{searched} sur {total} sources consultées",
+    "analysisBasisLabel": "Base d'analyse",
+    "recencyLabel": "Actualité",
+    "recencyValue": "{earliest}–{latest}",
+    "recencyNotAvailable": "Aucune année de publication disponible",
+    "integrityLabel": "Intégrité de la base d'études",
+    "integrityClean": "Aucune correction connue parmi les études incluses",
+    "integrityHasCorrections": "{count} étude(s) sur {total} avec une correction connue",
+    "consistencyLabel": "Cohérence des résultats",
+    "transferabilityLabel": "Transférabilité",
+    "notReportedNote": "Non indiqué — disponible avec la synthèse assistée par IA dans une prochaine étape."
   },
   "glossaryDefinitions": {
     "meta_analysis": "Combine les résultats de plusieurs études à l'aide de méthodes statistiques pour aboutir à une conclusion globale — souvent considérée comme méthodologiquement particulièrement solide lorsque les études combinées le sont elles-mêmes.",

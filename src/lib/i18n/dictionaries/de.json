@@ -74,6 +74,14 @@
     ],
     "betaPositioning": "TEKMESIS startet mit einer kleinen, geschlossenen Beta von 15 Personen. Wer jetzt einsteigt, prägt das Produkt aktiv mit.",
     "refundNote": "Kann dein Report aus technischen Gründen nicht erstellt werden, wird das automatisch erkannt und rückerstattet. Bei anderen Anliegen meldest du dich einfach bei uns — wir kümmern uns persönlich darum, Antwort innerhalb von 3–5 Werktagen.",
+    "guaranteeHeading": "Keine ausreichende Evidenz? Kein Verkauf.",
+    "guaranteeBody": "Bevor du bezahlst, prüfen wir automatisch, ob genügend vergleichbare, aussagekräftige Studien vorliegen. Reicht die Evidenzlage nicht aus, bieten wir dir keinen Report an — unabhängig vom Thema.",
+    "guaranteePoints": [
+      "Automatische Eignungsprüfung vor jedem Kauf",
+      "Keine Zahlung, wenn die Studienlage nicht ausreicht",
+      "Ablehnungsgründe transparent einsehbar"
+    ],
+    "guaranteeCta": "Wie wir das prüfen",
     "whyNotChatGptHeading": "Warum nicht einfach ChatGPT fragen?",
     "whyNotChatGptIntro": "Ein Chatbot beantwortet fast alles sofort — die Frage ist, worauf die Antwort beruht. TEKMESIS ist bewusst enger und langsamer gebaut:",
     "whyNotChatGptSwipeHint": "Tabelle nach rechts wischen, um den Chatbot-Vergleich zu sehen →",
@@ -398,6 +406,29 @@
     "protocol": "Studienprotokoll",
     "other": "Andere",
     "unknown": "Nicht klassifiziert"
+  },
+  "dataCompletenessLabels": {
+    "full_text": "Volltext",
+    "abstract": "Abstract",
+    "metadata_only": "Nur Metadaten"
+  },
+  "evidencePassport": {
+    "heading": "Evidenz-Profil",
+    "intro": "Eine strukturierte Momentaufnahme der Evidenzlage — auf einen Blick.",
+    "confidenceLabel": "Aussagekraft",
+    "studyDesignLabel": "Studiendesign",
+    "sourceCoverageLabel": "Quellenabdeckung",
+    "sourceCoverageValue": "{searched} von {total} Quellen durchsucht",
+    "analysisBasisLabel": "Analysebasis",
+    "recencyLabel": "Aktualität",
+    "recencyValue": "{earliest}–{latest}",
+    "recencyNotAvailable": "Keine Jahresangaben verfügbar",
+    "integrityLabel": "Integrität der Studienbasis",
+    "integrityClean": "Keine bekannten Korrekturen unter den eingeschlossenen Studien",
+    "integrityHasCorrections": "{count} von {total} Studien mit bekannter Korrektur",
+    "consistencyLabel": "Konsistenz der Ergebnisse",
+    "transferabilityLabel": "Übertragbarkeit",
+    "notReportedNote": "Nicht angegeben — folgt mit der KI-gestützten Synthese in einem späteren Ausbauschritt."
   },
   "glossaryDefinitions": {
     "meta_analysis": "Fasst die Ergebnisse mehrerer Studien mit statistischen Methoden zu einer Gesamtaussage zusammen — gilt methodisch oft als besonders belastbar, wenn die zusammengefassten Studien selbst solide sind.",

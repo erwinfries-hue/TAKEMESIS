@@ -8,6 +8,7 @@ import type {
 import type { SearchRunResult } from "@/lib/search/run-search";
 import type { EligibilityAssessment } from "@/lib/eligibility/eligibility";
 import { deriveConfidenceLabel, type ConfidenceLabel } from "@/lib/eligibility/teaser";
+import { buildEvidencePassport, type EvidencePassportData } from "@/lib/eligibility/evidence-passport";
 
 export const PREMIUM_REPORT_VERSION = "premium-v1";
 
@@ -38,6 +39,8 @@ export interface PremiumReportData {
   studyTypeDistribution: Array<{ type: PublicationType; count: number }>;
   publicationYearRange: { earliest: number | null; latest: number | null };
   confidenceLabel: ConfidenceLabel;
+  /** Standardized "Evidenz-Profil" summary (see evidence-passport.ts) — persisted here so /report/[token] can render it from the stored finalPayload without re-running the search. */
+  evidencePassport: EvidencePassportData;
   /** 5-7 key findings — always null until AI-based synthesis exists; never fabricated. */
   keyFindings: string[] | null;
   comparison: PremiumComparisonRow[];
@@ -166,6 +169,7 @@ export function buildPremiumReportData(params: BuildPremiumReportParams): Premiu
     studyTypeDistribution: studyTypeDistribution(includedRecords),
     publicationYearRange: publicationYearRange(includedRecords),
     confidenceLabel: deriveConfidenceLabel(eligibility),
+    evidencePassport: buildEvidencePassport(searchResult, eligibility),
     keyFindings: null,
     comparison: detailedRecords.map((record) => ({
       citation: buildCitation(record, locale),

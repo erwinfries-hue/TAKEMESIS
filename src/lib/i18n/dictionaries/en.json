@@ -74,6 +74,14 @@
     ],
     "betaPositioning": "TEKMESIS is launching with a small, closed beta of 15 people. Joining now means directly shaping the product.",
     "refundNote": "If your report can't be generated for technical reasons, that's detected automatically and refunded. For anything else, just get in touch — we handle it personally, with a response within 3–5 business days.",
+    "guaranteeHeading": "Not enough evidence? No sale.",
+    "guaranteeBody": "Before you pay, we automatically check whether there are enough comparable, meaningful studies. If the evidence isn't sufficient, we don't offer you a report — regardless of the topic.",
+    "guaranteePoints": [
+      "Automatic eligibility check before every purchase",
+      "No payment when the evidence base isn't sufficient",
+      "Rejection reasons shown transparently"
+    ],
+    "guaranteeCta": "How we check this",
     "whyNotChatGptHeading": "Why not just ask ChatGPT?",
     "whyNotChatGptIntro": "A chatbot answers almost anything instantly — the question is what the answer is actually based on. TEKMESIS is deliberately narrower and slower:",
     "whyNotChatGptSwipeHint": "Swipe the table right to see the chatbot comparison →",
@@ -395,6 +403,29 @@
     "protocol": "Study protocol",
     "other": "Other",
     "unknown": "Not classified"
+  },
+  "dataCompletenessLabels": {
+    "full_text": "Full text",
+    "abstract": "Abstract",
+    "metadata_only": "Metadata only"
+  },
+  "evidencePassport": {
+    "heading": "Evidence Passport",
+    "intro": "A structured snapshot of the evidence base — at a glance.",
+    "confidenceLabel": "Confidence",
+    "studyDesignLabel": "Study design",
+    "sourceCoverageLabel": "Source coverage",
+    "sourceCoverageValue": "{searched} of {total} sources searched",
+    "analysisBasisLabel": "Analysis basis",
+    "recencyLabel": "Recency",
+    "recencyValue": "{earliest}–{latest}",
+    "recencyNotAvailable": "No publication years available",
+    "integrityLabel": "Integrity of the study base",
+    "integrityClean": "No known corrections among the included studies",
+    "integrityHasCorrections": "{count} of {total} studies with a known correction",
+    "consistencyLabel": "Consistency of results",
+    "transferabilityLabel": "Transferability",
+    "notReportedNote": "Not reported — coming with AI-based synthesis in a later build-out step."
   },
   "glossaryDefinitions": {
     "meta_analysis": "Statistically combines the results of multiple studies into one overall estimate — often considered particularly robust evidence when the underlying studies are themselves sound.",
