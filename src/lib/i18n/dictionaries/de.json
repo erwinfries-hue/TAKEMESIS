@@ -452,6 +452,13 @@
     "exampleQuestionsHeading": "Diese Fragen zu {topic} sind bereits geprüft und funktionieren zuverlässig:",
     "refineCta": "Neue Frage stellen"
   },
+  "notResearchablePage": {
+    "heading": "Diese Frage lässt sich nicht durch eine wissenschaftliche Literatursuche beantworten",
+    "body": "TEKMESIS wertet wissenschaftliche Studien zu allgemeinen Wirkungen, Zusammenhängen und Massnahmen aus. Eine konkrete Tatsachenfrage zu einem einzelnen Gegenstand, einer Person oder einem Ereignis — mit genau einer richtigen Antwort — lässt sich damit nicht sinnvoll beantworten.",
+    "refineHeading": "So geht es weiter",
+    "refineBody": "Formuliere stattdessen eine Frage zu einer Wirkung, einem Zusammenhang oder einem Unterschied — etwa \"Welchen Effekt hat X auf Y?\".",
+    "refineCta": "Neue Frage stellen"
+  },
   "searchFailedPage": {
     "heading": "Die Quellen sind aktuell nicht erreichbar",
     "body": "Bei der Suche konnten wir keine unserer wissenschaftlichen Datenquellen erreichen. Das liegt nicht an deiner Frage — bitte versuche es in ein paar Minuten erneut.",

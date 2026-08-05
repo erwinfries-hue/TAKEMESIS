@@ -23,6 +23,7 @@ import { buildSearchStatsSummary } from "@/lib/reports/search-stats";
 import { FreeTeaser } from "@/components/free-teaser";
 import { PaywallPanel } from "@/components/paywall-panel";
 import { NotEligibleNotice } from "@/components/not-eligible-notice";
+import { NotResearchableNotice } from "@/components/not-researchable-notice";
 import { SearchFailedNotice } from "@/components/search-failed-notice";
 import { SearchLimitNotice } from "@/components/search-limit-notice";
 import { StudyLookupNotice } from "@/components/study-lookup-notice";
@@ -30,6 +31,7 @@ import { SeedStudyPanel } from "@/components/seed-study-panel";
 import type { NormalizedRecord } from "@/lib/source-adapters/types";
 import { MAX_QUESTION_LENGTH } from "@/lib/security/limits";
 import { checkFreeSearchLimit } from "@/lib/security/check-free-search-limit";
+import { checkResearchability } from "@/lib/classification/researchability";
 import { track } from "@/lib/analytics/track";
 import { RecordSearchHistory } from "@/components/record-search-history";
 
@@ -210,6 +212,28 @@ export default async function SearchPage({
       track({ eventName: "domain_classified", metadata: { domainSlug: topic.slug } }),
     ),
   );
+
+  // Researchability gate (docs/OPEN_RISKS.md #34/#35 — decided 2026-08-05):
+  // catches a question type no rephrasing or better source coverage could
+  // fix (a specific factual/trivia question, not a general effect/
+  // relationship question), before the costly search or the free-search
+  // quota is spent. Skipped entirely for the DOI-lookup flow — comparing
+  // against a specific known study is a different, always-legitimate use
+  // case, not a freeform question this check is about.
+  if (!seedDoi) {
+    const researchability = await checkResearchability(question, locale);
+    if (!researchability.researchable) {
+      await track({
+        eventName: "not_researchable",
+        metadata: { domainSlug: confirmedTopics[0]?.slug ?? null, source: researchability.source },
+      });
+      return (
+        <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
+          <NotResearchableNotice dict={dict} />
+        </main>
+      );
+    }
+  }
 
   // Domain confirmed: check the free-search limit (decision #7) right before
   // the costly step — the classification/clarification above is free/local.

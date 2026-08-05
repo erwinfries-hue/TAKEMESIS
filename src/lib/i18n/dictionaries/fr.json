@@ -452,6 +452,13 @@
     "exampleQuestionsHeading": "Ces questions sur {topic} sont déjà vérifiées et fonctionnent de façon fiable :",
     "refineCta": "Poser une nouvelle question"
   },
+  "notResearchablePage": {
+    "heading": "Cette question ne peut pas trouver de réponse via une recherche scientifique",
+    "body": "TEKMESIS analyse des études scientifiques sur des effets, des liens et des mesures d'ordre général. Une question factuelle précise sur un objet, une personne ou un événement unique — avec exactement une bonne réponse — ne peut pas trouver de réponse pertinente de cette façon.",
+    "refineHeading": "Comment continuer",
+    "refineBody": "Pose plutôt une question sur un effet, un lien ou une différence — p. ex. \"Quel effet X a-t-il sur Y ?\".",
+    "refineCta": "Poser une nouvelle question"
+  },
   "searchFailedPage": {
     "heading": "Les sources sont actuellement inaccessibles",
     "body": "Nous n'avons pu accéder à aucune de nos sources de données scientifiques lors de cette recherche. Cela n'est pas lié à ta question — merci de réessayer dans quelques minutes.",

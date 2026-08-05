@@ -449,6 +449,13 @@
     "exampleQuestionsHeading": "These questions about {topic} are already checked and work reliably:",
     "refineCta": "Ask a new question"
   },
+  "notResearchablePage": {
+    "heading": "This question can't be answered through a scientific literature search",
+    "body": "TEKMESIS evaluates scientific studies on general effects, relationships, and measures. A specific factual question about a single object, person, or event — with exactly one correct answer — can't be meaningfully answered this way.",
+    "refineHeading": "What you can do",
+    "refineBody": "Instead, ask about an effect, relationship, or difference — e.g. \"What effect does X have on Y?\".",
+    "refineCta": "Ask a new question"
+  },
   "searchFailedPage": {
     "heading": "The sources are currently unreachable",
     "body": "We couldn't reach any of our scientific data sources during this search. This isn't about your question — please try again in a few minutes.",

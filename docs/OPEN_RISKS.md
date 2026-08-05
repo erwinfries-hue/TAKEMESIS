@@ -1757,6 +1757,76 @@ checkpoint (decision #15) and before each production-readiness gate.
     would pass either way. Full verification clean: `npm run lint`,
     `npm run typecheck`, `npm run build`.
 
+36. **Built the researchability gate (item #34's deferred "hybrid" decision),
+    2026-08-05, same day.** Closes the fifth `CLAUDE.md` Broad-domain-rule
+    check ("tested for researchability") that had no code behind it before.
+    - `classification/researchability.ts`'s `isConfidentlyResearchable()`
+      is the free fast path: if the question already contains one of the
+      relationship/effect words real good questions on this app are
+      templated around (the same connector-verb/effect-noun vocabulary
+      already tracked in `relevance.ts`/`domain.ts`, extended per locale),
+      it's accepted with zero AI cost. Deliberately one-directional — no
+      "confidently reject" rule exists, since "warum"/"how"-shaped
+      questions are equally common in good questions; a rule-based false
+      reject would wrongly turn away a real paying customer with no
+      appeal, while a false accept just falls through to the existing
+      (already-fixed) eligibility check downstream, which stays safe.
+    - `ai/researchability-classification.ts`: only reached for the
+      minority of genuinely ambiguous questions. Same tool-forced,
+      schema-validated pattern as `study-extraction.ts` — one boolean
+      field, `AI_MODEL` (the cheap model, per Erwin's existing cost
+      choice), asked to judge the question's *type* (general effect/
+      relationship question vs. specific factual/trivia/definitional
+      question about one named entity), explicitly never its topic's
+      evidence volume — that stays eligibility.ts's job, so a genuinely
+      good but thin-coverage question is never misclassified as
+      "unresearchable."
+    - `checkResearchability()` orchestrates both and **fails open** on any
+      AI unavailability or error (`AI_EXTRACTION_ENABLED`/
+      `ANTHROPIC_API_KEY` unset, a thrown error, or a malformed response)
+      — same graceful-degradation contract as every other AI-gated
+      feature in this app; this check must never be the reason search
+      stops working when AI isn't provisioned. In this sandbox (no
+      `ANTHROPIC_API_KEY`), every question always takes this fail-open
+      path today — confirmed the existing e2e suite is unaffected (still
+      67/67).
+    - Wired into `/search/page.tsx` right after domain confirmation,
+      before the free-search-limit check and the costly multi-source
+      search — so a rejected question burns neither. Skipped entirely for
+      the DOI-lookup flow (comparing against a specific known study is a
+      different, always-legitimate case). New `not_researchable` analytics
+      event (`domainSlug`, `source: fast_path|ai|ai_unavailable`) for
+      admin visibility into how often each path fires — worth watching
+      once live to check the fast path isn't over- or under-triggering.
+    - New `NotResearchableNotice` component — deliberately distinct from
+      `NotEligibleNotice`, not a reused/parameterized variant: "wrong
+      question type" and "not enough evidence found" are different, both
+      honest, reasons, and only one of them is fixable by rephrasing.
+      Includes the `QuestionPhrasingTips` box (item #33) for guidance.
+    - Tests: `researchability-classification.test.ts` (4),
+      `researchability.test.ts` (9) + `researchability-disabled.test.ts`
+      (1, AI-unconfigured fail-open), `not-researchable-notice.test.tsx`
+      (2). No live AI call attempted (no `ANTHROPIC_API_KEY` in this
+      sandbox) — the AI branch is unit-tested against a fake client only,
+      same "not yet live-verified against the real model" caveat as
+      `study-extraction.ts`/`report-synthesis.ts`. Full verification
+      clean: `npm run lint`, `npm run typecheck`, unit tests (835/835, up
+      from 820), `npm run build`, `npm run test:e2e` (67/67, confirming no
+      regression to the existing search flow), `npm run test:a11y`
+      (21/21).
+
+    **Same-day follow-up from Erwin, not yet built:** a structured
+    "pick keywords, we assemble the sentence" input mode (e.g. separate
+    "measure/intervention" and "outcome" fields, templated into "Welchen
+    Effekt hat X auf Y?") — zero runtime AI cost (pure string assembly)
+    and structurally *prevents* an Eiffel-Tower-style trivia question from
+    ever being entered through that mode, rather than detecting it after
+    the fact. Recommended as an additional third input mode alongside
+    `OwnQuestionForm`/`StudyLookupForm`, not a replacement — freeform text
+    still matters for more nuanced questions (comparisons, 3+ concepts)
+    the template can't express. Not scoped or built yet; pending Erwin's
+    go-ahead as its own concept item.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

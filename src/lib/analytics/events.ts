@@ -13,6 +13,7 @@ export const ANALYTICS_EVENTS = [
   "question_submitted",
   "question_clarified",
   "domain_classified",
+  "not_researchable",
   "search_started",
   "search_completed",
   "search_failed",
