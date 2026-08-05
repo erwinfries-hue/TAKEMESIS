@@ -1883,6 +1883,28 @@ checkpoint (decision #15) and before each production-readiness gate.
        without the e2e env vars, not a regression; confirmed clean once
        killed), a11y (21/21).
 
+    **Third round, same day:** two more Erwin-requested adjustments.
+    1. "Box und Tab-Breite aufeinander anpassen" — the form card below
+       the tabs had its own independent `max-w-xl` (576px) cap in
+       `QuestionFormCard`, separate from the tab row's `max-w-2xl`
+       (672px) wrapper, so the two edges didn't line up. Removed
+       `QuestionFormCard`'s own max-width (it's only ever rendered inside
+       `QuestionModeSelector`'s tab panel, so `w-full` now just fills
+       whatever width that shared wrapper provides) and added `w-full` to
+       the tablist container too, so both the tab row and the form card
+       are governed by the one shared `max-w-2xl` and always match
+       exactly regardless of locale-specific label lengths.
+    2. "Um die drei Tab-Boxen eine Box ziehen als 'ein Button' mit drei
+       Buttons innerhalb" — restored an enclosing frame
+       (`rounded-2xl border border-brand-neutral-200 bg-white p-2`)
+       around the tab row, on top of the per-tab borders added earlier
+       today, so the control reads as one outer "button" containing
+       three inner tab buttons — combining both of today's asks instead
+       of trading one off against the other.
+       Verified visually in Chromium (desktop 1100px, both edges
+       pixel-aligned). Full verification re-run clean: lint, typecheck,
+       unit tests (849/849), build, e2e (68/68), a11y (21/21).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

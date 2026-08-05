@@ -32,19 +32,23 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
     <div className="flex w-full max-w-2xl flex-col items-center gap-3">
       {/* Widened from max-w-xl to max-w-2xl (2026-08-05) so the three tabs
           fit on one line at text-sm instead of each wrapping mid-label.
-          Each tab now carries its own border/background — the previous
-          single pill-shaped wrapper with only the active tab filled made
-          the two inactive tabs read as plain text links, not as tabs; the
-          per-tab border makes all three read as one segmented control at
-          a glance. flex-wrap (instead of the old inline-flex, which forced
-          a fixed total width) lets the whole set drop to a second row as
-          a unit on narrow viewports, rather than wrapping words inside a
-          single button. */}
+          Each tab carries its own border/background — the earlier single
+          pill wrapper with only the active tab filled made the two
+          inactive tabs read as plain text links, not as tabs. The outer
+          rounded-2xl/border/bg-white frame reads as one enclosing "button"
+          with the three tab pills inside it, restoring the segmented-
+          control look the original 2-tab design had; w-full makes this
+          frame the same width as the form card below it (QuestionFormCard
+          has no max-width of its own for exactly this reason — both are
+          capped only by this component's shared max-w-2xl wrapper).
+          flex-wrap lets the whole set drop to a second row as a unit on
+          narrow viewports or long labels (French), rather than wrapping
+          words inside a single button. */}
       <div
         role="tablist"
         aria-label={dict.questionModeSelector.tabListLabel}
         id={tabListId}
-        className="flex flex-wrap justify-center gap-2 text-sm"
+        className="flex w-full flex-wrap justify-center gap-2 rounded-2xl border border-brand-neutral-200 bg-white p-2 text-sm"
       >
         {tabs.map((tab) => (
           <button
