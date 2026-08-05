@@ -259,6 +259,20 @@ export const FR_EN_DICTIONARY: Record<string, string> = {
   recyclage: "recycling",
   réduction: "reduction",
   changements: "changes",
+  // Static entries mirroring the German-dictionary fix (2026-08-05): French
+  // is opted into the AI-fallback tier (AUTO_LEARN_LOCALES) which could
+  // cover gaps like this, but only when ANTHROPIC_API_KEY is actually
+  // configured — without it these terms would silently pass through
+  // untranslated, same failure mode as German had.
+  changement: "change",
+  climatique: "climate",
+  réchauffement: "warming",
+  empreinte: "footprint",
+  carbone: "carbon",
+  gaz: "gas",
+  serre: "greenhouse",
+  émissions: "emissions",
+  émission: "emission",
 
   // Technologie & Vie numérique / Technology & Digital Life
   réseaux: "networks",

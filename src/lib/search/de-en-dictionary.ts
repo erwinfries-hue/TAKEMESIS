@@ -312,6 +312,30 @@ export const DE_EN_DICTIONARY: Record<string, string> = {
   ökologische: "ecological",
   recycling: "recycling",
   konsumreduktion: "reducing consumption",
+  // Confirmed missing live (2026-08-05): none of these had an entry, so a
+  // climate-change question like "Welche Faktoren treiben den Klimawandel
+  // an?" sent every content word except "faktoren" untranslated into the
+  // (English-only) source APIs — the query effectively became just
+  // "factors", which is generic enough to match unrelated papers.
+  klimawandel: "climate change",
+  klima: "climate",
+  klimaschutz: "climate protection",
+  klimaneutral: "climate neutral",
+  klimaneutralität: "climate neutrality",
+  erderwärmung: "global warming",
+  erwärmung: "warming",
+  treibhausgase: "greenhouse gases",
+  treibhausgas: "greenhouse gas",
+  treibhauseffekt: "greenhouse effect",
+  emissionen: "emissions",
+  emission: "emission",
+  fussabdruck: "footprint",
+  kohlenstoff: "carbon",
+  kohlendioxid: "carbon dioxide",
+  treiben: "drive",
+  treibt: "drives",
+  antreiben: "drive",
+  treiber: "drivers",
 
   // Technologie & Digital Life / Technology & Digital Life
   medien: "media",

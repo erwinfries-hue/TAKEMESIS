@@ -168,6 +168,19 @@ describe("buildSearchQuery", () => {
     expect(query).not.toMatch(/\bhat\b/);
   });
 
+  it("translates climate-change vocabulary (dictionary gap closed 2026-08-05: live purchase sent 'klimawandel'/'treiben' untranslated into the query, which then only matched on the generic leftover word 'factors')", async () => {
+    const query = await buildSearchQuery(
+      "Welche Faktoren treiben den Klimawandel nachweislich am stärksten an?",
+      "de",
+    );
+    expect(query).toContain("climate change");
+    expect(query).toContain("factors");
+    expect(query).toContain("drive");
+    expect(query).toContain("demonstrably");
+    expect(query).not.toMatch(/\bklimawandel\b/);
+    expect(query).not.toMatch(/\btreiben\b/);
+  });
+
   it("falls back to the original question if every token is a stopword", async () => {
     const question = "Wie ist das?";
     expect(await buildSearchQuery(question, "de")).toBe(question);
@@ -221,6 +234,15 @@ describe("buildSearchQuery", () => {
     );
     expect(query).toContain("employee");
     expect(query).toContain("satisfaction");
+  });
+
+  it("translates French climate-change vocabulary statically, without relying on the (unconfigured-in-tests) AI fallback (dictionary gap closed 2026-08-05)", async () => {
+    const query = await buildSearchQuery(
+      "Quels facteurs sont les principaux moteurs prouvés du changement climatique ?",
+      "fr",
+    );
+    expect(query).toContain("climate");
+    expect(query).toContain("change");
   });
 
 });
