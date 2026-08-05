@@ -121,6 +121,15 @@
     "voiceInputListening": "Hört zu — antippen zum Stoppen",
     "characterCountLabel": "{count} / {max} Zeichen"
   },
+  "questionPhrasingTips": {
+    "toggleLabel": "Tipps für gute Fragen",
+    "tips": [
+      "Sei konkret: nenne Massnahme oder Mittel und die Wirkung, statt allgemein zu fragen.",
+      "Formuliere als Wirkungs- oder Vergleichsfrage, z. B. \"Welchen Effekt hat X auf Y?\"",
+      "Nutze gängige, einfache Begriffe statt Fachjargon oder ungewöhnliche Formulierungen.",
+      "Die Beispielfragen auf der Themen-Seite sind bereits geprüft — als Vorlage geeignet."
+    ]
+  },
   "questionModeSelector": {
     "tabListLabel": "Eingabemodus wählen"
   },
@@ -440,6 +449,7 @@
     "bodyInsufficientEvidence": "Wir haben zu wenige vergleichbare, aussagekräftige Studien gefunden, um einen fundierten Evidence Report zu erstellen.",
     "refineHeading": "So geht es weiter",
     "refineBody": "Versuche, deine Frage konkreter oder anders zu formulieren, oder wähle einen anderen Themenbereich.",
+    "exampleQuestionsHeading": "Diese Fragen zu {topic} sind bereits geprüft und funktionieren zuverlässig:",
     "refineCta": "Neue Frage stellen"
   },
   "searchFailedPage": {

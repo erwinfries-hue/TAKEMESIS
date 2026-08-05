@@ -121,6 +121,15 @@
     "voiceInputListening": "Listening — tap to stop",
     "characterCountLabel": "{count} / {max} characters"
   },
+  "questionPhrasingTips": {
+    "toggleLabel": "Tips for good questions",
+    "tips": [
+      "Be specific: name the measure or intervention and the effect, rather than asking generally.",
+      "Phrase it as an effect or comparison question, e.g. \"What effect does X have on Y?\"",
+      "Use common, plain terms rather than jargon or unusual phrasing.",
+      "The example questions on the topics page are already checked — good as a template."
+    ]
+  },
   "questionModeSelector": {
     "tabListLabel": "Choose input mode"
   },
@@ -437,6 +446,7 @@
     "bodyInsufficientEvidence": "We found too few comparable, informative studies to produce a well-founded evidence report.",
     "refineHeading": "What you can do",
     "refineBody": "Try phrasing your question more specifically or differently, or choose a different topic.",
+    "exampleQuestionsHeading": "These questions about {topic} are already checked and work reliably:",
     "refineCta": "Ask a new question"
   },
   "searchFailedPage": {

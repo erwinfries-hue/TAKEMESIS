@@ -55,4 +55,9 @@ describe("OwnQuestionForm", () => {
     fireEvent.keyDown(textarea, { key: "Enter" });
     expect(requestSubmit).not.toHaveBeenCalled();
   });
+
+  it("shows the collapsed phrasing-tips toggle", () => {
+    render(<OwnQuestionForm dict={dict} locale="de" />);
+    expect(screen.getByText(dict.questionPhrasingTips.toggleLabel)).toBeInTheDocument();
+  });
 });

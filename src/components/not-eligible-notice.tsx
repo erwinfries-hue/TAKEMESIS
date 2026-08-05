@@ -1,8 +1,22 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import { InfoIcon } from "@/components/icons/notice-icons";
+import { ExampleQuestionChip } from "@/components/example-question-chip";
 
-export function NotEligibleNotice({ dict }: { dict: Dictionary }) {
+export interface NotEligibleExampleTopic {
+  name: string;
+  /** Already live-verified eligible (docs/OPEN_RISKS.md #19/#27, `/admin/example-questions`) — safe to hold up as a working template. */
+  examples: string[];
+}
+
+export function NotEligibleNotice({
+  dict,
+  exampleTopic,
+}: {
+  dict: Dictionary;
+  /** The primary domain this search was run against, if any — omitted for the rare not-eligible-with-no-domain edge case. */
+  exampleTopic?: NotEligibleExampleTopic | null;
+}) {
   return (
     <div
       role="alert"
@@ -19,6 +33,18 @@ export function NotEligibleNotice({ dict }: { dict: Dictionary }) {
       </p>
       <h2 className="font-semibold text-brand-navy-900">{dict.notEligiblePage.refineHeading}</h2>
       <p className="text-sm text-brand-neutral-600">{dict.notEligiblePage.refineBody}</p>
+      {exampleTopic && exampleTopic.examples.length > 0 && (
+        <div className="flex flex-col gap-2 border-t border-brand-neutral-100 pt-3">
+          <p className="text-sm font-medium text-brand-navy-900">
+            {dict.notEligiblePage.exampleQuestionsHeading.replace("{topic}", exampleTopic.name)}
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {exampleTopic.examples.slice(0, 3).map((example) => (
+              <ExampleQuestionChip key={example} question={example} />
+            ))}
+          </div>
+        </div>
+      )}
       <Link
         href="/topics"
         className="self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"

@@ -272,9 +272,19 @@ export default async function SearchPage({
   const eligibility = assessEligibility(searchResult);
 
   if (eligibility.status === "not_eligible") {
+    const primaryTopic = confirmedTopics[0];
+    const exampleTopic = primaryTopic
+      ? {
+          name: topicCopy(primaryTopic, locale).name,
+          // Excludes the user's own (just-failed) question on the off chance it happens to match a curated example verbatim.
+          examples: topicCopy(primaryTopic, locale).examples.filter(
+            (example) => example.trim().toLowerCase() !== question.trim().toLowerCase(),
+          ),
+        }
+      : null;
     return (
       <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
-        <NotEligibleNotice dict={dict} />
+        <NotEligibleNotice dict={dict} exampleTopic={exampleTopic} />
       </main>
     );
   }

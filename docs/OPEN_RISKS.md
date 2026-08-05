@@ -1599,6 +1599,68 @@ checkpoint (decision #15) and before each production-readiness gate.
     way #32 was, if a real French high-risk question is found live to slip
     through.
 
+33. **RESOLVED 2026-08-04 — first real beta-tester feedback: three
+    questions in a row, no eligible report; built rephrasing guidance +
+    verified voice input, Erwin's request.** Investigated before building
+    anything (per `CLAUDE.md`'s workflow rule): "no hit" is not one failure
+    mode but at least five distinct ones stacked on top of each other —
+    query-translation gaps (DE/FR questions untranslated into the
+    English-indexed sources — the exact bug class that already caused
+    real 0-result searches on well-covered topics, e.g. "Dankbarkeits-
+    /Achtsamkeitsübungen": 0/0 German vs. 18–24 English), the
+    `MIN_RELEVANCE_SCORE`/concept-AND threshold being strict on short
+    questions, three topics with disclosed structurally weaker coverage
+    (`SOURCE_COVERAGE_MATRIX.md`), possible domain misclassification, and
+    ordinary source-adapter flakiness. `NotEligibleNotice` showed one flat
+    generic message regardless of which of these actually happened, with
+    no examples and no differentiation.
+
+    **Built (Erwin approved both halves of the proposed fix):**
+    - **Proactive:** new `QuestionPhrasingTips` component — a collapsed-
+      by-default `<details>` under `OwnQuestionForm`'s textarea, DE/EN/FR,
+      four short phrasing tips (be specific, phrase as an effect/
+      comparison question, use plain wording, the topic page's examples
+      are already checked). Deliberately never promises a match
+      (`CLAUDE.md`: "unsupported questions must not be sold") — guidance,
+      not a guarantee.
+    - **Reactive:** `NotEligibleNotice` now takes an optional
+      `exampleTopic` (name + examples) and, when the failed search had a
+      confirmed primary domain, shows up to 3 of that topic's own
+      curated example questions as `ExampleQuestionChip`s (already
+      live-verified eligible — item referenced in #19/#27,
+      `/admin/example-questions`) instead of only the generic "try
+      rephrasing" line. The user's own (just-failed) question is filtered
+      out of the candidates so a verbatim collision can't recommend
+      retrying the same thing that just failed. Wired in `/search/page.tsx`
+      from `confirmedTopics[0]`, the same "primary domain" convention
+      already used elsewhere on that page.
+    - **Voice input audit:** `voice-input-button.tsx` (task #113) had
+      shipped with **zero tests of any kind**, unit or e2e — genuinely
+      untested since it was first built. Added 8 unit tests (mocked
+      `SpeechRecognition`/`webkitSpeechRecognition`, covering hidden-when-
+      unsupported, start/stop toggle, transcript delivery, error/end state
+      reset) and 2 real Playwright e2e tests against the actual homepage,
+      injecting a fake `SpeechRecognition` constructor via
+      `addInitScript` before the page loads (the same technique
+      production code has no way to distinguish from the real browser
+      API) and driving it through its full async callback contract —
+      confirmed the mic button dictates into `OwnQuestionForm`'s textarea
+      end-to-end, and is correctly absent when the API isn't present.
+      **Genuine remaining limitation, not testable from this sandbox:**
+      real microphone audio capture and the actual browser vendor's
+      speech-recognition network round-trip (Chrome's implementation
+      calls Google's servers) — that needs a real device/browser
+      confirmation from Erwin, same class of gap as every other
+      "code-complete, not yet live-verified" item in this file.
+    - Tests: `question-phrasing-tips.test.tsx` (3), `not-eligible-
+      notice.test.tsx` (5, new — this component had no test file before
+      either), `own-question-form.test.tsx` (+1), `voice-input-
+      button.test.tsx` (8, new), plus 2 new e2e cases in
+      `e2e/search.spec.ts`. Full verification clean: `npm run lint`,
+      `npm run typecheck`, unit tests (816/816, up from 799), `npm run
+      build`, `npm run test:e2e` (65/65, up from 63), `npm run test:a11y`
+      (21/21).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

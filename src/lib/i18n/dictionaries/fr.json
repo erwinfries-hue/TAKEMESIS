@@ -121,6 +121,15 @@
     "voiceInputListening": "Écoute en cours — appuie pour arrêter",
     "characterCountLabel": "{count} / {max} caractères"
   },
+  "questionPhrasingTips": {
+    "toggleLabel": "Conseils pour de bonnes questions",
+    "tips": [
+      "Sois précis·e : nomme la mesure ou l'intervention et l'effet, plutôt que de poser une question générale.",
+      "Formule ta question comme une question d'effet ou de comparaison, p. ex. \"Quel effet X a-t-il sur Y ?\"",
+      "Utilise des termes courants et simples plutôt que du jargon ou une formulation inhabituelle.",
+      "Les exemples de questions sur la page des thèmes sont déjà vérifiés — utilisables comme modèle."
+    ]
+  },
   "questionModeSelector": {
     "tabListLabel": "Choisir le mode de saisie"
   },
@@ -440,6 +449,7 @@
     "bodyInsufficientEvidence": "Nous avons trouvé trop peu d'études comparables et probantes pour établir un Evidence Report solide.",
     "refineHeading": "Comment continuer",
     "refineBody": "Essaie de formuler ta question de façon plus précise ou différente, ou choisis un autre domaine thématique.",
+    "exampleQuestionsHeading": "Ces questions sur {topic} sont déjà vérifiées et fonctionnent de façon fiable :",
     "refineCta": "Poser une nouvelle question"
   },
   "searchFailedPage": {

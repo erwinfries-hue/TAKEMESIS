@@ -10,6 +10,7 @@ import { topDomainCandidates } from "@/lib/classification/domain";
 import { topics, topicCopy } from "@/content/topics";
 import { VoiceInputButton } from "@/components/voice-input-button";
 import { QuestionFormCard } from "@/components/question-form-card";
+import { QuestionPhrasingTips } from "@/components/question-phrasing-tips";
 
 const SUGGESTION_DEBOUNCE_MS = 400;
 
@@ -147,6 +148,7 @@ function OwnQuestionFormFields({
           </p>
         )}
         <p className="text-xs text-brand-neutral-600">{dict.ownQuestionForm.warning}</p>
+        <QuestionPhrasingTips dict={dict.questionPhrasingTips} />
       </div>
       <button
         type="submit"

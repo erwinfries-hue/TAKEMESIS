@@ -260,3 +260,60 @@ test("/search (invalid-DOI state) has no critical accessibility violations @a11y
     .analyze();
   expect(results.violations).toEqual([]);
 });
+
+// Real microphone audio and the browser vendor's actual speech-recognition
+// network round trip can't be exercised in CI/this sandbox — but the wiring
+// between the Web Speech API and the form (voice-input-button.tsx →
+// own-question-form.tsx) can be, by injecting a fake SpeechRecognition
+// constructor before the page loads (same technique real production code
+// has no way to distinguish from the genuine browser API) and driving it
+// through its real callback contract (start() called with the right lang,
+// onresult delivering a transcript, onend/onerror resetting state).
+test("voice input: the mic button dictates into the own-question textarea", async ({ page }) => {
+  await page.addInitScript(() => {
+    class FakeSpeechRecognition {
+      lang = "";
+      interimResults = false;
+      continuous = false;
+      onresult: ((event: { results: { 0: { 0: { transcript: string } } } }) => void) | null = null;
+      onerror: (() => void) | null = null;
+      onend: (() => void) | null = null;
+      start() {
+        // Mirrors real async recognition: the transcript arrives after start(), not synchronously.
+        setTimeout(() => {
+          this.onresult?.({ results: { 0: { 0: { transcript: "Welche Lernmethode verbessert den Lernerfolg?" } } } });
+          this.onend?.();
+        }, 0);
+      }
+      stop() {
+        this.onend?.();
+      }
+    }
+    // @ts-expect-error -- test-only global, not typed in app code
+    window.SpeechRecognition = FakeSpeechRecognition;
+  });
+
+  await page.goto("/");
+  const micButton = page.getByRole("button", { name: "Frage per Spracheingabe diktieren" });
+  await expect(micButton).toBeVisible();
+  await micButton.click();
+
+  await expect(page.getByLabel("Deine Frage")).toHaveValue(
+    "Welche Lernmethode verbessert den Lernerfolg?",
+  );
+  // Recognition self-ended (onend), so the button returns to its idle label rather than staying "listening".
+  await expect(page.getByRole("button", { name: "Frage per Spracheingabe diktieren" })).toBeVisible();
+});
+
+test("voice input: the mic button is absent when the browser has no Web Speech API (e.g. Firefox)", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    // @ts-expect-error -- test-only override
+    delete window.SpeechRecognition;
+    // @ts-expect-error -- test-only override
+    delete window.webkitSpeechRecognition;
+  });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Frage per Spracheingabe diktieren" })).toHaveCount(0);
+});
