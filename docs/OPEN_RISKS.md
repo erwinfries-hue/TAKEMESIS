@@ -1716,6 +1716,47 @@ checkpoint (decision #15) and before each production-readiness gate.
     peer-reviewed literature, yes/no." Not built without Erwin's decision
     on approach and where in the funnel it should sit.
 
+    **Decision (Erwin, 2026-08-05): hybrid.** A cheap rule-based fast path
+    decides the confident majority of questions for free (both "clearly
+    fine, skip the AI call" and "domain classification already failed,
+    existing fallback UI handles it"); only genuinely ambiguous questions
+    get one cheap AI classification call. Chosen specifically over
+    "always AI" because this check would run on every *free* search, not
+    just paid reports — materially higher volume than the AI usage
+    elsewhere in the app, which only runs post-purchase. Framed by Erwin
+    as its own concept item ("das Herz des Tools") — build tracked
+    separately from this incident's immediate stopword fix; see the
+    following item for the implementation.
+
+35. **Second real bug found by Erwin the same day (2026-08-05): the voice-
+    input mic button was completely unresponsive on Android/Chrome ("der
+    Knopf reagiert gar nicht").** Root cause: `next.config.ts`'s
+    `Permissions-Policy` header set `microphone=()` — the empty-parens
+    syntax blocks a feature for *every* origin, including the page's own,
+    not just third-party iframes (that distinction is what `(self)` is
+    for). Set during the Phase 10 security-headers hardening (item #60),
+    which predates the voice-input feature (task #113) — nobody cross-
+    checked the two, and every automated test of voice input (unit +
+    e2e, see item #33) used a *fake* `SpeechRecognition` constructor that
+    never touches the browser's real permission system, so this was
+    structurally impossible to catch until a real device hit it. Fixed:
+    `microphone=(self)` — third-party iframes still get no camera/mic/
+    geolocation/payment access (the header's original intent), the page
+    itself now can. Verified two ways: (1) a new
+    `security-headers.spec.ts` case asserts the header value directly;
+    (2) a new `e2e/voice-input-real-permissions.spec.ts`, run in its own
+    file because Playwright requires `launchOptions` overrides at the
+    file's top level, uses Chromium's `--use-fake-device-for-media-
+    stream` flags plus a granted `microphone` permission to exercise the
+    browser's **genuine** `SpeechRecognition` (no fake constructor) —
+    proving `recognition.start()` no longer gets refused outright. This
+    test was manually confirmed to fail against the pre-fix header value
+    (reverted locally, re-ran, watched it fail with the exact "button
+    never leaves its idle label" symptom, then restored the fix) before
+    being committed, so it's a genuine regression guard, not a test that
+    would pass either way. Full verification clean: `npm run lint`,
+    `npm run typecheck`, `npm run build`.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.

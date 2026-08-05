@@ -10,6 +10,16 @@ test("security headers are present on every response", async ({ request }) => {
   expect(headers["content-security-policy"]).toMatch(/script-src 'self' 'nonce-[^']+' 'strict-dynamic'/);
 });
 
+test("Permissions-Policy allows the site's own pages to use the microphone (voice input needs this — live bug 2026-08-05: 'microphone=()' silently blocked it for everyone, including same-origin)", async ({
+  request,
+}) => {
+  const response = await request.get("/");
+  const headers = response.headers();
+  expect(headers["permissions-policy"]).toContain("microphone=(self)");
+  // Camera/geolocation/payment stay fully blocked — this app never uses them.
+  expect(headers["permissions-policy"]).toContain("camera=()");
+});
+
 test("the CSP nonce does not break client-side hydration or interactivity, and produces no browser console errors", async ({
   page,
 }) => {
