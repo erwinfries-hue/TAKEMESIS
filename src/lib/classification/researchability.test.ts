@@ -18,6 +18,15 @@ describe("isConfidentlyResearchable", () => {
     expect(isConfidentlyResearchable("Does creatine improve physical performance?", "en")).toBe(true);
   });
 
+  it("recognizes the German 'Welchen Effekt hat X auf Y?' template (TemplatedQuestionForm output)", () => {
+    expect(
+      isConfidentlyResearchable(
+        "Welchen Effekt hat regelmässige Bewegung auf das allgemeine Erkrankungsrisiko?",
+        "de",
+      ),
+    ).toBe(true);
+  });
+
   it("does not treat the real production trivia case as confidently researchable", () => {
     expect(isConfidentlyResearchable("Warum ist der Eiffelturm so hoch?", "de")).toBe(false);
   });

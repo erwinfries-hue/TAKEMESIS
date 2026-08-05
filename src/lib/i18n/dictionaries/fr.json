@@ -133,6 +133,14 @@
   "questionModeSelector": {
     "tabListLabel": "Choisir le mode de saisie"
   },
+  "templatedQuestionForm": {
+    "heading": "Construire une question via un formulaire",
+    "measureLabel": "Mesure ou intervention",
+    "measurePlaceholder": "p. ex. activité physique régulière",
+    "outcomeLabel": "Effet ou objectif",
+    "outcomePlaceholder": "p. ex. le risque global de maladie",
+    "previewPrefix": "Ta question :"
+  },
   "studyLookupForm": {
     "heading": "Tu as déjà une étude ?",
     "intro": "Compare une étude précise avec le reste de l'évidence disponible sur le même sujet.",

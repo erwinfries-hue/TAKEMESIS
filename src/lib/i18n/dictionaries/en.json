@@ -133,6 +133,14 @@
   "questionModeSelector": {
     "tabListLabel": "Choose input mode"
   },
+  "templatedQuestionForm": {
+    "heading": "Build a question from a form",
+    "measureLabel": "Measure or intervention",
+    "measurePlaceholder": "e.g. regular exercise",
+    "outcomeLabel": "Outcome or goal",
+    "outcomePlaceholder": "e.g. overall disease risk",
+    "previewPrefix": "Your question:"
+  },
   "studyLookupForm": {
     "heading": "Already have a study?",
     "intro": "Compare a specific study against the rest of the available evidence on the same topic.",

@@ -34,6 +34,19 @@ describe("QuestionModeSelector", () => {
     expect(screen.queryByLabelText(dict.ownQuestionForm.label)).not.toBeInTheDocument();
   });
 
+  it("switches to the templated-question tab on click", () => {
+    render(<QuestionModeSelector dict={dict} locale="de" />);
+
+    fireEvent.click(screen.getByRole("tab", { name: dict.templatedQuestionForm.heading }));
+
+    expect(screen.getByRole("tab", { name: dict.templatedQuestionForm.heading })).toHaveAttribute(
+      "aria-selected",
+      "true",
+    );
+    expect(screen.getByLabelText(dict.templatedQuestionForm.measureLabel)).toBeInTheDocument();
+    expect(screen.queryByLabelText(dict.ownQuestionForm.label)).not.toBeInTheDocument();
+  });
+
   it("passes hideHeading through so each form's own <h2> is suppressed", () => {
     render(<QuestionModeSelector dict={dict} locale="de" />);
     expect(

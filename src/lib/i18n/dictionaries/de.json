@@ -133,6 +133,14 @@
   "questionModeSelector": {
     "tabListLabel": "Eingabemodus wählen"
   },
+  "templatedQuestionForm": {
+    "heading": "Frage per Formular bauen",
+    "measureLabel": "Massnahme oder Mittel",
+    "measurePlaceholder": "z. B. regelmässige Bewegung",
+    "outcomeLabel": "Wirkung oder Ziel",
+    "outcomePlaceholder": "z. B. das allgemeine Erkrankungsrisiko",
+    "previewPrefix": "Deine Frage:"
+  },
   "studyLookupForm": {
     "heading": "Hast du schon eine Studie?",
     "intro": "Vergleiche eine konkrete Studie mit der übrigen verfügbaren Evidenz zum gleichen Thema.",

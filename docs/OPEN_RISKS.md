@@ -1815,17 +1815,49 @@ checkpoint (decision #15) and before each production-readiness gate.
       regression to the existing search flow), `npm run test:a11y`
       (21/21).
 
-    **Same-day follow-up from Erwin, not yet built:** a structured
-    "pick keywords, we assemble the sentence" input mode (e.g. separate
-    "measure/intervention" and "outcome" fields, templated into "Welchen
-    Effekt hat X auf Y?") — zero runtime AI cost (pure string assembly)
-    and structurally *prevents* an Eiffel-Tower-style trivia question from
-    ever being entered through that mode, rather than detecting it after
-    the fact. Recommended as an additional third input mode alongside
-    `OwnQuestionForm`/`StudyLookupForm`, not a replacement — freeform text
-    still matters for more nuanced questions (comparisons, 3+ concepts)
-    the template can't express. Not scoped or built yet; pending Erwin's
-    go-ahead as its own concept item.
+    **Same-day follow-up from Erwin, built 2026-08-05:** a structured
+    "pick keywords, we assemble the sentence" input mode — zero runtime AI
+    cost (pure string assembly) and structurally *prevents* an
+    Eiffel-Tower-style trivia question from ever being entered through
+    that mode, rather than detecting it after the fact.
+    - `assembleTemplatedQuestion()` (`src/lib/search/templated-question.ts`)
+      — two trimmed keyword fields ("Massnahme/Mittel", "Wirkung/Ziel")
+      stitched into the fixed per-locale template "Welchen Effekt hat X
+      auf Y?" / "What effect does X have on Y?" / "Quel effet X a-t-il sur
+      Y ?"; returns `null` (submit disabled) until both fields are
+      non-empty. Deliberately kept to exactly this one proven template
+      shape, not a general sentence builder.
+    - `TemplatedQuestionForm` — third `QuestionModeSelector` tab
+      (`"template"`), alongside the existing `"question"`/`"doi"` tabs.
+      Reuses `QuestionFormCard`'s native GET-form wrapper: the assembled
+      question is carried in a hidden `<input name="q">`, so submission
+      needs no client-side navigation JS, same mechanism as the existing
+      forms. Live preview of the assembled sentence shown as the user
+      types (`role="status"`). Since `QuestionModeSelector` is the single
+      shared entry point already used identically by both `/` (Home) and
+      `/topics`, this — like the mic button and phrasing tips before it —
+      required no separate per-page wiring.
+    - Fixed a real gap found while building this: the German
+      `RESEARCHABLE_SIGNAL_TERMS` fast-path list (item above) had
+      "wirkung"/"einfluss"/"auswirkung(en)" but was missing "effekt"/
+      "effekte" — meaning the German template's own output ("Welchen
+      *Effekt* hat...") would have missed its own fast path and fallen
+      through to an AI call (or the fail-open default) despite English
+      ("effect") and French ("effet") already covering their equivalents.
+      Added; regression test confirms the exact template output now hits
+      `fast_path`.
+    - Tests: `templated-question.test.ts` (7, per-locale assembly +
+      trimming + empty-field handling), `templated-question-form.test.tsx`
+      (5), `question-mode-selector.test.tsx` extended for the third tab,
+      new e2e test in `site.spec.ts` (fills both fields on the homepage,
+      confirms the live preview, submits, confirms landing on
+      `/search?q=...` with the assembled question). Full verification
+      clean: `npm run lint`, `npm run typecheck`, unit tests (849/849,
+      up from 835 — one pre-existing flake in
+      `run-digest.test.ts` seen once during a full-suite run, reproduced
+      clean both in isolation and on a second full-suite rerun, not
+      caused by this change), `npm run test:integration` (1/1), `npm run
+      build`, `npm run test:e2e` (68/68), `npm run test:a11y` (21/21).
 
 ## Not risks, but explicit go/no-go gates already defined
 

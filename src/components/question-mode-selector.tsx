@@ -5,8 +5,9 @@ import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import { OwnQuestionForm } from "@/components/own-question-form";
 import { StudyLookupForm } from "@/components/study-lookup-form";
+import { TemplatedQuestionForm } from "@/components/templated-question-form";
 
-type Mode = "question" | "doi";
+type Mode = "question" | "template" | "doi";
 
 /**
  * Replaces the homepage's previous side-by-side OwnQuestionForm +
@@ -23,6 +24,7 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
 
   const tabs: { mode: Mode; label: string }[] = [
     { mode: "question", label: dict.ownQuestionForm.heading },
+    { mode: "template", label: dict.templatedQuestionForm.heading },
     { mode: "doi", label: dict.studyLookupForm.heading },
   ];
 
@@ -60,6 +62,8 @@ export function QuestionModeSelector({ dict, locale }: { dict: Dictionary; local
           <Suspense>
             <OwnQuestionForm dict={dict} locale={locale} hideHeading />
           </Suspense>
+        ) : mode === "template" ? (
+          <TemplatedQuestionForm dict={dict} locale={locale} hideHeading />
         ) : (
           <StudyLookupForm dict={dict} hideHeading />
         )}

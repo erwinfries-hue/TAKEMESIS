@@ -73,6 +73,23 @@ test("clicking an example-question chip prefills the own-question form", async (
   );
 });
 
+test("templated question form assembles a question from two keyword fields and submits it to /search", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page.getByRole("tab", { name: "Frage per Formular bauen" }).click();
+  await page.getByLabel("Massnahme oder Mittel").fill("regelmässige Bewegung");
+  await page.getByLabel("Wirkung oder Ziel").fill("das allgemeine Erkrankungsrisiko");
+  await expect(
+    page.getByText("Welchen Effekt hat regelmässige Bewegung auf das allgemeine Erkrankungsrisiko?"),
+  ).toBeVisible();
+
+  await page.getByRole("button", { name: "Frage einordnen" }).click();
+  await expect(page).toHaveURL(
+    /\/search\?q=.*Welchen(%20|\+)Effekt.*regelm/,
+  );
+});
+
 test("example-report preview renders all 9 premium report sections with a clear placeholder-data warning", async ({
   page,
 }) => {

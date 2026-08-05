@@ -32,7 +32,7 @@ const RESEARCHABLE_SIGNAL_TERMS: Record<Locale, string[]> = {
     "steigert", "steigern", "steigerte",
     "schadet", "schaden", "schadete", "geschadet",
     "schützt", "schützen", "schützte", "geschützt",
-    "wirkung", "einfluss", "auswirkung", "auswirkungen",
+    "wirkung", "effekt", "effekte", "einfluss", "auswirkung", "auswirkungen",
     "zusammenhang", "unterschied", "vergleich", "im vergleich", "verglichen",
   ],
   en: [
