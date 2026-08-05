@@ -81,6 +81,10 @@ export function QuestionClarification({
 
       <fieldset className="flex flex-col gap-2">
         <legend className="sr-only">{dict.searchPage.clarificationHeading}</legend>
+        {/* Only pre-check the first box when it's the classifier's actual top guess
+            (candidates.length > 0). When nothing matched and options is the full
+            fallbackTopics list, index 0 is just whichever topic sorts first — not a
+            recommendation — so nothing should be preselected (live bug, 2026-08-05). */}
         {options.map((option, index) => (
           <label
             key={option.slug}
@@ -90,7 +94,7 @@ export function QuestionClarification({
               type="checkbox"
               name="domain"
               value={option.slug}
-              defaultChecked={index === 0}
+              defaultChecked={candidates.length > 0 && index === 0}
               className="h-4 w-4 rounded border-brand-neutral-200 text-brand-teal-600 focus:ring-brand-teal-400"
             />
             {option.name}
