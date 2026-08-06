@@ -1,19 +1,22 @@
 import Link from "next/link";
 import type { Topic, TopicCopy } from "@/content/topics";
+import type { Locale } from "@/lib/i18n/config";
 import { TopicIcon } from "@/components/icons/topic-icons";
 
 export function TopicCard({
   topic,
   copy,
   elevatedRiskLabel,
+  locale,
 }: {
   topic: Topic;
   copy: TopicCopy;
   elevatedRiskLabel: string;
+  locale: Locale;
 }) {
   return (
     <Link
-      href={`/topics#${topic.slug}`}
+      href={`/${locale}/topics#${topic.slug}`}
       className="flex flex-col gap-2 rounded-xl border border-brand-neutral-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-md"
     >
       <TopicIcon slug={topic.slug} className="h-7 w-7 text-brand-teal-600" />

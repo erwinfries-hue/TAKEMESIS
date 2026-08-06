@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 import { startCheckoutAction } from "@/app/search/checkout-actions";
 
 /** Matches the 24x24/currentColor/rounded-cap line style of src/components/icons — kept local since it's a one-off list marker, not a reusable topic/process icon. */
@@ -22,12 +23,14 @@ function CheckIcon() {
 
 export function PaywallPanel({
   dict,
+  locale,
   priceDisplay,
   priceVersion,
   reportId,
   reportToken,
 }: {
   dict: Dictionary;
+  locale: Locale;
   priceDisplay: string;
   priceVersion: string;
   /** Null when report creation itself failed (e.g. the database is unreachable) — the buy form degrades to a disabled state rather than submitting to a report that doesn't exist. */
@@ -47,7 +50,7 @@ export function PaywallPanel({
           ))}
         </ul>
         <Link
-          href="/example-report"
+          href={`/${locale}/example-report`}
           className="self-start text-sm font-medium text-brand-teal-700 hover:underline"
         >
           {dict.paywallPanel.exampleReportCta} →

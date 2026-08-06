@@ -127,7 +127,7 @@ export default async function SearchPage({
           {dict.searchPage.noQuestionHeading}
         </h1>
         <p className="text-brand-neutral-600">{dict.searchPage.noQuestionBody}</p>
-        <Link href="/topics" className="font-medium text-brand-teal-700 hover:underline">
+        <Link href={`/${locale}/topics`} className="font-medium text-brand-teal-700 hover:underline">
           {dict.searchPage.noQuestionCta} →
         </Link>
       </main>
@@ -230,7 +230,7 @@ export default async function SearchPage({
       });
       return (
         <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
-          <NotResearchableNotice dict={dict} />
+          <NotResearchableNotice dict={dict} locale={locale} />
         </main>
       );
     }
@@ -309,7 +309,7 @@ export default async function SearchPage({
       : null;
     return (
       <main className="flex flex-1 flex-col items-center gap-6 px-6 py-16 sm:px-10">
-        <NotEligibleNotice dict={dict} exampleTopic={exampleTopic} />
+        <NotEligibleNotice dict={dict} locale={locale} exampleTopic={exampleTopic} />
       </main>
     );
   }
@@ -373,6 +373,7 @@ export default async function SearchPage({
       />
       <PaywallPanel
         dict={dict}
+        locale={locale}
         priceDisplay={formatPrice(priceConfig, locale)}
         priceVersion={priceConfig.version}
         reportId={reportId}

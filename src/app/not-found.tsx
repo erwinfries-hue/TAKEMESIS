@@ -52,13 +52,13 @@ export default async function NotFound() {
       <p className="max-w-md text-sm text-brand-neutral-600">{p.body}</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Link
-          href="/"
+          href={`/${locale}`}
           className="rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
         >
           {p.homeCta}
         </Link>
         <Link
-          href="/topics"
+          href={`/${locale}/topics`}
           className="rounded-full border border-brand-neutral-200 px-5 py-2 text-sm font-medium text-brand-navy-900 transition-colors hover:bg-brand-neutral-50"
         >
           {p.topicsCta}

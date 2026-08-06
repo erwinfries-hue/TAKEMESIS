@@ -24,13 +24,13 @@ export default async function CheckoutCancelPage() {
       <p className="max-w-xl text-brand-neutral-600">{dict.checkoutCancelPage.body}</p>
       <div className="mt-2 flex flex-wrap justify-center gap-3">
         <Link
-          href="/topics"
+          href={`/${locale}/topics`}
           className="rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
         >
           {dict.checkoutCancelPage.retryCta}
         </Link>
         <Link
-          href="/"
+          href={`/${locale}`}
           className="rounded-full border border-brand-neutral-200 px-5 py-2 text-sm font-medium text-brand-navy-900 transition-colors hover:bg-brand-neutral-100"
         >
           {dict.checkoutCancelPage.homeCta}

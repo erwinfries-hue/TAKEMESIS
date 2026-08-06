@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { buildLocaleAlternates } from "@/lib/i18n/metadata";
 import { topics, topicCopy } from "@/content/topics";
 import { SourceStatusPanel } from "@/components/source-status-panel";
 
@@ -11,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${dict.sourcesPage.heading} — ${dict.brand.name}`,
     description: dict.sourcesPage.intro,
-    alternates: { canonical: "/sources" },
+    alternates: buildLocaleAlternates(locale, "/sources"),
   };
 }
 

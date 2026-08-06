@@ -7,7 +7,7 @@ const dict = getDictionary("de");
 
 describe("NotEligibleNotice", () => {
   it("renders the generic guidance without an exampleTopic", () => {
-    render(<NotEligibleNotice dict={dict} />);
+    render(<NotEligibleNotice dict={dict} locale="de" />);
     expect(screen.getByText(dict.notEligiblePage.heading)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: dict.notEligiblePage.refineCta })).toBeInTheDocument();
   });
@@ -16,6 +16,7 @@ describe("NotEligibleNotice", () => {
     render(
       <NotEligibleNotice
         dict={dict}
+        locale="de"
         exampleTopic={{
           name: "Schlaf & Regeneration",
           examples: ["Frage eins?", "Frage zwei?", "Frage drei?", "Frage vier?"],
@@ -32,12 +33,12 @@ describe("NotEligibleNotice", () => {
   });
 
   it("does not render an example-questions section when exampleTopic is null", () => {
-    render(<NotEligibleNotice dict={dict} exampleTopic={null} />);
+    render(<NotEligibleNotice dict={dict} locale="de" exampleTopic={null} />);
     expect(screen.queryByText(/exampleQuestionsHeading/)).not.toBeInTheDocument();
   });
 
   it("does not render an example-questions section when examples is empty", () => {
-    render(<NotEligibleNotice dict={dict} exampleTopic={{ name: "X", examples: [] }} />);
+    render(<NotEligibleNotice dict={dict} locale="de" exampleTopic={{ name: "X", examples: [] }} />);
     expect(
       screen.queryByText(dict.notEligiblePage.exampleQuestionsHeading.replace("{topic}", "X")),
     ).not.toBeInTheDocument();
@@ -47,6 +48,7 @@ describe("NotEligibleNotice", () => {
     render(
       <NotEligibleNotice
         dict={dict}
+        locale="de"
         exampleTopic={{ name: "Schlaf & Regeneration", examples: ["Wirkt Melatonin?"] }}
       />,
     );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { XMLParser } from "fast-xml-parser";
 import { requireAdminSession } from "@/lib/admin/require-admin-session";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -237,9 +238,9 @@ export default async function AdminReportPreviewPage({
     <main className="flex flex-1 flex-col gap-8 px-6 py-12 sm:px-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold text-brand-navy-900">Report-Vorschau (mit KI)</h1>
-        <a href="/admin" className="text-sm text-brand-teal-700 hover:underline">
+        <Link href="/admin" className="text-sm text-brand-teal-700 hover:underline">
           Zurück zur Übersicht
-        </a>
+        </Link>
       </div>
 
       <p className="max-w-2xl text-sm text-brand-neutral-600">

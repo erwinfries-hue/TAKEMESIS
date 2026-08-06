@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { buildLocaleAlternates } from "@/lib/i18n/metadata";
 import { MethodologyFunnelIllustration } from "@/components/methodology-funnel-illustration";
 import { MethodologyCalculator } from "@/components/methodology-calculator";
 import { ProcessTimeline } from "@/components/process-timeline";
@@ -12,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${dict.methodologyPage.heading} — ${dict.brand.name}`,
     description: dict.methodologyPage.intro,
-    alternates: { canonical: "/methodology" },
+    alternates: buildLocaleAlternates(locale, "/methodology"),
   };
 }
 

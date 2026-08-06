@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 import { InfoIcon } from "@/components/icons/notice-icons";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 
@@ -11,9 +12,11 @@ export interface NotEligibleExampleTopic {
 
 export function NotEligibleNotice({
   dict,
+  locale,
   exampleTopic,
 }: {
   dict: Dictionary;
+  locale: Locale;
   /** The primary domain this search was run against, if any — omitted for the rare not-eligible-with-no-domain edge case. */
   exampleTopic?: NotEligibleExampleTopic | null;
 }) {
@@ -40,13 +43,13 @@ export function NotEligibleNotice({
           </p>
           <div className="flex flex-wrap gap-2">
             {exampleTopic.examples.slice(0, 3).map((example) => (
-              <ExampleQuestionChip key={example} question={example} />
+              <ExampleQuestionChip key={example} question={example} locale={locale} />
             ))}
           </div>
         </div>
       )}
       <Link
-        href="/topics"
+        href={`/${locale}/topics`}
         className="self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
       >
         {dict.notEligiblePage.refineCta}

@@ -143,7 +143,7 @@ test("/search without a question prompts to go back to topics", async ({ page })
   await expect(page.getByRole("heading", { name: "Keine Frage angegeben" })).toBeVisible();
   await expect(page.getByRole("link", { name: /Zurück zu den Themen/ })).toHaveAttribute(
     "href",
-    "/topics",
+    "/de/topics",
   );
 });
 

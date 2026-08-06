@@ -1,23 +1,24 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 
 const AXIA4_ROOT_URL = "https://axia4.ch";
 const AXIA4_BRAND_NAME = "AXIA4 by EF";
 
-export function SiteFooter({ dict }: { dict: Dictionary }) {
+export function SiteFooter({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   return (
     <footer className="border-t border-brand-neutral-200 px-6 py-6 text-center text-xs text-brand-neutral-600 print:hidden sm:px-10">
       <nav className="mb-3 flex flex-wrap justify-center gap-x-4 gap-y-1">
-        <Link href="/privacy" className="hover:text-brand-teal-700">
+        <Link href={`/${locale}/privacy`} className="hover:text-brand-teal-700">
           {dict.nav.privacy}
         </Link>
-        <Link href="/legal" className="hover:text-brand-teal-700">
+        <Link href={`/${locale}/legal`} className="hover:text-brand-teal-700">
           {dict.nav.legal}
         </Link>
-        <Link href="/methodology" className="hover:text-brand-teal-700">
+        <Link href={`/${locale}/methodology`} className="hover:text-brand-teal-700">
           {dict.nav.methodology}
         </Link>
-        <Link href="/sources" className="hover:text-brand-teal-700">
+        <Link href={`/${locale}/sources`} className="hover:text-brand-teal-700">
           {dict.nav.sources}
         </Link>
       </nav>

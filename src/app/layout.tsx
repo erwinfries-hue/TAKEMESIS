@@ -5,6 +5,7 @@ import "./globals.css";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import { buildLocaleAlternates } from "@/lib/i18n/metadata";
 import { clientEnv } from "@/lib/env/client";
 import { buildStructuredData } from "@/lib/seo/structured-data";
 import { SiteHeader } from "@/components/site-header";
@@ -26,18 +27,19 @@ export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const title = `${dict.brand.name} — ${dict.brand.claim}`;
+  const alternates = buildLocaleAlternates(locale, "/");
 
   return {
     metadataBase: new URL(clientEnv.NEXT_PUBLIC_APP_BASE_URL),
     title,
     description: dict.home.description,
-    alternates: { canonical: "/" },
+    alternates,
     // og:image is auto-injected by Next.js from app/opengraph-image.tsx
     // (file-convention metadata) — no need to reference it here.
     openGraph: {
       title,
       description: dict.home.description,
-      url: "/",
+      url: alternates.canonical,
       siteName: dict.brand.name,
       locale: OG_LOCALE[locale],
       type: "website",
@@ -86,7 +88,7 @@ export default async function RootLayout({
         <div id="main-content" className="flex flex-1 flex-col">
           {children}
         </div>
-        <SiteFooter dict={dict} />
+        <SiteFooter dict={dict} locale={locale} />
       </body>
     </html>
   );

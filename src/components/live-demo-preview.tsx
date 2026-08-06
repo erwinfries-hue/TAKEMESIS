@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 import type { TeaserData } from "@/lib/eligibility/teaser";
 import { ConfidenceGauge } from "@/components/confidence-gauge";
 
@@ -10,7 +11,15 @@ import { ConfidenceGauge } from "@/components/confidence-gauge";
  * presented as a live search result: the badge and framing make that
  * explicit, matching the /example-report page's existing pattern.
  */
-export function LiveDemoPreview({ dict, teaser }: { dict: Dictionary; teaser: TeaserData }) {
+export function LiveDemoPreview({
+  dict,
+  teaser,
+  locale,
+}: {
+  dict: Dictionary;
+  teaser: TeaserData;
+  locale: Locale;
+}) {
   return (
     <div className="animate-fade-in-up w-full max-w-md rounded-xl border border-brand-neutral-200 bg-white p-5 text-left shadow-sm">
       <span className="inline-block rounded-full bg-brand-warning-100 px-3 py-1 text-xs font-medium text-brand-warning-600">
@@ -32,7 +41,7 @@ export function LiveDemoPreview({ dict, teaser }: { dict: Dictionary; teaser: Te
         <ConfidenceGauge label={teaser.confidenceLabel} dict={dict} size="sm" />
       </div>
       <Link
-        href="/example-report"
+        href={`/${locale}/example-report`}
         className="mt-4 inline-block text-sm font-medium text-brand-teal-700 hover:underline"
       >
         {dict.home.liveDemoCta} →

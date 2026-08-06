@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { buildLocaleAlternates } from "@/lib/i18n/metadata";
 
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
@@ -8,7 +9,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${dict.legalPage.heading} — ${dict.brand.name}`,
     description: dict.legalPage.metaDescription,
-    alternates: { canonical: "/legal" },
+    alternates: buildLocaleAlternates(locale, "/legal"),
   };
 }
 

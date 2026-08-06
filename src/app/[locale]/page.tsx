@@ -39,7 +39,7 @@ export default async function Home() {
         <h1 className="max-w-4xl text-2xl font-semibold leading-tight text-brand-navy-900">
           {dict.home.description}
         </h1>
-        <LiveDemoPreview dict={dict} teaser={demoTeaser} />
+        <LiveDemoPreview dict={dict} teaser={demoTeaser} locale={locale} />
       </section>
 
       {/* 2. Own-question input, with the DOI/"already have a study" lookup as a
@@ -81,10 +81,11 @@ export default async function Home() {
               topic={topic}
               copy={topicCopy(topic, locale)}
               elevatedRiskLabel={dict.topicsPage.elevatedRiskBadge}
+              locale={locale}
             />
           ))}
         </div>
-        <Link href="/topics" className="font-medium text-brand-teal-700 hover:underline">
+        <Link href={`/${locale}/topics`} className="font-medium text-brand-teal-700 hover:underline">
           {dict.home.topicsTeaserCta} →
         </Link>
       </section>
@@ -97,7 +98,7 @@ export default async function Home() {
         <p className="max-w-xl text-brand-neutral-600">
           {dict.exampleReportPage.topicQuestion}
         </p>
-        <Link href="/example-report" className="font-medium text-brand-teal-700 hover:underline">
+        <Link href={`/${locale}/example-report`} className="font-medium text-brand-teal-700 hover:underline">
           {dict.exampleReportPage.heading} →
         </Link>
       </section>
@@ -171,7 +172,7 @@ export default async function Home() {
             </li>
           ))}
         </ul>
-        <Link href="/methodology" className="font-medium text-brand-teal-700 hover:underline">
+        <Link href={`/${locale}/methodology`} className="font-medium text-brand-teal-700 hover:underline">
           {dict.home.guaranteeCta} →
         </Link>
       </section>
@@ -218,7 +219,7 @@ export default async function Home() {
             </tbody>
           </table>
         </div>
-        <Link href="/methodology" className="font-medium text-brand-teal-700 hover:underline">
+        <Link href={`/${locale}/methodology`} className="font-medium text-brand-teal-700 hover:underline">
           {dict.home.whyNotChatGptCta} →
         </Link>
       </section>
@@ -229,7 +230,7 @@ export default async function Home() {
           {dict.home.sourceTransparencyHeading}
         </h2>
         <p className="max-w-xl text-brand-neutral-600">{dict.home.sourceTransparencyBody}</p>
-        <Link href="/sources" className="font-medium text-brand-teal-700 hover:underline">
+        <Link href={`/${locale}/sources`} className="font-medium text-brand-teal-700 hover:underline">
           {dict.home.sourceTransparencyCta} →
         </Link>
       </section>

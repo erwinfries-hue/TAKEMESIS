@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { buildLocaleAlternates } from "@/lib/i18n/metadata";
 import { topics, topicCopy } from "@/content/topics";
 import { ExampleQuestionChip } from "@/components/example-question-chip";
 import { QuestionModeSelector } from "@/components/question-mode-selector";
@@ -16,7 +17,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${dict.topicsPage.heading} — ${dict.brand.name}`,
     description: dict.topicsPage.intro,
-    alternates: { canonical: "/topics" },
+    alternates: buildLocaleAlternates(locale, "/topics"),
   };
 }
 
@@ -129,7 +130,7 @@ export default async function TopicsPage({
               </h3>
               <div className="mb-1 flex flex-wrap gap-2">
                 {copy.examples.map((example) => (
-                  <ExampleQuestionChip key={example} question={example} />
+                  <ExampleQuestionChip key={example} question={example} locale={locale} />
                 ))}
               </div>
 

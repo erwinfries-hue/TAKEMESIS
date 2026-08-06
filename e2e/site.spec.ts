@@ -41,16 +41,16 @@ test("an unknown URL returns a real 404 status with a branded not-found page", a
   expect(response?.status()).toBe(404);
   await expect(page.getByText("Fehler 404")).toBeVisible();
   await page.getByRole("link", { name: "Zur Startseite" }).click();
-  await expect(page).toHaveURL(/\/$/);
+  await expect(page).toHaveURL(/\/de$/);
 });
 
 test("main navigation links reach every content page", async ({ page }) => {
   await page.goto("/");
   const nav = page.getByRole("navigation", { name: "Hauptnavigation" });
-  await expect(nav.getByRole("link", { name: "Themen" })).toHaveAttribute("href", "/topics");
+  await expect(nav.getByRole("link", { name: "Themen" })).toHaveAttribute("href", "/de/topics");
   await expect(nav.getByRole("link", { name: "Methodik" })).toHaveAttribute(
     "href",
-    "/methodology",
+    "/de/methodology",
   );
 });
 

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
 import { getLocale } from "@/lib/i18n/locale";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { buildLocaleAlternates } from "@/lib/i18n/metadata";
 import type { Locale } from "@/lib/i18n/config";
 import { buildExampleReportPreviewSearchResult } from "@/content/example-report-preview";
 import { assessEligibility } from "@/lib/eligibility/eligibility";
@@ -22,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: `${dict.exampleReportPage.heading} — ${dict.brand.name}`,
     description: dict.exampleReportPage.body,
-    alternates: { canonical: "/example-report" },
+    alternates: buildLocaleAlternates(locale, "/example-report"),
   };
 }
 

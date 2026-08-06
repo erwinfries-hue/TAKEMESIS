@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import type { Locale } from "@/lib/i18n/config";
 import { InfoIcon } from "@/components/icons/notice-icons";
 import { QuestionPhrasingTips } from "@/components/question-phrasing-tips";
 
@@ -12,7 +13,7 @@ import { QuestionPhrasingTips } from "@/components/question-phrasing-tips";
  * way (no amount of rephrasing fixes thin coverage; the right rephrasing
  * does fix this).
  */
-export function NotResearchableNotice({ dict }: { dict: Dictionary }) {
+export function NotResearchableNotice({ dict, locale }: { dict: Dictionary; locale: Locale }) {
   return (
     <div
       role="alert"
@@ -31,7 +32,7 @@ export function NotResearchableNotice({ dict }: { dict: Dictionary }) {
       <p className="text-sm text-brand-neutral-600">{dict.notResearchablePage.refineBody}</p>
       <QuestionPhrasingTips dict={dict.questionPhrasingTips} />
       <Link
-        href="/topics"
+        href={`/${locale}/topics`}
         className="self-start rounded-full bg-brand-navy-900 px-5 py-2 text-sm font-medium text-white transition-colors hover:bg-brand-navy-800"
       >
         {dict.notResearchablePage.refineCta}
