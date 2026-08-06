@@ -29,6 +29,7 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(clientEnv.NEXT_PUBLIC_APP_BASE_URL),
     title,
     description: dict.home.description,
+    alternates: { canonical: "/" },
     // og:image is auto-injected by Next.js from app/opengraph-image.tsx
     // (file-convention metadata) — no need to reference it here.
     openGraph: {

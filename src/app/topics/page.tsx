@@ -13,7 +13,11 @@ import { getTrendingTopics } from "@/lib/analytics/trending-topics";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.topicsPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.topicsPage.heading} — ${dict.brand.name}`,
+    description: dict.topicsPage.intro,
+    alternates: { canonical: "/topics" },
+  };
 }
 
 export default async function TopicsPage({

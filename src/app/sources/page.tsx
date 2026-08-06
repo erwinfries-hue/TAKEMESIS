@@ -8,7 +8,11 @@ import { SourceStatusPanel } from "@/components/source-status-panel";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.sourcesPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.sourcesPage.heading} — ${dict.brand.name}`,
+    description: dict.sourcesPage.intro,
+    alternates: { canonical: "/sources" },
+  };
 }
 
 export default async function SourcesPage() {

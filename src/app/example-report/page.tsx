@@ -19,7 +19,11 @@ export const maxDuration = 60;
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.exampleReportPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.exampleReportPage.heading} — ${dict.brand.name}`,
+    description: dict.exampleReportPage.body,
+    alternates: { canonical: "/example-report" },
+  };
 }
 
 /**

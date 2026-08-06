@@ -9,7 +9,11 @@ import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.methodologyPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.methodologyPage.heading} — ${dict.brand.name}`,
+    description: dict.methodologyPage.intro,
+    alternates: { canonical: "/methodology" },
+  };
 }
 
 export default async function MethodologyPage() {

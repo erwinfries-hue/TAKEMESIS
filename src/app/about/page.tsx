@@ -5,7 +5,11 @@ import { getDictionary } from "@/lib/i18n/get-dictionary";
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  return { title: `${dict.aboutPage.heading} — ${dict.brand.name}` };
+  return {
+    title: `${dict.aboutPage.heading} — ${dict.brand.name}`,
+    description: dict.aboutPage.body,
+    alternates: { canonical: "/about" },
+  };
 }
 
 export default async function AboutPage() {
