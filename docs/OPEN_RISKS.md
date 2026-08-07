@@ -1937,6 +1937,63 @@ checkpoint (decision #15) and before each production-readiness gate.
     names already existed as blank placeholders in `.env.example`/the Zod
     schema from an earlier, never-finished pass, now actually wired.
 
+38. **Attempted and reverted (2026-08-07): static/ISR rendering for the 8
+    marketing pages.** Motivation: `getLocale()` reads `headers()`, which
+    forces every route dynamic even though the locale is already known from
+    the URL segment for anything under `[locale]/` — in theory a pure
+    performance/cost win (build-time prerendering, no per-request Supabase
+    reads for pages that don't need them). Implementation attempted Next's
+    "multiple root layouts" pattern (a separate root layout per top-level
+    route group — `(marketing)/[locale]/layout.tsx` reading `params.locale`
+    directly, `(app)/layout.tsx` keeping the existing cookie/header-based
+    `getLocale()` for admin/checkout/search/report). Two blocking findings,
+    both confirmed live via e2e, not guessed:
+    - **CSP nonce is fundamentally incompatible with static generation.**
+      This app's CSP (`middleware.ts`) uses `script-src 'nonce-<fresh-per-
+      request>' 'strict-dynamic'`. A statically prerendered page is built
+      once and has no per-request nonce to embed in its script tags — with
+      `strict-dynamic` present, browsers ignore `'self'` entirely, so every
+      script tag (including Next's own framework bootstrap) gets silently
+      CSP-blocked and the page never hydrates. Confirmed by adding
+      `generateStaticParams()`: e2e went from 68/68 to a dozen failures
+      (locale switcher, all forms, voice input — anything needing JS) with
+      zero console output beyond CSP violation messages. This is a real,
+      unavoidable tradeoff, not a bug in this attempt — a genuine fix would
+      mean switching that route group to a hash-based CSP instead of
+      nonce-based, a deliberate security-header change on its own, not a
+      side effect of a routing refactor.
+    - **Custom `not-found.tsx` files inside a parenthesized route group are
+      not reliably picked up under this Next.js version's Turbopack build.**
+      Tried four placements — nested inside `[locale]/`, at the group root
+      `(marketing)/not-found.tsx`, both simultaneously, and Next's
+      experimental `global-not-found.tsx` (`experimental.globalNotFound`) —
+      every one silently fell back to Next's generic, unbranded, link-less
+      "This page could not be found." instead of the custom branded
+      component, confirmed by `grep`-ing the compiled `.next/server/` output
+      for the custom copy (absent entirely — not a runtime resolution
+      issue, the file was never compiled in) and by direct Playwright
+      inspection of the rendered DOM. Moving the `notFound()` call itself
+      from the layout to a page (the standard, documented pattern) made no
+      difference. The plain, non-grouped `src/app/not-found.tsx` this
+      project used before today works completely reliably — the variable
+      that breaks it is specifically route-group nesting, which reads as a
+      genuine Turbopack gap in an otherwise-documented App Router
+      convention, not a mistake in this implementation.
+    - Given finding 1 alone already eliminates the original performance
+      benefit, and finding 2 would have shipped a real regression (broken,
+      dead-end 404 page for any mistyped/stale URL) had it not been caught
+      by the existing e2e suite before ever reaching a real deploy, the
+      entire attempt was reverted back to the single shared root layout —
+      confirmed via a clean `git diff` against the last pushed commit and a
+      full green re-run (typecheck, lint, 893 unit tests, build, 68 e2e).
+      Sentry (item #37, same session) is unaffected and stays wired.
+    - **Revisit only if:** (a) the CSP is deliberately redesigned to a
+      hash-based policy for static routes specifically (a security decision
+      for Erwin, not an engineering default), and (b) the not-found-in-
+      route-groups gap is independently confirmed fixed in a later Next.js
+      release (or reproduced against a webpack, non-Turbopack build, to
+      isolate whether it's genuinely Turbopack-specific).
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
