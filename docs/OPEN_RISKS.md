@@ -1905,6 +1905,38 @@ checkpoint (decision #15) and before each production-readiness gate.
        pixel-aligned). Full verification re-run clean: lint, typecheck,
        unit tests (849/849), build, e2e (68/68), a11y (21/21).
 
+37. **Sentry error monitoring wired (2026-08-07), code-complete but no live
+    DSN in this sandbox — same "provisioned, not yet live-verified" pattern
+    as every other secret-gated integration here.** Motivation: several past
+    incidents in this file (#2's relevance-threshold saga, #30's dropped
+    confirmation emails) were hard to diagnose because Vercel Hobby only
+    retains 12h of Runtime Logs, and errors only surfaced when Erwin
+    happened to be live-testing at the time. `@sentry/nextjs` installed;
+    `instrumentation.ts` (registers `sentry.server.config.ts`/
+    `sentry.edge.config.ts` by `NEXT_RUNTIME`, plus the `onRequestError`
+    hook) and `instrumentation-client.ts` (browser init) added at the
+    project root, matching `middleware.ts`'s existing root-level-file
+    convention rather than nesting under `src/`. All three init calls read
+    `SENTRY_DSN`/`NEXT_PUBLIC_SENTRY_DSN` directly from `process.env` (not
+    the app's Zod-validated env modules — these files load during
+    instrumentation registration, before the rest of the module graph is
+    safe to assume available) and set `enabled: Boolean(dsn)`, so an unset
+    DSN makes the SDK a genuine no-op — confirmed via a clean
+    `npm run build` (route classifications unchanged) and a clean
+    `npm run test:e2e` (68/68, including the CSP console-error check, which
+    would have caught a client-init exception). `next.config.ts` is
+    deliberately **not** wrapped with `withSentryConfig`: this project
+    builds with Turbopack (`next build` output: "▲ Next.js ... (Turbopack)"),
+    and Sentry's own webpack-plugin-based build-time instrumentation/source-
+    map upload is a documented no-op under Turbopack — wrapping it would add
+    an `SENTRY_AUTH_TOKEN`/org/project config surface for zero effect today.
+    Revisit only if the project ever moves off Turbopack for production
+    builds. **Human stop condition (`CLAUDE.md`: "secret"), one exact
+    action:** create a Sentry project (free tier is enough at beta volume)
+    and set `SENTRY_DSN` + `NEXT_PUBLIC_SENTRY_DSN` in Vercel — both var
+    names already existed as blank placeholders in `.env.example`/the Zod
+    schema from an earlier, never-finished pass, now actually wired.
+
 ## Not risks, but explicit go/no-go gates already defined
 
 - Beta continue/optimize/pause/stop thresholds: decision #15.
