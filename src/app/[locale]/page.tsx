@@ -12,13 +12,17 @@ import { ProcessTimeline } from "@/components/process-timeline";
 import { PROCESS_STEP_ICONS } from "@/components/icons/process-step-icons";
 import { RecentSearchesPanel } from "@/components/recent-searches-panel";
 import { StickyMobileCta } from "@/components/sticky-mobile-cta";
+import { ExampleQuestionChip } from "@/components/example-question-chip";
 
 const TEASER_COUNT = 6;
+const SPOTLIGHT_TOPIC = "ernaehrung-supplements";
 
 export default async function Home() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const teaserTopics = topics.slice(0, TEASER_COUNT);
+  const spotlightTopic = topics.find((topic) => topic.slug === SPOTLIGHT_TOPIC);
+  const spotlightCopy = spotlightTopic ? topicCopy(spotlightTopic, locale) : undefined;
 
   // Same question as /example-report (dict.exampleReportPage.topicQuestion)
   // so the homepage teaser and the full example report it links to are the
@@ -65,6 +69,75 @@ export default async function Home() {
         <RecentSearchesPanel dict={dict} />
       </section>
       <StickyMobileCta label={dict.home.heroCta} targetId="eigene-frage" />
+
+      {/* 2b. Entry niche: nutrition & supplements (2026-11-15, Verkaufsstart).
+          TEKMESIS stays a broad evidence platform; this section only gives
+          first-time visitors one concrete, searchable starting point. The
+          questions are the curated topic examples, already checked. */}
+      <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 bg-white px-6 py-10 text-center sm:px-10 sm:py-16">
+        <h2 className="text-2xl font-semibold text-brand-navy-900">{dict.home.spotlightHeading}</h2>
+        <p className="max-w-xl text-brand-neutral-600">{dict.home.spotlightIntro}</p>
+        <div className="flex max-w-3xl flex-wrap justify-center gap-2">
+          {spotlightCopy?.examples.map((example) => (
+            <ExampleQuestionChip key={example} question={example} locale={locale} />
+          ))}
+        </div>
+        <Link
+          href={`/${locale}/topics#${SPOTLIGHT_TOPIC}`}
+          className="font-medium text-brand-teal-700 hover:underline"
+        >
+          {dict.home.spotlightCta} →
+        </Link>
+      </section>
+
+      {/* 2c. Differentiation: why not a general-purpose AI chatbot. Moved up
+          from after the guarantee (was 6b) because it is the strongest answer
+          to the first objection a visitor has (2026-11-15, Verkaufsstart). */}
+      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16">
+        <h2 className="text-2xl font-semibold text-brand-navy-900">
+          {dict.home.whyNotChatGptHeading}
+        </h2>
+        <p className="max-w-xl text-center text-brand-neutral-600">
+          {dict.home.whyNotChatGptIntro}
+        </p>
+        <p className="text-xs text-brand-neutral-600 sm:hidden">
+          {dict.home.whyNotChatGptSwipeHint}
+        </p>
+        <div className="w-full max-w-4xl overflow-x-auto rounded-lg border border-brand-neutral-200 bg-white">
+          <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
+            <thead>
+              <tr className="border-b border-brand-neutral-200">
+                <th scope="col" className="p-4 font-semibold text-brand-navy-900">
+                  {dict.home.whyNotChatGptTableCriterionHeader}
+                </th>
+                <th scope="col" className="p-4 font-semibold text-brand-teal-700">
+                  {dict.home.whyNotChatGptTableTekmesisHeader}
+                </th>
+                <th scope="col" className="p-4 font-semibold text-brand-neutral-600">
+                  {dict.home.whyNotChatGptTableChatbotHeader}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {dict.home.whyNotChatGptRows.map((row, index) => (
+                <tr
+                  key={row.criterion}
+                  className={index % 2 === 1 ? "bg-brand-neutral-50" : undefined}
+                >
+                  <th scope="row" className="p-4 font-medium text-brand-navy-900">
+                    {row.criterion}
+                  </th>
+                  <td className="p-4 text-brand-neutral-950">{row.tekmesis}</td>
+                  <td className="p-4 text-brand-neutral-600">{row.chatbot}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <Link href={`/${locale}/methodology`} className="font-medium text-brand-teal-700 hover:underline">
+          {dict.home.whyNotChatGptCta} →
+        </Link>
+      </section>
 
       {/* 3. Topic-category inspiration grid */}
       <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-10 sm:px-10 sm:py-16">
@@ -177,53 +250,6 @@ export default async function Home() {
         </Link>
       </section>
 
-      {/* 6b. Differentiation: why not a general-purpose AI chatbot */}
-      <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 px-6 py-10 sm:px-10 sm:py-16">
-        <h2 className="text-2xl font-semibold text-brand-navy-900">
-          {dict.home.whyNotChatGptHeading}
-        </h2>
-        <p className="max-w-xl text-center text-brand-neutral-600">
-          {dict.home.whyNotChatGptIntro}
-        </p>
-        <p className="text-xs text-brand-neutral-600 sm:hidden">
-          {dict.home.whyNotChatGptSwipeHint}
-        </p>
-        <div className="w-full max-w-4xl overflow-x-auto rounded-lg border border-brand-neutral-200 bg-white">
-          <table className="w-full min-w-[36rem] border-collapse text-left text-sm">
-            <thead>
-              <tr className="border-b border-brand-neutral-200">
-                <th scope="col" className="p-4 font-semibold text-brand-navy-900">
-                  {dict.home.whyNotChatGptTableCriterionHeader}
-                </th>
-                <th scope="col" className="p-4 font-semibold text-brand-teal-700">
-                  {dict.home.whyNotChatGptTableTekmesisHeader}
-                </th>
-                <th scope="col" className="p-4 font-semibold text-brand-neutral-600">
-                  {dict.home.whyNotChatGptTableChatbotHeader}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {dict.home.whyNotChatGptRows.map((row, index) => (
-                <tr
-                  key={row.criterion}
-                  className={index % 2 === 1 ? "bg-brand-neutral-50" : undefined}
-                >
-                  <th scope="row" className="p-4 font-medium text-brand-navy-900">
-                    {row.criterion}
-                  </th>
-                  <td className="p-4 text-brand-neutral-950">{row.tekmesis}</td>
-                  <td className="p-4 text-brand-neutral-600">{row.chatbot}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        <Link href={`/${locale}/methodology`} className="font-medium text-brand-teal-700 hover:underline">
-          {dict.home.whyNotChatGptCta} →
-        </Link>
-      </section>
-
       {/* 7. Source/method transparency */}
       <section className="flex flex-col items-center gap-4 border-t border-brand-neutral-200 px-6 py-10 text-center sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">
@@ -235,7 +261,7 @@ export default async function Home() {
         </Link>
       </section>
 
-      {/* 8. Trust / privacy / beta */}
+      {/* 8. Trust / privacy (closed-beta wording removed 2026-11-15: the product is live and sells) */}
       <section className="flex flex-col items-center gap-6 border-t border-brand-neutral-200 bg-white px-6 py-10 text-center sm:px-10 sm:py-16">
         <h2 className="text-2xl font-semibold text-brand-navy-900">{dict.home.trustHeading}</h2>
         <p className="max-w-xl text-brand-neutral-600">{dict.home.trustBody}</p>

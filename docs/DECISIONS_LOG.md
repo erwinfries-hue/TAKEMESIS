@@ -262,3 +262,25 @@ or personal data sent, consistent with the privacy rule in `12`.
   first-class metrics so this checkpoint can be evaluated without manual DB queries.
 - These thresholds are the last mandatory open decision from `02_CONCEPT_REVIEW_PROTOCOL.md`'s
   list — once documented, `FINAL_CONCEPT_DECISIONS.md` and siblings can be compiled.
+
+## 16. Public launch positioning: closed-beta wording removed, supplements as entry niche
+
+**Decision (Erwin, 2026-11-15, chat "Verkaufsstart Numoteca & Tekmesis"):**
+- The homepage no longer says TEKMESIS is in a closed beta of 15 people. The
+  product is live in Stripe live mode (see `STATUS.md`); the wording made
+  first-time visitors unsure whether they may buy. Replaced by a plain "new,
+  your feedback shapes it" line. Decision 15's beta cohort and thresholds stay
+  valid as the evaluation frame for the first real buyers.
+- TEKMESIS stays a broad evidence platform (`CLAUDE.md` identity rule). The
+  homepage gets one concrete entry niche, nutrition & supplements, shown right
+  after the question input with the curated (already checked) example
+  questions of that topic. Reason: the first paid promotion targets
+  supplement questions, which people search in question form.
+- The "Why not just ask ChatGPT?" comparison moves up, directly after that
+  niche section, because it answers the first objection.
+
+**Follow-on implications:**
+- No change to eligibility, pricing (CHF 9.90), payment or privacy rules.
+- First promotion (founder's network, LinkedIn post, Google Ads on supplement
+  questions, capped at CHF 150) is evaluated on 2026-12-15 with PostHog:
+  visits → teaser viewed → paid.

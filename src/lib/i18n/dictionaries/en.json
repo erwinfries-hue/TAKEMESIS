@@ -26,6 +26,9 @@
       "Transparent about uncertainty",
       "CHF 9.90 once – no subscription"
     ],
+    "spotlightHeading": "Does this supplement actually work?",
+    "spotlightIntro": "Before you spend money on omega-3, creatine or probiotics, see what the studies show. Tap a pre-checked example question or ask your own.",
+    "spotlightCta": "All nutrition & supplement questions",
     "liveDemoBadge": "Illustrative example – not a real live analysis",
     "liveDemoHeading": "This is what your free teaser could look like",
     "liveDemoCandidateLabel": "Records found",
@@ -64,15 +67,15 @@
     "sourceTransparencyHeading": "Transparent sources",
     "sourceTransparencyBody": "Every answer links to real, verifiable sources from recognized scholarly databases — never to invented studies.",
     "sourceTransparencyCta": "See source routing",
-    "trustHeading": "Trust & Beta",
-    "trustBody": "TEKMESIS is in closed beta. We deliberately collect little data, never sell reports for unsuitable questions, and disclose our limitations openly.",
+    "trustHeading": "Trust & privacy",
+    "trustBody": "We deliberately collect little data, never sell reports for unsuitable questions, and disclose our limitations openly.",
     "trustPoints": [
       "No mandatory account",
       "No health profiles",
       "Warning before sensitive input",
       "Self-service report deactivation"
     ],
-    "betaPositioning": "TEKMESIS is launching with a small, closed beta of 15 people. Joining now means directly shaping the product.",
+    "betaPositioning": "TEKMESIS is new. Your feedback goes straight into the product – tell us what's missing.",
     "refundNote": "If your report can't be generated for technical reasons, that's detected automatically and refunded. For anything else, just get in touch — we handle it personally, with a response within 3–5 business days.",
     "guaranteeHeading": "Not enough evidence? No sale.",
     "guaranteeBody": "Before you pay, we automatically check whether there are enough comparable, meaningful studies. If the evidence isn't sufficient, we don't offer you a report — regardless of the topic.",
