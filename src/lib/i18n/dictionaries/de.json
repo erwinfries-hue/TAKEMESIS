@@ -26,6 +26,9 @@
       "Transparente Unsicherheiten",
       "Einmalig CHF 9.90 – kein Abo"
     ],
+    "spotlightHeading": "Wirkt dieses Supplement wirklich?",
+    "spotlightIntro": "Bevor du Geld für Omega-3, Kreatin oder Probiotika ausgibst: Sieh nach, was Studien dazu zeigen. Tippe eine geprüfte Beispielfrage an oder stelle deine eigene.",
+    "spotlightCta": "Alle Fragen zu Ernährung & Supplements",
     "liveDemoBadge": "Beispielhafte Darstellung – keine echte Live-Auswertung",
     "liveDemoHeading": "So könnte dein kostenloser Teaser aussehen",
     "liveDemoCandidateLabel": "Gefundene Treffer",
@@ -64,15 +67,15 @@
     "sourceTransparencyHeading": "Transparente Quellen",
     "sourceTransparencyBody": "Jede Antwort verweist auf echte, überprüfbare Quellen aus anerkannten wissenschaftlichen Datenbanken — nie auf erfundene Studien.",
     "sourceTransparencyCta": "Quellenrouting ansehen",
-    "trustHeading": "Vertrauen & Beta",
-    "trustBody": "TEKMESIS befindet sich in der geschlossenen Beta-Phase. Wir sammeln bewusst wenige Daten, verkaufen keine Reports zu ungeeigneten Fragen und legen unsere Limitationen offen.",
+    "trustHeading": "Vertrauen & Datenschutz",
+    "trustBody": "Wir sammeln bewusst wenige Daten, verkaufen keine Reports zu ungeeigneten Fragen und legen unsere Limitationen offen.",
     "trustPoints": [
       "Kein Pflicht-Konto",
       "Keine Gesundheitsprofile",
       "Warnhinweis vor sensiblen Eingaben",
       "Report jederzeit selbst deaktivierbar"
     ],
-    "betaPositioning": "TEKMESIS startet mit einer kleinen, geschlossenen Beta von 15 Personen. Wer jetzt einsteigt, prägt das Produkt aktiv mit.",
+    "betaPositioning": "TEKMESIS ist neu. Deine Rückmeldung fliesst direkt ins Produkt ein – schreib uns, was dir fehlt.",
     "refundNote": "Kann dein Report aus technischen Gründen nicht erstellt werden, wird das automatisch erkannt und rückerstattet. Bei anderen Anliegen meldest du dich einfach bei uns — wir kümmern uns persönlich darum, Antwort innerhalb von 3–5 Werktagen.",
     "guaranteeHeading": "Keine ausreichende Evidenz? Kein Verkauf.",
     "guaranteeBody": "Bevor du bezahlst, prüfen wir automatisch, ob genügend vergleichbare, aussagekräftige Studien vorliegen. Reicht die Evidenzlage nicht aus, bieten wir dir keinen Report an — unabhängig vom Thema.",

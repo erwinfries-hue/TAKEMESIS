@@ -26,6 +26,9 @@
       "Incertitudes indiquées clairement",
       "CHF 9.90 une fois – sans abonnement"
     ],
+    "spotlightHeading": "Ce complément fonctionne-t-il vraiment ?",
+    "spotlightIntro": "Avant de dépenser de l'argent pour des oméga-3, de la créatine ou des probiotiques, découvrez ce que montrent les études. Choisissez une question d'exemple déjà vérifiée ou posez la vôtre.",
+    "spotlightCta": "Toutes les questions sur l'alimentation et les compléments",
     "liveDemoBadge": "Exemple illustratif – pas une analyse en direct réelle",
     "liveDemoHeading": "À quoi pourrait ressembler ton aperçu gratuit",
     "liveDemoCandidateLabel": "Résultats trouvés",
@@ -64,15 +67,15 @@
     "sourceTransparencyHeading": "Sources transparentes",
     "sourceTransparencyBody": "Chaque réponse renvoie à des sources réelles et vérifiables issues de bases de données scientifiques reconnues — jamais à des études inventées.",
     "sourceTransparencyCta": "Voir le routage des sources",
-    "trustHeading": "Confiance & Bêta",
-    "trustBody": "TEKMESIS est actuellement en phase de bêta fermée. Nous collectons délibérément peu de données, ne vendons aucun rapport pour des questions non éligibles et communiquons ouvertement nos limitations.",
+    "trustHeading": "Confiance & confidentialité",
+    "trustBody": "Nous collectons délibérément peu de données, ne vendons aucun rapport pour des questions non éligibles et communiquons ouvertement nos limitations.",
     "trustPoints": [
       "Aucun compte obligatoire",
       "Aucun profil de santé",
       "Avertissement avant toute saisie sensible",
       "Rapport désactivable à tout moment"
     ],
-    "betaPositioning": "TEKMESIS démarre avec une petite bêta fermée de 15 personnes. Qui rejoint maintenant façonne activement le produit.",
+    "betaPositioning": "TEKMESIS est nouveau. Vos retours sont intégrés directement au produit – dites-nous ce qui vous manque.",
     "refundNote": "Si ton rapport ne peut pas être généré pour des raisons techniques, cela est détecté et remboursé automatiquement. Pour toute autre question, contacte-nous simplement — nous nous en occupons personnellement, réponse sous 3 à 5 jours ouvrables.",
     "guaranteeHeading": "Pas assez de preuves ? Pas de vente.",
     "guaranteeBody": "Avant que tu payes, nous vérifions automatiquement s'il existe suffisamment d'études comparables et probantes. Si l'évidence est insuffisante, nous ne te proposons aucun rapport — quel que soit le sujet.",
